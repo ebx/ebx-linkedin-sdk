@@ -19,6 +19,8 @@ public class Company extends LinkedInType {
   @Setter
   private String emailDomains;
   
+  private String rawCompanyType;
+  
   @Getter
   @Setter
   private CompanyType companyType;
@@ -33,7 +35,13 @@ public class Company extends LinkedInType {
   
   @Getter
   @Setter
-  private String status;
+  private List<Industry> industries;
+  
+  private String rawStatus;
+  
+  @Getter
+  @Setter
+  private Status status;
   
   @Getter
   @Setter
@@ -67,9 +75,11 @@ public class Company extends LinkedInType {
   @Setter
   private String description;
   
+  private String rawStockExchange;
+  
   @Getter
   @Setter
-  private String stockExchange;
+  private StockExchange stockExchange;
   
   @Getter
   @Setter
@@ -78,4 +88,29 @@ public class Company extends LinkedInType {
   @Getter
   @Setter
   private int numFollowers;
+  
+  /**
+   * Creates the stock CompanyType enum from the raw string and populates the field.
+   * Should be called when the JSON is mapped to the object
+   */
+  private void createCompanyType() {
+    companyType = CompanyType.fromCode(rawCompanyType);
+  }
+  
+  /**
+   * Creates the Status enum from the raw string and populates the field.
+   * Should be called when the JSON is mapped to the object
+   */
+  private void createStatus() {
+    status = Status.fromCode(rawStatus);
+  }
+
+  /**
+   * Creates the StockExchange enum from the raw string and populates the field.
+   * Should be called when the JSON is mapped to the object
+   */
+  private void createStockExchange() {
+    stockExchange = StockExchange.fromCode(rawStockExchange);
+  }
+
 }
