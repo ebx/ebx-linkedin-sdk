@@ -1,18 +1,16 @@
 package com.echobox.api.linkedin.types;
 
 import lombok.Getter;
+import lombok.Setter;
 
 public class Industry {
   
   @Getter
+  @Setter
   private int code;
   
   @Getter
+  @Setter
   private String name;
-  
-  public Industry(int code, String name) {
-    this.code = code;
-    this.name = name;
-  }
   
 }

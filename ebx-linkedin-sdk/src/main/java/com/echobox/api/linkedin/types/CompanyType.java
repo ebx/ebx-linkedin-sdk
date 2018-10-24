@@ -16,7 +16,7 @@ public enum CompanyType {
   PARTNERSHIP("S");
   
   @Getter
-  private String code;
+  private final String code;
   
   CompanyType(String code) {
     this.code = code;

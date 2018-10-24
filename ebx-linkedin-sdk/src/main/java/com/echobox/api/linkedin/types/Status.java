@@ -13,7 +13,7 @@ public enum Status {
   ACQUIRED("ACQ");
   
   @Getter
-  private String code;
+  private final String code;
   
   Status(String code) {
     this.code = code;
