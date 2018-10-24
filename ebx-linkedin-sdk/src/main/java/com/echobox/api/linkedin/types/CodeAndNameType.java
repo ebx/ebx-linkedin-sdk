@@ -3,14 +3,19 @@ package com.echobox.api.linkedin.types;
 import lombok.Getter;
 import lombok.Setter;
 
-public class Industry {
+/**
+ * Code and name model wrapper
+ * @author Joanna
+ *
+ */
+public class CodeAndNameType {
   
   @Getter
   @Setter
-  private int code;
+  private String code;
   
   @Getter
   @Setter
   private String name;
-  
+
 }

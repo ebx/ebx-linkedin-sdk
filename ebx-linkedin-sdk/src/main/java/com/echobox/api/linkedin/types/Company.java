@@ -5,112 +5,156 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
-public class Company extends LinkedInType {
+/**
+ * The company's profile model type
+ * @see <a href="https://developer.linkedin.com/docs/fields/company-profile">Company Profile</a>
+ * for more informatiom
+ * @author Joanna
+ *
+ */
+public class Company extends LinkedInNameType {
   
-  @Getter
-  @Setter
-  private String name;
-  
+  /**
+   * The unique string identifier of a company.
+   */
   @Getter
   @Setter
   private String universalName;
   
+  /**
+   * Company email domains.
+   */
   @Getter
   @Setter
-  private String emailDomains;
+  private List<String> emailDomains;
   
-  private String rawCompanyType;
-  
+  /**
+   * The type of company.
+   * @see <a href="https://developer.linkedin.com/docs/fields/company-profile">Company types</a>
+   * for more information
+   */
   @Getter
   @Setter
-  private CompanyType companyType;
+  private CodeAndNameType companyType;
   
+  /**
+   * Company ticker identification for the stock exchange. Available only for public companies.
+   */
   @Getter
   @Setter
   private String ticker;
   
+  /**
+   * Company web site address.
+   */
   @Getter
   @Setter
   private String websiteURL;
   
+  /**
+   * A collection containing a code and name pertaining to the company's industry. 
+   * @see <a href="https://developer.linkedin.com/docs/reference/industry-codes">Industry Codes</a>
+   * for the list of industries available.
+   */
   @Getter
   @Setter
-  private List<Industry> industries;
+  private List<CodeAndNameType> industries;
   
-  private String rawStatus;
-  
+  /**
+   * Company status.
+   * @see <a href="https://developer.linkedin.com/docs/fields/company-profile">status</a> for more
+   * information
+   */
   @Getter
   @Setter
-  private Status status;
+  private CodeAndNameType status;
   
+  /**
+   * URL for the company logo in JPG format.
+   */
   @Getter
   @Setter
   private String logoURL;
   
+  /**
+   * URL for the company logo in a square format.
+   */
   @Getter
   @Setter
   private String squareLogoURL;
   
+  /**
+   * URL for the company blog.
+   */
   @Getter
   @Setter
   private String blogRSSURL;
   
+  /**
+   * Handle for the company Twitter feed.
+   */
   @Getter
   @Setter
   private long twitterId;
   
+  /**
+   * Number range of employees at the company.
+   * @see <a href="https://developer.linkedin.com/docs/fields/company-profile">
+   * employee-count-range</a> for more information
+   */
   @Getter
   @Setter
-  private String employeeCountRange;
+  private CodeAndNameType employeeCountRange;
   
+  /**
+   * Company specialties. Retrieves information from string input.
+   */
   @Getter
   @Setter
-  private String specialities;
+  private List<String> specialities;
   
+  /**
+   * Company location.
+   */
   @Getter
   @Setter
   private List<Location> locations;
   
+  /**
+   * Company description. Limit of 500 characters.
+   */
   @Getter
   @Setter
   private String description;
   
-  private String rawStockExchange;
-  
+  /**
+   * Stock exchange the company is in. Available only for public companies.
+   * @see <a href="https://developer.linkedin.com/docs/fields/company-profile">stock-exchange</a>
+   * for more information
+   */
   @Getter
   @Setter
-  private StockExchange stockExchange;
+  private CodeAndNameType stockExchange;
   
+  /**
+   * Year listed for the company's founding.
+   */
   @Getter
   @Setter
-  private String endYear;
+  private int foundedYear;
   
+  /**
+   * Year listed for when the company closed or was acquired by another.
+   */
+  @Getter
+  @Setter
+  private int endYear;
+  
+  /**
+   * The number of followers for the company's profile.
+   */
   @Getter
   @Setter
   private int numFollowers;
-  
-  /**
-   * Creates the stock CompanyType enum from the raw string and populates the field.
-   * Should be called when the JSON is mapped to the object
-   */
-  private void createCompanyType() {
-    companyType = CompanyType.fromCode(rawCompanyType);
-  }
-  
-  /**
-   * Creates the Status enum from the raw string and populates the field.
-   * Should be called when the JSON is mapped to the object
-   */
-  private void createStatus() {
-    status = Status.fromCode(rawStatus);
-  }
-
-  /**
-   * Creates the StockExchange enum from the raw string and populates the field.
-   * Should be called when the JSON is mapped to the object
-   */
-  private void createStockExchange() {
-    stockExchange = StockExchange.fromCode(rawStockExchange);
-  }
 
 }
