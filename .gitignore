@@ -24,3 +24,10 @@ hs_err_pid*
 
 # Target generated files
 target/*
+*/target/
+
+# classpath and project files
+*/.classpath
+.settings/
+*/.project
+*/.checkstyle
