@@ -18,39 +18,31 @@
 package com.echobox.api.linkedin.types;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 /**
- * Status type
+ * StockExchange
  * @author Joanna
  *
  */
-@RequiredArgsConstructor
-public enum StatusType implements CodeType<String> {
+public enum StockExchange implements CodeType<Integer> {
   
-  OPERATING("OPR"),
-  OPERATING_SUBSIDIARY("OPS"),
-  REORGANISING("RRG"),
-  OUT_OF_BUSINESS("OOB"),
-  ACQUIRED("ACQ");
+  ASE(1, "American Stock Exchange"),
+  NYS(2, "New York Stock Exchange"),
+  NMS(3, "NASDAQ"),
+  LSE(4, "London Stock Exchange"),
+  FRA(5, "Frankfurt Stock Exchange"),
+  GER(6, "XETRA Stock Exchange"),
+  PAR(7, "Euronext Paris");
   
   @Getter
-  private final String code;
+  private final Integer code;
   
-  /**
-   * Convert the provided code into a status type
-   *
-   * @param code the code
-   * @return if successful the desired status type otherwise null
-   */
-  public static StatusType fromCode(String code) {
-    for (StatusType statusType : StatusType.values()) {
-      if (statusType.getCode().equals(code)) {
-        return statusType;
-      }
-    }
-
-    return null;
+  @Getter
+  private String name;
+  
+  StockExchange(int code, String name) {
+    this.code = code;
+    this.name = name;
   }
 
 }

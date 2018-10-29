@@ -21,36 +21,30 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Status type
+ * EmployeeCountRange
  * @author Joanna
  *
  */
 @RequiredArgsConstructor
-public enum StatusType implements CodeType<String> {
+public enum EmployeeCountRange implements CodeType<String> {
   
-  OPERATING("OPR"),
-  OPERATING_SUBSIDIARY("OPS"),
-  REORGANISING("RRG"),
-  OUT_OF_BUSINESS("OOB"),
-  ACQUIRED("ACQ");
+  XXXS("A", 0, 1),
+  XXS("B", 2, 10),
+  XS("C", 11, 50),
+  S("D", 51, 200),
+  M("E", 201, 500),
+  L("F", 501, 1000),
+  XL("G", 1001, 5000),
+  XXL("H", 5001, 10000),
+  XXXL("I", 10001, null);
   
   @Getter
   private final String code;
   
-  /**
-   * Convert the provided code into a status type
-   *
-   * @param code the code
-   * @return if successful the desired status type otherwise null
-   */
-  public static StatusType fromCode(String code) {
-    for (StatusType statusType : StatusType.values()) {
-      if (statusType.getCode().equals(code)) {
-        return statusType;
-      }
-    }
-
-    return null;
-  }
+  @Getter
+  public final Integer min;
+  
+  @Getter
+  public final Integer max;
 
 }

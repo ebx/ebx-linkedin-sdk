@@ -22,6 +22,7 @@ import lombok.Setter;
 
 /**
  * Code and name model wrapper
+ * @param <C> code type
  * @author Joanna
  *
  */

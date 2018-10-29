@@ -121,7 +121,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
-  private CodeAndNameType employeeCountRange;
+  private CodeAndNameType<EmployeeCountRange> employeeCountRange;
 
   /**
    * Company specialties. Retrieves information from string input.
@@ -151,7 +151,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
-  private CodeAndNameType stockExchange;
+  private CodeAndNameType<StockExchange> stockExchange;
 
   /**
    * Year listed for the company's founding.
