@@ -25,7 +25,7 @@ import lombok.Setter;
  * @author Joanna
  *
  */
-public abstract class LinkedInNameType extends LinkedInIdType {
+public abstract class LinkedInIdAndNameType extends LinkedInIdType {
   
   /**
    * The name of the type

@@ -25,14 +25,19 @@ import lombok.Setter;
  * @author Joanna
  *
  */
-public class CodeAndNameType {
+public class CodeAndNameType<C extends CodeType<?>> {
   
+  /**
+   * If the code type returned does not exist, it can potentially be null
+   */
   @Getter
   @Setter
+  private C codeType;
+  
+  @Getter
   private String code;
   
   @Getter
-  @Setter
   private String name;
 
 }

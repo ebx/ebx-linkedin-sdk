@@ -29,7 +29,7 @@ import java.util.List;
  * @author Joanna
  *
  */
-public class Company extends LinkedInNameType {
+public class Company extends LinkedInIdAndNameType {
 
   /**
    * The unique string identifier of a company.
@@ -52,7 +52,7 @@ public class Company extends LinkedInNameType {
    */
   @Getter
   @Setter
-  private CodeAndNameType companyType;
+  private CodeAndNameType<CompanyType> companyType;
 
   /**
    * Company ticker identification for the stock exchange. Available only for public companies.
@@ -75,7 +75,7 @@ public class Company extends LinkedInNameType {
    */
   @Getter
   @Setter
-  private List<CodeAndNameType> industries;
+  private List<CodeAndNameType<IndustryCode>> industries;
 
   /**
    * Company status.
@@ -84,7 +84,7 @@ public class Company extends LinkedInNameType {
    */
   @Getter
   @Setter
-  private CodeAndNameType status;
+  private CodeAndNameType<StatusType> status;
 
   /**
    * URL for the company logo in JPG format.

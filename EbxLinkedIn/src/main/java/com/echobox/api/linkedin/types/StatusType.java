@@ -18,20 +18,39 @@
 package com.echobox.api.linkedin.types;
 
 import lombok.Getter;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
 /**
- * Linked in types that contain an id field
+ * Status type
  * @author Joanna
  *
  */
-public abstract class LinkedInIdType {
+@RequiredArgsConstructor
+public enum StatusType implements CodeType {
+  
+  OPERATING("OPR"),
+  OPERATING_SUBSIDIARY("OPS"),
+  REORGANISING("RRG"),
+  OUT_OF_BUSINESS("OOB"),
+  ACQUIRED("ACQ");
+  
+  @Getter
+  private final String code;
   
   /**
-   * Unique internal numeric identifier
+   * Convert the provided code into a status type
+   *
+   * @param code the code
+   * @return if successful the desired status type otherwise null
    */
-  @Getter
-  @Setter
-  private long id;
+  public static StatusType fromCode(String code) {
+    for (StatusType statusType : StatusType.values()) {
+      if (statusType.getCode().equals(code)) {
+        return statusType;
+      }
+    }
+
+    return null;
+  }
 
 }

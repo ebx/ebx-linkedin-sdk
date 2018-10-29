@@ -18,20 +18,42 @@
 package com.echobox.api.linkedin.types;
 
 import lombok.Getter;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
 /**
- * Linked in types that contain an id field
+ * Company type
  * @author Joanna
  *
  */
-public abstract class LinkedInIdType {
+@RequiredArgsConstructor
+public enum CompanyType implements CodeType<String> {
+  
+  PUBLIC_COMPANY("C"),
+  EDUCATIONAL("D"),
+  SELF_EMPLOYED("E"),
+  GOVERNMENT_AGENCY("G"),
+  NON_PROFIT("N"),
+  SELF_OWNED("O"),
+  PRIVATELY_HELD("P"),
+  PARTNERSHIP("S");
+  
+  @Getter
+  private final String code;
   
   /**
-   * Unique internal numeric identifier
+   * Convert the provided code into a company type
+   *
+   * @param code the code
+   * @return if successful the desired company type otherwise null
    */
-  @Getter
-  @Setter
-  private long id;
+  public static CompanyType fromCode(String code) {
+    for (CompanyType companyType : CompanyType.values()) {
+      if (companyType.getCode().equals(code)) {
+        return companyType;
+      }
+    }
+
+    return null;
+  }
 
 }
