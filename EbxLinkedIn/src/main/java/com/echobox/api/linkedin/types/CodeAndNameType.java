@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import lombok.Getter;
 
 /**
@@ -34,19 +36,25 @@ public class CodeAndNameType<C extends CodeType<?>> {
   private C codeType;
   
   @Getter
+  @LinkedIn
   private String code;
   
   @Getter
+  @LinkedIn
   private String name;
+
+  public CodeAndNameType() {}
   
   /**
    * Initialise code name name tyoe
    * @param codeType code type
    */
-  public CodeAndNameType(C codeType) {
-    this.codeType = codeType;
-    this.code = codeType.getCode().toString();
-    this.name = codeType.getName();
+  public CodeAndNameType build(C codeType) {
+    CodeAndNameType<CodeType<?>> codeAndNameType = new CodeAndNameType<>();
+    codeAndNameType.codeType = codeType;
+    codeAndNameType.code = codeType.getCode().toString();
+    codeAndNameType.name = codeType.getName();
+    return codeAndNameType;
   }
 
 }

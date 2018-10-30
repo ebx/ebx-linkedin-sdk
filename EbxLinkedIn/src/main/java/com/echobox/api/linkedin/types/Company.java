@@ -20,6 +20,8 @@ package com.echobox.api.linkedin.types;
 import lombok.Getter;
 import lombok.Setter;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import java.util.List;
 
 /**
@@ -36,6 +38,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private String universalName;
 
   /**
@@ -43,6 +46,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private List<String> emailDomains;
 
   /**
@@ -52,6 +56,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private CodeAndNameType<CompanyType> companyType;
 
   /**
@@ -59,6 +64,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private String ticker;
 
   /**
@@ -66,6 +72,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private String websiteURL;
 
   /**
@@ -75,6 +82,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private List<CodeAndNameType<IndustryCode>> industries;
 
   /**
@@ -84,6 +92,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private CodeAndNameType<StatusType> status;
 
   /**
@@ -91,6 +100,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private String logoURL;
 
   /**
@@ -98,6 +108,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private String squareLogoURL;
 
   /**
@@ -105,6 +116,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private String blogRSSURL;
 
   /**
@@ -112,6 +124,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private long twitterId;
 
   /**
@@ -121,6 +134,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private CodeAndNameType<EmployeeCountRange> employeeCountRange;
 
   /**
@@ -128,6 +142,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private List<String> specialities;
 
   /**
@@ -135,6 +150,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private List<Location> locations;
 
   /**
@@ -142,6 +158,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private String description;
 
   /**
@@ -151,6 +168,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private CodeAndNameType<StockExchange> stockExchange;
 
   /**
@@ -158,6 +176,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private int foundedYear;
 
   /**
@@ -165,6 +184,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private int endYear;
 
   /**
@@ -172,6 +192,9 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private int numFollowers;
+  
+  // TODO: after the JSON has been mapped, ensure the enums are populated...
 
 }

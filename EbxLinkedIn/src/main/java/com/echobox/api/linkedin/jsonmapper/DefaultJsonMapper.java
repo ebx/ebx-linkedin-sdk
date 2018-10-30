@@ -133,8 +133,14 @@ public class DefaultJsonMapper implements JsonMapper {
         return null;
       }
 
-      JsonObject jsonObject = GSON.fromJson(json, new TypeToken<JsonObject>() {}.getType());
-      T instance = createInstance(type);
+      JsonObject jsonObject = GSON.fromJson(json, new TypeToken<JsonObject>() {}.getType());        
+      T instance;
+      try {
+        instance = createInstance(type);
+      } catch (Exception ex) {
+        System.out.println(json);
+        throw ex;
+      }
 
       if (instance instanceof JsonObject) {
         // Are we asked to map to JsonObject? If so, short-circuit right away.
@@ -293,8 +299,10 @@ public class DefaultJsonMapper implements JsonMapper {
     }
     if (List.class.equals(type)) {
       // LinkedIn my wrap arrays as objects, need to extract the array out
-      return toJavaList(rawValue.toString(), ReflectionUtils.getFirstParameterizedTypeArgument(
-          fieldWithAnnotation.getField()));
+      Field field = fieldWithAnnotation.getField();
+      Class<?> firstParameterizedTypeArgument = ReflectionUtils.getFirstParameterizedTypeArgument(
+          field);
+      return toJavaList(rawValue.toString(), firstParameterizedTypeArgument);
     }
     if (Map.class.equals(type)) {
       return convertJsonObjectToMap(rawValue.toString(), fieldWithAnnotation.getField());
@@ -570,7 +578,13 @@ public class DefaultJsonMapper implements JsonMapper {
         JsonElement totalElement = jsonObject.get("_total");
         if (totalElement != null) {
           int total = totalElement.getAsInt();
-          JsonArray valuesArray = jsonObject.getAsJsonArray("values");
+          JsonElement values = jsonObject.get("values");
+          if (total == 0 || values == null) {
+            // TODO: log 
+            System.out.println("None");
+            return new ArrayList<>();
+          }
+          JsonArray valuesArray = values.getAsJsonArray();
           if (total != valuesArray.size()) {
             // TODO: add logging, something's unexpected has happened, carrying on...
           }

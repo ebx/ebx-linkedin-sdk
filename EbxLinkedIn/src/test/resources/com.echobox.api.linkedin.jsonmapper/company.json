@@ -1,0 +1,77 @@
+{
+    "companyType": {
+        "code": "C",
+        "name": "Public Company"
+    },
+    "description": "Some sort of description",
+    "emailDomains": {
+        "_total": 0
+    },
+    "employeeCountRange": {
+        "code": "C",
+        "name": "11-50"
+    },
+    "foundedYear": 2018,
+    "id": 123,
+    "industries": {
+        "_total": 1,
+        "values": [
+            {
+                "code": "137",
+                "name": "Human Resources"
+            }
+        ]
+    },
+    "locations": {
+        "_total": 2,
+        "values": [
+            {
+                "address": {
+                    "city": "Goddard",
+                    "countryCode": "us",
+                    "postalCode": "67051",
+                    "regionCode": 904,
+                    "state": "Kansas",
+                    "street1": "12 Swanee Dr"
+                },
+                "contactInfo": {},
+                "isActive": true,
+                "isHeadquarters": true
+            },
+            {
+                "address": {
+                    "city": "Los Altos Hills",
+                    "countryCode": "us",
+                    "postalCode": "94857",
+                    "regionCode": 0,
+                    "state": "California",
+                    "street1": "12345 Gigli Ct"
+                },
+                "contactInfo": {},
+                "isActive": true,
+                "isHeadquarters": false
+            }
+        ]
+    },
+    "logoUrl": "https://media.licdn.com/dms/image/C560BAQG94DRkxZXHUg/company-logo_200_200/0?e=1548288000&v=beta&t=Y1zXBOEPH8S7a1SU0qv-uXW8aKCgXR4egM5KQdnnZTg",
+    "name": "Test \"Quote\"​",
+    "numFollowers": 959,
+    "specialties": {
+        "_total": 5,
+        "values": [
+            "slacking",
+            "computer science",
+            "IT",
+            "DevTest",
+            "bug bash"
+        ]
+    },
+    "squareLogoUrl": "https://media.licdn.com/dms/image/C560BAQG94DRkxZXHUg/company-logo_200_200/0?e=1548288000&v=beta&t=Y1zXBOEPH8S7a1SU0qv-uXW8aKCgXR4egM5KQdnnZTg",
+    "status": {
+        "code": "ACQ",
+        "name": "Acquired"
+    },
+    "twitterId": "",
+    "universalName": "test",
+    "websiteUrl": "http://123.com"
+}
