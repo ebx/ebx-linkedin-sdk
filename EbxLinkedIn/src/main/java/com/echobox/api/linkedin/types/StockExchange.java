@@ -44,5 +44,20 @@ public enum StockExchange implements CodeType<Integer> {
     this.code = code;
     this.name = name;
   }
+  
+  /**
+   * Convert the provided code into a status type
+   *
+   * @param code the code
+   * @return if successful the desired status type otherwise null
+   */
+  public static StockExchange fromCode(String code) {
+    for (StockExchange stockExchange : StockExchange.values()) {
+      if (stockExchange.getCode().equals(code)) {
+        return stockExchange;
+      }
+    }
+    return null;
+  }
 
 }

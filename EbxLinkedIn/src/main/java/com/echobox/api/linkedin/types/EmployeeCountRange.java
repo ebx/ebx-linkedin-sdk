@@ -28,23 +28,41 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum EmployeeCountRange implements CodeType<String> {
   
-  XXXS("A", 0, 1),
-  XXS("B", 2, 10),
-  XS("C", 11, 50),
-  S("D", 51, 200),
-  M("E", 201, 500),
-  L("F", 501, 1000),
-  XL("G", 1001, 5000),
-  XXL("H", 5001, 10000),
-  XXXL("I", 10001, null);
+  XXXS("A", "1", null, 1),
+  XXS("B", "2-10", 2, 10),
+  XS("C", "11-50", 11, 50),
+  S("D", "51-200", 51, 200),
+  M("E", "201-500", 201, 500),
+  L("F", "501-1000", 501, 1000),
+  XL("G", "1001-5000", 1001, 5000),
+  XXL("H", "5001-10,000", 5001, 10000),
+  XXXL("I", "10,000+", 10001, null);
   
   @Getter
   private final String code;
+  
+  @Getter
+  private final String name;
   
   @Getter
   public final Integer min;
   
   @Getter
   public final Integer max;
+  
+  /**
+   * Convert the provided code into a company type
+   *
+   * @param code the code
+   * @return if successful the desired company type otherwise null
+   */
+  public static EmployeeCountRange fromCode(String code) {
+    for (EmployeeCountRange employeeCountRange : EmployeeCountRange.values()) {
+      if (employeeCountRange.getCode().equals(code)) {
+        return employeeCountRange;
+      }
+    }
+    return null;
+  }
 
 }

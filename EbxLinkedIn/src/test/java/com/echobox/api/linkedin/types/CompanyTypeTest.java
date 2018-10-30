@@ -17,47 +17,25 @@
 
 package com.echobox.api.linkedin.types;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import static org.junit.Assert.assertEquals;
 
-import org.apache.commons.lang3.text.WordUtils;
+import org.junit.Test;
 
 /**
- * Status type
+ * Company type test
  * @author Joanna
  *
  */
-@RequiredArgsConstructor
-public enum StatusType implements CodeType<String> {
+public class CompanyTypeTest {
   
-  OPERATING("OPR"),
-  OPERATING_SUBSIDIARY("OPS"),
-  REORGANISING("RRG"),
-  OUT_OF_BUSINESS("OOB"),
-  ACQUIRED("ACQ");
-  
-  @Getter
-  private final String code;
-  
-  @Override
-  public String getName() {
-    String name = toString();
-    return WordUtils.capitalize(name.replaceAll("_", " ").toLowerCase());
+  @Test
+  public void testGetName() {
+    assertEquals("Educational", CompanyType.EDUCATIONAL.getName());
   }
   
-  /**
-   * Convert the provided code into a status type
-   *
-   * @param code the code
-   * @return if successful the desired status type otherwise null
-   */
-  public static StatusType fromCode(String code) {
-    for (StatusType statusType : StatusType.values()) {
-      if (statusType.getCode().equals(code)) {
-        return statusType;
-      }
-    }
-    return null;
+  @Test
+  public void testGetNameWithUnderscore() {
+    assertEquals("Government Agency", CompanyType.GOVERNMENT_AGENCY.getName());
   }
 
 }

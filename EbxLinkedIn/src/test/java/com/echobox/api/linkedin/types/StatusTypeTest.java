@@ -17,47 +17,25 @@
 
 package com.echobox.api.linkedin.types;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import static org.junit.Assert.assertEquals;
 
-import org.apache.commons.lang3.text.WordUtils;
+import org.junit.Test;
 
 /**
- * Status type
+ * Status type test
  * @author Joanna
  *
  */
-@RequiredArgsConstructor
-public enum StatusType implements CodeType<String> {
+public class StatusTypeTest {
   
-  OPERATING("OPR"),
-  OPERATING_SUBSIDIARY("OPS"),
-  REORGANISING("RRG"),
-  OUT_OF_BUSINESS("OOB"),
-  ACQUIRED("ACQ");
-  
-  @Getter
-  private final String code;
-  
-  @Override
-  public String getName() {
-    String name = toString();
-    return WordUtils.capitalize(name.replaceAll("_", " ").toLowerCase());
+  @Test
+  public void testGetName() {
+    assertEquals("Acquired", StatusType.ACQUIRED.getName());
   }
   
-  /**
-   * Convert the provided code into a status type
-   *
-   * @param code the code
-   * @return if successful the desired status type otherwise null
-   */
-  public static StatusType fromCode(String code) {
-    for (StatusType statusType : StatusType.values()) {
-      if (statusType.getCode().equals(code)) {
-        return statusType;
-      }
-    }
-    return null;
+  @Test
+  public void testGetNameWithUnderscore() {
+    assertEquals("Operating Subsidiary", StatusType.OPERATING_SUBSIDIARY.getName());
   }
 
 }

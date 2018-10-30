@@ -20,6 +20,8 @@ package com.echobox.api.linkedin.types;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 /**
  * Company type
  * @author Joanna
@@ -40,6 +42,12 @@ public enum CompanyType implements CodeType<String> {
   @Getter
   private final String code;
   
+  @Override
+  public String getName() {
+    String name = toString();
+    return WordUtils.capitalize(name.replaceAll("_", " ").toLowerCase());
+  }
+  
   /**
    * Convert the provided code into a company type
    *
@@ -52,7 +60,6 @@ public enum CompanyType implements CodeType<String> {
         return companyType;
       }
     }
-
     return null;
   }
 

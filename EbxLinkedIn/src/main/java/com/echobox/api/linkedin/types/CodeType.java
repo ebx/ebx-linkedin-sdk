@@ -30,5 +30,11 @@ public interface CodeType<T> {
    * @return code
    */
   T getCode();
+  
+  /**
+   * Get the name
+   * @return name
+   */
+  String getName();
 
 }
