@@ -1,2 +1,5 @@
 language: java
+sudo: false # faster builds
+
+script: "mvn clean package -Dmaven.test.failure.ignore=true"
 
