@@ -18,35 +18,23 @@
 package com.echobox.api.linkedin.types;
 
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Code and name model wrapper
- * @param <C> code type
  * @author Joanna
  *
  */
-public class CodeAndNameType<C extends CodeType<?>> {
-  
-  /**
-   * If the code type returned does not exist, it can potentially be null
-   */
-  @Getter
-  private C codeType;
+@RequiredArgsConstructor
+public class CodeAndNameType {
   
   @Getter
+  @NonNull
   private String code;
   
   @Getter
+  @NonNull
   private String name;
-  
-  /**
-   * Initialise code name name tyoe
-   * @param codeType code type
-   */
-  public CodeAndNameType(C codeType) {
-    this.codeType = codeType;
-    this.code = codeType.getCode().toString();
-    this.name = codeType.getName();
-  }
 
 }

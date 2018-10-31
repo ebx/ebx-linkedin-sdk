@@ -18,7 +18,6 @@
 package com.echobox.api.linkedin.types;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
@@ -35,14 +34,12 @@ public class Company extends LinkedInIdAndNameType {
    * The unique string identifier of a company.
    */
   @Getter
-  @Setter
   private String universalName;
 
   /**
    * Company email domains.
    */
   @Getter
-  @Setter
   private List<String> emailDomains;
 
   /**
@@ -51,21 +48,26 @@ public class Company extends LinkedInIdAndNameType {
    * for more information
    */
   @Getter
-  @Setter
-  private CodeAndNameType<CompanyType> companyType;
+  private CodeAndNameType companyTypeRaw;
+  
+  /**
+   * The type of company as an email.
+   * @see <a href="https://developer.linkedin.com/docs/fields/company-profile">Company types</a>
+   * for more information
+   */
+  @Getter
+  private CompanyType companyType;
 
   /**
    * Company ticker identification for the stock exchange. Available only for public companies.
    */
   @Getter
-  @Setter
   private String ticker;
 
   /**
    * Company web site address.
    */
   @Getter
-  @Setter
   private String websiteURL;
 
   /**
@@ -74,8 +76,15 @@ public class Company extends LinkedInIdAndNameType {
    * for the list of industries available.
    */
   @Getter
-  @Setter
-  private List<CodeAndNameType<IndustryCode>> industries;
+  private List<CodeAndNameType> industriesRaw;
+  
+  /**
+   * A collection containing a code and name pertaining to the company's industry. 
+   * @see <a href="https://developer.linkedin.com/docs/reference/industry-codes">Industry Codes</a>
+   * for the list of industries available.
+   */
+  @Getter
+  private List<IndustryCode> industries;
 
   /**
    * Company status.
@@ -83,35 +92,33 @@ public class Company extends LinkedInIdAndNameType {
    * information
    */
   @Getter
-  @Setter
-  private CodeAndNameType<StatusType> status;
+  private CodeAndNameType statusRaw;
+  
+  @Getter
+  private StatusType status;
 
   /**
    * URL for the company logo in JPG format.
    */
   @Getter
-  @Setter
   private String logoURL;
 
   /**
    * URL for the company logo in a square format.
    */
   @Getter
-  @Setter
   private String squareLogoURL;
 
   /**
    * URL for the company blog.
    */
   @Getter
-  @Setter
   private String blogRSSURL;
 
   /**
    * Handle for the company Twitter feed.
    */
   @Getter
-  @Setter
   private long twitterId;
 
   /**
@@ -120,28 +127,32 @@ public class Company extends LinkedInIdAndNameType {
    * employee-count-range</a> for more information
    */
   @Getter
-  @Setter
-  private CodeAndNameType<EmployeeCountRange> employeeCountRange;
+  private CodeAndNameType employeeCountRangeRaw;
+  
+  /**
+   * Number range of employees at the company.
+   * @see <a href="https://developer.linkedin.com/docs/fields/company-profile">
+   * employee-count-range</a> for more information
+   */
+  @Getter
+  private EmployeeCountRange employeeCountRange;
 
   /**
    * Company specialties. Retrieves information from string input.
    */
   @Getter
-  @Setter
   private List<String> specialities;
 
   /**
    * Company location.
    */
   @Getter
-  @Setter
   private List<Location> locations;
 
   /**
    * Company description. Limit of 500 characters.
    */
   @Getter
-  @Setter
   private String description;
 
   /**
@@ -150,28 +161,32 @@ public class Company extends LinkedInIdAndNameType {
    * for more information
    */
   @Getter
-  @Setter
-  private CodeAndNameType<StockExchange> stockExchange;
+  private CodeAndNameType stockExchangeRaw;
+  
+  /**
+   * Stock exchange the company is in. Available only for public companies.
+   * @see <a href="https://developer.linkedin.com/docs/fields/company-profile">stock-exchange</a>
+   * for more information
+   */
+  @Getter
+  private StockExchange stockExchange;
 
   /**
    * Year listed for the company's founding.
    */
   @Getter
-  @Setter
   private int foundedYear;
 
   /**
    * Year listed for when the company closed or was acquired by another.
    */
   @Getter
-  @Setter
   private int endYear;
 
   /**
    * The number of followers for the company's profile.
    */
   @Getter
-  @Setter
   private int numFollowers;
 
 }
