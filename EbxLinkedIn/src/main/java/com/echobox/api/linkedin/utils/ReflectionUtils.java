@@ -206,8 +206,11 @@ public final class ReflectionUtils {
 
     ParameterizedType parameterizedType = (ParameterizedType) type;
     Type firstTypeArgument = parameterizedType.getActualTypeArguments()[i];
-    if (firstTypeArgument instanceof Enum) {
-      return (Class<? extends Enum>) type;
+    try {
+      Class<?> returnClass = (Class<?>) firstTypeArgument;      
+    } catch (Exception ex) {
+      
+      System.out.println(ex);
     }
     return (firstTypeArgument instanceof Class) ? (Class<?>) firstTypeArgument : null;
   }

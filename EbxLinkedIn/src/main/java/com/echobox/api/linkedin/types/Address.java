@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,6 +34,7 @@ public class Address {
    */
   @Getter
   @Setter
+  @LinkedIn("street1")
   private String firstStreet;
   
   /**
@@ -39,6 +42,7 @@ public class Address {
    */
   @Getter
   @Setter
+  @LinkedIn("street2")
   private String secondStreet;
   
   /**
@@ -46,6 +50,7 @@ public class Address {
    */
   @Getter
   @Setter
+  @LinkedIn
   private String city;
   
   /**
@@ -53,6 +58,7 @@ public class Address {
    */
   @Getter
   @Setter
+  @LinkedIn
   private String state;
   
   /**
@@ -68,7 +74,7 @@ public class Address {
    */
   @Getter
   @Setter
-  private int countryCode;
+  private String countryCode;
   
   /**
    * Region code for location.

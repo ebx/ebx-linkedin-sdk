@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,6 +34,7 @@ public class ContactInfo {
    */
   @Getter
   @Setter
+  @LinkedIn
   private String phoneOne;
 
   /**
@@ -39,6 +42,7 @@ public class ContactInfo {
    */
   @Getter
   @Setter
+  @LinkedIn
   private String phoneTwo;
 
   /**
@@ -46,5 +50,6 @@ public class ContactInfo {
    */
   @Getter
   @Setter
+  @LinkedIn
   private String fax;
 }

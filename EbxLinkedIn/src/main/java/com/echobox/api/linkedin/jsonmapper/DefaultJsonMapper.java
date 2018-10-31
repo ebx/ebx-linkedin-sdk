@@ -151,6 +151,7 @@ public class DefaultJsonMapper implements JsonMapper {
       // out of the JSON object and put it in the Java object
       for (FieldWithAnnotation<LinkedIn> fieldWithAnnotation : fieldsWithAnnotation) {
         String facebookFieldName = getLinkedInFieldName(fieldWithAnnotation);
+        System.out.println(facebookFieldName);
 
         if (!jsonObject.has(facebookFieldName)) {
           // if (MAPPER_LOGGER.isTraceEnabled()) {
@@ -609,7 +610,8 @@ public class DefaultJsonMapper implements JsonMapper {
 
   private <T> List<T> toListInternal(String json, Class<T> type) {
     try {
-      JsonArray jsonArray = GSON.fromJson(json, new TypeToken<JsonArray>() {}.getType());
+      JsonObject jsonObject = GSON.fromJson(json, new TypeToken<JsonObject>() {}.getType());
+      JsonArray jsonArray = jsonObject.get("values").getAsJsonArray();
       return StreamSupport.stream(jsonArray.spliterator(), false)
           .map(jsonElem -> toJavaObject(jsonElem.toString(), type))
           .collect(Collectors.toList());

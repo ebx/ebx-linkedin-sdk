@@ -46,8 +46,8 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
-  @LinkedIn
-  private List<String> emailDomains;
+  @LinkedIn("emailDomains")
+  private List<String> emailDomainsRaw;
 
   /**
    * The type of company.
@@ -57,7 +57,7 @@ public class Company extends LinkedInIdAndNameType {
   @Getter
   @Setter
   @LinkedIn
-  private CodeAndNameType<CompanyType> companyType;
+  private CodeAndNameType companyType;
 
   /**
    * Company ticker identification for the stock exchange. Available only for public companies.
@@ -82,8 +82,11 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @Setter
-  @LinkedIn
-  private List<CodeAndNameType<IndustryCode>> industries;
+  @LinkedIn("industries")
+  private List<CodeAndNameType> industriesRaw;
+  
+  @Getter
+  private List<IndustryCode> industries;
 
   /**
    * Company status.
@@ -93,7 +96,7 @@ public class Company extends LinkedInIdAndNameType {
   @Getter
   @Setter
   @LinkedIn
-  private CodeAndNameType<StatusType> status;
+  private CodeAndNameType status;
 
   /**
    * URL for the company logo in JPG format.
@@ -125,7 +128,7 @@ public class Company extends LinkedInIdAndNameType {
   @Getter
   @Setter
   @LinkedIn
-  private long twitterId;
+  private String twitterId;
 
   /**
    * Number range of employees at the company.
@@ -135,7 +138,7 @@ public class Company extends LinkedInIdAndNameType {
   @Getter
   @Setter
   @LinkedIn
-  private CodeAndNameType<EmployeeCountRange> employeeCountRange;
+  private CodeAndNameType employeeCountRange;
 
   /**
    * Company specialties. Retrieves information from string input.
@@ -169,7 +172,7 @@ public class Company extends LinkedInIdAndNameType {
   @Getter
   @Setter
   @LinkedIn
-  private CodeAndNameType<StockExchange> stockExchange;
+  private CodeAndNameType stockExchange;
 
   /**
    * Year listed for the company's founding.

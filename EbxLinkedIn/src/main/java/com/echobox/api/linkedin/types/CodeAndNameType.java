@@ -20,6 +20,7 @@ package com.echobox.api.linkedin.types;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Code and name model wrapper
@@ -27,13 +28,8 @@ import lombok.Getter;
  * @author Joanna
  *
  */
-public class CodeAndNameType<C extends CodeType<?>> {
-  
-  /**
-   * If the code type returned does not exist, it can potentially be null
-   */
-  @Getter
-  private C codeType;
+@RequiredArgsConstructor
+public class CodeAndNameType {
   
   @Getter
   @LinkedIn
@@ -42,19 +38,5 @@ public class CodeAndNameType<C extends CodeType<?>> {
   @Getter
   @LinkedIn
   private String name;
-
-  public CodeAndNameType() {}
-  
-  /**
-   * Initialise code name name tyoe
-   * @param codeType code type
-   */
-  public CodeAndNameType build(C codeType) {
-    CodeAndNameType<CodeType<?>> codeAndNameType = new CodeAndNameType<>();
-    codeAndNameType.codeType = codeType;
-    codeAndNameType.code = codeType.getCode().toString();
-    codeAndNameType.name = codeType.getName();
-    return codeAndNameType;
-  }
 
 }

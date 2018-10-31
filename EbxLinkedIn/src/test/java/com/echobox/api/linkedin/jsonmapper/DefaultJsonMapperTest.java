@@ -22,7 +22,7 @@ public class DefaultJsonMapperTest {
     String companyJSON = readFileToString(COMPANY_JSON);
     DefaultJsonMapper mapper = new DefaultJsonMapper();
     Company javaObject = mapper.toJavaObject(companyJSON, Company.class);
-    System.out.println();
+    
   }
   
   private String readFileToString(final String fileName) {

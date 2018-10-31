@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,6 +34,7 @@ public class Location {
    */
   @Getter
   @Setter
+  @LinkedIn
   private String description;
   
   /**
@@ -39,20 +42,23 @@ public class Location {
    */
   @Getter
   @Setter
-  private boolean isHeadQuarters;
+  @LinkedIn
+  private boolean isHeadquarters;
   
   /**
    * Valid values are true or false. A value of true matches the active location.
    */
   @Getter
   @Setter
-  private String isActive;
+  @LinkedIn
+  private boolean isActive;
   
   /**
    * Address of location.
    */
   @Getter
   @Setter
+  @LinkedIn
   private Address address;
   
   /**
@@ -60,5 +66,6 @@ public class Location {
    */
   @Getter
   @Setter
+  @LinkedIn
   private ContactInfo contactInfo;
 }
