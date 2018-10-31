@@ -20,6 +20,7 @@ package com.echobox.api.linkedin.types;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -28,16 +29,22 @@ import lombok.RequiredArgsConstructor;
  * @author Joanna
  *
  */
+@NoArgsConstructor
 @RequiredArgsConstructor
 public class CodeAndNameType {
   
   @Getter
-  @LinkedIn
   @NonNull
+  @LinkedIn
   private String code;
   
   @Getter
   @NonNull
+  @LinkedIn
   private String name;
+  
+  boolean hasNullFields() {
+    return code == null || name == null;
+  }
 
 }

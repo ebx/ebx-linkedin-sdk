@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types;
 
+import static com.echobox.api.linkedin.logging.LinkedInLogger.TYPE_LOGGER;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -60,6 +62,7 @@ public enum CompanyType implements CodeType<String> {
         return companyType;
       }
     }
+    TYPE_LOGGER.warn("Could not get company type from code " + code);
     return null;
   }
 

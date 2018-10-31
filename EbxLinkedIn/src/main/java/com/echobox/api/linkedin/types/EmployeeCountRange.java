@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types;
 
+import static com.echobox.api.linkedin.logging.LinkedInLogger.TYPE_LOGGER;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -62,6 +64,7 @@ public enum EmployeeCountRange implements CodeType<String> {
         return employeeCountRange;
       }
     }
+    TYPE_LOGGER.warn("Could not get employee count range from code " + code);
     return null;
   }
 

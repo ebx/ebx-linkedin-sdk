@@ -20,6 +20,8 @@ package com.echobox.api.linkedin.types;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import static com.echobox.api.linkedin.logging.LinkedInLogger.TYPE_LOGGER;
+
 import org.apache.commons.lang3.text.WordUtils;
 
 /**
@@ -57,6 +59,7 @@ public enum StatusType implements CodeType<String> {
         return statusType;
       }
     }
+    TYPE_LOGGER.warn("Could not get status type from code " + code);
     return null;
   }
 

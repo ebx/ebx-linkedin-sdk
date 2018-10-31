@@ -1,6 +1,9 @@
 package com.echobox.api.linkedin.jsonmapper;
 
+import static org.junit.Assert.assertEquals;
+
 import com.echobox.api.linkedin.types.Company;
+import com.echobox.api.linkedin.types.CompanyType;
 import com.google.common.io.Files;
 
 import org.junit.Test;
@@ -21,8 +24,10 @@ public class DefaultJsonMapperTest {
   public void testToJavaObject() {
     String companyJSON = readFileToString(COMPANY_JSON);
     DefaultJsonMapper mapper = new DefaultJsonMapper();
-    Company javaObject = mapper.toJavaObject(companyJSON, Company.class);
+    Company company = mapper.toJavaObject(companyJSON, Company.class);
     
+    assertEquals("test", company.getUniversalName());
+    assertEquals(CompanyType.PUBLIC_COMPANY, company.getCompanyType());
   }
   
   private String readFileToString(final String fileName) {

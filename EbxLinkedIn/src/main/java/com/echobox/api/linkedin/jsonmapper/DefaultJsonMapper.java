@@ -709,7 +709,7 @@ public class DefaultJsonMapper implements JsonMapper {
        * User beware: this will turn *anything* into a string, which might lead to results you don't
        * expect.
        */
-      return rawValue.toString();
+      return rawValue.toString().replaceAll("\"", "");
     }
 
     if (Integer.class.equals(type) || Integer.TYPE.equals(type)) {

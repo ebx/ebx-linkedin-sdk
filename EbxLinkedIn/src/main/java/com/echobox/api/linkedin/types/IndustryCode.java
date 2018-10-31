@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types;
 
+import static com.echobox.api.linkedin.logging.LinkedInLogger.TYPE_LOGGER;
+
 import lombok.Getter;
 
 /**
@@ -204,6 +206,7 @@ public enum IndustryCode implements CodeType<Integer> {
         return industryCode;
       }
     }
+    TYPE_LOGGER.warn("Could not get industry code from code " + code);
     return null;
   }
   

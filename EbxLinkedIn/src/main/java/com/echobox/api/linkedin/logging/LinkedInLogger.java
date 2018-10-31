@@ -41,6 +41,10 @@ public abstract class LinkedInLogger {
   public static final LinkedInLogger CLIENT_LOGGER;
 
   public static final LinkedInLogger VALUE_FACTORY_LOGGER;
+  
+  public static final LinkedInLogger TYPE_LOGGER;
+  
+  private static final String PACKAGE_NAME = "com.echobox.api.linkedin.";
 
   static {
     // define our logger class
@@ -48,11 +52,12 @@ public abstract class LinkedInLogger {
     LOGGER_CLASS = loggerClass;
 
     // create the loggers
-    HTTP_LOGGER = getLoggerInstance("com.restfb.HTTP");
-    MAPPER_LOGGER = getLoggerInstance("com.restfb.DefaultJsonMapper");
-    UTILS_LOGGER = getLoggerInstance("com.restfb.UTILITY");
-    CLIENT_LOGGER = getLoggerInstance("com.restfb.DefaultFacebookClient");
-    VALUE_FACTORY_LOGGER = getLoggerInstance("com.restfb.types.webhook.ChangeValueFactory");
+    HTTP_LOGGER = getLoggerInstance(PACKAGE_NAME + "HTTP");
+    MAPPER_LOGGER = getLoggerInstance(PACKAGE_NAME + "DefaultJsonMapper");
+    UTILS_LOGGER = getLoggerInstance(PACKAGE_NAME + "UTILITY");
+    CLIENT_LOGGER = getLoggerInstance(PACKAGE_NAME + "DefaultFacebookClient");
+    VALUE_FACTORY_LOGGER = getLoggerInstance(PACKAGE_NAME + "webhook.ChangeValueFactory");
+    TYPE_LOGGER = getLoggerInstance(PACKAGE_NAME + "TYPES");
   }
 
   public static LinkedInLogger getLoggerInstance(String logCategory) {
