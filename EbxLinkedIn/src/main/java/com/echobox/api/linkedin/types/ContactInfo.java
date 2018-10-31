@@ -20,7 +20,6 @@ package com.echobox.api.linkedin.types;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Contact info model
@@ -33,23 +32,20 @@ public class ContactInfo {
    * Company phone number for the location.
    */
   @Getter
-  @Setter
-  @LinkedIn
+  @LinkedIn("phone1")
   private String phoneOne;
 
   /**
    * Second company phone number for the location.
    */
   @Getter
-  @Setter
-  @LinkedIn
+  @LinkedIn("phone2")
   private String phoneTwo;
 
   /**
    * Company fax number for the location.
    */
   @Getter
-  @Setter
   @LinkedIn
   private String fax;
 }

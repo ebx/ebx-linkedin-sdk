@@ -1,0 +1,5 @@
+language: java
+sudo: false # faster builds
+
+script: "cd EbxLinkedIn && mvn clean package -Dmaven.test.failure.ignore=true"
+

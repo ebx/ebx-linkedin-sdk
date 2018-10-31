@@ -31,3 +31,4 @@ target/*
 .settings/
 */.project
 */.checkstyle
+.idea/

@@ -18,7 +18,6 @@
 package com.echobox.api.linkedin.types;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
@@ -37,7 +36,6 @@ public class Company extends LinkedInIdAndNameType {
    * The unique string identifier of a company.
    */
   @Getter
-  @Setter
   @LinkedIn
   private String universalName;
 
@@ -45,25 +43,22 @@ public class Company extends LinkedInIdAndNameType {
    * Company email domains.
    */
   @Getter
-  @Setter
   @LinkedIn("emailDomains")
   private List<String> emailDomainsRaw;
-
+  
   /**
    * The type of company.
    * @see <a href="https://developer.linkedin.com/docs/fields/company-profile">Company types</a>
    * for more information
    */
   @Getter
-  @Setter
-  @LinkedIn
-  private CodeAndNameType companyType;
+  @LinkedIn("companyType")
+  private CodeAndNameType companyTypeRaw;
 
   /**
    * Company ticker identification for the stock exchange. Available only for public companies.
    */
   @Getter
-  @Setter
   @LinkedIn
   private String ticker;
 
@@ -71,7 +66,6 @@ public class Company extends LinkedInIdAndNameType {
    * Company web site address.
    */
   @Getter
-  @Setter
   @LinkedIn
   private String websiteURL;
 
@@ -81,10 +75,14 @@ public class Company extends LinkedInIdAndNameType {
    * for the list of industries available.
    */
   @Getter
-  @Setter
   @LinkedIn("industries")
   private List<CodeAndNameType> industriesRaw;
   
+  /**
+   * A collection containing a code and name pertaining to the company's industry. 
+   * @see <a href="https://developer.linkedin.com/docs/reference/industry-codes">Industry Codes</a>
+   * for the list of industries available.
+   */
   @Getter
   private List<IndustryCode> industries;
 
@@ -94,15 +92,16 @@ public class Company extends LinkedInIdAndNameType {
    * information
    */
   @Getter
-  @Setter
-  @LinkedIn
-  private CodeAndNameType status;
+  @LinkedIn("status")
+  private CodeAndNameType statusRaw;
+  
+  @Getter
+  private StatusType status;
 
   /**
    * URL for the company logo in JPG format.
    */
   @Getter
-  @Setter
   @LinkedIn
   private String logoURL;
 
@@ -110,7 +109,6 @@ public class Company extends LinkedInIdAndNameType {
    * URL for the company logo in a square format.
    */
   @Getter
-  @Setter
   @LinkedIn
   private String squareLogoURL;
 
@@ -118,7 +116,6 @@ public class Company extends LinkedInIdAndNameType {
    * URL for the company blog.
    */
   @Getter
-  @Setter
   @LinkedIn
   private String blogRSSURL;
 
@@ -126,7 +123,6 @@ public class Company extends LinkedInIdAndNameType {
    * Handle for the company Twitter feed.
    */
   @Getter
-  @Setter
   @LinkedIn
   private String twitterId;
 
@@ -136,15 +132,21 @@ public class Company extends LinkedInIdAndNameType {
    * employee-count-range</a> for more information
    */
   @Getter
-  @Setter
-  @LinkedIn
-  private CodeAndNameType employeeCountRange;
+  @LinkedIn("employeeCountRange")
+  private CodeAndNameType employeeCountRangeRaw;
+  
+  /**
+   * Number range of employees at the company.
+   * @see <a href="https://developer.linkedin.com/docs/fields/company-profile">
+   * employee-count-range</a> for more information
+   */
+  @Getter
+  private EmployeeCountRange employeeCountRange;
 
   /**
    * Company specialties. Retrieves information from string input.
    */
   @Getter
-  @Setter
   @LinkedIn
   private List<String> specialities;
 
@@ -152,7 +154,6 @@ public class Company extends LinkedInIdAndNameType {
    * Company location.
    */
   @Getter
-  @Setter
   @LinkedIn
   private List<Location> locations;
 
@@ -160,7 +161,6 @@ public class Company extends LinkedInIdAndNameType {
    * Company description. Limit of 500 characters.
    */
   @Getter
-  @Setter
   @LinkedIn
   private String description;
 
@@ -170,15 +170,21 @@ public class Company extends LinkedInIdAndNameType {
    * for more information
    */
   @Getter
-  @Setter
-  @LinkedIn
-  private CodeAndNameType stockExchange;
+  @LinkedIn("stockExchange")
+  private CodeAndNameType stockExchangeRaw;
+  
+  /**
+   * Stock exchange the company is in. Available only for public companies.
+   * @see <a href="https://developer.linkedin.com/docs/fields/company-profile">stock-exchange</a>
+   * for more information
+   */
+  @Getter
+  private StockExchange stockExchange;
 
   /**
    * Year listed for the company's founding.
    */
   @Getter
-  @Setter
   @LinkedIn
   private int foundedYear;
 
@@ -186,7 +192,6 @@ public class Company extends LinkedInIdAndNameType {
    * Year listed for when the company closed or was acquired by another.
    */
   @Getter
-  @Setter
   @LinkedIn
   private int endYear;
 
@@ -194,7 +199,6 @@ public class Company extends LinkedInIdAndNameType {
    * The number of followers for the company's profile.
    */
   @Getter
-  @Setter
   @LinkedIn
   private int numFollowers;
   

@@ -20,11 +20,11 @@ package com.echobox.api.linkedin.types;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
  * Code and name model wrapper
- * @param <C> code type
  * @author Joanna
  *
  */
@@ -33,10 +33,11 @@ public class CodeAndNameType {
   
   @Getter
   @LinkedIn
+  @NonNull
   private String code;
   
   @Getter
-  @LinkedIn
+  @NonNull
   private String name;
 
 }

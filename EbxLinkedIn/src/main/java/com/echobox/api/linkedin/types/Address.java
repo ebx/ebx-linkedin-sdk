@@ -20,7 +20,6 @@ package com.echobox.api.linkedin.types;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Address model
@@ -33,7 +32,6 @@ public class Address {
    * First line of street address of location.
    */
   @Getter
-  @Setter
   @LinkedIn("street1")
   private String firstStreet;
   
@@ -41,7 +39,6 @@ public class Address {
    * Second line of street address of location.
    */
   @Getter
-  @Setter
   @LinkedIn("street2")
   private String secondStreet;
   
@@ -49,7 +46,6 @@ public class Address {
    * City for location.
    */
   @Getter
-  @Setter
   @LinkedIn
   private String city;
   
@@ -57,7 +53,6 @@ public class Address {
    * State for location.
    */
   @Getter
-  @Setter
   @LinkedIn
   private String state;
   
@@ -66,20 +61,20 @@ public class Address {
    * Must be combined with the country-code parameter. Not supported for all countries.
    */
   @Getter
-  @Setter
+  @LinkedIn
   private String postalCode;
   
   /**
    * Country code for location. Matches companies with a location in a specific country.
    */
   @Getter
-  @Setter
+  @LinkedIn
   private String countryCode;
   
   /**
    * Region code for location.
    */
   @Getter
-  @Setter
+  @LinkedIn
   private String regionCode;
 }

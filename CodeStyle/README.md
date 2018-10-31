@@ -22,7 +22,7 @@ To format Imports correctly: **Ctrl-Shift-O**
 
 **_Use the formatter!!!!_**
 
-## TO Configure the Eclipse "check style" plug-in:
+## To Configure the Eclipse "check style" plug-in:
 
 When first importing the maven project you should be prompted to install
 the Eclipse "check style" plug-in. This will act as a kind of "compiler" and underline code which
@@ -65,7 +65,7 @@ To format Imports correctly: **Ctrl-Alt-O**
 
 **_Use the formatter!!!!_**
 
-## TO Configure the Intellj "check style" plug-in:
+## To Configure the Intellj "check style" plug-in:
 
 to Install the Intellj "check style" plug-in go to:
 
