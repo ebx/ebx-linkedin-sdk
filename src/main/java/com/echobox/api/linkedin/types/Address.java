@@ -76,5 +76,5 @@ public class Address {
    */
   @Getter
   @LinkedIn
-  private String regionCode;
+  private Integer regionCode;
 }

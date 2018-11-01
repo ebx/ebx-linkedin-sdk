@@ -18,6 +18,7 @@
 package com.echobox.api.linkedin.types;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import com.echobox.api.linkedin.jsonmapper.JsonMapper;
 import com.echobox.api.linkedin.jsonmapper.JsonMapper.JsonMappingCompleted;
@@ -46,6 +47,7 @@ public class Company extends LinkedInIdAndNameType {
    * Company email domains.
    */
   @Getter
+  @Setter
   @LinkedIn("emailDomains")
   private List<String> emailDomainsRaw;
 
@@ -113,14 +115,14 @@ public class Company extends LinkedInIdAndNameType {
    * URL for the company logo in JPG format.
    */
   @Getter
-  @LinkedIn
+  @LinkedIn("logoUrl")
   private String logoURL;
 
   /**
    * URL for the company logo in a square format.
    */
   @Getter
-  @LinkedIn
+  @LinkedIn("squareLogoUrl")
   private String squareLogoURL;
 
   /**
@@ -159,7 +161,7 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @LinkedIn
-  private List<String> specialities;
+  private List<String> specialties;
 
   /**
    * Company location.
@@ -197,21 +199,21 @@ public class Company extends LinkedInIdAndNameType {
    */
   @Getter
   @LinkedIn
-  private int foundedYear;
+  private Integer foundedYear;
 
   /**
    * Year listed for when the company closed or was acquired by another.
    */
   @Getter
   @LinkedIn
-  private int endYear;
+  private Integer endYear;
 
   /**
    * The number of followers for the company's profile.
    */
   @Getter
   @LinkedIn
-  private int numFollowers;
+  private Integer numFollowers;
 
   @JsonMappingCompleted
   protected void jsonMappingCompleted(JsonMapper jsonMapper) {
