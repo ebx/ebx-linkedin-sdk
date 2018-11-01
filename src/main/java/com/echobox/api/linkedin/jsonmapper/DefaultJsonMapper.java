@@ -68,7 +68,7 @@ public class DefaultJsonMapper implements JsonMapper {
 
   /**
    * Creates a JSON mapper which will throw
-   * {@link com.echobox.api.linkedin.exception.FacebookJsonMappingException} whenever an error
+   * {@link com.echobox.api.linkedin.exception.LinkedInJsonMappingException} whenever an error
    * occurs when mapping JSON data to Java objects.
    */
   public DefaultJsonMapper() {
@@ -132,7 +132,7 @@ public class DefaultJsonMapper implements JsonMapper {
     try {
       List<FieldWithAnnotation<LinkedIn>> fieldsWithAnnotation =
           ReflectionUtils.findFieldsWithAnnotation(type, LinkedIn.class);
-      Set<String> facebookFieldNamesWithMultipleMappings =
+      Set<String> linkedinFieldNamesWithMultipleMappings =
           linkedInFieldNamesWithMultipleMappings(fieldsWithAnnotation);
 
       // If there are no annotated fields, assume we're mapping to a built-in
@@ -181,13 +181,13 @@ public class DefaultJsonMapper implements JsonMapper {
       // For each LinkedIn-annotated field on the current Java object, pull data
       // out of the JSON object and put it in the Java object
       for (FieldWithAnnotation<LinkedIn> fieldWithAnnotation : fieldsWithAnnotation) {
-        String facebookFieldName = getLinkedInFieldName(fieldWithAnnotation);
+        String linkedinFieldName = getLinkedInFieldName(fieldWithAnnotation);
 
-        if (!jsonObject.has(facebookFieldName)) {
+        if (!jsonObject.has(linkedinFieldName)) {
           if (LOGGER.isTraceEnabled()) {
             LOGGER
                 .trace(String.format("No JSON value present for '%s', skipping. JSON is '%s'.",
-                    facebookFieldName, json));
+                    linkedinFieldName, json));
           }
           continue;
         }
@@ -199,20 +199,20 @@ public class DefaultJsonMapper implements JsonMapper {
         // If we notice that this LinkedIn field name is mapped more than once,
         // go into a special mode where we swallow any exceptions that occur
         // when mapping to the Java field. Handle this case here if it does happen
-        if (facebookFieldNamesWithMultipleMappings.contains(facebookFieldName)) {
+        if (linkedinFieldNamesWithMultipleMappings.contains(linkedinFieldName)) {
           try {
             fieldWithAnnotation.getField().set(instance,
-                toJavaType(fieldWithAnnotation, jsonObject, facebookFieldName));
+                toJavaType(fieldWithAnnotation, jsonObject, linkedinFieldName));
           } catch (LinkedInJsonMappingException e) {
-            logMultipleMappingFailedForField(facebookFieldName, fieldWithAnnotation, json);
+            logMultipleMappingFailedForField(linkedinFieldName, fieldWithAnnotation, json);
           } catch (JSONException e) {
-            logMultipleMappingFailedForField(facebookFieldName, fieldWithAnnotation, json);
+            logMultipleMappingFailedForField(linkedinFieldName, fieldWithAnnotation, json);
           }
 
         } else {
           try {
             fieldWithAnnotation.getField().set(instance,
-                toJavaType(fieldWithAnnotation, jsonObject, facebookFieldName));
+                toJavaType(fieldWithAnnotation, jsonObject, linkedinFieldName));
           } catch (Exception e) {
             if (!jsonMappingErrorHandler.handleMappingError(json, type, e)) {
               throw e;
@@ -296,7 +296,7 @@ public class DefaultJsonMapper implements JsonMapper {
           return null;
         } else {
           throw new LinkedInJsonMappingException(
-              "Unable to convert Facebook response JSON to a list of " + type.getName()
+              "Unable to convert LinkedIn response JSON to a list of " + type.getName()
                   + " instances.  Offending JSON is " + json, ex);
         }
       }
@@ -329,7 +329,7 @@ public class DefaultJsonMapper implements JsonMapper {
         return null;
       } else {
         throw new LinkedInJsonMappingException(
-            "Unable to convert Facebook response JSON to a list of " + type.getName()
+            "Unable to convert LinkedIn response JSON to a list of " + type.getName()
                 + " instances", ex);
       }
     }
@@ -564,14 +564,14 @@ public class DefaultJsonMapper implements JsonMapper {
     // TODO: A better implementation would query each duplicate-mapped field. If
     // it has is a non-null value and the other duplicate values are null, use
     // the non-null field.
-    Set<String> facebookFieldNamesWithMultipleMappings = linkedInFieldNamesWithMultipleMappings(
+    Set<String> linkedinFieldNamesWithMultipleMappings = linkedInFieldNamesWithMultipleMappings(
         fieldsWithAnnotation);
-    if (!facebookFieldNamesWithMultipleMappings.isEmpty() && LOGGER.isDebugEnabled()) {
+    if (!linkedinFieldNamesWithMultipleMappings.isEmpty() && LOGGER.isDebugEnabled()) {
       LOGGER
           .debug(String.format(
               "Unable to convert to JSON because multiple @%s annotations for the same name are"
                   + "present: %s",
-              LinkedIn.class.getSimpleName(), facebookFieldNamesWithMultipleMappings));
+              LinkedIn.class.getSimpleName(), linkedinFieldNamesWithMultipleMappings));
     }
 
     for (FieldWithAnnotation<LinkedIn> fieldWithAnnotation : fieldsWithAnnotation) {
@@ -606,7 +606,7 @@ public class DefaultJsonMapper implements JsonMapper {
    * Given a {@code json} value of something like {@code MyValue} or {@code 123} , return a
    * representation of that value of type {@code type}.
    * <p>
-   * This is to support non-legal JSON served up by Facebook for API calls like {@code Friends.get}
+   * This is to support non-legal JSON served up by LinkedIn for API calls like {@code Friends.get}
    * (example result: {@code [222333,1240079]}).
    * 
    * @param <T>
@@ -860,7 +860,8 @@ public class DefaultJsonMapper implements JsonMapper {
      * <p>
      * If the mapper should continue processing, return {@code true} and {@code null} will be mapped
      * to the target type. If you would like the mapper to stop processing and throw
-     * {@link com.restfb.exception.FacebookJsonMappingException}, return {@code false}.
+     * {@link com.echobox.api.linkedin.exception.LinkedInJsonMappingException},
+     * return {@code false}.
      * 
      * @param unmappableJson
      *          The JSON that couldn't be mapped to a Java type.
@@ -870,7 +871,7 @@ public class DefaultJsonMapper implements JsonMapper {
      *          The exception that occurred while performing the mapping operation, or {@code null}
      *          if there was no exception.
      * @return {@code true} to continue processing, {@code false} to throw a
-     *         {@link com.restfb.exception.FacebookJsonMappingException}.
+     *         {@link com.echobox.api.linkedin.exception.LinkedInJsonMappingException}.
      */
     boolean handleMappingError(String unmappableJson, Class<?> targetType, Exception ex);
   }

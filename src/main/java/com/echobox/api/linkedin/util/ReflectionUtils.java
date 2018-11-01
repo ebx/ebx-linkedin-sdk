@@ -206,12 +206,6 @@ public final class ReflectionUtils {
 
     ParameterizedType parameterizedType = (ParameterizedType) type;
     Type firstTypeArgument = parameterizedType.getActualTypeArguments()[i];
-    try {
-      Class<?> returnClass = (Class<?>) firstTypeArgument;      
-    } catch (Exception ex) {
-      
-      System.out.println(ex);
-    }
     return (firstTypeArgument instanceof Class) ? (Class<?>) firstTypeArgument : null;
   }
 

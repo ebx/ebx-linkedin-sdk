@@ -41,34 +41,34 @@ public final class DateUtils {
   private static Logger LOGGER = LinkedInLogger.getLoggerInstance();
   
   /**
-   * Facebook "long" date format (IETF RFC 3339). Example: {@code 2010-02-28T16:11:08+0000}
+   * LinkedIn "long" date format (IETF RFC 3339). Example: {@code 2010-02-28T16:11:08+0000}
    */
-  public static final String FACEBOOK_LONG_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+  public static final String LINKEDIN_LONG_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
   /**
-   * Facebook "long" date format (IETF RFC 3339) without a timezone component. Example: {@code 2010-02-28T16:11:08}
+   * LinkedIn "long" date format (IETF RFC 3339) without a timezone component. Example: {@code 2010-02-28T16:11:08}
    */
-  public static final String FACEBOOK_LONG_DATE_FORMAT_WITHOUT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss";
+  public static final String LINKEDIN_LONG_DATE_FORMAT_WITHOUT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss";
 
   /**
-   * Facebook "long" date format (IETF RFC 3339) without a timezone or seconds component. Example: {@code 2010-02-28T16:11}
+   * LinkedIn "long" date format (IETF RFC 3339) without a timezone or seconds component. Example: {@code 2010-02-28T16:11}
    */
-  public static final String FACEBOOK_LONG_DATE_FORMAT_WITHOUT_TIMEZONE_OR_SECONDS = "yyyy-MM-dd'T'HH:mm";
+  public static final String LINKEDIN_LONG_DATE_FORMAT_WITHOUT_TIMEZONE_OR_SECONDS = "yyyy-MM-dd'T'HH:mm";
 
   /**
-   * Facebook short date format. Example: {@code 04/15/1984}
+   * LinkedIn short date format. Example: {@code 04/15/1984}
    */
-  public static final String FACEBOOK_SHORT_DATE_FORMAT = "MM/dd/yyyy";
+  public static final String LINKEDIN_SHORT_DATE_FORMAT = "MM/dd/yyyy";
 
   /**
-   * Facebook alternate short date format. Example: {@code 2012-09-15}
+   * LinkedIn alternate short date format. Example: {@code 2012-09-15}
    */
-  public static final String FACEBOOK_ALTERNATE_SHORT_DATE_FORMAT = "yyyy-MM-dd";
+  public static final String LINKEDIN_ALTERNATE_SHORT_DATE_FORMAT = "yyyy-MM-dd";
 
   /**
-   * Facebook month-year only date format. Example: {@code Example: 2007-03}
+   * LinkedIn month-year only date format. Example: {@code Example: 2007-03}
    */
-  public static final String FACEBOOK_MONTH_YEAR_DATE_FORMAT = "yyyy-MM";
+  public static final String LINKEDIN_MONTH_YEAR_DATE_FORMAT = "yyyy-MM";
 
   /**
    * DateFormatStrategy (default: SimpleDateFormat).
@@ -83,13 +83,13 @@ public final class DateUtils {
   }
 
   /**
-   * Returns a Java representation of a Facebook "long" {@code date} string, or the number of seconds since the epoch.
+   * Returns a Java representation of a LinkedIn "long" {@code date} string, or the number of seconds since the epoch.
    * <p>
    * Supports dates with or without timezone information.
    * 
    * @param date
-   *          Facebook {@code date} string.
-   * @return Java date representation of the given Facebook "long" {@code date} string or {@code null} if {@code date}
+   *          LinkedIn {@code date} string.
+   * @return Java date representation of the given LinkedIn "long" {@code date} string or {@code null} if {@code date}
    *         is {@code null} or invalid.
    */
   public static Date toDateFromLongFormat(String date) {
@@ -103,27 +103,27 @@ public final class DateUtils {
       return new Date(Long.parseLong(date) * 1000L);
     }
 
-    Date parsedDate = toDateWithFormatString(date, FACEBOOK_LONG_DATE_FORMAT);
+    Date parsedDate = toDateWithFormatString(date, LINKEDIN_LONG_DATE_FORMAT);
 
     // Fall back to variant without timezone if the initial parse fails
     if (parsedDate == null) {
-      parsedDate = toDateWithFormatString(date, FACEBOOK_LONG_DATE_FORMAT_WITHOUT_TIMEZONE);
+      parsedDate = toDateWithFormatString(date, LINKEDIN_LONG_DATE_FORMAT_WITHOUT_TIMEZONE);
     }
 
     // Fall back to variant without seconds if secondary parse fails
     if (parsedDate == null) {
-      parsedDate = toDateWithFormatString(date, FACEBOOK_LONG_DATE_FORMAT_WITHOUT_TIMEZONE_OR_SECONDS);
+      parsedDate = toDateWithFormatString(date, LINKEDIN_LONG_DATE_FORMAT_WITHOUT_TIMEZONE_OR_SECONDS);
     }
 
     return parsedDate;
   }
 
   /**
-   * Returns a Java representation of a Facebook "short" {@code date} string.
+   * Returns a Java representation of a LinkedIn "short" {@code date} string.
    * 
    * @param date
-   *          Facebook {@code date} string.
-   * @return Java date representation of the given Facebook "short" {@code date} string or {@code null} if {@code date}
+   *          LinkedIn {@code date} string.
+   * @return Java date representation of the given LinkedIn "short" {@code date} string or {@code null} if {@code date}
    *         is {@code null} or invalid.
    */
   public static Date toDateFromShortFormat(String date) {
@@ -131,22 +131,22 @@ public final class DateUtils {
       return null;
     }
 
-    Date parsedDate = toDateWithFormatString(date, FACEBOOK_SHORT_DATE_FORMAT);
+    Date parsedDate = toDateWithFormatString(date, LINKEDIN_SHORT_DATE_FORMAT);
 
     // Fall back to variant if initial parse fails
     if (parsedDate == null) {
-      parsedDate = toDateWithFormatString(date, FACEBOOK_ALTERNATE_SHORT_DATE_FORMAT);
+      parsedDate = toDateWithFormatString(date, LINKEDIN_ALTERNATE_SHORT_DATE_FORMAT);
     }
 
     return parsedDate;
   }
 
   /**
-   * Returns a Java representation of a Facebook "month-year" {@code date} string.
+   * Returns a Java representation of a LinkedIn "month-year" {@code date} string.
    * 
    * @param date
-   *          Facebook {@code date} string.
-   * @return Java date representation of the given Facebook "month-year" {@code date} string or {@code null} if
+   *          LinkedIn {@code date} string.
+   * @return Java date representation of the given LinkedIn "month-year" {@code date} string or {@code null} if
    *         {@code date} is {@code null} or invalid.
    */
   public static Date toDateFromMonthYearFormat(String date) {
@@ -158,7 +158,7 @@ public final class DateUtils {
       return null;
     }
 
-    return toDateWithFormatString(date, FACEBOOK_MONTH_YEAR_DATE_FORMAT);
+    return toDateWithFormatString(date, LINKEDIN_MONTH_YEAR_DATE_FORMAT);
   }
 
   /**
@@ -173,7 +173,7 @@ public final class DateUtils {
       return null;
     }
 
-    return strategy.formatFor(FACEBOOK_LONG_DATE_FORMAT_WITHOUT_TIMEZONE).format(date);
+    return strategy.formatFor(LINKEDIN_LONG_DATE_FORMAT_WITHOUT_TIMEZONE).format(date);
   }
 
   /**
