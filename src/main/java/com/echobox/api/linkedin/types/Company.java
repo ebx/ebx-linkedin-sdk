@@ -17,12 +17,12 @@
 
 package com.echobox.api.linkedin.types;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import com.echobox.api.linkedin.jsonmapper.JsonMapper;
 import com.echobox.api.linkedin.jsonmapper.JsonMapper.JsonMappingCompleted;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -232,8 +232,9 @@ public class Company extends LinkedInIdAndNameType {
     if (employeeCountRangeRaw != null && !employeeCountRangeRaw.hasNullFields()) {
       employeeCountRange = EmployeeCountRange.fromCode(employeeCountRangeRaw.getCode());
     }
-    if (stockExchangeRaw != null && !stockExchangeRaw.hasNullFields())
-      stockExchange = StockExchange.fromCode(stockExchangeRaw.getCode());
+    if (stockExchangeRaw != null && !stockExchangeRaw.hasNullFields()) {
+      stockExchange = StockExchange.fromCode(stockExchangeRaw.getCode());      
+    }
   }
 
 }

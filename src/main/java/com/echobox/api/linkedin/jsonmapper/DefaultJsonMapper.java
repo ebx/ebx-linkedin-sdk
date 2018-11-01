@@ -17,16 +17,18 @@
 
 package com.echobox.api.linkedin.jsonmapper;
 
-import static com.echobox.api.linkedin.logging.LinkedInLogger.MAPPER_LOGGER;
 import static java.util.Collections.unmodifiableList;
 
-import com.echobox.api.linkedin.json.JsonArray;
-import com.echobox.api.linkedin.json.JsonObject;
+import com.echobox.api.linkedin.logging.LinkedInLogger;
 import com.echobox.api.linkedin.util.DateUtils;
 import com.echobox.api.linkedin.util.ReflectionUtils;
 import com.echobox.api.linkedin.util.ReflectionUtils.FieldWithAnnotation;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.slf4j.Logger;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -45,8 +47,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * Default implementation of a JSON-to-Java mapper.
@@ -56,6 +56,8 @@ import java.util.stream.StreamSupport;
  *
  */
 public class DefaultJsonMapper implements JsonMapper {
+  
+  private static Logger LOGGER = LinkedInLogger.getLoggerInstance();
 
   /**
    * We call this instance's
@@ -76,7 +78,7 @@ public class DefaultJsonMapper implements JsonMapper {
        * (java.lang.String, java.lang.Class, java.lang.Exception)
        */
       @Override
-      public boolean handleMappingError(String unmappableJson, Class<?> targetType, Exception e) {
+      public boolean handleMappingError(String unmappableJson, Class<?> targetType, Exception ex) {
         return false;
       }
     });
@@ -159,8 +161,8 @@ public class DefaultJsonMapper implements JsonMapper {
       // LinkedIn might return the string "false" to mean null.
       // Check for that and bail early if we find it.
       if ("false".equals(json)) {
-        if (MAPPER_LOGGER.isDebugEnabled()) {
-          MAPPER_LOGGER
+        if (LOGGER.isDebugEnabled()) {
+          LOGGER
               .debug(String.format(
                   "Encountered 'false' from LinkedIn when trying to map to %s - mapping null "
                       + "instead.", type.getSimpleName()));
@@ -168,10 +170,10 @@ public class DefaultJsonMapper implements JsonMapper {
         return null;
       }
 
-      JsonObject jsonObject = new JsonObject(json);
+      JSONObject jsonObject = new JSONObject(json);
       T instance = createInstance(type);
 
-      if (instance instanceof JsonObject) {
+      if (instance instanceof JSONObject) {
         // Are we asked to map to JsonObject? If so, short-circuit right away.
         return (T) jsonObject;
       }
@@ -180,11 +182,10 @@ public class DefaultJsonMapper implements JsonMapper {
       // out of the JSON object and put it in the Java object
       for (FieldWithAnnotation<LinkedIn> fieldWithAnnotation : fieldsWithAnnotation) {
         String facebookFieldName = getLinkedInFieldName(fieldWithAnnotation);
-        System.out.println(facebookFieldName);
 
         if (!jsonObject.has(facebookFieldName)) {
-          if (MAPPER_LOGGER.isTraceEnabled()) {
-            MAPPER_LOGGER
+          if (LOGGER.isTraceEnabled()) {
+            LOGGER
                 .trace(String.format("No JSON value present for '%s', skipping. JSON is '%s'.",
                     facebookFieldName, json));
           }
@@ -204,9 +205,8 @@ public class DefaultJsonMapper implements JsonMapper {
                 toJavaType(fieldWithAnnotation, jsonObject, facebookFieldName));
           } catch (LinkedInJsonMappingException e) {
             logMultipleMappingFailedForField(facebookFieldName, fieldWithAnnotation, json);
-          } catch (Exception e) {
-            logMultipleMappingFailedForField(facebookFieldName,
-                fieldWithAnnotation, json);
+          } catch (JSONException e) {
+            logMultipleMappingFailedForField(facebookFieldName, fieldWithAnnotation, json);
           }
 
         } else {
@@ -259,8 +259,8 @@ public class DefaultJsonMapper implements JsonMapper {
     if (json.startsWith("{")) {
       // LinkedIn may return an empty object as a list - handle it here
       if (isEmptyObject(json)) {
-        if (MAPPER_LOGGER.isTraceEnabled()) {
-          MAPPER_LOGGER
+        if (LOGGER.isTraceEnabled()) {
+          LOGGER
               .trace("Encountered {} when we should've seen []. Mapping the {} as an empty list and"
                   + "moving on...");
         }
@@ -270,27 +270,27 @@ public class DefaultJsonMapper implements JsonMapper {
       // LinkedIn returns arrays wrapped in an object
       // Extract the values out of the JSON response
       try {
-        JsonObject jsonObject = new JsonObject(json);
+        JSONObject jsonObject = new JSONObject(json);
         Object totalElement = jsonObject.opt("_total");
         if (totalElement != null) {
           int total = jsonObject.getInt("_total");
           Object values = jsonObject.opt("values");
           if (total == 0 || values == null) {
-            if (MAPPER_LOGGER.isTraceEnabled()) {
-              MAPPER_LOGGER
+            if (LOGGER.isTraceEnabled()) {
+              LOGGER
                   .trace("No values provided in the JSON, carrying on...");
             }
             return new ArrayList<>();
           }
-          JsonArray valuesArray = jsonObject.getJsonArray("values");
+          JSONArray valuesArray = jsonObject.getJSONArray("values");
           if (total != valuesArray.length()) {
-            MAPPER_LOGGER
+            LOGGER
                 .error("The total number of object expected was different to the size or the array."
                     + "Total was " + total + " but response contained " + valuesArray.length());
           }
           return toJavaListInternal(json, type);
         }
-      } catch (Exception ex) {
+      } catch (JSONException ex) {
         // Should never get here, but just in case...
         if (jsonMappingErrorHandler.handleMappingError(json, type, ex)) {
           return null;
@@ -309,15 +309,14 @@ public class DefaultJsonMapper implements JsonMapper {
 
   private <T> List<T> toJavaListInternal(String json, Class<T> type) {
     try {
-      List<T> list = new ArrayList<T>();
-      JsonObject jsonObject = new JsonObject(json);
-      JsonArray jsonArray = jsonObject.getJsonArray("values");
+      List<T> list = new ArrayList<>();
+      JSONObject jsonObject = new JSONObject(json);
+      JSONArray jsonArray = jsonObject.getJSONArray("values");
       for (int i = 0; i < jsonArray.length(); i++) {
         String rebuildJson = jsonArray.get(i).toString();
-        if (jsonArray.optJsonArray(i) == null && rebuildJson.startsWith("[")) {
-          // the inner JSON starts with square brackets but the parser don't think this is a JSON array
-          // so we think the parser is right and add quotes around the string
-          // solves Issue #719
+        if (jsonArray.optJSONArray(i) == null && rebuildJson.startsWith("[")) {
+          // the inner JSON starts with square brackets but the parser don't think this is a JSON
+          // array so we think the parser is right and add quotes around the string
           list.add(toJavaObject('"' + rebuildJson + '"', type));
         } else {
           list.add(toJavaObject(rebuildJson, type));
@@ -357,18 +356,19 @@ public class DefaultJsonMapper implements JsonMapper {
         JsonMappingCompleted.class)) {
       method.setAccessible(true);
 
-      if (method.getParameterTypes().length == 0)
-        method.invoke(object);
-      else if (method.getParameterTypes().length == 1 && JsonMapper.class.equals(method
-          .getParameterTypes()[0]))
-        method.invoke(object, this);
-      else
+      if (method.getParameterTypes().length == 0) {
+        method.invoke(object);        
+      } else if (method.getParameterTypes().length == 1 && JsonMapper.class.equals(method
+          .getParameterTypes()[0])) {
+        method.invoke(object, this);        
+      } else {
         throw new LinkedInJsonMappingException(
             String.format(
                 "Methods annotated with @%s must take 0 parameters or a single %s parameter."
                     + "Your method was %s",
                 JsonMappingCompleted.class.getSimpleName(), JsonMapper.class.getSimpleName(),
                 method));
+      }
     }
   }
 
@@ -385,14 +385,14 @@ public class DefaultJsonMapper implements JsonMapper {
    */
   protected void logMultipleMappingFailedForField(String linkedinFieldName,
       FieldWithAnnotation<LinkedIn> fieldWithAnnotation, String json) {
-    if (!MAPPER_LOGGER.isTraceEnabled()) {
+    if (!LOGGER.isTraceEnabled()) {
       return;
     }
 
     Field field = fieldWithAnnotation.getField();
 
-    if (MAPPER_LOGGER.isTraceEnabled()) {
-      MAPPER_LOGGER.trace("Could not map '" + linkedinFieldName + "' to "
+    if (LOGGER.isTraceEnabled()) {
+      LOGGER.trace("Could not map '" + linkedinFieldName + "' to "
           + field.getDeclaringClass().getSimpleName()
           + "." + field.getName() + ", but continuing on because '" + linkedinFieldName
           + "' is mapped to multiple fields in " + field.getDeclaringClass().getSimpleName()
@@ -415,8 +415,8 @@ public class DefaultJsonMapper implements JsonMapper {
     // If no LinkedIn field name was specified in the annotation, assume
     // it's the same name as the Java field
     if (StringUtils.isBlank(linkedinFieldName)) {
-      if (MAPPER_LOGGER.isTraceEnabled()) {
-        MAPPER_LOGGER
+      if (LOGGER.isTraceEnabled()) {
+        LOGGER
             .trace(String.format(
                 "No explicit LinkedIn field name found for %s, so defaulting to the field name"
                     + "itself (%s)", field, field.getName()));
@@ -437,8 +437,8 @@ public class DefaultJsonMapper implements JsonMapper {
    */
   protected Set<String> linkedInFieldNamesWithMultipleMappings(
       List<FieldWithAnnotation<LinkedIn>> fieldsWithAnnotation) {
-    Map<String, Integer> linkedinFieldsNamesWithOccurrenceCount = new HashMap<String, Integer>();
-    Set<String> linkedinFieldNamesWithMultipleMappings = new HashSet<String>();
+    Map<String, Integer> linkedinFieldsNamesWithOccurrenceCount = new HashMap<>();
+    Set<String> linkedinFieldNamesWithMultipleMappings = new HashSet<>();
 
     // Get a count of LinkedIn field name occurrences for each
     // @LinkedIn-annotated field
@@ -496,20 +496,21 @@ public class DefaultJsonMapper implements JsonMapper {
       return null;
     }
 
-    if (object instanceof JsonObject) {
-      return (JsonObject) object;
+    if (object instanceof JSONObject) {
+      return (JSONObject) object;
     }
 
     if (object instanceof List<?>) {
-      JsonArray jsonArray = new JsonArray();
-      for (Object o : (List<?>) object)
-        jsonArray.put(toJsonInternal(o, ignoreNullValuedProperties));
+      JSONArray jsonArray = new JSONArray();
+      for (Object o : (List<?>) object) {
+        jsonArray.put(toJsonInternal(o, ignoreNullValuedProperties));        
+      }
 
       return jsonArray;
     }
 
     if (object instanceof Map<?, ?>) {
-      JsonObject jsonObject = new JsonObject();
+      JSONObject jsonObject = new JSONObject();
       for (Entry<?, ?> entry : ((Map<?, ?>) object).entrySet()) {
         if (!(entry.getKey() instanceof String)) {
           throw new LinkedInJsonMappingException("Your Map keys must be of type " + String.class
@@ -519,7 +520,7 @@ public class DefaultJsonMapper implements JsonMapper {
         try {
           jsonObject.put((String) entry.getKey(), toJsonInternal(entry.getValue(),
               ignoreNullValuedProperties));
-        } catch (Exception e) {
+        } catch (JSONException e) {
           throw new LinkedInJsonMappingException(
               "Unable to process value '" + entry.getValue() + "' for key '" + entry.getKey()
                   + "' in Map " + object, e);
@@ -555,7 +556,7 @@ public class DefaultJsonMapper implements JsonMapper {
     List<FieldWithAnnotation<LinkedIn>> fieldsWithAnnotation =
         ReflectionUtils.findFieldsWithAnnotation(object.getClass(), LinkedIn.class);
 
-    JsonObject jsonObject = new JsonObject();
+    JSONObject jsonObject = new JSONObject();
 
     // No longer throw an exception in this case. If there are multiple fields
     // with the same @LinkedIn value, it's luck of the draw which is picked for
@@ -565,8 +566,8 @@ public class DefaultJsonMapper implements JsonMapper {
     // the non-null field.
     Set<String> facebookFieldNamesWithMultipleMappings = linkedInFieldNamesWithMultipleMappings(
         fieldsWithAnnotation);
-    if (!facebookFieldNamesWithMultipleMappings.isEmpty() && MAPPER_LOGGER.isDebugEnabled()) {
-      MAPPER_LOGGER
+    if (!facebookFieldNamesWithMultipleMappings.isEmpty() && LOGGER.isDebugEnabled()) {
+      LOGGER
           .debug(String.format(
               "Unable to convert to JSON because multiple @%s annotations for the same name are"
                   + "present: %s",
@@ -671,13 +672,13 @@ public class DefaultJsonMapper implements JsonMapper {
    * @param linkedinFieldName
    *          Specifies what JSON field to pull "raw" data from.
    * @return A
-   * @throws JsonException
+   * @throws JSONException
    *           If an error occurs while mapping JSON to Java.
    * @throws linkedinJsonMappingException
    *           If an error occurs while mapping JSON to Java.
    */
   protected Object toJavaType(FieldWithAnnotation<LinkedIn> fieldWithAnnotation,
-      JsonObject jsonObject, String linkedinFieldName) {
+      JSONObject jsonObject, String linkedinFieldName) {
     Class<?> type = fieldWithAnnotation.getField().getType();
     Object rawValue = jsonObject.get(linkedinFieldName);
 
@@ -702,10 +703,10 @@ public class DefaultJsonMapper implements JsonMapper {
        * Per Antonello Naccarato, sometimes FB will return an empty JSON array instead of an empty
        * string. Look for that here.
        */
-      if (rawValue instanceof JsonArray) {
-        if (((JsonArray) rawValue).length() == 0) {
-          if (MAPPER_LOGGER.isTraceEnabled()) {
-            MAPPER_LOGGER.trace(String.format(
+      if (rawValue instanceof JSONArray) {
+        if (((JSONArray) rawValue).length() == 0) {
+          if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(String.format(
                 "Coercing an empty JSON array to an empty string for %s", fieldWithAnnotation));
           }
 
@@ -759,8 +760,8 @@ public class DefaultJsonMapper implements JsonMapper {
       try {
         return Enum.valueOf(enumType, jsonObject.getString(linkedinFieldName));
       } catch (IllegalArgumentException iae) {
-        if (MAPPER_LOGGER.isDebugEnabled()) {
-          MAPPER_LOGGER.debug(
+        if (LOGGER.isDebugEnabled()) {
+          LOGGER.debug(
               String.format("Cannot map string %s to enum %s",
                   jsonObject.getString(linkedinFieldName), enumType.getName()));
         }
@@ -783,7 +784,7 @@ public class DefaultJsonMapper implements JsonMapper {
     Class<?> secondParam = ReflectionUtils.getSecondParameterizedTypeArgument(field);
 
     if (json.startsWith("{")) {
-      JsonObject jsonObject = new JsonObject(json);
+      JSONObject jsonObject = new JSONObject(json);
       Map map = new HashMap();
       Iterator<?> keyIt = jsonObject.keys();
       while (keyIt.hasNext()) {
@@ -865,13 +866,13 @@ public class DefaultJsonMapper implements JsonMapper {
      *          The JSON that couldn't be mapped to a Java type.
      * @param targetType
      *          The Java type we were attempting to map to.
-     * @param e
+     * @param ex
      *          The exception that occurred while performing the mapping operation, or {@code null}
      *          if there was no exception.
      * @return {@code true} to continue processing, {@code false} to throw a
      *         {@link com.restfb.exception.FacebookJsonMappingException}.
      */
-    boolean handleMappingError(String unmappableJson, Class<?> targetType, Exception e);
+    boolean handleMappingError(String unmappableJson, Class<?> targetType, Exception ex);
   }
 
 }

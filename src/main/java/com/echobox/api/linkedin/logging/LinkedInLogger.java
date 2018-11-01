@@ -1,106 +1,47 @@
-/**
- * Copyright (c) 2010-2017 Mark Allen, Norbert Bartels.
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package com.echobox.api.linkedin.logging;
 
-import com.echobox.api.linkedin.exception.LinkedInLoggerException;
-
-import java.lang.reflect.Constructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.ext.EventLogger;
+import org.slf4j.ext.LoggerWrapper;
 
 /**
+ * LinkedIn logger
+ * @author Joanna
  *
  */
-public abstract class LinkedInLogger {
-
-  private static Class LOGGER_CLASS = null;
-
-  public static final LinkedInLogger HTTP_LOGGER;
-
-  public static final LinkedInLogger MAPPER_LOGGER;
-
-  public static final LinkedInLogger UTILS_LOGGER;
-
-  public static final LinkedInLogger CLIENT_LOGGER;
-
-  public static final LinkedInLogger VALUE_FACTORY_LOGGER;
+public class LinkedInLogger extends LoggerWrapper {
   
-  public static final LinkedInLogger TYPE_LOGGER;
+  private static final String FQCN = EventLogger.class.getName();
+
+  private LinkedInLogger(Logger logger) {
+    super(logger, FQCN);
+  }
   
-  private static final String PACKAGE_NAME = "com.echobox.api.linkedin.";
-
-  static {
-    // define our logger class
-    Class loggerClass = JulLogger.class;
-    LOGGER_CLASS = loggerClass;
-
-    // create the loggers
-    HTTP_LOGGER = getLoggerInstance(PACKAGE_NAME + "HTTP");
-    MAPPER_LOGGER = getLoggerInstance(PACKAGE_NAME + "DefaultJsonMapper");
-    UTILS_LOGGER = getLoggerInstance(PACKAGE_NAME + "UTILITY");
-    CLIENT_LOGGER = getLoggerInstance(PACKAGE_NAME + "DefaultFacebookClient");
-    VALUE_FACTORY_LOGGER = getLoggerInstance(PACKAGE_NAME + "webhook.ChangeValueFactory");
-    TYPE_LOGGER = getLoggerInstance(PACKAGE_NAME + "TYPES");
+  /**
+   * Get the LinkedIn logger instance
+   * @return the LinkedIn logger instance
+   */
+  public static Logger getLoggerInstance() {
+    String callingClassName = Thread.currentThread().getStackTrace()[2].getClassName();
+    return new LinkedInLogger(LoggerFactory.getLogger(callingClassName));
   }
 
-  public static LinkedInLogger getLoggerInstance(String logCategory) {
-    Object obj;
-    Class[] ctrTypes = new Class[] { String.class };
-    Object[] ctrArgs = new Object[] { logCategory };
-    try {
-      Constructor ctor = LOGGER_CLASS.getConstructor(ctrTypes);
-      obj = ctor.newInstance(ctrArgs);
-    } catch (Exception e) {
-      throw new LinkedInLoggerException("logger cannot be created");
-    }
-
-    return (LinkedInLogger) obj;
-  }
-
-  public abstract void trace(Object msg);
-
-  public abstract void trace(Object msg, Throwable thr);
-
-  public abstract void debug(Object msg);
-
-  public abstract void debug(Object msg, Throwable thr);
-
-  public abstract void info(Object msg);
-
-  public abstract void info(Object msg, Throwable thr);
-
-  public abstract void warn(Object msg);
-
-  public abstract void warn(Object msg, Throwable thr);
-
-  public abstract void error(Object msg);
-
-  public abstract void error(Object msg, Throwable thr);
-
-  public abstract void fatal(Object msg);
-
-  public abstract void fatal(Object msg, Throwable thr);
-
-  public abstract boolean isDebugEnabled();
-
-  public abstract boolean isInfoEnabled();
-
-  public abstract boolean isTraceEnabled();
 }

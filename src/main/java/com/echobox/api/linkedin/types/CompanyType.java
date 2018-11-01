@@ -17,12 +17,12 @@
 
 package com.echobox.api.linkedin.types;
 
-import static com.echobox.api.linkedin.logging.LinkedInLogger.TYPE_LOGGER;
+import com.echobox.api.linkedin.logging.LinkedInLogger;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import org.apache.commons.lang3.text.WordUtils;
+import org.slf4j.Logger;
 
 /**
  * Company type
@@ -41,14 +41,10 @@ public enum CompanyType implements CodeType<String> {
   PRIVATELY_HELD("P"),
   PARTNERSHIP("S");
   
+  private static Logger LOGGER = LinkedInLogger.getLoggerInstance();
+  
   @Getter
   private final String code;
-  
-  @Override
-  public String getName() {
-    String name = toString();
-    return WordUtils.capitalize(name.replaceAll("_", " ").toLowerCase());
-  }
   
   /**
    * Convert the provided code into a company type
@@ -62,7 +58,7 @@ public enum CompanyType implements CodeType<String> {
         return companyType;
       }
     }
-    TYPE_LOGGER.warn("Could not get company type from code " + code);
+    LOGGER.warn("Could not get company type from code " + code);
     return null;
   }
 

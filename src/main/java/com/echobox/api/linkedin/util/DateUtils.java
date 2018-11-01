@@ -21,8 +21,11 @@
  */
 package com.echobox.api.linkedin.util;
 
-import static com.echobox.api.linkedin.logging.LinkedInLogger.UTILS_LOGGER;
 import static java.lang.String.format;
+
+import com.echobox.api.linkedin.logging.LinkedInLogger;
+
+import org.slf4j.Logger;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -34,6 +37,9 @@ import java.util.Date;
  * @since 1.6
  */
 public final class DateUtils {
+  
+  private static Logger LOGGER = LinkedInLogger.getLoggerInstance();
+  
   /**
    * Facebook "long" date format (IETF RFC 3339). Example: {@code 2010-02-28T16:11:08+0000}
    */
@@ -186,8 +192,8 @@ public final class DateUtils {
     try {
       return strategy.formatFor(format).parse(date);
     } catch (ParseException e) {
-      if (UTILS_LOGGER.isTraceEnabled()) {
-        UTILS_LOGGER.trace(format("Unable to parse date '%s' using format string '%s': %s", date, format, e));
+      if (LOGGER.isTraceEnabled()) {
+        LOGGER.trace(format("Unable to parse date '%s' using format string '%s': %s", date, format, e));
       }
 
       return null;

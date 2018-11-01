@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 /**
  * Code type interface
  * @author Joanna
@@ -35,6 +37,9 @@ public interface CodeType<T> {
    * Get the name
    * @return name
    */
-  String getName();
+  default String getName() {
+    String name = toString();
+    return WordUtils.capitalize(name.replaceAll("_", " ").toLowerCase());
+  }
 
 }
