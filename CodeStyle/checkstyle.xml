@@ -31,7 +31,6 @@
         </module>
         <module name="IllegalThrows">
             <property name="illegalClassNames" value="java.security.InvalidParameterException"/>
-            <property name="illegalClassNames" value="java.net.MalformedURLException"/>
 		</module>
         <module name="IllegalType"/>
         <module name="PackageDeclaration"/>
