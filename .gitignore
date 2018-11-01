@@ -27,8 +27,9 @@ target/*
 */target/
 
 # classpath and project files
-*/.classpath
+.classpath
 .settings/
-*/.project
-*/.checkstyle
+.project
+.checkstyle
 .idea/
+/target/
