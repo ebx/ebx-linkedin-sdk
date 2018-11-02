@@ -19,6 +19,7 @@ package com.echobox.api.linkedin.jsonmapper;
 
 import static java.util.Collections.unmodifiableList;
 
+import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
 import com.echobox.api.linkedin.logging.LinkedInLogger;
 import com.echobox.api.linkedin.util.DateUtils;
 import com.echobox.api.linkedin.util.ReflectionUtils;

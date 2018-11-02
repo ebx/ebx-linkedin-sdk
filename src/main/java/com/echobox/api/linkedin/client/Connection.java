@@ -23,7 +23,7 @@ package com.echobox.api.linkedin.client;
 
 import static java.util.Collections.unmodifiableList;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedInJsonMappingException;
+import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
 import com.echobox.api.linkedin.util.ReflectionUtils;
 
 import org.apache.commons.lang3.StringUtils;
