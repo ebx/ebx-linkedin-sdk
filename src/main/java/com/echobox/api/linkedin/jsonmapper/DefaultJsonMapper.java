@@ -284,7 +284,7 @@ public class DefaultJsonMapper implements JsonMapper {
               .error("The total number of object expected was different to the size or the array."
                   + "Total was " + total + " but response contained " + values.length());
         }
-        return toJavaListInternal(json, type);
+        return toJavaListInternal(values, type);
       } catch (JSONException ex) {
         // Should never get here, but just in case...
         if (jsonMappingErrorHandler.handleMappingError(json, type, ex)) {
@@ -296,17 +296,15 @@ public class DefaultJsonMapper implements JsonMapper {
         }
       }
 
+    } else {
+      // If LinkedIn returns an actual array, at least we handle it here...
+      return toJavaListInternal(new JSONArray(json), type);      
     }
-
-    // If LinkedIn returns an actual array, at least we handle it here...
-    return toJavaListInternal(json, type);
   }
 
-  private <T> List<T> toJavaListInternal(String json, Class<T> type) {
+  private <T> List<T> toJavaListInternal(JSONArray jsonArray, Class<T> type) {
     try {
       List<T> list = new ArrayList<>();
-      JSONObject jsonObject = new JSONObject(json);
-      JSONArray jsonArray = jsonObject.getJSONArray("values");
       for (int i = 0; i < jsonArray.length(); i++) {
         String rebuildJson = jsonArray.get(i).toString();
         if (jsonArray.optJSONArray(i) == null && rebuildJson.startsWith("[")) {
@@ -320,7 +318,7 @@ public class DefaultJsonMapper implements JsonMapper {
 
       return unmodifiableList(list);
     } catch (Exception ex) {
-      if (jsonMappingErrorHandler.handleMappingError(json, type, ex)) {
+      if (jsonMappingErrorHandler.handleMappingError(jsonArray.toString(), type, ex)) {
         return null;
       } else {
         throw new LinkedInJsonMappingException(
