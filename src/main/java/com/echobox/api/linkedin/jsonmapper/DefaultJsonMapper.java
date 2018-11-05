@@ -56,7 +56,7 @@ import java.util.Set;
  *
  */
 public class DefaultJsonMapper implements JsonMapper {
-  
+
   private static Logger LOGGER = LinkedInLogger.getLoggerInstance();
 
   /**
@@ -271,25 +271,20 @@ public class DefaultJsonMapper implements JsonMapper {
       // Extract the values out of the JSON response
       try {
         JSONObject jsonObject = new JSONObject(json);
-        Object totalElement = jsonObject.opt("_total");
-        if (totalElement != null) {
-          int total = jsonObject.getInt("_total");
-          Object values = jsonObject.opt("values");
-          if (total == 0 || values == null) {
-            if (LOGGER.isTraceEnabled()) {
-              LOGGER
-                  .trace("No values provided in the JSON, carrying on...");
-            }
-            return new ArrayList<>();
+        int total = jsonObject.optInt("_total");
+        JSONArray values = jsonObject.optJSONArray("values");
+        if (values == null) {
+          if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("No values provided in the JSON, carrying on...");
           }
-          JSONArray valuesArray = jsonObject.getJSONArray("values");
-          if (total != valuesArray.length()) {
-            LOGGER
-                .error("The total number of object expected was different to the size or the array."
-                    + "Total was " + total + " but response contained " + valuesArray.length());
-          }
-          return toJavaListInternal(json, type);
+          return new ArrayList<>();
         }
+        if (total != values.length()) {
+          LOGGER
+              .error("The total number of object expected was different to the size or the array."
+                  + "Total was " + total + " but response contained " + values.length());
+        }
+        return toJavaListInternal(json, type);
       } catch (JSONException ex) {
         // Should never get here, but just in case...
         if (jsonMappingErrorHandler.handleMappingError(json, type, ex)) {
@@ -357,10 +352,10 @@ public class DefaultJsonMapper implements JsonMapper {
       method.setAccessible(true);
 
       if (method.getParameterTypes().length == 0) {
-        method.invoke(object);        
+        method.invoke(object);
       } else if (method.getParameterTypes().length == 1 && JsonMapper.class.equals(method
           .getParameterTypes()[0])) {
-        method.invoke(object, this);        
+        method.invoke(object, this);
       } else {
         throw new LinkedInJsonMappingException(
             String.format(
@@ -503,7 +498,7 @@ public class DefaultJsonMapper implements JsonMapper {
     if (object instanceof List<?>) {
       JSONArray jsonArray = new JSONArray();
       for (Object o : (List<?>) object) {
-        jsonArray.put(toJsonInternal(o, ignoreNullValuedProperties));        
+        jsonArray.put(toJsonInternal(o, ignoreNullValuedProperties));
       }
 
       return jsonArray;
@@ -545,7 +540,7 @@ public class DefaultJsonMapper implements JsonMapper {
     if (object instanceof Enum) {
       return ((Enum) object).name();
     }
-    
+
     if (object instanceof Date) {
       return DateUtils.toLongFormatFromDate((Date) object);
     }
@@ -598,7 +593,7 @@ public class DefaultJsonMapper implements JsonMapper {
     if (fieldValue instanceof Collection) {
       return ((Collection) fieldValue).isEmpty();
     }
-  
+
     return (fieldValue instanceof Map && ((Map) fieldValue).isEmpty());
   }
 
