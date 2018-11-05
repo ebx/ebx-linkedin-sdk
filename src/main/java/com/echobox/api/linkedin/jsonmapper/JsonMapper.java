@@ -31,11 +31,11 @@ import java.lang.annotation.Target;
 import java.util.List;
 
 /**
- * Specifies how a Facebook JSON-to-Java (and vice-versa) mapper must operate.
+ * Specifies how a LinkedIn JSON-to-Java (and vice-versa) mapper must operate.
  * <p>
  * Note that implementors must be able to handle illegal JSON in
  * {@link #toJavaObject(String, Class)} and
- * {@link #toJavaList(String, Class)} in order to correctly process Facebook responses.
+ * {@link #toJavaList(String, Class)} in order to correctly process LinkedIn responses.
  * For example, the {@code Users.getLoggedInUser} Legacy API call returns a value like
  * {@code 1240077}, which is not valid JSON.
  * 
@@ -55,7 +55,7 @@ public interface JsonMapper {
    * @param type
    *          Java type token.
    * @return A Java object (of type {@code type}) representation of the JSON input.
-   * @throws FacebookJsonMappingException
+   * @throws LinkedInJsonMappingException
    *           If an error occurs while mapping JSON to Java.
    */
   <T> T toJavaObject(String json, Class<T> type);
@@ -74,7 +74,7 @@ public interface JsonMapper {
    *          Java type token.
    * @return A Java object (of type {@code List} which contains elements of type
    *         {@code type}) representation of the JSON input.
-   * @throws FacebookJsonMappingException
+   * @throws LinkedInJsonMappingException
    *           If an error occurs while mapping JSON to Java.
    */
   <T> List<T> toJavaList(String json, Class<T> type);
@@ -89,7 +89,7 @@ public interface JsonMapper {
    *          The Java object to map to JSON. Can be a Javabean, {@link java.util.List}, or
    *          {@link java.util.Map}.
    * @return A JSON string.
-   * @throws FacebookJsonMappingException
+   * @throws LinkedInJsonMappingException
    *           If an error occurs while mapping Java to JSON.
    * @since 1.4
    */
@@ -108,7 +108,7 @@ public interface JsonMapper {
    *          If {@code true}, no Javabean properties with {@code null} values will be included in
    *          the generated JSON.
    * @return A JSON string.
-   * @throws FacebookJsonMappingException
+   * @throws LinkedInJsonMappingException
    *           If an error occurs while mapping Java to JSON.
    * @since 1.6.5
    */
@@ -120,10 +120,10 @@ public interface JsonMapper {
    * mapping operation has been completed.
    * <p>
    * The method you specify must take 0 parameters or a single {@code JsonMapper} parameter. 
-   * Any other signature will cause a {@code FacebookJsonMappingException} to be thrown.
+   * Any other signature will cause a {@code LinkedInJsonMappingException} to be thrown.
    * <p>
    * This is useful if you'd like to perform a custom post-mapping task, like massaging the data
-   * Facebook returns or custom mapping of fields {@code JsonMapper} isn't equipped to handle yet.
+   * LinkedIn returns or custom mapping of fields {@code JsonMapper} isn't equipped to handle yet.
    * 
    * @author <a href="http://restfb.com">Mark Allen</a>
    * @since 1.6.11
