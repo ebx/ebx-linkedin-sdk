@@ -32,4 +32,6 @@ Please see the tests for examples of API calls that are supported and the expect
 
 * **[GitHub Issues](https://github.com/ebx/ebx-linkedin-sdk/issues/new)**: If you have ideas, bugs, or problems with our library, just open a new issue.
 
+## Contributing
+
 If you would like to get involved please follow the instructions [here](https://github.com/ebx/ebx-linkedin-sdk/tree/master/CONTRIBUTING.md)

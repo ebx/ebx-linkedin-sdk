@@ -24,7 +24,7 @@ Pull requests (PR) are a very important way to contribute code to the library. W
 * The pull request should be mergeable
 * Explain why you made the change and why it's beneficial
 * Junit tests required for any functional change
-* The pull request should be based on the `dev` branch
+* The pull request should be based on the `master` branch
 * *Group and squash your commits, fewer are better*
 
 If your issue or your PR doesn't meet a condition, don't be afraid. We are not dogmatic with these rules and you can and should send us your contribution anyway. Be prepared to answer upcoming questions :smirk:
