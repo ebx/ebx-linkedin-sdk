@@ -32,4 +32,5 @@ target/*
 .project
 .checkstyle
 .idea/
+*.iml
 /target/
