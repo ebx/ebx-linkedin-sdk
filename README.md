@@ -4,7 +4,7 @@
 
 ## What it is
 
-ebx-linkedin-sdk is a pure Java LinkedIn API client with no external dependencies.
+ebx-linkedin-sdk is a pure Java LinkedIn API client.
 
 It was created and maintained by [Echobox](http://echobox.com) along with a worldwide team of contributors.
 
