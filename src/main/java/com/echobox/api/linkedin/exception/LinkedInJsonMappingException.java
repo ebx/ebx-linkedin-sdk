@@ -15,7 +15,9 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.jsonmapper;
+package com.echobox.api.linkedin.exception;
+
+import com.echobox.api.linkedin.jsonmapper.LinkedInException;
 
 /**
  * LinkedIn Json mapping exception

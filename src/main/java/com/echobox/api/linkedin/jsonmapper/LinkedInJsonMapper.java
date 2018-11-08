@@ -19,6 +19,7 @@ package com.echobox.api.linkedin.jsonmapper;
 
 import static java.util.Collections.unmodifiableList;
 
+import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
 import com.echobox.api.linkedin.logging.LinkedInLogger;
 
 import org.apache.commons.lang3.StringUtils;
@@ -57,15 +58,11 @@ public class LinkedInJsonMapper extends DefaultJsonMapper {
    *          The JSON mapping error handler to use.
    * @throws IllegalArgumentException
    *           If {@code jsonMappingErrorHandler} is {@code null}.
-   * @since 1.6.2
    */
   public LinkedInJsonMapper(JsonMappingErrorHandler jsonMappingErrorHandler) {
     super(jsonMappingErrorHandler);
   }
 
-  /**
-   * @see com.echobox.api.linkedin.JsonMapper#toJavaList(java.lang.String, java.lang.Class)
-   */
   @Override
   public <T> List<T> toJavaList(String json, Class<T> type) {
     if (type == null) {

@@ -38,7 +38,6 @@ import java.util.*;
  * @author <a href="http://restfb.com">Mark Allen</a>
  * @author Igor Kabiljo
  * @author Scott Hernandez
- * @since 1.6
  */
 public final class ReflectionUtils {
   /**

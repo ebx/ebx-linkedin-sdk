@@ -26,6 +26,7 @@ import static java.lang.String.format;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableSet;
 
+import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
 import com.echobox.api.linkedin.logging.LinkedInLogger;
 import com.echobox.api.linkedin.util.DateUtils;
 import com.echobox.api.linkedin.util.ReflectionUtils;
@@ -57,7 +58,8 @@ import java.util.Set;
 /**
  * Default implementation of a JSON-to-Java mapper.
  * 
- * @author <a href="http://restfb.com">Mark Allen</a>
+ * @author Joanna
+ *
  */
 public class DefaultJsonMapper implements JsonMapper {
 
@@ -97,7 +99,6 @@ public class DefaultJsonMapper implements JsonMapper {
    *          The JSON mapping error handler to use.
    * @throws IllegalArgumentException
    *           If {@code jsonMappingErrorHandler} is {@code null}.
-   * @since 1.6.2
    */
   public DefaultJsonMapper(JsonMappingErrorHandler jsonMappingErrorHandler) {
     if (jsonMappingErrorHandler == null) {
@@ -871,7 +872,6 @@ public class DefaultJsonMapper implements JsonMapper {
    * handled.
    * 
    * @author <a href="http://restfb.com">Mark Allen</a>
-   * @since 1.6.2
    */
   public interface JsonMappingErrorHandler {
     /**
