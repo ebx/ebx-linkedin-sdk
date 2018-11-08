@@ -1,12 +1,12 @@
 [![Build Status](https://travis-ci.org/ebx/ebx-linkedin-sdk.svg?branch=master)](https://travis-ci.org/ebx/ebx-linkedin-sdk)
 
-# ebx-linkedin-sdk
+# ebx-linkedin-sdk - Initial release under development!
 
 ## What it is
 
 ebx-linkedin-sdk is a pure Java LinkedIn API client.
 
-It was created and maintained by [Echobox](http://echobox.com) along with a worldwide team of contributors.
+It was created and maintained by [Echobox](http://echobox.com).
 
 ## Licensing
 
