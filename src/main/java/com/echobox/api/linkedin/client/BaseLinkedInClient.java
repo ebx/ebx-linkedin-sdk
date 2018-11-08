@@ -25,6 +25,7 @@ package com.echobox.api.linkedin.client;
 import com.echobox.api.linkedin.jsonmapper.JsonMapper;
 import com.echobox.api.linkedin.logging.LinkedInLogger;
 import com.echobox.api.linkedin.util.URLUtils;
+import com.restfb.exception.ResponseErrorJsonParsingException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
@@ -121,6 +122,23 @@ abstract class BaseLinkedInClient {
       "users.getloggedinuser", "users.getstandardinfo", "users.hasapppermission", "users.isappuser", "users.isverified",
       "video.getuploadlimits"));
   }
+  
+  /**
+  *
+  * @param json
+  * @return
+  */
+ protected void skipResponseStatusExceptionParsing(String json) throws ResponseErrorJsonParsingException {
+   // If this is not an object, it's not an error response.
+   if (!json.startsWith("{")) {
+     throw new ResponseErrorJsonParsingException();
+   }
+
+   int subStrEnd = Math.min(50, json.length());
+   if (!json.substring(0, subStrEnd).contains("\"error\"")) {
+     throw new ResponseErrorJsonParsingException();
+   }
+ }
 
   /**
    * create a {@see JsonObject} from String and swallow possible {@see JsonException}
