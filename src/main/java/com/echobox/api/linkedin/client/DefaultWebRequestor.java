@@ -29,10 +29,12 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
@@ -436,7 +438,7 @@ public class DefaultWebRequestor implements WebRequestor {
       customizeConnection(request);
       httpResponse = request.execute();      
       
-      fillHeaderAndDebugInfo(httpResponse);
+      fillHeaderAndDebugInfo(httpResponse.getHeaders());
       
       Response response = fetchResponse(httpResponse);
       
@@ -445,23 +447,37 @@ public class DefaultWebRequestor implements WebRequestor {
       }
       
       return response;
+    } catch (HttpResponseException ex) {
+      fillHeaderAndDebugInfo(ex.getHeaders());
+      
+      Response response = fetchResponse(ex.getStatusCode(), ex.getContent());
+      
+      if (LOGGER.isDebugEnabled()) {
+        LOGGER.debug(format("Facebook responded with an error %s", response));
+      }
+      
+      return response;
     } finally {
       closeQuietly(httpResponse);
     }
   }
 
-  protected void fillHeaderAndDebugInfo(HttpResponse httpResponse) {
-    currentHeaders = httpResponse.getHeaders();
+  protected void fillHeaderAndDebugInfo(HttpHeaders httpHeaders) {
+    currentHeaders = httpHeaders;
 
-    String liFabric = StringUtils.trimToEmpty((String) currentHeaders.get("x-li-fabric"));
-    String liFormat = StringUtils.trimToEmpty((String) currentHeaders.get("x-li-format"));
-    String liRequestId = StringUtils.trimToEmpty((String) currentHeaders.get("x-li-request-id"));
-    String liUUID = StringUtils.trimToEmpty((String) currentHeaders.get("x-li-uuid"));
+    String liFabric = StringUtils.trimToEmpty(httpHeaders.getFirstHeaderStringValue("x-li-fabric"));
+    String liFormat = StringUtils.trimToEmpty(httpHeaders.getFirstHeaderStringValue("x-li-format"));
+    String liRequestId = StringUtils.trimToEmpty(httpHeaders.getFirstHeaderStringValue("x-li-request-id"));
+    String liUUID = StringUtils.trimToEmpty(httpHeaders.getFirstHeaderStringValue("x-li-uuid"));
      debugHeaderInfo = new DebugHeaderInfo(liFabric, liFormat, liRequestId, liUUID);
   }
 
   protected Response fetchResponse(HttpResponse httpUrlConnection) throws IOException {
-    return new Response(httpUrlConnection.getStatusCode(), fromInputStream(httpUrlConnection.getContent()));
+    return fetchResponse(httpUrlConnection.getStatusCode(), fromInputStream(httpUrlConnection.getContent()));
+  }
+  
+  protected Response fetchResponse(int statusCode, String body) {
+    return new Response(statusCode, body);
   }
 
   /**
