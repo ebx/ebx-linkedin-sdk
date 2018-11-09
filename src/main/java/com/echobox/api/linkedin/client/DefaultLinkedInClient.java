@@ -108,7 +108,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   /**
    * API endpoint URL.
    */
-  protected String LINKEDIN_API_ENDPOINT_URL = "https://api.linkedin.com/";
+  protected String LINKEDIN_API_ENDPOINT_URL = "https://api.linkedin.com";
 
   /**
    * Version of API endpoint.

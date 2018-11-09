@@ -49,6 +49,10 @@ public interface WebRequestor {
      * HTTP response body as text.
      */
     private String body;
+    
+    public Response() {
+      
+    }
 
     /**
      * Creates a response with the given HTTP status code and response body as text.

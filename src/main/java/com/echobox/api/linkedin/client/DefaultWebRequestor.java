@@ -19,17 +19,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.echobox.api.linkedin.client;
 
 import static java.lang.String.format;
 
 import com.echobox.api.linkedin.logging.LinkedInLogger;
-import com.echobox.api.linkedin.util.URLUtils;
-import com.echobox.api.linkedin.version.Version;
-import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
-import com.google.api.client.auth.oauth2.BearerToken;
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
@@ -49,7 +44,6 @@ import org.slf4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -57,8 +51,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.GeneralSecurityException;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -67,18 +59,19 @@ import java.util.Map;
  * @author <a href="http://restfb.com">Mark Allen</a>
  */
 public class DefaultWebRequestor implements WebRequestor {
-  
+
   private static final Logger LOGGER = LinkedInLogger.getLoggerInstance();
-  
+
   /**
    * Default charset to use for encoding/decoding strings.
    */
   public static final String ENCODING_CHARSET = "UTF-8";
-  
+
   /**
    * Arbitrary unique boundary marker for multipart {@code POST}s.
    */
-  private static final String MULTIPART_BOUNDARY = "**boundarystringwhichwill**neverbeencounteredinthewild**";
+  private static final String MULTIPART_BOUNDARY =
+      "**boundarystringwhichwill**neverbeencounteredinthewild**";
 
   /**
    * Line separator for multipart {@code POST}s.
@@ -99,34 +92,37 @@ public class DefaultWebRequestor implements WebRequestor {
    * By default, how long should we wait for a response (in ms)?
    */
   private static final int DEFAULT_READ_TIMEOUT_IN_MS = 180000;
-  
+
   private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
-  private Map<String, List<String>> currentHeaders;
+  private Map<String, Object> currentHeaders;
 
   private DebugHeaderInfo debugHeaderInfo;
-  
+
   /**
    * By default this is true, to prevent breaking existing usage
    */
   private boolean autocloseBinaryAttachmentStream = true;
-  
+
   private HttpRequestFactory requestFactory;
 
   protected enum HttpMethod {
     GET, DELETE, POST
   }
-  
-  public DefaultWebRequestor(String clientId, String clientSecret, String accessToken) throws GeneralSecurityException, IOException {
+
+  public DefaultWebRequestor(String clientId, String clientSecret, String accessToken)
+      throws GeneralSecurityException, IOException {
     this.requestFactory = authorize(clientId, clientSecret, accessToken);
   }
-  
-  private HttpRequestFactory authorize(String clientId, String clientSecret, String accessToken) throws GeneralSecurityException, IOException {
+
+  private HttpRequestFactory authorize(String clientId, String clientSecret, String accessToken)
+      throws GeneralSecurityException, IOException {
     HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
     // load client secrets
-    JSONObject appTokens = new JSONObject().put("client_id", clientId).put("client_secret", clientSecret);
+    JSONObject appTokens = new JSONObject().put("client_id", clientId).put("client_secret",
+        clientSecret);
     String installedAppTokens = new JSONObject().put("installed", appTokens).toString();
-    
+
     GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
         new InputStreamReader(new ByteArrayInputStream(installedAppTokens.getBytes())));
     // set up authorization code flow
@@ -134,7 +130,7 @@ public class DefaultWebRequestor implements WebRequestor {
         new GoogleCredential.Builder().setJsonFactory(JSON_FACTORY).setTransport(httpTransport)
             .setClientSecrets(clientSecrets).build();
     credential.setAccessToken(accessToken);
-    
+
     HttpRequestFactory requestFactory =
         httpTransport.createRequestFactory(new HttpRequestInitializer() {
           @Override
@@ -143,7 +139,7 @@ public class DefaultWebRequestor implements WebRequestor {
             request.setParser(new JsonObjectParser(JSON_FACTORY));
           }
         });
-    
+
     return requestFactory;
   }
 
@@ -153,10 +149,7 @@ public class DefaultWebRequestor implements WebRequestor {
    */
   @Override
   public Response executeGet(String url) throws IOException {
-    GenericUrl genericUrl = new GenericUrl(url);
-    HttpRequest request = requestFactory.buildGetRequest(genericUrl);
-    HttpResponse execute = request.execute();
-    return null;
+    return execute(url, HttpMethod.GET);
   }
 
   /**
@@ -173,95 +166,104 @@ public class DefaultWebRequestor implements WebRequestor {
    * @see com.restfb.WebRequestor#executePost(java.lang.String, java.lang.String, com.restfb.BinaryAttachment[])
    */
   @Override
-  public Response executePost(String url, String parameters, BinaryAttachment... binaryAttachments) throws IOException {
-    if (binaryAttachments == null) {
-      binaryAttachments = new BinaryAttachment[0];
-    }
-
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Executing a POST to " + url + " with parameters "
-          + (binaryAttachments.length > 0 ? "" : "(sent in request body): ") + URLUtils.urlDecode(parameters)
-          + (binaryAttachments.length > 0 ? " and " + binaryAttachments.length + " binary attachment[s]." : ""));
-    }
-
-    HttpURLConnection httpUrlConnection = null;
-    OutputStream outputStream = null;
-    InputStream inputStream = null;
-
-    try {
-      httpUrlConnection = openConnection(new URL(url + (binaryAttachments.length > 0 ? "?" + parameters : "")));
-      httpUrlConnection.setReadTimeout(DEFAULT_READ_TIMEOUT_IN_MS);
-
-      // Allow subclasses to customize the connection if they'd like to - set
-      // their own headers, timeouts, etc.
-      customizeConnection(httpUrlConnection);
-
-      httpUrlConnection.setRequestMethod("POST");
-      httpUrlConnection.setDoOutput(true);
-      httpUrlConnection.setUseCaches(false);
-
-      if (binaryAttachments.length > 0) {
-        httpUrlConnection.setRequestProperty("Connection", "Keep-Alive");
-        httpUrlConnection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + MULTIPART_BOUNDARY);
-      }
-
-      httpUrlConnection.connect();
-      outputStream = httpUrlConnection.getOutputStream();
-
-      // If we have binary attachments, the body is just the attachments and the
-      // other parameters are passed in via the URL.
-      // Otherwise the body is the URL parameter string.
-      if (binaryAttachments.length > 0) {
-        for (BinaryAttachment binaryAttachment : binaryAttachments) {
-          StringBuilder stringBuilder = new StringBuilder();
-
-          stringBuilder.append(MULTIPART_TWO_HYPHENS).append(MULTIPART_BOUNDARY)
-            .append(MULTIPART_CARRIAGE_RETURN_AND_NEWLINE).append("Content-Disposition: form-data; name=\"")
-            .append(createFormFieldName(binaryAttachment)).append("\"; filename=\"")
-            .append(binaryAttachment.getFilename()).append("\"");
-
-          if (binaryAttachment.getContentType() != null && binaryAttachment.getContentType().length() > 0) {
-            stringBuilder.append(MULTIPART_CARRIAGE_RETURN_AND_NEWLINE).append("Content-Type: ")
-              .append(binaryAttachment.getContentType());
-          }
-
-          stringBuilder.append(MULTIPART_CARRIAGE_RETURN_AND_NEWLINE).append(MULTIPART_CARRIAGE_RETURN_AND_NEWLINE);
-
-          outputStream.write(stringBuilder.toString().getBytes(ENCODING_CHARSET));
-
-          write(binaryAttachment.getData(), outputStream, MULTIPART_DEFAULT_BUFFER_SIZE);
-
-          outputStream.write((MULTIPART_CARRIAGE_RETURN_AND_NEWLINE + MULTIPART_TWO_HYPHENS + MULTIPART_BOUNDARY
-              + MULTIPART_TWO_HYPHENS + MULTIPART_CARRIAGE_RETURN_AND_NEWLINE).getBytes(ENCODING_CHARSET));
-        }
-      } else {
-        outputStream.write(parameters.getBytes(ENCODING_CHARSET));
-      }
-
-      if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug(format("Response headers: %s", httpUrlConnection.getHeaderFields()));
-      }
-
-      fillHeaderAndDebugInfo(httpUrlConnection);
-
-      try {
-        inputStream = httpUrlConnection.getResponseCode() != HttpURLConnection.HTTP_OK
-            ? httpUrlConnection.getErrorStream() : httpUrlConnection.getInputStream();
-      } catch (IOException e) {
-        LOGGER.warn(format("An error occurred while POSTing to %s:", url), e);
-      }
-
-      return new Response(httpUrlConnection.getResponseCode(), fromInputStream(inputStream));
-    } finally {
-      if (autocloseBinaryAttachmentStream && binaryAttachments.length > 0) {
-        for (BinaryAttachment binaryAttachment : binaryAttachments) {
-          closeQuietly(binaryAttachment.getData());
-        }
-      }
-
-      closeQuietly(outputStream);
-      closeQuietly(httpUrlConnection);
-    }
+  public Response executePost(String url, String parameters, BinaryAttachment... binaryAttachments)
+      throws IOException {
+    return null;
+    // if (binaryAttachments == null) {
+    // binaryAttachments = new BinaryAttachment[0];
+    // }
+    //
+    // if (LOGGER.isDebugEnabled()) {
+    // LOGGER.debug("Executing a POST to " + url + " with parameters "
+    // + (binaryAttachments.length > 0 ? "" : "(sent in request body): ") +
+    // URLUtils.urlDecode(parameters)
+    // + (binaryAttachments.length > 0 ? " and " + binaryAttachments.length + " binary
+    // attachment[s]." : ""));
+    // }
+    //
+    // HttpURLConnection httpUrlConnection = null;
+    // OutputStream outputStream = null;
+    // InputStream inputStream = null;
+    //
+    // try {
+    // httpUrlConnection = openConnection(new URL(url + (binaryAttachments.length > 0 ? "?" +
+    // parameters : "")));
+    // httpUrlConnection.setReadTimeout(DEFAULT_READ_TIMEOUT_IN_MS);
+    //
+    // // Allow subclasses to customize the connection if they'd like to - set
+    // // their own headers, timeouts, etc.
+    // customizeConnection(httpUrlConnection);
+    //
+    // httpUrlConnection.setRequestMethod("POST");
+    // httpUrlConnection.setDoOutput(true);
+    // httpUrlConnection.setUseCaches(false);
+    //
+    // if (binaryAttachments.length > 0) {
+    // httpUrlConnection.setRequestProperty("Connection", "Keep-Alive");
+    // httpUrlConnection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" +
+    // MULTIPART_BOUNDARY);
+    // }
+    //
+    // httpUrlConnection.connect();
+    // outputStream = httpUrlConnection.getOutputStream();
+    //
+    // // If we have binary attachments, the body is just the attachments and the
+    // // other parameters are passed in via the URL.
+    // // Otherwise the body is the URL parameter string.
+    // if (binaryAttachments.length > 0) {
+    // for (BinaryAttachment binaryAttachment : binaryAttachments) {
+    // StringBuilder stringBuilder = new StringBuilder();
+    //
+    // stringBuilder.append(MULTIPART_TWO_HYPHENS).append(MULTIPART_BOUNDARY)
+    // .append(MULTIPART_CARRIAGE_RETURN_AND_NEWLINE).append("Content-Disposition: form-data;
+    // name=\"")
+    // .append(createFormFieldName(binaryAttachment)).append("\"; filename=\"")
+    // .append(binaryAttachment.getFilename()).append("\"");
+    //
+    // if (binaryAttachment.getContentType() != null && binaryAttachment.getContentType().length() >
+    // 0) {
+    // stringBuilder.append(MULTIPART_CARRIAGE_RETURN_AND_NEWLINE).append("Content-Type: ")
+    // .append(binaryAttachment.getContentType());
+    // }
+    //
+    // stringBuilder.append(MULTIPART_CARRIAGE_RETURN_AND_NEWLINE).append(MULTIPART_CARRIAGE_RETURN_AND_NEWLINE);
+    //
+    // outputStream.write(stringBuilder.toString().getBytes(ENCODING_CHARSET));
+    //
+    // write(binaryAttachment.getData(), outputStream, MULTIPART_DEFAULT_BUFFER_SIZE);
+    //
+    // outputStream.write((MULTIPART_CARRIAGE_RETURN_AND_NEWLINE + MULTIPART_TWO_HYPHENS +
+    // MULTIPART_BOUNDARY
+    // + MULTIPART_TWO_HYPHENS + MULTIPART_CARRIAGE_RETURN_AND_NEWLINE).getBytes(ENCODING_CHARSET));
+    // }
+    // } else {
+    // outputStream.write(parameters.getBytes(ENCODING_CHARSET));
+    // }
+    //
+    // if (LOGGER.isDebugEnabled()) {
+    // LOGGER.debug(format("Response headers: %s", httpUrlConnection.getHeaderFields()));
+    // }
+    //
+    // fillHeaderAndDebugInfo(httpUrlConnection);
+    //
+    // try {
+    // inputStream = httpUrlConnection.getResponseCode() != HttpURLConnection.HTTP_OK
+    // ? httpUrlConnection.getErrorStream() : httpUrlConnection.getInputStream();
+    // } catch (IOException e) {
+    // LOGGER.warn(format("An error occurred while POSTing to %s:", url), e);
+    // }
+    //
+    // return new Response(httpUrlConnection.getResponseCode(), fromInputStream(inputStream));
+    // } finally {
+    // if (autocloseBinaryAttachmentStream && binaryAttachments.length > 0) {
+    // for (BinaryAttachment binaryAttachment : binaryAttachments) {
+    // closeQuietly(binaryAttachment.getData());
+    // }
+    // }
+    //
+    // closeQuietly(outputStream);
+    // closeQuietly(httpUrlConnection);
+    // }
   }
 
   /**
@@ -290,7 +292,7 @@ public class DefaultWebRequestor implements WebRequestor {
    * @param connection
    *          The connection to customize.
    */
-  protected void customizeConnection(HttpURLConnection connection) {
+  protected void customizeConnection(HttpRequest connection) {
     // This implementation is a no-op
   }
 
@@ -303,14 +305,14 @@ public class DefaultWebRequestor implements WebRequestor {
    * @param closeable
    *          The resource to close.
    */
-  protected void closeQuietly(Closeable closeable) {
-    if (closeable == null) {
+  protected void closeQuietly(HttpResponse response) {
+    if (response == null) {
       return;
     }
     try {
-      closeable.close();
+      response.disconnect();
     } catch (Exception t) {
-      LOGGER.warn(format("Unable to close %s: ", closeable), t);
+      LOGGER.warn(format("Unable to close %s: ", response), t);
     }
   }
 
@@ -349,7 +351,8 @@ public class DefaultWebRequestor implements WebRequestor {
    * @throws NullPointerException
    *           If either {@code source} or @{code destination} is {@code null}.
    */
-  protected void write(InputStream source, OutputStream destination, int bufferSize) throws IOException {
+  protected void write(InputStream source, OutputStream destination, int bufferSize)
+      throws IOException {
     if (source == null || destination == null) {
       throw new NullPointerException("Must provide non-null source and destination streams.");
     }
@@ -403,7 +406,7 @@ public class DefaultWebRequestor implements WebRequestor {
    * 
    * @return the current reponse header map
    */
-  public Map<String, List<String>> getCurrentHeaders() {
+  public Map<String, Object> getCurrentHeaders() {
     return currentHeaders;
   }
 
@@ -421,70 +424,46 @@ public class DefaultWebRequestor implements WebRequestor {
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug(format("Making a %s request to %s", httpMethod.name(), url));
     }
-
-    HttpURLConnection httpUrlConnection = null;
-
+    
+    HttpResponse httpResponse = null;
     try {
-      httpUrlConnection = openConnection(new URL(url));
-      httpUrlConnection.setReadTimeout(DEFAULT_READ_TIMEOUT_IN_MS);
-      httpUrlConnection.setUseCaches(false);
-      httpUrlConnection.setRequestMethod(httpMethod.name());
-
-      // Allow subclasses to customize the connection if they'd like to - set
-      // their own headers, timeouts, etc.
-      customizeConnection(httpUrlConnection);
-
-      httpUrlConnection.connect();
-
-      if (LOGGER.isTraceEnabled()) {
-        LOGGER.trace(format("Response headers: %s", httpUrlConnection.getHeaderFields()));
-      }
-
-      fillHeaderAndDebugInfo(httpUrlConnection);
-
-      Response response = fetchResponse(httpUrlConnection);
-
+      GenericUrl genericUrl = new GenericUrl(url);
+      HttpRequest request = requestFactory.buildRequest(httpMethod.name(), genericUrl, null);
+      request.setReadTimeout(DEFAULT_READ_TIMEOUT_IN_MS);
+      
+      // Allow subclasses to customize the connection if they'd like to - set their own headers, 
+      // timeouts, etc.
+      customizeConnection(request);
+      httpResponse = request.execute();      
+      
+      fillHeaderAndDebugInfo(httpResponse);
+      
+      Response response = fetchResponse(httpResponse);
+      
       if (LOGGER.isDebugEnabled()) {
         LOGGER.debug(format("Facebook responded with %s", response));
       }
-
+      
       return response;
     } finally {
-      closeQuietly(httpUrlConnection);
+      closeQuietly(httpResponse);
     }
   }
 
-  protected void fillHeaderAndDebugInfo(HttpURLConnection httpUrlConnection) {
-    currentHeaders = Collections.unmodifiableMap(httpUrlConnection.getHeaderFields());
+  protected void fillHeaderAndDebugInfo(HttpResponse httpResponse) {
+    currentHeaders = httpResponse.getHeaders();
 
-    String usedApiVersion = StringUtils.trimToEmpty(httpUrlConnection.getHeaderField("facebook-api-version"));
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug(format("Facebook used the API %s to answer your request", usedApiVersion));
-    }
-
-    String fbTraceId = StringUtils.trimToEmpty(httpUrlConnection.getHeaderField("x-fb-trace-id"));
-    String fbRev = StringUtils.trimToEmpty(httpUrlConnection.getHeaderField("x-fb-rev"));
-    String fbDebug = StringUtils.trimToEmpty(httpUrlConnection.getHeaderField("x-fb-debug"));
-    String fbAppUsage = StringUtils.trimToEmpty(httpUrlConnection.getHeaderField("x-app-usage"));
-    String fbPageUsage = StringUtils.trimToEmpty(httpUrlConnection.getHeaderField("x-page-usage"));
-    Version usedVersion = Version.getVersionFromString(usedApiVersion);
-    // TODO: Debug header info??
-//    debugHeaderInfo = new DebugHeaderInfo(fbDebug, fbRev, fbTraceId, usedVersion, fbAppUsage, fbPageUsage);
+    String liFabric = StringUtils.trimToEmpty((String) currentHeaders.get("x-li-fabric"));
+    String liFormat = StringUtils.trimToEmpty((String) currentHeaders.get("x-li-format"));
+    String liRequestId = StringUtils.trimToEmpty((String) currentHeaders.get("x-li-request-id"));
+    String liUUID = StringUtils.trimToEmpty((String) currentHeaders.get("x-li-uuid"));
+     debugHeaderInfo = new DebugHeaderInfo(liFabric, liFormat, liRequestId, liUUID);
   }
 
-  protected Response fetchResponse(HttpURLConnection httpUrlConnection) throws IOException {
-    InputStream inputStream = null;
-    try {
-      inputStream = httpUrlConnection.getResponseCode() != HttpURLConnection.HTTP_OK
-          ? httpUrlConnection.getErrorStream() : httpUrlConnection.getInputStream();
-    } catch (IOException e) {
-      LOGGER.warn(format("An error occurred while making a %s request to %s:",
-        httpUrlConnection.getRequestMethod(), httpUrlConnection.getURL()), e);
-    }
-
-    return new Response(httpUrlConnection.getResponseCode(), fromInputStream(inputStream));
+  protected Response fetchResponse(HttpResponse httpUrlConnection) throws IOException {
+    return new Response(httpUrlConnection.getStatusCode(), fromInputStream(httpUrlConnection.getContent()));
   }
-  
+
   /**
    * Builds and returns a string representation of the given {@code inputStream} .
    *
