@@ -17,8 +17,6 @@
 
 package com.echobox.api.linkedin.exception;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedInException;
-
 /**
  * LinkedIn logger exception
  * @author Joanna
