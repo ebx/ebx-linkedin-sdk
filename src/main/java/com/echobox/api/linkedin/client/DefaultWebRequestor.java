@@ -26,11 +26,29 @@ import static java.lang.String.format;
 import com.echobox.api.linkedin.logging.LinkedInLogger;
 import com.echobox.api.linkedin.util.URLUtils;
 import com.echobox.api.linkedin.version.Version;
+import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
+import com.google.api.client.auth.oauth2.BearerToken;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonObjectParser;
+import com.google.api.client.json.jackson2.JacksonFactory;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +56,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -80,18 +99,52 @@ public class DefaultWebRequestor implements WebRequestor {
    * By default, how long should we wait for a response (in ms)?
    */
   private static final int DEFAULT_READ_TIMEOUT_IN_MS = 180000;
+  
+  private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
   private Map<String, List<String>> currentHeaders;
 
   private DebugHeaderInfo debugHeaderInfo;
-
+  
   /**
    * By default this is true, to prevent breaking existing usage
    */
   private boolean autocloseBinaryAttachmentStream = true;
+  
+  private HttpRequestFactory requestFactory;
 
   protected enum HttpMethod {
     GET, DELETE, POST
+  }
+  
+  public DefaultWebRequestor(String clientId, String clientSecret, String accessToken) throws GeneralSecurityException, IOException {
+    this.requestFactory = authorize(clientId, clientSecret, accessToken);
+  }
+  
+  private HttpRequestFactory authorize(String clientId, String clientSecret, String accessToken) throws GeneralSecurityException, IOException {
+    HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+    // load client secrets
+    JSONObject appTokens = new JSONObject().put("client_id", clientId).put("client_secret", clientSecret);
+    String installedAppTokens = new JSONObject().put("installed", appTokens).toString();
+    
+    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
+        new InputStreamReader(new ByteArrayInputStream(installedAppTokens.getBytes())));
+    // set up authorization code flow
+    GoogleCredential credential =
+        new GoogleCredential.Builder().setJsonFactory(JSON_FACTORY).setTransport(httpTransport)
+            .setClientSecrets(clientSecrets).build();
+    credential.setAccessToken(accessToken);
+    
+    HttpRequestFactory requestFactory =
+        httpTransport.createRequestFactory(new HttpRequestInitializer() {
+          @Override
+          public void initialize(HttpRequest request) throws IOException {
+            credential.initialize(request);
+            request.setParser(new JsonObjectParser(JSON_FACTORY));
+          }
+        });
+    
+    return requestFactory;
   }
 
   /**
@@ -100,7 +153,10 @@ public class DefaultWebRequestor implements WebRequestor {
    */
   @Override
   public Response executeGet(String url) throws IOException {
-    return execute(url, HttpMethod.GET);
+    GenericUrl genericUrl = new GenericUrl(url);
+    HttpRequest request = requestFactory.buildGetRequest(genericUrl);
+    HttpResponse execute = request.execute();
+    return null;
   }
 
   /**

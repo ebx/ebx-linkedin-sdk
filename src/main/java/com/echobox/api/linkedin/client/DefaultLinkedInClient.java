@@ -1,6 +1,7 @@
 
 package com.echobox.api.linkedin.client;
 
+import static java.lang.String.format;
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
@@ -123,28 +124,20 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
   }
 
-  public DefaultLinkedInClient(String accessToken, Version apiVersion) {
-    this(accessToken, null, new DefaultWebRequestor(), new DefaultJsonMapper(), apiVersion);
-  }
+//  public DefaultLinkedInClient(String accessToken, Version apiVersion) {
+//    this(accessToken, null, new DefaultWebRequestor(accessToken), new DefaultJsonMapper(), apiVersion);
+//  }
+//
+//  public DefaultLinkedInClient(String accessToken, String appSecret, Version apiVersion) {
+//    this(accessToken, appSecret, new DefaultWebRequestor(accessToken), new DefaultJsonMapper(), apiVersion);
+//  }
 
-  public DefaultLinkedInClient(String accessToken, String appSecret, Version apiVersion) {
-    this(accessToken, appSecret, new DefaultWebRequestor(), new DefaultJsonMapper(), apiVersion);
-  }
-
-  public DefaultLinkedInClient(String accessToken, WebRequestor webRequestor,
-      JsonMapper jsonMapper, Version apiVersion) {
-    this(accessToken, null, webRequestor, jsonMapper, apiVersion);
-  }
-
-  public DefaultLinkedInClient(String accessToken, String appSecret, WebRequestor webRequestor,
-      JsonMapper jsonMapper, Version apiVersion) {
+  public DefaultLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper, Version apiVersion) {
     super();
     
     verifyParameterPresence("jsonMapper", jsonMapper);
     verifyParameterPresence("webRequestor", webRequestor);
     
-    this.accessToken = StringUtils.trimToNull(accessToken);
-    this.appSecret = StringUtils.trimToNull(appSecret);
     this.webRequestor = webRequestor;
     this.jsonMapper = jsonMapper;
     this.apiVersion = apiVersion;
@@ -327,8 +320,25 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
   @Override
   protected String createEndpointForApiCall(String apiCall, boolean hasAttachment) {
-    // TODO Auto-generated method stub
-    return null;
+    while (apiCall.startsWith("/"))
+      apiCall = apiCall.substring(1);
+
+    String baseUrl = getFacebookGraphEndpointUrl();
+
+    return format("%s/%s", baseUrl, apiCall);
+  }
+  
+  /**
+   * Returns the base endpoint URL for the Graph API.
+   * 
+   * @return The base endpoint URL for the Graph API.
+   */
+  protected String getFacebookGraphEndpointUrl() {
+    if (apiVersion.isUrlElementRequired()) {
+      return LINKEDIN_API_ENDPOINT_URL + '/' + apiVersion.getUrlElement();
+    } else {
+      return LINKEDIN_API_ENDPOINT_URL;
+    }
   }
 
   @Override

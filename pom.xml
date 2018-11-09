@@ -60,7 +60,11 @@
 			<version>0.1.2</version>
 			<scope>runtime</scope>
 		</dependency>
-
+		<dependency>
+	      <groupId>com.google.apis</groupId>
+	      <artifactId>google-api-services-oauth2</artifactId>
+	      <version>v1-rev145-1.25.0</version>
+	    </dependency>
 	</dependencies>
 
 	<repositories>

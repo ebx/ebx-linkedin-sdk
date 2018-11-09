@@ -17,7 +17,11 @@ public enum Version {
   private static Logger LOGGER = LinkedInLogger.getLoggerInstance();
   
   @Getter
-  private final String version;
+  private final String urlElement;
+  
+  public boolean isUrlElementRequired() {
+    return null != this.urlElement;
+  }
   
   /**
    * Convert the provided code into a company type
@@ -27,7 +31,7 @@ public enum Version {
    */
   public static Version getVersionFromString(String urlElement) {
     for (Version version : Version.values()) {
-      if (version.getVersion().equals(urlElement)) {
+      if (version.getUrlElement().equals(urlElement)) {
         return version;
       }
     }
