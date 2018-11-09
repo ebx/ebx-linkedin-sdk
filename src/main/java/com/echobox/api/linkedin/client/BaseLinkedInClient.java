@@ -32,103 +32,44 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 /**
- * Base class that contains data and functionality common to {@link DefaultFacebookClient} and
- * {@link DefaultLegacyFacebookClient}.
+ * Base class that contains data and functionality common to {@link DefaultLinkedInClient}
  * 
- * @author <a href="http://restfb.com">Mark Allen</a>
- * @since 1.5
+ * @author Joanna
+ *
  */
 abstract class BaseLinkedInClient {
   
   private static final Logger LOGGER = LinkedInLogger.getLoggerInstance();
   
   /**
-   * Handles {@code GET}s and {@code POST}s to the Facebook API endpoint.
+   * Handles REST request methods to the LinkedIn API endpoint.
    */
   protected WebRequestor webRequestor;
 
   /**
-   * Handles mapping Facebook response JSON to Java objects.
+   * Handles mapping LinkedIn response JSON to Java objects.
    */
   protected JsonMapper jsonMapper;
 
   /**
-   * Set of parameter names that user must not specify themselves, since we use these parameters internally.
+   * Set of parameter names that user must not specify themselves, since we use these parameters
+   * internally.
    */
   protected final Set<String> illegalParamNames = new HashSet<String>();
 
-  /**
-   * Set of API calls that can use the read-only endpoint for a performance boost.
-   */
-  protected final Set<String> readOnlyApiCalls = new HashSet<String>();
-
-  /**
-   * Legacy API error response 'error_code' attribute name.
-   */
-  protected static final String LEGACY_ERROR_CODE_ATTRIBUTE_NAME = "error_code";
-
-  /**
-   * Legacy API error response 'error_msg' attribute name.
-   */
-  protected static final String LEGACY_ERROR_MSG_ATTRIBUTE_NAME = "error_msg";
-
-  /**
-   * Reserved access token parameter name.
-   */
-  protected static final String ACCESS_TOKEN_PARAM_NAME = "access_token";
-
-  /**
-   * Reserved application secret proof parameter name.
-   */
-  protected static final String APP_SECRET_PROOF_PARAM_NAME = "appsecret_proof";
-
-  /**
-   * Initializes this Facebook client.
-   */
-  public BaseLinkedInClient() {
-    initializeReadOnlyApiCalls();
-  }
-
-  /**
-   * TODO: do we need this?
-   * Stores off the set of API calls that support the read-only endpoint.
-   * <p>
-   * This list was cribbed from the
-   * <a href="https://github.com/facebook/php-sdk/blob/master/src/facebook.php" target="_blank">Official PHP Facebook
-   * API client</a>.
-   * 
-   * @since 1.6.3
-   */
-  protected void initializeReadOnlyApiCalls() {
-    readOnlyApiCalls.addAll(Arrays.asList("admin.getallocation", "admin.getappproperties", "admin.getbannedusers",
-      "admin.getlivestreamvialink", "admin.getmetrics", "admin.getrestrictioninfo", "application.getpublicinfo",
-      "auth.getapppublickey", "auth.getsession", "auth.getsignedpublicsessiondata", "comments.get",
-      "connect.getunconnectedfriendscount", "dashboard.getactivity", "dashboard.getcount", "dashboard.getglobalnews",
-      "dashboard.getnews", "dashboard.multigetcount", "dashboard.multigetnews", "data.getcookies", "events.get",
-      "events.getmembers", "fbml.getcustomtags", "feed.getappfriendstories", "feed.getregisteredtemplatebundlebyid",
-      "feed.getregisteredtemplatebundles", "fql.multiquery", "fql.query", "friends.arefriends", "friends.get",
-      "friends.getappusers", "friends.getlists", "friends.getmutualfriends", "gifts.get", "groups.get",
-      "groups.getmembers", "intl.gettranslations", "links.get", "notes.get", "notifications.get", "pages.getinfo",
-      "pages.isadmin", "pages.isappadded", "pages.isfan", "permissions.checkavailableapiaccess",
-      "permissions.checkgrantedapiaccess", "photos.get", "photos.getalbums", "photos.gettags", "profile.getinfo",
-      "profile.getinfooptions", "stream.get", "stream.getcomments", "stream.getfilters", "users.getinfo",
-      "users.getloggedinuser", "users.getstandardinfo", "users.hasapppermission", "users.isappuser", "users.isverified",
-      "video.getuploadlimits"));
-  }
-  
   /**
   *
   * @param json
   * @return
   */
- protected void skipResponseStatusExceptionParsing(String json) throws ResponseErrorJsonParsingException {
+ protected void skipResponseStatusExceptionParsing(String json)
+     throws ResponseErrorJsonParsingException {
    // If this is not an object, it's not an error response.
    if (!json.startsWith("{")) {
      throw new ResponseErrorJsonParsingException();
@@ -151,7 +92,7 @@ abstract class BaseLinkedInClient {
     JSONObject errorObject = null;
 
     // We need to swallow exceptions here because it's possible to get a legit
-    // Facebook response that contains illegal JSON (e.g.
+    // LinkedIn response that contains illegal JSON (e.g.
     // users.getLoggedInUser returning 1240077) - we're only interested in
     // whether or not there's an error_code field present.
     try {
@@ -174,7 +115,8 @@ abstract class BaseLinkedInClient {
    *          The parameters to which the given {@code parameter} is appended.
    * @return A new array which contains both {@code parameter} and {@code parameters}.
    */
-  protected Parameter[] parametersWithAdditionalParameter(Parameter parameter, Parameter... parameters) {
+  protected Parameter[] parametersWithAdditionalParameter(Parameter parameter,
+      Parameter... parameters) {
     Parameter[] updatedParameters = new Parameter[parameters.length + 1];
     System.arraycopy(parameters, 0, updatedParameters, 0, parameters.length);
     updatedParameters[parameters.length] = parameter;
@@ -182,7 +124,8 @@ abstract class BaseLinkedInClient {
   }
 
   /**
-   * Given a map of query names to queries, verify that it contains valid data and convert it to a JSON object string.
+   * Given a map of query names to queries, verify that it contains valid data and convert it to a
+   * JSON object string.
    * 
    * @param queries
    *          The query map to convert.
@@ -206,7 +149,8 @@ abstract class BaseLinkedInClient {
       }
 
       try {
-        jsonObject.put(StringUtils.trimToEmpty(entry.getKey()), StringUtils.trimToEmpty(entry.getValue()));
+        jsonObject.put(StringUtils.trimToEmpty(entry.getKey()),
+            StringUtils.trimToEmpty(entry.getValue()));
       } catch (JSONException e) {
         // Shouldn't happen unless bizarre input is provided
         throw new IllegalArgumentException("Unable to convert " + queries + " to JSON.", e);
@@ -219,8 +163,7 @@ abstract class BaseLinkedInClient {
   /**
    * Gets the URL-encoded version of the given {@code value} for the parameter named {@code name}.
    * <p>
-   * Includes special-case handling for access token parameters where we check if the token is already URL-encoded - if
-   * so, we don't encode again. All other parameter types are always URL-encoded.
+   * Parameter types should always be URL-encoded.
    * 
    * @param name
    *          The name of the parameter whose value should be URL-encoded and returned.
@@ -229,24 +172,19 @@ abstract class BaseLinkedInClient {
    * @return The URL-encoded version of the given {@code value}.
    */
   protected String urlEncodedValueForParameterName(String name, String value) {
-    // Special handling for access_token -
-    // '%7C' is the pipe character and will be present in any access_token
-    // parameter that's already URL-encoded. If we see this combination, don't
-    // URL-encode. Otherwise, URL-encode as normal.
-    return ACCESS_TOKEN_PARAM_NAME.equals(name) && value.contains("%7C") ? value : URLUtils.urlEncode(value);
+    // URL-encode as normal.
+    return URLUtils.urlEncode(value);
   }
 
   /**
-   * Given an api call (e.g. "me" or "fql.query"), returns the correct FB API endpoint to use.
+   * Given an api call, returns the correct LinkedIn API endpoint to use.
    * <p>
-   * Useful for returning the read-only API endpoint where possible.
    * 
    * @param apiCall
    *          The FB API call (Graph or Old REST API) for which we'd like an endpoint.
    * @param hasAttachment
    *          Are we including a multipart file when making this API call?
    * @return An absolute endpoint URL to communicate with.
-   * @since 1.6.3
    */
   protected abstract String createEndpointForApiCall(String apiCall, boolean hasAttachment);
 
@@ -254,7 +192,6 @@ abstract class BaseLinkedInClient {
    * Returns the base read-only endpoint URL.
    * 
    * @return The base read-only endpoint URL.
-   * @since 1.6.3
    */
   protected abstract String getFacebookReadOnlyEndpointUrl();
 

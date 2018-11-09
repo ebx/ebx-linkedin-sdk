@@ -1,24 +1,20 @@
-/**
- * Copyright (c) 2010-2017 Mark Allen, Norbert Bartels.
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 
 package com.echobox.api.linkedin.client;
 
@@ -27,6 +23,7 @@ import static java.lang.String.format;
 import com.echobox.api.linkedin.logging.LinkedInLogger;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential.Builder;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpHeaders;
@@ -50,15 +47,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.Map;
 
 /**
- * Default implementation of a service that sends HTTP requests to the Facebook API endpoint.
+ * Default implementation of a service that sends HTTP requests to the LinkedIn API endpoint.
  * 
- * @author <a href="http://restfb.com">Mark Allen</a>
+ * @author Joanna
+ *
  */
 public class DefaultWebRequestor implements WebRequestor {
 
@@ -68,27 +64,6 @@ public class DefaultWebRequestor implements WebRequestor {
    * Default charset to use for encoding/decoding strings.
    */
   public static final String ENCODING_CHARSET = "UTF-8";
-
-  /**
-   * Arbitrary unique boundary marker for multipart {@code POST}s.
-   */
-  private static final String MULTIPART_BOUNDARY =
-      "**boundarystringwhichwill**neverbeencounteredinthewild**";
-
-  /**
-   * Line separator for multipart {@code POST}s.
-   */
-  private static final String MULTIPART_CARRIAGE_RETURN_AND_NEWLINE = "\r\n";
-
-  /**
-   * Hyphens for multipart {@code POST}s.
-   */
-  private static final String MULTIPART_TWO_HYPHENS = "--";
-
-  /**
-   * Default buffer size for multipart {@code POST}s.
-   */
-  private static final int MULTIPART_DEFAULT_BUFFER_SIZE = 8192;
 
   /**
    * By default, how long should we wait for a response (in ms)?
@@ -101,15 +76,20 @@ public class DefaultWebRequestor implements WebRequestor {
 
   private DebugHeaderInfo debugHeaderInfo;
 
-  /**
-   * By default this is true, to prevent breaking existing usage
-   */
-  private boolean autocloseBinaryAttachmentStream = true;
-
   private HttpRequestFactory requestFactory;
 
   protected enum HttpMethod {
     GET, DELETE, POST
+  }
+  
+  public DefaultWebRequestor(String accessToken)
+      throws GeneralSecurityException, IOException {
+    this(null, null, accessToken);
+  }
+  
+  public DefaultWebRequestor(String clientId, String clientSecret)
+      throws GeneralSecurityException, IOException {
+    this(clientId, clientSecret, null);
   }
 
   public DefaultWebRequestor(String clientId, String clientSecret, String accessToken)
@@ -120,18 +100,32 @@ public class DefaultWebRequestor implements WebRequestor {
   private HttpRequestFactory authorize(String clientId, String clientSecret, String accessToken)
       throws GeneralSecurityException, IOException {
     HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-    // load client secrets
-    JSONObject appTokens = new JSONObject().put("client_id", clientId).put("client_secret",
-        clientSecret);
-    String installedAppTokens = new JSONObject().put("installed", appTokens).toString();
+    
+    GoogleClientSecrets clientSecrets = null;
+    if (clientId != null && clientSecret != null) {
+      // Load client secrets
+      JSONObject appTokens = new JSONObject().put("client_id", clientId).put("client_secret",
+          clientSecret);
+      String installedAppTokens = new JSONObject().put("installed", appTokens).toString();      
+      clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
+          new InputStreamReader(new ByteArrayInputStream(installedAppTokens.getBytes())));
+    }
 
-    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
-        new InputStreamReader(new ByteArrayInputStream(installedAppTokens.getBytes())));
-    // set up authorization code flow
-    GoogleCredential credential =
-        new GoogleCredential.Builder().setJsonFactory(JSON_FACTORY).setTransport(httpTransport)
-            .setClientSecrets(clientSecrets).build();
-    credential.setAccessToken(accessToken);
+    // Set up authorization code flow
+    Builder credentiaBuilder =
+        new GoogleCredential.Builder()
+            .setJsonFactory(JSON_FACTORY)
+            .setTransport(httpTransport);
+    
+    if (clientSecrets != null) {
+      credentiaBuilder.setClientSecrets(clientSecrets);
+    }
+    
+    GoogleCredential credential = credentiaBuilder.build();
+    
+    if (accessToken != null) {
+      credential.setAccessToken(accessToken);      
+    }
 
     HttpRequestFactory requestFactory =
         httpTransport.createRequestFactory(new HttpRequestInitializer() {
@@ -145,167 +139,37 @@ public class DefaultWebRequestor implements WebRequestor {
     return requestFactory;
   }
 
-  /**
-   * @throws java.io.IOException
-   * @see com.restfb.WebRequestor#executeGet(java.lang.String)
-   */
   @Override
   public Response executeGet(String url) throws IOException {
     return execute(url, HttpMethod.GET);
   }
 
-  /**
-   * @throws java.io.IOException
-   * @see com.restfb.WebRequestor#executePost(java.lang.String, java.lang.String)
-   */
   @Override
   public Response executePost(String url, String parameters) throws IOException {
     return executePost(url, parameters, (BinaryAttachment[]) null);
   }
 
-  /**
-   * @throws java.io.IOException
-   * @see com.restfb.WebRequestor#executePost(java.lang.String, java.lang.String, com.restfb.BinaryAttachment[])
-   */
   @Override
   public Response executePost(String url, String parameters, BinaryAttachment... binaryAttachments)
       throws IOException {
-    return null;
-    // if (binaryAttachments == null) {
-    // binaryAttachments = new BinaryAttachment[0];
-    // }
-    //
-    // if (LOGGER.isDebugEnabled()) {
-    // LOGGER.debug("Executing a POST to " + url + " with parameters "
-    // + (binaryAttachments.length > 0 ? "" : "(sent in request body): ") +
-    // URLUtils.urlDecode(parameters)
-    // + (binaryAttachments.length > 0 ? " and " + binaryAttachments.length + " binary
-    // attachment[s]." : ""));
-    // }
-    //
-    // HttpURLConnection httpUrlConnection = null;
-    // OutputStream outputStream = null;
-    // InputStream inputStream = null;
-    //
-    // try {
-    // httpUrlConnection = openConnection(new URL(url + (binaryAttachments.length > 0 ? "?" +
-    // parameters : "")));
-    // httpUrlConnection.setReadTimeout(DEFAULT_READ_TIMEOUT_IN_MS);
-    //
-    // // Allow subclasses to customize the connection if they'd like to - set
-    // // their own headers, timeouts, etc.
-    // customizeConnection(httpUrlConnection);
-    //
-    // httpUrlConnection.setRequestMethod("POST");
-    // httpUrlConnection.setDoOutput(true);
-    // httpUrlConnection.setUseCaches(false);
-    //
-    // if (binaryAttachments.length > 0) {
-    // httpUrlConnection.setRequestProperty("Connection", "Keep-Alive");
-    // httpUrlConnection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" +
-    // MULTIPART_BOUNDARY);
-    // }
-    //
-    // httpUrlConnection.connect();
-    // outputStream = httpUrlConnection.getOutputStream();
-    //
-    // // If we have binary attachments, the body is just the attachments and the
-    // // other parameters are passed in via the URL.
-    // // Otherwise the body is the URL parameter string.
-    // if (binaryAttachments.length > 0) {
-    // for (BinaryAttachment binaryAttachment : binaryAttachments) {
-    // StringBuilder stringBuilder = new StringBuilder();
-    //
-    // stringBuilder.append(MULTIPART_TWO_HYPHENS).append(MULTIPART_BOUNDARY)
-    // .append(MULTIPART_CARRIAGE_RETURN_AND_NEWLINE).append("Content-Disposition: form-data;
-    // name=\"")
-    // .append(createFormFieldName(binaryAttachment)).append("\"; filename=\"")
-    // .append(binaryAttachment.getFilename()).append("\"");
-    //
-    // if (binaryAttachment.getContentType() != null && binaryAttachment.getContentType().length() >
-    // 0) {
-    // stringBuilder.append(MULTIPART_CARRIAGE_RETURN_AND_NEWLINE).append("Content-Type: ")
-    // .append(binaryAttachment.getContentType());
-    // }
-    //
-    // stringBuilder.append(MULTIPART_CARRIAGE_RETURN_AND_NEWLINE).append(MULTIPART_CARRIAGE_RETURN_AND_NEWLINE);
-    //
-    // outputStream.write(stringBuilder.toString().getBytes(ENCODING_CHARSET));
-    //
-    // write(binaryAttachment.getData(), outputStream, MULTIPART_DEFAULT_BUFFER_SIZE);
-    //
-    // outputStream.write((MULTIPART_CARRIAGE_RETURN_AND_NEWLINE + MULTIPART_TWO_HYPHENS +
-    // MULTIPART_BOUNDARY
-    // + MULTIPART_TWO_HYPHENS + MULTIPART_CARRIAGE_RETURN_AND_NEWLINE).getBytes(ENCODING_CHARSET));
-    // }
-    // } else {
-    // outputStream.write(parameters.getBytes(ENCODING_CHARSET));
-    // }
-    //
-    // if (LOGGER.isDebugEnabled()) {
-    // LOGGER.debug(format("Response headers: %s", httpUrlConnection.getHeaderFields()));
-    // }
-    //
-    // fillHeaderAndDebugInfo(httpUrlConnection);
-    //
-    // try {
-    // inputStream = httpUrlConnection.getResponseCode() != HttpURLConnection.HTTP_OK
-    // ? httpUrlConnection.getErrorStream() : httpUrlConnection.getInputStream();
-    // } catch (IOException e) {
-    // LOGGER.warn(format("An error occurred while POSTing to %s:", url), e);
-    // }
-    //
-    // return new Response(httpUrlConnection.getResponseCode(), fromInputStream(inputStream));
-    // } finally {
-    // if (autocloseBinaryAttachmentStream && binaryAttachments.length > 0) {
-    // for (BinaryAttachment binaryAttachment : binaryAttachments) {
-    // closeQuietly(binaryAttachment.getData());
-    // }
-    // }
-    //
-    // closeQuietly(outputStream);
-    // closeQuietly(httpUrlConnection);
-    // }
+    throw new UnsupportedOperationException("POST has not been implemented yet");
   }
 
   /**
-   * Given a {@code url}, opens and returns a connection to it.
-   * <p>
-   * If you'd like to pipe your connection through a proxy, this is the place to do so.
-   * 
-   * @param url
-   *          The URL to connect to.
-   * @return A connection to the URL.
-   * @throws IOException
-   *           If an error occurs while establishing the connection.
-   * @since 1.6.3
-   */
-  protected HttpURLConnection openConnection(URL url) throws IOException {
-    return (HttpURLConnection) url.openConnection();
-  }
-
-  /**
-   * Hook method which allows subclasses to easily customize the {@code connection}s created by
-   * {@link #executeGet(String)} and {@link #executePost(String, String)} - for example, setting a custom read timeout
-   * or request header.
-   * <p>
+   * Hook method which allows subclasses to easily customise the HTTP request connection
    * This implementation is a no-op.
    * 
-   * @param connection
-   *          The connection to customize.
+   * @param connection The connection to customize.
    */
   protected void customizeConnection(HttpRequest connection) {
     // This implementation is a no-op
   }
 
   /**
-   * Attempts to cleanly close a resource, swallowing any exceptions that might occur since there's no way to recover
-   * anyway.
-   * <p>
-   * It's OK to pass {@code null} in, this method will no-op in that case.
+   * Attempts to cleanly disconnect the reponse, swallowing any exceptions that might occur since
+   * there's no way to recover anyway.
    * 
-   * @param closeable
-   *          The resource to close.
+   * @param response The HTTP response to close.
    */
   protected void closeQuietly(HttpResponse response) {
     if (response == null) {
@@ -314,44 +178,20 @@ public class DefaultWebRequestor implements WebRequestor {
     try {
       response.disconnect();
     } catch (Exception t) {
-      LOGGER.warn(format("Unable to close %s: ", response), t);
+      LOGGER.warn(format("Unable to disconnect %s: ", response), t);
     }
   }
 
   /**
-   * Attempts to cleanly close an {@code HttpURLConnection}, swallowing any exceptions that might occur since there's no
-   * way to recover anyway.
-   * <p>
-   * It's OK to pass {@code null} in, this method will no-op in that case.
+   * Writes the contents of the {@code source} stream to the {@code destination} stream using the 
+   * given {@code bufferSize}.
    * 
-   * @param httpUrlConnection
-   *          The connection to close.
-   */
-  protected void closeQuietly(HttpURLConnection httpUrlConnection) {
-    if (httpUrlConnection == null) {
-      return;
-    }
-    try {
-      httpUrlConnection.disconnect();
-    } catch (Exception t) {
-      LOGGER.warn(format("Unable to disconnect %s: ", httpUrlConnection), t);
-    }
-  }
-
-  /**
-   * Writes the contents of the {@code source} stream to the {@code destination} stream using the given
-   * {@code bufferSize}.
-   * 
-   * @param source
-   *          The source stream to copy from.
-   * @param destination
-   *          The destination stream to copy to.
-   * @param bufferSize
-   *          The size of the buffer to use during the copy operation.
-   * @throws IOException
-   *           If an error occurs when reading from {@code source} or writing to {@code destination}.
-   * @throws NullPointerException
-   *           If either {@code source} or @{code destination} is {@code null}.
+   * @param source The source stream to copy from.
+   * @param destination The destination stream to copy to.
+   * @param bufferSize The size of the buffer to use during the copy operation.
+   * @throws IOException If an error occurs when reading from {@code source} or writing to
+   * {@code destination}.
+   * @throws NullPointerException If either {@code source} or @{code destination} is {@code null}.
    */
   protected void write(InputStream source, OutputStream destination, int bufferSize)
       throws IOException {
@@ -366,44 +206,6 @@ public class DefaultWebRequestor implements WebRequestor {
   }
 
   /**
-   * Creates the form field name for the binary attachment filename by stripping off the file extension - for example,
-   * the filename "test.png" would return "test".
-   * 
-   * @param binaryAttachment
-   *          The binary attachment for which to create the form field name.
-   * @return The form field name for the given binary attachment.
-   */
-  protected String createFormFieldName(BinaryAttachment binaryAttachment) {
-    if (binaryAttachment.getFieldName() != null) {
-      return binaryAttachment.getFieldName();
-    }
-
-    String name = binaryAttachment.getFilename();
-    int fileExtensionIndex = name.lastIndexOf('.');
-    return fileExtensionIndex > 0 ? name.substring(0, fileExtensionIndex) : name;
-  }
-
-  /**
-   * returns if the binary attachment stream is closed automatically
-   * 
-   * @since 1.7.0
-   * @return
-   */
-  public boolean isAutocloseBinaryAttachmentStream() {
-    return autocloseBinaryAttachmentStream;
-  }
-
-  /**
-   * define if the binary attachment stream is closed automatically after sending the content to facebook
-   * 
-   * @since 1.7.0
-   * @param autocloseBinaryAttachmentStream
-   */
-  public void setAutocloseBinaryAttachmentStream(boolean autocloseBinaryAttachmentStream) {
-    this.autocloseBinaryAttachmentStream = autocloseBinaryAttachmentStream;
-  }
-
-  /**
    * access to the current response headers
    * 
    * @return the current reponse header map
@@ -414,7 +216,8 @@ public class DefaultWebRequestor implements WebRequestor {
 
   @Override
   public Response executeDelete(String url) throws IOException {
-    return execute(url, HttpMethod.DELETE);
+    throw new UnsupportedOperationException("DELETE has not been implemented yet");
+    // return execute(url, HttpMethod.DELETE);
   }
 
   @Override
@@ -426,36 +229,36 @@ public class DefaultWebRequestor implements WebRequestor {
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug(format("Making a %s request to %s", httpMethod.name(), url));
     }
-    
+
     HttpResponse httpResponse = null;
     try {
       GenericUrl genericUrl = new GenericUrl(url);
       HttpRequest request = requestFactory.buildRequest(httpMethod.name(), genericUrl, null);
       request.setReadTimeout(DEFAULT_READ_TIMEOUT_IN_MS);
-      
-      // Allow subclasses to customize the connection if they'd like to - set their own headers, 
+
+      // Allow subclasses to customize the connection if they'd like to - set their own headers,
       // timeouts, etc.
       customizeConnection(request);
-      httpResponse = request.execute();      
-      
+      httpResponse = request.execute();
+
       fillHeaderAndDebugInfo(httpResponse.getHeaders());
-      
+
       Response response = fetchResponse(httpResponse);
-      
+
       if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug(format("Facebook responded with %s", response));
+        LOGGER.debug(format("LinkedIn responded with %s", response));
       }
-      
+
       return response;
     } catch (HttpResponseException ex) {
       fillHeaderAndDebugInfo(ex.getHeaders());
-      
+
       Response response = fetchResponse(ex.getStatusCode(), ex.getContent());
-      
+
       if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug(format("Facebook responded with an error %s", response));
+        LOGGER.debug(format("LinkedIn responded with an error %s", response));
       }
-      
+
       return response;
     } finally {
       closeQuietly(httpResponse);
@@ -467,15 +270,17 @@ public class DefaultWebRequestor implements WebRequestor {
 
     String liFabric = StringUtils.trimToEmpty(httpHeaders.getFirstHeaderStringValue("x-li-fabric"));
     String liFormat = StringUtils.trimToEmpty(httpHeaders.getFirstHeaderStringValue("x-li-format"));
-    String liRequestId = StringUtils.trimToEmpty(httpHeaders.getFirstHeaderStringValue("x-li-request-id"));
+    String liRequestId = StringUtils.trimToEmpty(httpHeaders.getFirstHeaderStringValue(
+        "x-li-request-id"));
     String liUUID = StringUtils.trimToEmpty(httpHeaders.getFirstHeaderStringValue("x-li-uuid"));
-     debugHeaderInfo = new DebugHeaderInfo(liFabric, liFormat, liRequestId, liUUID);
+    debugHeaderInfo = new DebugHeaderInfo(liFabric, liFormat, liRequestId, liUUID);
   }
 
   protected Response fetchResponse(HttpResponse httpUrlConnection) throws IOException {
-    return fetchResponse(httpUrlConnection.getStatusCode(), fromInputStream(httpUrlConnection.getContent()));
+    return fetchResponse(httpUrlConnection.getStatusCode(), fromInputStream(httpUrlConnection
+        .getContent()));
   }
-  
+
   protected Response fetchResponse(int statusCode, String body) {
     return new Response(statusCode, body);
   }
@@ -483,12 +288,10 @@ public class DefaultWebRequestor implements WebRequestor {
   /**
    * Builds and returns a string representation of the given {@code inputStream} .
    *
-   * @param inputStream
-   *          The stream from which a string representation is built.
+   * @param inputStream The stream from which a string representation is built.
    *
    * @return A string representation of the given {@code inputStream}.
-   * @throws IOException
-   *           If an error occurs while processing the {@code inputStream}.
+   * @throws IOException If an error occurs while processing the {@code inputStream}.
    */
   public static String fromInputStream(InputStream inputStream) throws IOException {
     if (inputStream == null) {

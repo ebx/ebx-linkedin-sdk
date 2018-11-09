@@ -24,6 +24,7 @@ package com.echobox.api.linkedin.client;
 import static java.util.Collections.unmodifiableList;
 
 import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
+import com.echobox.api.linkedin.jsonmapper.JsonMapper;
 import com.echobox.api.linkedin.util.ReflectionUtils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +33,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -49,7 +49,6 @@ public class Connection<T> implements Iterable<List<T>> {
   private List<T> data;
   private String previousPageUrl;
   private String nextPageUrl;
-  private Long totalCount;
   private String beforeCursor;
   private String afterCursor;
 
@@ -143,7 +142,7 @@ public class Connection<T> implements Iterable<List<T>> {
    * @since 1.6.7
    */
   @SuppressWarnings("unchecked")
-  public Connection(LinkedInClient facebookClient, String json, Class<T> connectionType) {
+  public Connection(String fullEndpoint, LinkedInClient facebookClient, String json, Class<T> connectionType) {
     List<T> dataList = new ArrayList<T>();
 
     if (json == null) {
@@ -159,7 +158,7 @@ public class Connection<T> implements Iterable<List<T>> {
     }
 
     // Pull out data
-    JSONArray jsonData = jsonObject.getJSONArray("data");
+    JSONArray jsonData = jsonObject.getJSONArray("values");
     for (int i = 0; i < jsonData.length(); i++) {
       dataList.add(connectionType.equals(JSONObject.class) ? (T) jsonData.get(i)
           : facebookClient.getJsonMapper().toJavaObject(jsonData.get(i).toString(), connectionType));
@@ -168,31 +167,29 @@ public class Connection<T> implements Iterable<List<T>> {
     // Pull out paging info, if present
     if (jsonObject.has("paging")) {
       JSONObject jsonPaging = jsonObject.getJSONObject("paging");
-      previousPageUrl = jsonPaging.has("previous") ? jsonPaging.getString("previous") : null;
-      nextPageUrl = jsonPaging.has("next") ? jsonPaging.getString("next") : null;
-      if (null != previousPageUrl && previousPageUrl.startsWith("http://")) {
-        previousPageUrl = previousPageUrl.replaceFirst("http://", "https://");
-      }
-      if (null != nextPageUrl && nextPageUrl.startsWith("http://")) {
-        nextPageUrl = nextPageUrl.replaceFirst("http://", "https://");
+      Integer count = jsonPaging.has("count") ? jsonPaging.getInt("count") : null;
+      Integer start = jsonPaging.has("start") ? jsonPaging.getInt("previous") : null;
+      // Paging is available
+      if (count != null && start != null) {
+        // You will know that you have reached the end of the dataset when your response contains
+        // less elements in the entities block of the response than your count parameter requested.
+        if (jsonData.length() < count) {
+          previousPageUrl = null;
+          nextPageUrl = null;
+        } else {
+          nextPageUrl = String.format("%s?start=%s&count=%s", fullEndpoint, start, count);
+          if (start > 0) {
+            // There's a previous page
+            previousPageUrl = String.format("%s?start=%s&count=%s", fullEndpoint, start - count, count);
+          }          
+        }
       }
     } else {
       previousPageUrl = null;
       nextPageUrl = null;
     }
-
-    if (jsonObject.has("paging") && jsonObject.getJSONObject("paging").has("cursors")) {
-      JSONObject jsonCursors = jsonObject.getJSONObject("paging").getJSONObject("cursors");
-      beforeCursor = jsonCursors.has("before") ? jsonCursors.getString("before") : null;
-      afterCursor = jsonCursors.has("after") ? jsonCursors.getString("after") : null;
-    }
-
-    if (jsonObject.has("summary")) {
-      JSONObject jsonSummary = jsonObject.getJSONObject("summary");
-      totalCount = jsonSummary.has("total_count") ? jsonSummary.getLong("total_count") : null;
-    } else {
-      totalCount = null;
-    }
+    
+    // TODO: there is a total...
 
     this.data = unmodifiableList(dataList);
     this.facebookClient = facebookClient;
@@ -269,16 +266,6 @@ public class Connection<T> implements Iterable<List<T>> {
    */
   public boolean hasNext() {
     return !StringUtils.isBlank(getNextPageUrl());
-  }
-
-  /**
-   * provides the total count of elements, if FB provides them (API >= v2.0)
-   * 
-   * @return the total count of elements if present
-   * @since 1.6.16
-   */
-  public Long getTotalCount() {
-    return totalCount;
   }
 
   public String getBeforeCursor() {
