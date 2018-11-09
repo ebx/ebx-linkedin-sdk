@@ -22,10 +22,10 @@
 
 package com.echobox.api.linkedin.client;
 
+import com.echobox.api.linkedin.exception.ResponseErrorJsonParsingException;
 import com.echobox.api.linkedin.jsonmapper.JsonMapper;
 import com.echobox.api.linkedin.logging.LinkedInLogger;
 import com.echobox.api.linkedin.util.URLUtils;
-import com.restfb.exception.ResponseErrorJsonParsingException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;

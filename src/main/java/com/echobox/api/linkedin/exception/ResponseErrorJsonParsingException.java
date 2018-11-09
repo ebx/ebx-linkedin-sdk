@@ -1,5 +1,8 @@
 package com.echobox.api.linkedin.exception;
 
-public class ResponseErrorJsonParsingException {
+/**
+ * Exception is thrown if it makes no sense to parse a error json
+ */
+public class ResponseErrorJsonParsingException extends Exception {
 
 }
