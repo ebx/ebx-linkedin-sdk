@@ -27,9 +27,9 @@ public class LinkedInQueryParseException extends LinkedInAPIException {
    * @param userMessage
    *          Value of the Facebook response attribute {@code error.error_user_message}.
    */
-  public LinkedInQueryParseException(String errorType, String errorMessage, Integer errorCode, Integer errorSubcode,
-      Integer httpStatusCode, String userTitle, String userMessage, Boolean isTransient, JSONObject rawError) {
-    super(errorType, errorMessage, errorCode, errorSubcode, httpStatusCode, userTitle, userMessage, isTransient,
+  public LinkedInQueryParseException(String errorMessage, Integer errorCode,
+      Integer httpStatusCode, Boolean isTransient, JSONObject rawError) {
+    super(errorMessage, errorCode, httpStatusCode, isTransient,
       rawError);
   }
   

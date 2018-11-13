@@ -54,6 +54,6 @@ public interface LinkedInExceptionMapper {
    *          raw error message as JSON
    * @return An appropriate {@code FacebookException} subclass.
    */
-  LinkedInException exceptionForTypeAndMessage(Integer errorCode, Integer errorSubcode, Integer httpStatusCode,
-      String type, String message, String userTitle, String userMessage, Boolean isTransient, JSONObject rawError);
+  LinkedInException exceptionForTypeAndMessage(Integer errorCode, Integer httpStatusCode,
+      String message, Boolean isTransient, JSONObject rawError);
 }

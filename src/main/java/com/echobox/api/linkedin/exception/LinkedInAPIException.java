@@ -45,34 +45,14 @@ public class LinkedInAPIException extends LinkedInErrorMessageException {
   private static final long serialVersionUID = 1L;
 
   /**
-   * The Facebook Graph API error type.
-   */
-  private final String errorType;
-
-  /**
    * The Facebook API error message.
    */
   private final String errorMessage;
 
   /**
-   * The Facebook API error user title.
-   */
-  private final String errorUserTitle;
-
-  /**
-   * The Facebook API error user message.
-   */
-  private final String errorUserMessage;
-
-  /**
    * The Facebook API error code.
    */
   private final Integer errorCode;
-
-  /**
-   * The Facebook API error subcode.
-   */
-  private final Integer errorSubcode;
 
   /**
    * The HTTP status code returned by the server.
@@ -101,29 +81,16 @@ public class LinkedInAPIException extends LinkedInErrorMessageException {
    * @param isTransient
    * 
    */
-  public LinkedInAPIException(String errorType, String errorMessage, Integer errorCode, Integer errorSubcode,
-      Integer httpStatusCode, String errorUserTitle, String errorUserMessage, Boolean isTransient,
+  public LinkedInAPIException(String errorMessage, Integer errorCode,
+      Integer httpStatusCode, Boolean isTransient,
       JSONObject rawError) {
-    super(String.format("Received Facebook error response of type %s: %s (code %s, subcode %s)", errorType, errorMessage,
-      errorCode, errorSubcode));
-    this.errorType = errorType;
+    super(String.format("Received Facebook error response: %s (code %s)", errorMessage,
+      errorCode));
     this.errorMessage = errorMessage;
     this.errorCode = errorCode;
-    this.errorSubcode = errorSubcode;
     this.httpStatusCode = httpStatusCode;
-    this.errorUserTitle = errorUserTitle;
-    this.errorUserMessage = errorUserMessage;
     this.isTransient = isTransient;
     setRawErrorJson(rawError);
-  }
-
-  /**
-   * Gets the Facebook Graph API error type.
-   * 
-   * @return The Facebook Graph API error type.
-   */
-  public String getErrorType() {
-    return errorType;
   }
 
   /**
@@ -145,15 +112,6 @@ public class LinkedInAPIException extends LinkedInErrorMessageException {
   }
 
   /**
-   * Gets the Facebook API error subcode.
-   * 
-   * @return The Facebook API error subcode.
-   */
-  public Integer getErrorSubcode() {
-    return errorSubcode;
-  }
-
-  /**
    * Gets the HTTP status code returned by the server.
    * 
    * @return The HTTP status code returned by the server.
@@ -161,26 +119,6 @@ public class LinkedInAPIException extends LinkedInErrorMessageException {
    */
   public Integer getHttpStatusCode() {
     return httpStatusCode;
-  }
-
-  /**
-   * Gets the Facebook API error user title.
-   * 
-   * @return the Facebook API error user title
-   * @since 1.7.1
-   */
-  public String getErrorUserTitle() {
-    return errorUserTitle;
-  }
-
-  /**
-   * Gets the Facebook API error user message.
-   * 
-   * @return the Facebook API error user message
-   * @since 1.7.1
-   */
-  public String getErrorUserMessage() {
-    return errorUserMessage;
   }
 
   public Boolean getIsTransient() {

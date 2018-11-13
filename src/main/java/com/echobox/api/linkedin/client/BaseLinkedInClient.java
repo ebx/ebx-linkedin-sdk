@@ -24,13 +24,11 @@ package com.echobox.api.linkedin.client;
 
 import com.echobox.api.linkedin.exception.ResponseErrorJsonParsingException;
 import com.echobox.api.linkedin.jsonmapper.JsonMapper;
-import com.echobox.api.linkedin.logging.LinkedInLogger;
 import com.echobox.api.linkedin.util.URLUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -44,9 +42,7 @@ import java.util.Set;
  *
  */
 abstract class BaseLinkedInClient {
-  
-  private static final Logger LOGGER = LinkedInLogger.getLoggerInstance();
-  
+
   /**
    * Handles REST request methods to the LinkedIn API endpoint.
    */
@@ -64,46 +60,15 @@ abstract class BaseLinkedInClient {
   protected final Set<String> illegalParamNames = new HashSet<String>();
 
   /**
-  *
-  * @param json
-  * @return
+  * If the error object is not in the correct ofrmat, throw a ResponseErrorJsonParsingException
+  * @param json error JSON
   */
- protected void skipResponseStatusExceptionParsing(String json)
-     throws ResponseErrorJsonParsingException {
-   // If this is not an object, it's not an error response.
-   if (!json.startsWith("{")) {
-     throw new ResponseErrorJsonParsingException();
-   }
-
-   int subStrEnd = Math.min(50, json.length());
-   if (!json.substring(0, subStrEnd).contains("\"error\"")) {
-     throw new ResponseErrorJsonParsingException();
-   }
- }
-
-  /**
-   * create a {@see JsonObject} from String and swallow possible {@see JsonException}
-   * 
-   * @param json
-   *          the string representation of the json
-   * @return the JsonObject, may be <code>null</code>
-   */
-  protected JSONObject silentlyCreateObjectFromString(String json) {
-    JSONObject errorObject = null;
-
-    // We need to swallow exceptions here because it's possible to get a legit
-    // LinkedIn response that contains illegal JSON (e.g.
-    // users.getLoggedInUser returning 1240077) - we're only interested in
-    // whether or not there's an error_code field present.
-    try {
-      errorObject = new JSONObject(json);
-    } catch (JSONException e) {
-      if (LOGGER.isTraceEnabled()) {
-        LOGGER.trace("illegal json received - returning null");
-      }
+  protected void skipResponseStatusExceptionParsing(String json)
+      throws ResponseErrorJsonParsingException {
+    // If this is not an object, it's not an error response.
+    if (!json.startsWith("{")) {
+      throw new ResponseErrorJsonParsingException();
     }
-
-    return errorObject;
   }
 
   /**
@@ -145,7 +110,7 @@ abstract class BaseLinkedInClient {
     for (Entry<String, String> entry : queries.entrySet()) {
       if (StringUtils.isBlank(entry.getKey()) || StringUtils.isBlank(entry.getValue())) {
         throw new IllegalArgumentException(
-          "Provided queries must have non-blank keys and values. You provided: " + queries);
+            "Provided queries must have non-blank keys and values. You provided: " + queries);
       }
 
       try {
@@ -181,7 +146,7 @@ abstract class BaseLinkedInClient {
    * <p>
    * 
    * @param apiCall
-   *          The FB API call (Graph or Old REST API) for which we'd like an endpoint.
+   *          The LI API call for which we'd like an endpoint.
    * @param hasAttachment
    *          Are we including a multipart file when making this API call?
    * @return An absolute endpoint URL to communicate with.
@@ -189,7 +154,8 @@ abstract class BaseLinkedInClient {
   protected abstract String createEndpointForApiCall(String apiCall, boolean hasAttachment);
 
   /**
-   * Verifies that the provided parameter names don't collide with the ones we internally pass along to Facebook.
+   * Verifies that the provided parameter names don't collide with the ones we internally pass along
+   * to LinkedIn.
    * 
    * @param parameters
    *          The parameters to check.
@@ -200,7 +166,8 @@ abstract class BaseLinkedInClient {
     for (Parameter parameter : parameters)
       if (illegalParamNames.contains(parameter.name)) {
         throw new IllegalArgumentException(
-          "Parameter '" + parameter.name + "' is reserved for RestFB use - " + "you cannot specify it yourself.");
+            "Parameter '" + parameter.name + "' is reserved for RestFB use - "
+                + "you cannot specify it yourself.");
       }
   }
 
@@ -217,7 +184,8 @@ abstract class BaseLinkedInClient {
   protected void verifyParameterPresence(String parameterName, String parameter) {
     verifyParameterPresence(parameterName, (Object) parameter);
     if (parameter.trim().length() == 0) {
-      throw new IllegalArgumentException("The '" + parameterName + "' parameter cannot be an empty string.");
+      throw new IllegalArgumentException("The '" + parameterName
+          + "' parameter cannot be an empty string.");
     }
   }
 

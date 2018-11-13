@@ -57,7 +57,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   /**
    * API error response 'code' attribute name.
    */
-  protected static final String ERROR_CODE_ATTRIBUTE_NAME = "code";
+  protected static final String ERROR_CODE_ATTRIBUTE_NAME = "serviceErrorCode";
 
   /**
    * API error response 'error_subcode' attribute name.
@@ -119,7 +119,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   /**
    * Version of API endpoint.
    */
-  protected Version apiVersion = Version.V1;
+  protected Version apiVersion = Version.V2;
 
   /**
    * By default this is <code>false</code>, so real http DELETE is used
@@ -221,7 +221,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
       }
     });
 
-    Parameter[] params = new Parameter[0];
     return new Connection<T>(connectionPageUrl, this, connectionJson, connectionType);
   }
 
@@ -467,21 +466,17 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   }
 
   /**
-   * TODO: check LinkedIn errors...
-   * Throws an exception if Facebook returned an error response. Using the Graph API, it's possible to see both the new
-   * Graph API-style errors as well as Legacy API-style errors, so we have to handle both here. This method extracts
-   * relevant information from the error JSON and throws an exception which encapsulates it for end-user consumption.
+   * Throws an exception if LinkedIn returned an error response. 
+   * This method extracts relevant information from the error JSON and throws an exception which 
+   * encapsulates it for end-user consumption.
    * <p>
    * For Graph API errors:
    * <p>
    * If the {@code error} JSON field is present, we've got a response status error for this API call.
    * <p>
-   * For Legacy errors (e.g. FQL):
-   * <p>
-   * If the {@code error_code} JSON field is present, we've got a response status error for this API call.
    * 
    * @param json
-   *          The JSON returned by Facebook in response to an API call.
+   *          The JSON returned by LinkedIn in response to an API call.
    * @param httpStatusCode
    *          The HTTP status code returned by the server, e.g. 500.
    * @throws FacebookGraphException
@@ -498,31 +493,14 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
       JSONObject errorObject = new JSONObject(json);
 
-      if (!errorObject.has(ERROR_ATTRIBUTE_NAME)) {
-        return;
-      }
-
-      JSONObject innerErrorObject = errorObject.getJSONObject(ERROR_ATTRIBUTE_NAME);
-
       // If there's an Integer error code, pluck it out.
-      Integer errorCode = innerErrorObject.has(ERROR_CODE_ATTRIBUTE_NAME)
-          ? innerErrorObject.getString(ERROR_CODE_ATTRIBUTE_NAME) == null ? null
-              : Integer.parseInt(innerErrorObject.getString(ERROR_CODE_ATTRIBUTE_NAME))
-          : null;
-      Integer errorSubcode = innerErrorObject.has(ERROR_SUBCODE_ATTRIBUTE_NAME)
-          ? innerErrorObject.getString(ERROR_SUBCODE_ATTRIBUTE_NAME) == null ? null
-              : Integer.parseInt(innerErrorObject.getString(ERROR_SUBCODE_ATTRIBUTE_NAME))
+      Integer errorCode = errorObject.has(ERROR_CODE_ATTRIBUTE_NAME)
+          ? errorObject.getString(ERROR_CODE_ATTRIBUTE_NAME) == null ? null
+              : Integer.parseInt(errorObject.getString(ERROR_CODE_ATTRIBUTE_NAME))
           : null;
 
-      throw graphFacebookExceptionMapper.exceptionForTypeAndMessage(errorCode, errorSubcode,
-          httpStatusCode,
-          innerErrorObject.optString(ERROR_TYPE_ATTRIBUTE_NAME), innerErrorObject.getString(
-              ERROR_MESSAGE_ATTRIBUTE_NAME),
-          innerErrorObject.optString(ERROR_USER_TITLE_ATTRIBUTE_NAME),
-          innerErrorObject.optString(ERROR_USER_MSG_ATTRIBUTE_NAME),
-          innerErrorObject.optBoolean(ERROR_IS_TRANSIENT_NAME, false),
-
-          errorObject);
+      throw graphFacebookExceptionMapper.exceptionForTypeAndMessage(errorCode,
+          httpStatusCode, errorObject.getString( ERROR_MESSAGE_ATTRIBUTE_NAME), false, errorObject);
     } catch (JSONException e) {
       throw new LinkedInJsonMappingException("Unable to process the Facebook API response", e);
     } catch (ResponseErrorJsonParsingException ex) {
@@ -533,6 +511,8 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   }
 
   /**
+   * https://developer.linkedin.com/docs/guide/v2/error-handling#error_codes
+   * TODO: implement error classes
    * A canned implementation of {@code FacebookExceptionMapper} that maps Graph API exceptions.
    * <p>
    * Thanks to BatchFB's Jeff Schnitzer for doing some of the legwork to find these exception type names.
@@ -546,28 +526,20 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
      *      String, String, String, Boolean, JsonObject)
      */
     @Override
-    public LinkedInException exceptionForTypeAndMessage(Integer errorCode, Integer errorSubcode,
-        Integer httpStatusCode,
-        String type, String message, String errorUserTitle, String errorUserMessage,
-        Boolean isTransient,
-        JSONObject rawError) {
-      if ("OAuthException".equals(type) || "OAuthAccessTokenException".equals(type)) {
-        return new LinkedInOAuthException(type, message, errorCode, errorSubcode, httpStatusCode,
-            errorUserTitle,
-            errorUserMessage, isTransient, rawError);
+    public LinkedInException exceptionForTypeAndMessage(Integer errorCode, Integer httpStatusCode,
+        String message, Boolean isTransient, JSONObject rawError) {
+      if (new Integer(401).equals(httpStatusCode)) {
+        return new LinkedInOAuthException(message, errorCode, httpStatusCode,isTransient, rawError);
       }
 
-      if ("QueryParseException".equals(type)) {
-        return new LinkedInQueryParseException(type, message, errorCode, errorSubcode,
-            httpStatusCode, errorUserTitle,
-            errorUserMessage, isTransient, rawError);
+      if (new Integer(400).equals(httpStatusCode)) {
+        return new LinkedInQueryParseException(message, errorCode, httpStatusCode, isTransient,
+            rawError);
       }
 
       // Don't recognize this exception type? Just go with the standard
       // FacebookGraphException.
-      return new LinkedInAPIException(type, message, errorCode, errorSubcode, httpStatusCode,
-          errorUserTitle,
-          errorUserMessage, isTransient, rawError);
+      return new LinkedInAPIException( message, errorCode, httpStatusCode, isTransient, rawError);
     }
   }
 
