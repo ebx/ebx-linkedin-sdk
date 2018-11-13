@@ -189,13 +189,6 @@ abstract class BaseLinkedInClient {
   protected abstract String createEndpointForApiCall(String apiCall, boolean hasAttachment);
 
   /**
-   * Returns the base read-only endpoint URL.
-   * 
-   * @return The base read-only endpoint URL.
-   */
-  protected abstract String getFacebookReadOnlyEndpointUrl();
-
-  /**
    * Verifies that the provided parameter names don't collide with the ones we internally pass along to Facebook.
    * 
    * @param parameters

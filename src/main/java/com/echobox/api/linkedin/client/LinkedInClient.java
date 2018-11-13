@@ -22,17 +22,14 @@
 package com.echobox.api.linkedin.client;
 
 import static java.lang.String.format;
-import static java.util.Collections.unmodifiableList;
 
 import com.echobox.api.linkedin.jsonmapper.JsonMapper;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.scope.ScopeBuilder;
 import com.echobox.api.linkedin.util.ReflectionUtils;
 import com.echobox.api.linkedin.util.URLUtils;
+import com.echobox.api.linkedin.version.Version;
 
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +75,9 @@ import java.util.Map;
  * @author Broc Seib
  */
 public interface LinkedInClient {
+  
+  Version getVersion();
+  
   /**
    * Fetches a single <a href="http://developers.facebook.com/docs/reference/api/">Graph API object</a>, mapping the
    * result to an instance of {@code objectType}.
@@ -227,26 +227,6 @@ public interface LinkedInClient {
   boolean deleteObject(String object, Parameter... parameters);
 
   /**
-   * Converts an arbitrary number of {@code sessionKeys} to OAuth access tokens.
-   * <p>
-   * See the <a href="http://developers.facebook.com/docs/guides/upgrade">Facebook Platform Upgrade Guide</a> for
-   * details on how this process works and why you should convert your application's session keys if you haven't
-   * already.
-   * 
-   * @param appId
-   *          A Facebook application ID.
-   * @param secretKey
-   *          A Facebook application secret key.
-   * @param sessionKeys
-   *          The Old REST API session keys to be converted to OAuth access tokens.
-   * @return A list of access tokens ordered to correspond to the {@code sessionKeys} argument list.
-   * @throws FacebookException
-   *           If an error occurs while attempting to convert the session keys to API keys.
-   * @since 1.6
-   */
-  List<AccessToken> convertSessionKeysToAccessTokens(String appId, String secretKey, String... sessionKeys);
-
-  /**
    * Obtains an access token which can be used to perform Graph API operations on behalf of a user.
    * <p>
    * See <a href="https://developers.facebook.com/docs/facebook-login/access-tokens">Access Tokens</a>.
@@ -286,144 +266,6 @@ public interface LinkedInClient {
   AccessToken obtainAppAccessToken(String appId, String appSecret);
 
   /**
-   * Obtains an extended access token for the given existing, non-expired, short-lived access_token.
-   * <p>
-   * See <a href="https://developers.facebook.com/roadmap/offline-access-removal/#extend_token">Facebook's extend access
-   * token documentation</a>.
-   * 
-   * @param appId
-   *          The ID of the app for which you'd like to obtain an extended access token.
-   * @param appSecret
-   *          The secret for the app for which you'd like to obtain an extended access token.
-   * @param accessToken
-   *          The non-expired, short-lived access token to extend.
-   * @return An extended access token for the given {@code accessToken}.
-   * @throws FacebookException
-   *           If an error occurs while attempting to obtain an extended access token.
-   * @since 1.6.10
-   */
-  AccessToken obtainExtendedAccessToken(String appId, String appSecret, String accessToken);
-
-  /**
-   * Generates an {@code appsecret_proof} value.
-   * <p>
-   * See <a href="https://developers.facebook.com/docs/graph-api/securing-requests">Facebook's 'securing requests'
-   * documentation</a> for more info.
-   * 
-   * @param accessToken
-   *          The access token required to generate the {@code appsecret_proof} value.
-   * @param appSecret
-   *          The secret for the app for which you'd like to generate the {@code appsecret_proof} value.
-   * @return A hex-encoded SHA256 hash as a {@code String}.
-   * @throws IllegalStateException
-   *           If creating the {@code appsecret_proof} fails.
-   * @since 1.6.13
-   */
-  String obtainAppSecretProof(String accessToken, String appSecret);
-
-  /**
-   * Convenience method which invokes {@link #obtainExtendedAccessToken(String, String, String)} with the current access
-   * token.
-   * 
-   * @param appId
-   *          The ID of the app for which you'd like to obtain an extended access token.
-   * @param appSecret
-   *          The secret for the app for which you'd like to obtain an extended access token.
-   * @return An extended access token for the given {@code accessToken}.
-   * @throws FacebookException
-   *           If an error occurs while attempting to obtain an extended access token.
-   * @throws IllegalStateException
-   *           If this instance was not constructed with an access token.
-   * @since 1.6.10
-   */
-  AccessToken obtainExtendedAccessToken(String appId, String appSecret);
-
-  /**
-   * Parses a signed request and verifies it against your App Secret.
-   * <p>
-   * See <a href="http://developers.facebook.com/docs/howtos/login/signed-request/">Facebook's signed request
-   * documentation</a>.
-   * 
-   * @param signedRequest
-   *          The signed request to parse.
-   * @param appSecret
-   *          The secret for the app that can read this signed request.
-   * @param objectType
-   *          Object type token.
-   * @param <T>
-   *          class of objectType
-   * @return An instance of type {@code objectType} which contains the decoded object embedded within
-   *         {@code signedRequest}.
-   * @throws FacebookSignedRequestParsingException
-   *           If an error occurs while trying to process {@code signedRequest}.
-   * @throws FacebookSignedRequestVerificationException
-   *           If {@code signedRequest} fails verification against {@code appSecret}.
-   * @since 1.6.13
-   */
-  <T> T parseSignedRequest(String signedRequest, String appSecret, Class<T> objectType);
-
-  /**
-   * <p>
-   * When working with access tokens, you may need to check what information is associated with them, such as its user
-   * or expiry. To get this information you can use the debug tool in the developer site, or you can use this function.
-   * </p>
-   * 
-   * <p>
-   * You must instantiate your FacebookClient using your App Access Token, or a valid User Access Token from a developer
-   * of the app.
-   * </p>
-   * 
-   * <p>
-   * Note that if your app is set to Native/Desktop in the Advanced settings of your App Dashboard, the underlying
-   * GraphAPI endpoint will not work with your app token unless you change the "App Secret in Client" setting to NO. If
-   * you do not see this setting, make sure your "App Type" is set to Native/Desktop and then press the save button at
-   * the bottom of the page. This will not affect apps set to Web.
-   * </p>
-   * 
-   * <p>
-   * The response of the API call is a JSON array containing data and a map of fields. For example:
-   * </p>
-   * 
-   * <pre>
-   * {@code
-   * {
-   *     "data": {
-   *         "app_id": 138483919580948, 
-   *         "application": "Social Cafe", 
-   *         "expires_at": 1352419328, 
-   *         "is_valid": true, 
-   *         "issued_at": 1347235328, 
-   *         "metadata": {
-   *             "sso": "iphone-safari"
-   *         }, 
-   *         "scopes": [
-   *             "email", 
-   *             "publish_actions"
-   *         ], 
-   *         "user_id": 1207059
-   *     }
-   * }
-   * }
-   * </pre>
-   * 
-   * <p>
-   * Note that the {@code issued_at} field is not returned for short-lived access tokens.
-   * </p>
-   * 
-   * <p>
-   * See <a href="https://developers.facebook.com/docs/howtos/login/debugging-access-tokens/"> Debugging an Access
-   * Token</a>
-   * </p>
-   * 
-   * @param inputToken
-   *          The Access Token to debug.
-   * 
-   * @return A JsonObject containing the debug information for the accessToken.
-   * @since 1.6.13
-   */
-  DebugTokenInfo debugToken(String inputToken);
-
-  /**
    * Gets the {@code JsonMapper} used to convert Facebook JSON to Java objects.
    * 
    * @return The {@code JsonMapper} used to convert Facebook JSON to Java objects.
@@ -438,16 +280,6 @@ public interface LinkedInClient {
    * @since 1.6.7
    */
   WebRequestor getWebRequestor();
-
-  /**
-   * generates an logout url
-   * 
-   * @param next
-   *          may be null, url the webpage should redirect after logout
-   * @return the logout url
-   * @since 1.9.0
-   */
-  String getLogoutUrl(String next);
 
   /**
    * generates the login dialog url

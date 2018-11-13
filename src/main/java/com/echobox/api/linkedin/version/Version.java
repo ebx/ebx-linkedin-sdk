@@ -10,18 +10,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Version {
   
-  V1("v1"),
+  V1("v1", new V1PagingImpl()),
   
-  V2("v2");
+  V2("v2", new V2PagingImpl());
   
   private static Logger LOGGER = LinkedInLogger.getLoggerInstance();
   
   @Getter
   private final String urlElement;
   
-  public boolean isUrlElementRequired() {
-    return null != this.urlElement;
-  }
+  @Getter
+  private final PagingStrategy pagingStrategy;
   
   /**
    * Convert the provided code into a company type

@@ -148,6 +148,11 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   }
 
   @Override
+  public Version getVersion() {
+    return apiVersion;
+  }
+
+  @Override
   public <T> T fetchObject(String object, Class<T> objectType, Parameter... parameters) {
     verifyParameterPresence("object", object);
     verifyParameterPresence("objectType", objectType);
@@ -199,102 +204,58 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     verifyParameterPresence("connection", connection);
     verifyParameterPresence("connectionType", connectionType);
     final String fullEndpoint = createEndpointForApiCall(connection, false);
-//    final String parameterString = toParameterString(parameters);
     return new Connection<T>(fullEndpoint, this, makeRequest(connection, parameters),
         connectionType);
   }
 
   /**
    * @see https://developer.linkedin.com/docs/guide/v2/concepts/paging
-   * TODO: Test??
    */
   @Override
   public <T> Connection<T> fetchConnectionPage(String connectionPageUrl, Class<T> connectionType) {
     String connectionJson = makeRequestAndProcessResponse(new Requestor() {
       @Override
       public Response makeRequest() throws IOException {
-        return webRequestor.executeGet(connectionPageUrl);
+        String pageURL = URLUtils.replaceOrAddQueryParameter(connectionPageUrl, "format", "json");
+        return webRequestor.executeGet(pageURL);
       }
     });
 
-    final String fullEndpoint = createEndpointForApiCall(connectionPageUrl, false);
-    return new Connection<T>(fullEndpoint, this, connectionJson, connectionType);
+    Parameter[] params = new Parameter[0];
+    return new Connection<T>(connectionPageUrl, this, connectionJson, connectionType);
   }
 
   @Override
   public <T> T publish(String connection, Class<T> objectType, Parameter... parameters) {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException("Publish is not yet implemented");
   }
 
   @Override
   public <T> T publish(String connection, Class<T> objectType,
       List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException("Publish is not yet implemented");
   }
 
   @Override
   public <T> T publish(String connection, Class<T> objectType, BinaryAttachment binaryAttachment,
       Parameter... parameters) {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException("Publish is not yet implemented");
   }
 
   @Override
   public boolean deleteObject(String object, Parameter... parameters) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  @Override
-  public List<AccessToken> convertSessionKeysToAccessTokens(String appId, String secretKey,
-      String... sessionKeys) {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException("Delete is not yet implemented");
   }
 
   @Override
   public AccessToken obtainUserAccessToken(String appId, String appSecret, String redirectUri,
       String verificationCode) {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException("Obtain user access token is not yet implemented");
   }
 
   @Override
   public AccessToken obtainAppAccessToken(String appId, String appSecret) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public AccessToken obtainExtendedAccessToken(String appId, String appSecret, String accessToken) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public String obtainAppSecretProof(String accessToken, String appSecret) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public AccessToken obtainExtendedAccessToken(String appId, String appSecret) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public <T> T parseSignedRequest(String signedRequest, String appSecret, Class<T> objectType) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public DebugTokenInfo debugToken(String inputToken) {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException("Obtain user access token is not yet implemented");
   }
 
   @Override
@@ -308,16 +269,9 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   }
 
   @Override
-  public String getLogoutUrl(String next) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
   public String getLoginDialogUrl(String appId, String redirectUri, ScopeBuilder scope,
       Parameter... additionalParameters) {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException("Get login dialog URL is not yet implemented");
   }
 
   @Override
@@ -336,17 +290,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    * @return The base endpoint URL for the Graph API.
    */
   protected String getFacebookGraphEndpointUrl() {
-    if (apiVersion.isUrlElementRequired()) {
-      return LINKEDIN_API_ENDPOINT_URL + '/' + apiVersion.getUrlElement();
-    } else {
-      return LINKEDIN_API_ENDPOINT_URL;
-    }
-  }
-
-  @Override
-  protected String getFacebookReadOnlyEndpointUrl() {
-    // TODO Auto-generated method stub
-    return null;
+    return LINKEDIN_API_ENDPOINT_URL + '/' + apiVersion.getUrlElement();
   }
 
   /**

@@ -24,8 +24,9 @@ package com.echobox.api.linkedin.client;
 import static java.util.Collections.unmodifiableList;
 
 import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
-import com.echobox.api.linkedin.jsonmapper.JsonMapper;
 import com.echobox.api.linkedin.util.ReflectionUtils;
+import com.echobox.api.linkedin.version.PagingStrategy;
+import com.echobox.api.linkedin.version.Version;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -163,34 +164,13 @@ public class Connection<T> implements Iterable<List<T>> {
       dataList.add(connectionType.equals(JSONObject.class) ? (T) jsonData.get(i)
           : facebookClient.getJsonMapper().toJavaObject(jsonData.get(i).toString(), connectionType));
     }
-
-    // Pull out paging info, if present
-    if (jsonObject.has("paging")) {
-      JSONObject jsonPaging = jsonObject.getJSONObject("paging");
-      Integer count = jsonPaging.has("count") ? jsonPaging.getInt("count") : null;
-      Integer start = jsonPaging.has("start") ? jsonPaging.getInt("previous") : null;
-      // Paging is available
-      if (count != null && start != null) {
-        // You will know that you have reached the end of the dataset when your response contains
-        // less elements in the entities block of the response than your count parameter requested.
-        if (jsonData.length() < count) {
-          previousPageUrl = null;
-          nextPageUrl = null;
-        } else {
-          nextPageUrl = String.format("%s?start=%s&count=%s", fullEndpoint, start, count);
-          if (start > 0) {
-            // There's a previous page
-            previousPageUrl = String.format("%s?start=%s&count=%s", fullEndpoint, start - count, count);
-          }          
-        }
-      }
-    } else {
-      previousPageUrl = null;
-      nextPageUrl = null;
-    }
     
-    // TODO: there is a total...
-
+    Version version = facebookClient.getVersion();
+    PagingStrategy pagingStrategy = version.getPagingStrategy();
+    pagingStrategy.discoverPages(jsonObject, fullEndpoint);
+    this.nextPageUrl = pagingStrategy.getNextPageUrl();
+    this.previousPageUrl = pagingStrategy.getPreviousPageUrl();
+    
     this.data = unmodifiableList(dataList);
     this.facebookClient = facebookClient;
     this.connectionType = connectionType;
@@ -234,7 +214,6 @@ public class Connection<T> implements Iterable<List<T>> {
    * This connection's "previous page of data" URL.
    * 
    * @return This connection's "previous page of data" URL, or {@code null} if there is no previous page.
-   * @since 1.5.3
    */
   public String getPreviousPageUrl() {
     return previousPageUrl;
