@@ -1,5 +1,5 @@
 
-package com.echobox.api.linkedin.version;
+package com.echobox.api.linkedin.client.paging;
 
 import com.echobox.api.linkedin.util.URLUtils;
 

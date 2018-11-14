@@ -1,40 +1,55 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package com.echobox.api.linkedin.client;
-
-import static java.lang.String.format;
-import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
-import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
-import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
-import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
-import static java.net.HttpURLConnection.HTTP_NOT_MODIFIED;
-import static java.net.HttpURLConnection.HTTP_OK;
-import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
 
 import com.echobox.api.linkedin.client.WebRequestor.Response;
 import com.echobox.api.linkedin.exception.LinkedInAPIException;
 import com.echobox.api.linkedin.exception.LinkedInException;
 import com.echobox.api.linkedin.exception.LinkedInExceptionMapper;
+import com.echobox.api.linkedin.exception.LinkedInGatewayTimeoutException;
+import com.echobox.api.linkedin.exception.LinkedInInteralServerException;
 import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
 import com.echobox.api.linkedin.exception.LinkedInNetworkException;
 import com.echobox.api.linkedin.exception.LinkedInOAuthException;
 import com.echobox.api.linkedin.exception.LinkedInQueryParseException;
+import com.echobox.api.linkedin.exception.LinkedInRateLimitException;
+import com.echobox.api.linkedin.exception.LinkedInResourceNotFoundException;
 import com.echobox.api.linkedin.exception.ResponseErrorJsonParsingException;
 import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapper;
 import com.echobox.api.linkedin.jsonmapper.JsonMapper;
 import com.echobox.api.linkedin.logging.LinkedInLogger;
-import com.echobox.api.linkedin.scope.ScopeBuilder;
 import com.echobox.api.linkedin.util.URLUtils;
 import com.echobox.api.linkedin.version.Version;
 
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
+/**
+ * Default implementation of a LinkedIn API client.
+ * @author Joanna
+ *
+ */
 public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedInClient {
 
   private static final Logger LOGGER = LinkedInLogger.getLoggerInstance();
@@ -82,11 +97,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   protected static final String ERROR_IS_TRANSIENT_NAME = "is_transient";
 
   /**
-   * API error response 'error_user_title' attribute name.
-   */
-  protected static final String ERROR_USER_TITLE_ATTRIBUTE_NAME = "error_user_title";
-
-  /**
    * Reserved "multiple IDs" parameter name.
    */
   protected static final String IDS_PARAM_NAME = "ids";
@@ -109,12 +119,12 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   /**
    * Knows how to map Graph API exceptions to formal Java exception types.
    */
-  protected LinkedInExceptionMapper graphFacebookExceptionMapper;
+  protected LinkedInExceptionMapper linkedinExceptionMapper;
 
   /**
    * API endpoint URL.
    */
-  protected String LINKEDIN_API_ENDPOINT_URL = "https://api.linkedin.com";
+  protected static final String LINKEDIN_API_ENDPOINT_URL = "https://api.linkedin.com";
 
   /**
    * Version of API endpoint.
@@ -126,8 +136,19 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    */
   protected boolean httpDeleteFallback = false;
 
+  /**
+   * Creates a Facebook Graph API client with the given {@code accessToken}.
+   * 
+   * @param accessToken
+   *          A Facebook OAuth access token.
+   * @param appSecret
+   *          A Facebook application secret.
+   * @param apiVersion
+   *          Version of the api endpoint
+   * @since 1.6.14
+   */
   public DefaultLinkedInClient(String accessToken) throws GeneralSecurityException, IOException {
-    this(accessToken, Version.V1);
+    this(accessToken, Version.V2);
   }
 
   public DefaultLinkedInClient(String accessToken, Version apiVersion)
@@ -160,45 +181,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   }
 
   @Override
-  public <T> T fetchObjects(List<String> ids, Class<T> objectType, Parameter... parameters) {
-    verifyParameterPresence("ids", ids);
-    verifyParameterPresence("connectionType", objectType);
-
-    if (ids.isEmpty()) {
-      throw new IllegalArgumentException("The list of IDs cannot be empty.");
-    }
-
-    for (Parameter parameter : parameters) {
-      if (IDS_PARAM_NAME.equals(parameter.name)) {
-        throw new IllegalArgumentException("You cannot specify the '" + IDS_PARAM_NAME
-            + "' URL parameter yourself - "
-            + "RestFB will populate this for you with "
-            + "the list of IDs you passed to this method.");
-      }
-    }
-
-    // Normalize the IDs
-    for (int i = 0; i < ids.size(); i++) {
-      String id = ids.get(i).trim();
-      if ("".equals(id)) {
-        throw new IllegalArgumentException("The list of IDs cannot contain blank strings.");
-      }
-
-      ids.set(i, id);
-    }
-
-    try {
-      String jsonString =
-          makeRequest("", parametersWithAdditionalParameter(Parameter.with(IDS_PARAM_NAME,
-              StringUtils.join(ids.toArray())), parameters));
-
-      return jsonMapper.toJavaObject(jsonString, objectType);
-    } catch (JSONException e) {
-      throw new LinkedInJsonMappingException("Unable to map connection JSON to Java objects", e);
-    }
-  }
-
-  @Override
   public <T> Connection<T> fetchConnection(String connection, Class<T> connectionType,
       Parameter... parameters) {
     verifyParameterPresence("connection", connection);
@@ -208,9 +190,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
         connectionType);
   }
 
-  /**
-   * @see https://developer.linkedin.com/docs/guide/v2/concepts/paging
-   */
   @Override
   public <T> Connection<T> fetchConnectionPage(String connectionPageUrl, Class<T> connectionType) {
     String connectionJson = makeRequestAndProcessResponse(new Requestor() {
@@ -268,64 +247,59 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   }
 
   @Override
-  public String getLoginDialogUrl(String appId, String redirectUri, ScopeBuilder scope,
-      Parameter... additionalParameters) {
-    throw new UnsupportedOperationException("Get login dialog URL is not yet implemented");
-  }
-
-  @Override
   protected String createEndpointForApiCall(String apiCall, boolean hasAttachment) {
     while (apiCall.startsWith("/"))
       apiCall = apiCall.substring(1);
 
-    String baseUrl = getFacebookGraphEndpointUrl();
+    String baseUrl = getLinkedInEndpointUrl();
 
-    return format("%s/%s", baseUrl, apiCall);
+    return String.format("%s/%s", baseUrl, apiCall);
   }
 
   /**
-   * Returns the base endpoint URL for the Graph API.
+   * Returns the base endpoint URL for the LinkedIn API.
    * 
-   * @return The base endpoint URL for the Graph API.
+   * @return The base endpoint URL for the LinkedIn API.
    */
-  protected String getFacebookGraphEndpointUrl() {
+  protected String getLinkedInEndpointUrl() {
     return LINKEDIN_API_ENDPOINT_URL + '/' + apiVersion.getUrlElement();
   }
 
   /**
-   * Coordinates the process of executing the API request GET/POST and processing the response we receive from the
-   * endpoint.
+   * Coordinates the process of executing the API request GET/POST and processing the response we 
+   * receive from the endpoint.
    * 
    * @param endpoint
-   *          Facebook Graph API endpoint.
+   *          LinkedIn Graph API endpoint.
    * @param parameters
-   *          Arbitrary number of parameters to send along to Facebook as part of the API call.
-   * @return The JSON returned by Facebook for the API call.
-   * @throws FacebookException
-   *           If an error occurs while making the Facebook API POST or processing the response.
+   *          Arbitrary number of parameters to send along to LinkedIn as part of the API call.
+   * @return The JSON returned by LinkedIn for the API call.
+   * @throws LinkedInException
+   *           If an error occurs while making the LinkedIn API POST or processing the response.
    */
   protected String makeRequest(String endpoint, Parameter... parameters) {
     return makeRequest(endpoint, false, false, null, parameters);
   }
 
   /**
-   * Coordinates the process of executing the API request GET/POST and processing the response we receive from the
-   * endpoint.
+   * Coordinates the process of executing the API request GET/POST and processing the response we 
+   * receive from the endpoint.
    * 
    * @param endpoint
-   *          Facebook Graph API endpoint.
+   *          LinkedIn Graph API endpoint.
    * @param executeAsPost
-   *          {@code true} to execute the web request as a {@code POST}, {@code false} to execute as a {@code GET}.
+   *          {@code true} to execute the web request as a {@code POST}, {@code false} to execute 
+   *          as a {@code GET}.
    * @param executeAsDelete
    *          {@code true} to add a special 'treat this request as a {@code DELETE}' parameter.
    * @param binaryAttachments
-   *          A list of binary files to include in a {@code POST} request. Pass {@code null} if no attachment should be
-   *          sent.
+   *          A list of binary files to include in a {@code POST} request. Pass {@code null} if no 
+   *          attachment should be sent.
    * @param parameters
-   *          Arbitrary number of parameters to send along to Facebook as part of the API call.
-   * @return The JSON returned by Facebook for the API call.
-   * @throws FacebookException
-   *           If an error occurs while making the Facebook API POST or processing the response.
+   *          Arbitrary number of parameters to send along to LinkedIn as part of the API call.
+   * @return The JSON returned by LinkedIn for the API call.
+   * @throws LinkedInException
+   *           If an error occurs while making the LinkedIn API POST or processing the response.
    */
   protected String makeRequest(String endpoint, final boolean executeAsPost,
       final boolean executeAsDelete,
@@ -348,7 +322,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
     return makeRequestAndProcessResponse(new Requestor() {
       /**
-       * @see com.restfb.DefaultFacebookClient.Requestor#makeRequest()
+       * @see com.echobox.api.linkedin.client.DefaultLinkedInClient.Requestor#makeRequest()
        */
       @Override
       public Response makeRequest() throws IOException {
@@ -366,12 +340,12 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   }
 
   /**
-   * Generate the parameter string to be included in the Facebook API request.
+   * Generate the parameter string to be included in the LinkedIn API request.
    * 
    * @param parameters
    *          Arbitrary number of extra parameters to include in the request.
-   * @return The parameter string to include in the Facebook API request.
-   * @throws FacebookJsonMappingException
+   * @return The parameter string to include in the LinkedIn API request.
+   * @throws LinkedInJsonMappingException
    *           If an error occurs when building the parameter string.
    */
   protected String toParameterString(Parameter... parameters) {
@@ -379,14 +353,14 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   }
 
   /**
-   * Generate the parameter string to be included in the Facebook API request.
+   * Generate the parameter string to be included in the LinkedIn API request.
    * 
    * @param withJsonParameter
    *          add additional parameter format with type json
    * @param parameters
    *          Arbitrary number of extra parameters to include in the request.
-   * @return The parameter string to include in the Facebook API request.
-   * @throws FacebookJsonMappingException
+   * @return The parameter string to include in the LinkedIn API request.
+   * @throws LinkedInJsonMappingException
    *           If an error occurs when building the parameter string.
    */
   protected String toParameterString(boolean withJsonParameter, Parameter... parameters) {
@@ -430,32 +404,35 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     try {
       response = requestor.makeRequest();
     } catch (Exception t) {
-      throw new LinkedInNetworkException("Facebook request failed", t);
+      throw new LinkedInNetworkException("LinkedIn request failed", t);
     }
 
     // If we get any HTTP response code other than a 200 OK or 400 Bad Request
     // or 401 Not Authorized or 403 Forbidden or 404 Not Found or 500 Internal
-    // Server Error or 302 Not Modified
+    // Server Error or 302 Not Modified or 504 Gateway Timeout or 429 Rate Limit
     // throw an exception.
-    if (HTTP_OK != response.getStatusCode() && HTTP_BAD_REQUEST != response.getStatusCode()
-        && HTTP_UNAUTHORIZED != response.getStatusCode() && HTTP_NOT_FOUND != response
-            .getStatusCode()
-        && HTTP_INTERNAL_ERROR != response.getStatusCode() && HTTP_FORBIDDEN != response
-            .getStatusCode()
-        && HTTP_NOT_MODIFIED != response.getStatusCode()) {
-      throw new LinkedInNetworkException("Facebook request failed", response.getStatusCode());
+    if (HttpURLConnection.HTTP_OK != response.getStatusCode()
+        && HttpURLConnection.HTTP_BAD_REQUEST != response.getStatusCode()
+        && HttpURLConnection.HTTP_UNAUTHORIZED != response.getStatusCode()
+        && HttpURLConnection.HTTP_NOT_FOUND != response .getStatusCode()
+        && HttpURLConnection.HTTP_INTERNAL_ERROR != response.getStatusCode()
+        && HttpURLConnection.HTTP_FORBIDDEN != response .getStatusCode()
+        && HttpURLConnection.HTTP_NOT_MODIFIED != response.getStatusCode()
+        && HttpURLConnection.HTTP_GATEWAY_TIMEOUT != response.getStatusCode()
+        && 429 != response.getStatusCode()) {
+      throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
     }
 
     String json = response.getBody();
 
     // If the response contained an error code, throw an exception.
-    throwFacebookResponseStatusExceptionIfNecessary(json, response.getStatusCode());
+    throwLinkedInResponseStatusExceptionIfNecessary(json, response.getStatusCode());
 
     // If there was no response error information and this was a 500 or 401
-    // error, something weird happened on Facebook's end. Bail.
-    if (HTTP_INTERNAL_ERROR == response.getStatusCode() || HTTP_UNAUTHORIZED == response
-        .getStatusCode()) {
-      throw new LinkedInNetworkException("Facebook request failed", response.getStatusCode());
+    // error, something weird happened on LinkedIn's end. Bail.
+    if (HttpURLConnection.HTTP_INTERNAL_ERROR == response.getStatusCode()
+        || HttpURLConnection.HTTP_UNAUTHORIZED == response.getStatusCode()) {
+      throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
     }
 
     return json;
@@ -479,14 +456,14 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    *          The JSON returned by LinkedIn in response to an API call.
    * @param httpStatusCode
    *          The HTTP status code returned by the server, e.g. 500.
-   * @throws FacebookGraphException
+   * @throws LinkedInGraphException
    *           If the JSON contains a Graph API error response.
-   * @throws FacebookResponseStatusException
+   * @throws LinkedInResponseStatusException
    *           If the JSON contains an Legacy API error response.
-   * @throws FacebookJsonMappingException
+   * @throws LinkedInJsonMappingException
    *           If an error occurs while processing the JSON.
    */
-  protected void throwFacebookResponseStatusExceptionIfNecessary(String json,
+  protected void throwLinkedInResponseStatusExceptionIfNecessary(String json,
       Integer httpStatusCode) {
     try {
       skipResponseStatusExceptionParsing(json);
@@ -499,10 +476,10 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
               : Integer.parseInt(errorObject.getString(ERROR_CODE_ATTRIBUTE_NAME))
           : null;
 
-      throw graphFacebookExceptionMapper.exceptionForTypeAndMessage(errorCode,
-          httpStatusCode, errorObject.getString( ERROR_MESSAGE_ATTRIBUTE_NAME), false, errorObject);
+      throw linkedinExceptionMapper.exceptionForTypeAndMessage(errorCode,
+          httpStatusCode, errorObject.getString(ERROR_MESSAGE_ATTRIBUTE_NAME), false, errorObject);
     } catch (JSONException e) {
-      throw new LinkedInJsonMappingException("Unable to process the Facebook API response", e);
+      throw new LinkedInJsonMappingException("Unable to process the LinkedIn API response", e);
     } catch (ResponseErrorJsonParsingException ex) {
       if (LOGGER.isTraceEnabled()) {
         LOGGER.trace("caught ResponseErrorJsonParsingException - ignoring", ex);
@@ -511,34 +488,49 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   }
 
   /**
-   * https://developer.linkedin.com/docs/guide/v2/error-handling#error_codes
-   * TODO: implement error classes
-   * A canned implementation of {@code FacebookExceptionMapper} that maps Graph API exceptions.
-   * <p>
-   * Thanks to BatchFB's Jeff Schnitzer for doing some of the legwork to find these exception type names.
-   * 
-   * @author <a href="http://restfb.com">Mark Allen</a>
-   * @since 1.6.3
+   * Implementation of {@code LinkedInExceptionMapper} that maps LinkedIn API exceptions.
+   * @author Joanna
    */
-  protected static class DefaultGraphFacebookExceptionMapper implements LinkedInExceptionMapper {
-    /**
-     * @see com.restfb.exception.FacebookExceptionMapper#exceptionForTypeAndMessage(Integer, Integer, Integer, String,
-     *      String, String, String, Boolean, JsonObject)
-     */
+  protected static class DefaultLinkedInExceptionMapper implements LinkedInExceptionMapper {
     @Override
     public LinkedInException exceptionForTypeAndMessage(Integer errorCode, Integer httpStatusCode,
         String message, Boolean isTransient, JSONObject rawError) {
-      if (new Integer(401).equals(httpStatusCode)) {
-        return new LinkedInOAuthException(message, errorCode, httpStatusCode,isTransient, rawError);
-      }
-
+      // Bad Request - client mistakes
       if (new Integer(400).equals(httpStatusCode)) {
         return new LinkedInQueryParseException(message, errorCode, httpStatusCode, isTransient,
             rawError);
       }
+      
+      // Unauthorised 
+      if (new Integer(401).equals(httpStatusCode)) {
+        return new LinkedInOAuthException(message, errorCode, httpStatusCode,isTransient, rawError);
+      }
+      
+      // Resource not found 
+      if (new Integer(404).equals(httpStatusCode)) {
+        return new LinkedInResourceNotFoundException(message, errorCode, httpStatusCode,isTransient,
+            rawError);
+      }
+      
+      // 429 Rate limit
+      if (new Integer(429).equals(httpStatusCode)) {
+        return new LinkedInRateLimitException(message, errorCode, httpStatusCode,isTransient,
+            rawError);
+      }
+      
+      // Internal Server Error 
+      if (new Integer(500).equals(httpStatusCode)) {
+        return new LinkedInInteralServerException(message, errorCode, httpStatusCode,isTransient,
+            rawError);
+      }
+      
+      // Gateway timeout
+      if (new Integer(504).equals(httpStatusCode)) {
+        return new LinkedInGatewayTimeoutException(message, errorCode, httpStatusCode,isTransient,
+            rawError);
+      }
 
-      // Don't recognize this exception type? Just go with the standard
-      // FacebookGraphException.
+      // Don't recognize this exception type? Just go with the standard LinkedInAPIException.
       return new LinkedInAPIException( message, errorCode, httpStatusCode, isTransient, rawError);
     }
   }

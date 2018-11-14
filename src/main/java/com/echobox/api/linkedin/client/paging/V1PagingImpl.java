@@ -1,5 +1,5 @@
 
-package com.echobox.api.linkedin.version;
+package com.echobox.api.linkedin.client.paging;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

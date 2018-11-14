@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 package com.echobox.api.linkedin.client;
 
 import static java.lang.String.format;
@@ -63,6 +62,21 @@ public class DefaultWebRequestor implements WebRequestor {
   /**
    * Default charset to use for encoding/decoding strings.
    */
+  public static final String CLIENT_ID_KEY = "client_id";
+
+  /**
+   * Default charset to use for encoding/decoding strings.
+   */
+  public static final String CLIENT_SECRET_KEY = "client_secret";
+
+  /**
+   * Default charset to use for encoding/decoding strings.
+   */
+  public static final String INSTALLED_KEY = "installed";
+
+  /**
+   * Default charset to use for encoding/decoding strings.
+   */
   public static final String ENCODING_CHARSET = "UTF-8";
 
   /**
@@ -81,14 +95,13 @@ public class DefaultWebRequestor implements WebRequestor {
   protected enum HttpMethod {
     GET, DELETE, POST
   }
-  
-  public DefaultWebRequestor(String accessToken)
-      throws GeneralSecurityException, IOException {
+
+  public DefaultWebRequestor(String accessToken) throws GeneralSecurityException, IOException {
     this(null, null, accessToken);
   }
-  
-  public DefaultWebRequestor(String clientId, String clientSecret)
-      throws GeneralSecurityException, IOException {
+
+  public DefaultWebRequestor(String clientId, String clientSecret) throws GeneralSecurityException,
+      IOException {
     this(clientId, clientSecret, null);
   }
 
@@ -100,13 +113,13 @@ public class DefaultWebRequestor implements WebRequestor {
   private HttpRequestFactory authorize(String clientId, String clientSecret, String accessToken)
       throws GeneralSecurityException, IOException {
     HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-    
+
     GoogleClientSecrets clientSecrets = null;
     if (clientId != null && clientSecret != null) {
       // Load client secrets
-      JSONObject appTokens = new JSONObject().put("client_id", clientId).put("client_secret",
-          clientSecret);
-      String installedAppTokens = new JSONObject().put("installed", appTokens).toString();      
+      JSONObject appTokens = new JSONObject().put(CLIENT_ID_KEY, clientId)
+          .put(CLIENT_SECRET_KEY, clientSecret);
+      String installedAppTokens = new JSONObject().put(INSTALLED_KEY, appTokens).toString();
       clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
           new InputStreamReader(new ByteArrayInputStream(installedAppTokens.getBytes())));
     }
@@ -116,15 +129,15 @@ public class DefaultWebRequestor implements WebRequestor {
         new GoogleCredential.Builder()
             .setJsonFactory(JSON_FACTORY)
             .setTransport(httpTransport);
-    
+
     if (clientSecrets != null) {
       credentiaBuilder.setClientSecrets(clientSecrets);
     }
-    
+
     GoogleCredential credential = credentiaBuilder.build();
-    
+
     if (accessToken != null) {
-      credential.setAccessToken(accessToken);      
+      credential.setAccessToken(accessToken);
     }
 
     HttpRequestFactory requestFactory =
@@ -166,7 +179,7 @@ public class DefaultWebRequestor implements WebRequestor {
   }
 
   /**
-   * Attempts to cleanly disconnect the reponse, swallowing any exceptions that might occur since
+   * Attempts to cleanly disconnect the response, swallowing any exceptions that might occur since
    * there's no way to recover anyway.
    * 
    * @param response The HTTP response to close.

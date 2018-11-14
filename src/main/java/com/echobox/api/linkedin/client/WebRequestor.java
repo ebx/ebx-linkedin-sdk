@@ -29,15 +29,15 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 
 /**
- * Specifies how a class that sends {@code HTTP} requests to the Facebook API endpoint must operate.
+ * Specifies how a class that sends {@code HTTP} requests to the LinkedIn API endpoint must operate.
  * 
- * @author <a href="http://restfb.com">Mark Allen</a>
+ * @author Joanna
  */
 public interface WebRequestor {
   /**
    * Encapsulates an HTTP response body and status code.
    * 
-   * @author <a href="http://restfb.com">Mark Allen</a>
+   * @author Joanna
    */
   class Response {
     /**
@@ -94,19 +94,19 @@ public interface WebRequestor {
   }
 
   /**
-   * Given a Facebook API endpoint URL, execute a {@code GET} against it.
+   * Given a LinkedIn API endpoint URL, execute a {@code GET} against it.
    * 
    * @param url
    *          The URL to make a {@code GET} request for, including URL parameters.
    * @return HTTP response data.
    * @throws IOException
    *           If an error occurs while performing the {@code GET} operation.
-   * @since 1.5
    */
   Response executeGet(String url) throws IOException;
 
   /**
-   * Given a Facebook API endpoint URL and parameter string, execute a {@code POST} to the endpoint URL.
+   * Given a LinkedIn API endpoint URL and parameter string, execute a {@code POST} to the endpoint
+   * URL.
    * 
    * @param url
    *          The URL to {@code POST} to.
@@ -119,22 +119,26 @@ public interface WebRequestor {
   Response executePost(String url, String parameters) throws IOException;
 
   /**
-   * Given a Facebook API endpoint URL and parameter string, execute a {@code POST} to the endpoint URL.
+   * Given a LinkedIn API endpoint URL and parameter string, execute a {@code POST} to the endpoint
+   * URL.
    * 
    * @param url
    *          The URL to {@code POST} to.
    * @param parameters
    *          The parameters to be {@code POST}ed.
    * @param binaryAttachments
-   *          Optional binary attachments to be included in the {@code POST} body (e.g. photos and videos).
+   *          Optional binary attachments to be included in the {@code POST} body (e.g. photos and
+   *          videos).
    * @return HTTP response data.
    * @throws IOException
    *           If an error occurs while performing the {@code POST}.
    */
-  Response executePost(String url, String parameters, BinaryAttachment... binaryAttachments) throws IOException;
+  Response executePost(String url, String parameters, BinaryAttachment... binaryAttachments)
+      throws IOException;
 
   /**
-   * Given a Facebook API endpoint URL and parameter string, execute a {@code DELETE} to the endpoint URL.
+   * Given a LinkedIn API endpoint URL and parameter string, execute a {@code DELETE} to the
+   * endpoint URL.
    * 
    * @param url
    *          The URL to submit the {@code DELETE} to.
@@ -145,12 +149,9 @@ public interface WebRequestor {
   Response executeDelete(String url) throws IOException;
 
   /**
-   * Provides access to the facebook header information.
+   * Provides access to the LinkedIn header information.
    * 
-   * The fields <code>x-fb-rev</code>, <code>x-fb-trace-id</code> and <code>x-fb-debug</code> are checked and returned
-   * in a single container of the type {@see DebugHeaderInfo}
-   * 
-   * @return container with the explained facebook debug header information
+   * @return container with the explained LinkedIn debug header information
    */
   DebugHeaderInfo getDebugHeaderInfo();
 }

@@ -1,5 +1,5 @@
 
-package com.echobox.api.linkedin.version;
+package com.echobox.api.linkedin.client.paging;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,12 +22,8 @@ public class V2PagingImpl extends PagingStrategy {
           previousPageUrl = null;
           nextPageUrl = null;
         } else {
-          nextPageUrl = String.format("%s?start=%s&count=%s", fullEndpoint, start, count);
-          if (start > 0) {
-            // There's a previous page
-            previousPageUrl = String.format("%s?start=%s&count=%s", fullEndpoint, start - count,
-                count);
-          }
+          setNextPageURL(fullEndpoint, start, count);
+          setPreviousPageURL(fullEndpoint, start, count);
         }
       }
     } else {

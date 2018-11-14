@@ -32,7 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
 
 /**
- * Representation of a Facebook API request parameter.
+ * Representation of a LinkedIn API request parameter.
  * 
  * @author <a href="http://restfb.com">Mark Allen</a>
  */
@@ -57,12 +57,13 @@ public final class Parameter {
    * @param jsonMapper
    *          Mapper for converting the parameter value to JSON.
    * @throws IllegalArgumentException
-   *           If {@code name} is {@code null} or a blank string or either {@code value} or {@code jsonMapper} is
-   *           {@code null}.
+   *           If {@code name} is {@code null} or a blank string or either {@code value} 
+   *           {@code jsonMapper} is {@code null}.
    */
   private Parameter(String name, Object value, JsonMapper jsonMapper) {
     if (StringUtils.isBlank(name) || value == null) {
-      throw new IllegalArgumentException(Parameter.class + " instances must have a non-blank name and non-null value.");
+      throw new IllegalArgumentException(Parameter.class
+          + " instances must have a non-blank name and non-null value.");
     }
 
     if (jsonMapper == null) {
@@ -71,19 +72,18 @@ public final class Parameter {
 
     this.name = StringUtils.trimToEmpty(name);
 
-    // Special handling for Date types - turn them into Facebook date strings.
+    // Special handling for Date types - turn them into LinkedIn date strings.
     // Otherwise, use the JSON value of the type.
-    this.value = value instanceof Date ? DateUtils.toLongFormatFromDate((Date) value) : jsonMapper.toJson(value, true);
+    this.value = value instanceof Date ? DateUtils.toLongFormatFromDate((Date) value)
+        : jsonMapper.toJson(value, true);
   }
 
   /**
    * Factory method which provides an instance with the given {@code name} and {@code value}.
    * <p>
-   * The {@code value} parameter is often a {@link String} or primitive type like {@link Integer}, but you may pass in a
-   * {@link java.util.List}, {@link java.util.Map}, or your own <tt>@Facebook</tt>-annotated Javabean and it will be
-   * converted to JSON automatically. See the "attachment" section of
-   * <a href="http://wiki.developers.facebook.com/index.php/Stream.publish">the stream.publish API documentation</a> for
-   * an example of where this is useful.
+   * The {@code value} parameter is often a {@link String} or primitive type like {@link Integer}, 
+   * but you may pass in a {@link java.util.List}, {@link java.util.Map}, or your own 
+   * <tt>@LinkedIn</tt>-annotated Javabean and it will be converted to JSON automatically. 
    * 
    * @param name
    *          The parameter name.
@@ -92,7 +92,7 @@ public final class Parameter {
    * @return A {@code Parameter} instance with the given {@code name} and {@code value}.
    * @throws IllegalArgumentException
    *           If {@code name} or {@code value} is {@code null} or a blank string.
-   * @throws FacebookJsonMappingException
+   * @throws LinkedInJsonMappingException
    *           If an error occurs when converting {@code value} to JSON.
    */
   public static Parameter with(String name, Object value) {
@@ -100,14 +100,12 @@ public final class Parameter {
   }
 
   /**
-   * Factory method which provides an instance with the given {@code name} and {@code value}, using the provided
-   * {@code jsonMapper} to turn {@code value} into a JSON string.
+   * Factory method which provides an instance with the given {@code name} and {@code value}, 
+   * using the provided {@code jsonMapper} to turn {@code value} into a JSON string.
    * <p>
-   * The {@code value} parameter is often a {@link String} or primitive type like {@link Integer}, but you may pass in a
-   * {@link java.util.List}, {@link java.util.Map}, or your own <tt>@Facebook</tt>-annotated Javabean and it will be
-   * converted to JSON automatically. See the "attachment" section of
-   * <a href="http://wiki.developers.facebook.com/index.php/Stream.publish">the stream.publish API documentation</a> for
-   * an example of where this is useful.
+   * The {@code value} parameter is often a {@link String} or primitive type like {@link Integer},
+   * but you may pass in a {@link java.util.List}, {@link java.util.Map}, or your own
+   * <tt>@LinkedIn</tt>-annotated Javabean and it will be converted to JSON automatically. 
    * 
    * @param name
    *          The parameter name.
@@ -118,7 +116,7 @@ public final class Parameter {
    * @return A {@code Parameter} instance with the given {@code name} and {@code value}.
    * @throws IllegalArgumentException
    *           If {@code name} or {@code value} is {@code null} or a blank string.
-   * @throws FacebookJsonMappingException
+   * @throws LinkedInJsonMappingException
    *           If an error occurs when converting {@code value} to JSON.
    */
   public static Parameter with(String name, Object value, JsonMapper jsonMapper) {

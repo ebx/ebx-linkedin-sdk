@@ -57,7 +57,7 @@ abstract class BaseLinkedInClient {
    * Set of parameter names that user must not specify themselves, since we use these parameters
    * internally.
    */
-  protected final Set<String> illegalParamNames = new HashSet<String>();
+  protected final Set<String> illegalParamNames = new HashSet<>();
 
   /**
   * If the error object is not in the correct ofrmat, throw a ResponseErrorJsonParsingException
@@ -163,12 +163,13 @@ abstract class BaseLinkedInClient {
    *           If there's a parameter name collision.
    */
   protected void verifyParameterLegality(Parameter... parameters) {
-    for (Parameter parameter : parameters)
+    for (Parameter parameter : parameters) {
       if (illegalParamNames.contains(parameter.name)) {
         throw new IllegalArgumentException(
-            "Parameter '" + parameter.name + "' is reserved for RestFB use - "
+            "Parameter '" + parameter.name + "' is reserved for ebx-linkedin-sdk use - "
                 + "you cannot specify it yourself.");
       }
+    }
   }
 
   /**

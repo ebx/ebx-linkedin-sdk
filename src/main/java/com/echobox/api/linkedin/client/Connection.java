@@ -19,13 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.echobox.api.linkedin.client;
 
 import static java.util.Collections.unmodifiableList;
 
+import com.echobox.api.linkedin.client.paging.PagingStrategy;
 import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
 import com.echobox.api.linkedin.util.ReflectionUtils;
-import com.echobox.api.linkedin.version.PagingStrategy;
 import com.echobox.api.linkedin.version.Version;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,11 +39,12 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
- * Represents a <a href="http://developers.facebook.com/docs/api">Graph API Connection type</a>.
+ * Represents a LinkedIn API Connection type
+ *
+ * @param <T> The LinkedIn type
+ * @author Joanna
  *
  * @param <T>
- *          The Facebook type
- * @author <a href="http://restfb.com">Mark Allen</a>
  */
 public class Connection<T> implements Iterable<List<T>> {
   private LinkedInClient facebookClient;
@@ -50,8 +52,6 @@ public class Connection<T> implements Iterable<List<T>> {
   private List<T> data;
   private String previousPageUrl;
   private String nextPageUrl;
-  private String beforeCursor;
-  private String afterCursor;
 
   /**
    * @see java.lang.Iterable#iterator()
@@ -64,9 +64,9 @@ public class Connection<T> implements Iterable<List<T>> {
 
   /**
    * Iterator over connection pages.
+   * @param <T> type
    * 
    * @author <a href="http://restfb.com">Mark Allen</a>
-   * @since 1.6.7
    */
   protected static class Itr<T> implements ConnectionIterator<T> {
     private Connection<T> connection;
@@ -116,7 +116,8 @@ public class Connection<T> implements Iterable<List<T>> {
      */
     @Override
     public void remove() {
-      throw new UnsupportedOperationException(Itr.class.getSimpleName() + " doesn't support the remove() operation.");
+      throw new UnsupportedOperationException(Itr.class.getSimpleName()
+          + " doesn't support the remove() operation.");
     }
 
     /**
@@ -131,20 +132,25 @@ public class Connection<T> implements Iterable<List<T>> {
   /**
    * Creates a connection with the given {@code jsonObject}.
    * 
-   * @param facebookClient
-   *          The {@code FacebookClient} used to fetch additional pages and map data to JSON objects.
+   * @param fullEndpoint
+   *          The full endpoint so it is possible to build up the next and previous pages for the
+   *          URL
+   * @param linkedinClient
+   *          The {@code LinkedInClient} used to fetch additional pages and map data to JSON
+   *          objects.
    * @param json
-   *          Raw JSON which must include a {@code data} field that holds a JSON array and optionally a {@code paging}
-   *          field that holds a JSON object with next/previous page URLs.
+   *          Raw JSON which must include a {@code data} field that holds a JSON array and
+   *          optionally a {@code paging} field that holds a JSON object with next/previous page
+   *          URLs.
    * @param connectionType
    *          Connection type token.
-   * @throws FacebookJsonMappingException
+   * @throws LinkedInJsonMappingException
    *           If the provided {@code json} is invalid.
-   * @since 1.6.7
    */
   @SuppressWarnings("unchecked")
-  public Connection(String fullEndpoint, LinkedInClient facebookClient, String json, Class<T> connectionType) {
-    List<T> dataList = new ArrayList<T>();
+  public Connection(String fullEndpoint, LinkedInClient linkedinClient, String json,
+      Class<T> connectionType) {
+    List<T> dataList = new ArrayList<>();
 
     if (json == null) {
       throw new LinkedInJsonMappingException("You must supply non-null connection JSON.");
@@ -155,24 +161,26 @@ public class Connection<T> implements Iterable<List<T>> {
     try {
       jsonObject = new JSONObject(json);
     } catch (JSONException e) {
-      throw new LinkedInJsonMappingException("The connection JSON you provided was invalid: " + json, e);
+      throw new LinkedInJsonMappingException("The connection JSON you provided was invalid: "
+          + json, e);
     }
 
     // Pull out data
     JSONArray jsonData = jsonObject.getJSONArray("values");
     for (int i = 0; i < jsonData.length(); i++) {
       dataList.add(connectionType.equals(JSONObject.class) ? (T) jsonData.get(i)
-          : facebookClient.getJsonMapper().toJavaObject(jsonData.get(i).toString(), connectionType));
+          : linkedinClient.getJsonMapper().toJavaObject(jsonData.get(i).toString(),
+              connectionType));
     }
-    
-    Version version = facebookClient.getVersion();
+
+    Version version = linkedinClient.getVersion();
     PagingStrategy pagingStrategy = version.getPagingStrategy();
     pagingStrategy.discoverPages(jsonObject, fullEndpoint);
     this.nextPageUrl = pagingStrategy.getNextPageUrl();
     this.previousPageUrl = pagingStrategy.getPreviousPageUrl();
-    
+
     this.data = unmodifiableList(dataList);
-    this.facebookClient = facebookClient;
+    this.facebookClient = linkedinClient;
     this.connectionType = connectionType;
   }
 
@@ -180,7 +188,6 @@ public class Connection<T> implements Iterable<List<T>> {
    * Fetches the next page of the connection. Designed to be used by {@link Itr}.
    * 
    * @return The next page of the connection.
-   * @since 1.6.7
    */
   protected Connection<T> fetchNextPage() {
     return facebookClient.fetchConnectionPage(getNextPageUrl(), connectionType);
@@ -213,7 +220,8 @@ public class Connection<T> implements Iterable<List<T>> {
   /**
    * This connection's "previous page of data" URL.
    * 
-   * @return This connection's "previous page of data" URL, or {@code null} if there is no previous page.
+   * @return This connection's "previous page of data" URL, or {@code null} if there is no previous
+   * page.
    */
   public String getPreviousPageUrl() {
     return previousPageUrl;
@@ -223,7 +231,6 @@ public class Connection<T> implements Iterable<List<T>> {
    * This connection's "next page of data" URL.
    * 
    * @return This connection's "next page of data" URL, or {@code null} if there is no next page.
-   * @since 1.5.3
    */
   public String getNextPageUrl() {
     return nextPageUrl;
@@ -232,7 +239,8 @@ public class Connection<T> implements Iterable<List<T>> {
   /**
    * Does this connection have a previous page of data?
    * 
-   * @return {@code true} if there is a previous page of data for this connection, {@code false} otherwise.
+   * @return {@code true} if there is a previous page of data for this connection, {@code false}
+   * otherwise.
    */
   public boolean hasPrevious() {
     return !StringUtils.isBlank(getPreviousPageUrl());
@@ -241,17 +249,10 @@ public class Connection<T> implements Iterable<List<T>> {
   /**
    * Does this connection have a next page of data?
    * 
-   * @return {@code true} if there is a next page of data for this connection, {@code false} otherwise.
+   * @return {@code true} if there is a next page of data for this connection, {@code false}
+   * otherwise.
    */
   public boolean hasNext() {
     return !StringUtils.isBlank(getNextPageUrl());
-  }
-
-  public String getBeforeCursor() {
-    return beforeCursor;
-  }
-
-  public String getAfterCursor() {
-    return afterCursor;
   }
 }

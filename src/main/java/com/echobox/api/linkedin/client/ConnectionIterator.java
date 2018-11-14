@@ -19,11 +19,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.echobox.api.linkedin.client;
 
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * The connection iterator
+ * @author Joanna
+ *
+ * @param <T> type of the connection iterator
+ */
 public interface ConnectionIterator<T> extends Iterator<List<T>> {
 
   /**

@@ -1,5 +1,8 @@
 package com.echobox.api.linkedin.version;
 
+import com.echobox.api.linkedin.client.paging.PagingStrategy;
+import com.echobox.api.linkedin.client.paging.V1PagingImpl;
+import com.echobox.api.linkedin.client.paging.V2PagingImpl;
 import com.echobox.api.linkedin.logging.LinkedInLogger;
 
 import org.slf4j.Logger;
@@ -34,8 +37,8 @@ public enum Version {
         return version;
       }
     }
-    LOGGER.warn("Could not get company type from code " + urlElement + ", defaulting to v1");
-    return V1;
+    LOGGER.warn("Could not get company type from code " + urlElement + ", defaulting to V2");
+    return V2;
   }
 
 }
