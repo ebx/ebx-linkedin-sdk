@@ -216,7 +216,6 @@ public interface LinkedInClient {
    * @return The access token for the application identified by {@code appId} and {@code appSecret}.
    * @throws LinkedInException
    *           If an error occurs while attempting to obtain an access token.
-   * @since 1.6.10
    */
   AccessToken obtainAppAccessToken(String appId, String appSecret);
 

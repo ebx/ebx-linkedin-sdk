@@ -475,6 +475,10 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
       skipResponseStatusExceptionParsing(json);
 
       JSONObject errorObject = new JSONObject(json);
+      
+      if (!errorObject.has(ERROR_ATTRIBUTE_NAME)) {
+        return;
+      }
 
       // If there's an Integer error code, pluck it out.
       Integer errorCode = errorObject.has(ERROR_CODE_ATTRIBUTE_NAME)

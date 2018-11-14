@@ -93,7 +93,6 @@ public interface JsonMapper {
    * @return A JSON string.
    * @throws LinkedInJsonMappingException
    *           If an error occurs while mapping Java to JSON.
-   * @since 1.4
    */
   String toJson(Object object);
 
@@ -112,7 +111,6 @@ public interface JsonMapper {
    * @return A JSON string.
    * @throws LinkedInJsonMappingException
    *           If an error occurs while mapping Java to JSON.
-   * @since 1.6.5
    */
   String toJson(Object object, boolean ignoreNullValuedProperties);
 
@@ -128,7 +126,6 @@ public interface JsonMapper {
    * LinkedIn returns or custom mapping of fields {@code JsonMapper} isn't equipped to handle yet.
    * 
    * @author <a href="http://restfb.com">Mark Allen</a>
-   * @since 1.6.11
    */
   @Target({ METHOD })
   @Retention(RUNTIME)

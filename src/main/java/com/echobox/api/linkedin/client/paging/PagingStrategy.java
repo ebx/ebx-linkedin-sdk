@@ -21,6 +21,7 @@ import com.echobox.api.linkedin.util.URLUtils;
 
 import lombok.Getter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 /**
@@ -47,7 +48,19 @@ public abstract class PagingStrategy {
    * @param jsonObject The JSON object to discover the paging
    * @param fullEndpoint The full endpoint to build the next page URL
    */
-  public abstract void discoverPages(JSONObject jsonObject, String fullEndpoint);
+  public void populatePages(JSONObject jsonObject, String fullEndpoint) {
+    if (StringUtils.isBlank(fullEndpoint)) {
+      throw new IllegalStateException("The fullEndpoint cannot be blank to discover pages.");
+    }
+    if (jsonObject == null) {
+      previousPageUrl = null;
+      nextPageUrl = null;
+    } else {
+      discoverPages(jsonObject, fullEndpoint);
+    }
+  }
+  
+  protected abstract void discoverPages(JSONObject jsonObject, String fullEndpoint);
 
   protected void setNextPageURL(String fullEndpoint, int start, int count) {
     nextPageUrl = createPagedURL(fullEndpoint, start + count, count);
@@ -57,6 +70,8 @@ public abstract class PagingStrategy {
     if (start > 0) {
       // There's a previous page
       previousPageUrl = createPagedURL(fullEndpoint, start - count, count);
+    } else {
+      previousPageUrl = null;
     }
   }
   

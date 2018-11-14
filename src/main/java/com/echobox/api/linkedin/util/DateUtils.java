@@ -34,7 +34,6 @@ import java.util.Date;
  * A collection of date-handling utility methods.
  * 
  * @author <a href="http://restfb.com">Mark Allen</a>
- * @since 1.6
  */
 public final class DateUtils {
   

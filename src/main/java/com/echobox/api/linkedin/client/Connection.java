@@ -55,7 +55,6 @@ public class Connection<T> implements Iterable<List<T>> {
 
   /**
    * @see java.lang.Iterable#iterator()
-   * @since 1.6.7
    */
   @Override
   public ConnectionIterator<T> iterator() {
@@ -175,7 +174,7 @@ public class Connection<T> implements Iterable<List<T>> {
 
     Version version = linkedinClient.getVersion();
     PagingStrategy pagingStrategy = version.getPagingStrategy();
-    pagingStrategy.discoverPages(jsonObject, fullEndpoint);
+    pagingStrategy.populatePages(jsonObject, fullEndpoint);
     this.nextPageUrl = pagingStrategy.getNextPageUrl();
     this.previousPageUrl = pagingStrategy.getPreviousPageUrl();
 

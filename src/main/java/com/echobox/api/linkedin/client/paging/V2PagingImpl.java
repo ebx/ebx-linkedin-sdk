@@ -17,8 +17,13 @@
 
 package com.echobox.api.linkedin.client.paging;
 
+import com.echobox.api.linkedin.util.URLUtils;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * The paging strategy for V1 JSON responses
@@ -28,24 +33,39 @@ import org.json.JSONObject;
 public class V2PagingImpl extends PagingStrategy {
 
   @Override
-  public void discoverPages(JSONObject jsonObject, String fullEndpoint) {
-    JSONArray jsonData = jsonObject.getJSONArray("values");
-    // Pull out paging info, if present
-    if (jsonObject.has("paging")) {
-      JSONObject jsonPaging = jsonObject.getJSONObject("paging");
-      Integer count = jsonPaging.has("count") ? jsonPaging.getInt("count") : null;
-      Integer start = jsonPaging.has("start") ? jsonPaging.getInt("start") : null;
-      // Paging is available
-      if (count != null && start != null) {
-        // You will know that you have reached the end of the dataset when your response contains
-        // less elements in the entities block of the response than your count parameter requested.
-        if (jsonData.length() < count) {
-          previousPageUrl = null;
-          nextPageUrl = null;
-        } else {
+  protected void discoverPages(JSONObject jsonObject, String fullEndpoint) {
+    if (jsonObject.has("elements")) {
+      JSONArray elements = jsonObject.getJSONArray("elements");
+
+      // Pull out paging info, if present
+      if (jsonObject.has("paging")) {
+        JSONObject jsonPaging = jsonObject.getJSONObject("paging");
+        Integer count = jsonPaging.optInt("count");
+        Integer start = jsonPaging.optInt("start");
+
+        // You will know that you have reached the end of the dataset when your response
+        // contains less elements in the entities block of the response than your count
+        // parameter requested.
+        Map<String, List<String>> extractParametersFromUrl =
+            URLUtils.extractParametersFromUrl(fullEndpoint);
+        if (extractParametersFromUrl.containsKey("count")) {
+          // Check if the count is less than the elements returned - if so we're at the last page
+          int requestedCount = Integer.parseInt(extractParametersFromUrl.get("count").get(0));
+          if (elements.length() < requestedCount) {
+            nextPageUrl = null;
+            setPreviousPageURL(fullEndpoint, start, count);
+            return;
+          }
+        }
+
+        // Paging is available
+        if (count != null && start != null) {
           setNextPageURL(fullEndpoint, start, count);
           setPreviousPageURL(fullEndpoint, start, count);
         }
+      } else {
+        previousPageUrl = null;
+        nextPageUrl = null;
       }
     } else {
       previousPageUrl = null;

@@ -83,7 +83,6 @@ public final class URLUtils {
    *          {@code null}.
    * @throws IllegalStateException
    *           If unable to URL-decode because the JVM doesn't support {@value #ENCODING_CHARSET}.
-   * @since 1.6.5
    */
   public static String urlDecode(String string) {
     if (string == null) {

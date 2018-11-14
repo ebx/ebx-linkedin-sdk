@@ -71,7 +71,8 @@ public enum Version {
         return version;
       }
     }
-    LOGGER.warn("Could not get company type from code " + urlElement + ", defaulting to V2");
+    LOGGER.warn("Could not get company type from code " + urlElement + ", defaulting to "
+        + DEFAULT_VERSION);
     return DEFAULT_VERSION;
   }
 

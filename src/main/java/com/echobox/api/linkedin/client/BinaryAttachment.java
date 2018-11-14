@@ -64,7 +64,6 @@ public class BinaryAttachment {
    *          The attachment's data.
    * @throws IllegalArgumentException
    *           If {@code data} is {@code null} or {@code filename} is {@code null} or blank.
-   * @since 1.6.17
    */
   protected BinaryAttachment(String filename, byte[] data) {
     if (StringUtils.isBlank(filename)) {
@@ -89,7 +88,6 @@ public class BinaryAttachment {
    *          The field name the binary belongs to
    * @throws IllegalArgumentException
    *           If {@code data} is {@code null} or {@code filename} is {@code null} or blank.
-   * @since 1.6.17
    */
   protected BinaryAttachment(String fieldName, String filename, byte[] data) {
     this(filename, data);
@@ -112,7 +110,6 @@ public class BinaryAttachment {
    * @throws IllegalArgumentException
    *           If {@code data} is {@code null}, {@code filename} is {@code null} or blank,
    *           or {@code contentType} is {@code null} or blank.
-   * @since 1.6.17
    */
   protected BinaryAttachment(String filename, byte[] data, String contentType) {
     this(filename, data);
@@ -137,7 +134,6 @@ public class BinaryAttachment {
    * @throws IllegalArgumentException
    *           If {@code data} is {@code null}, {@code filename} is {@code null} or blank, or
    *           {@code contentType} is {@code null} or blank.
-   * @since 1.6.17
    */
   protected BinaryAttachment(String fieldName, String filename, byte[] data, String contentType) {
     this(filename, data, contentType);
@@ -158,7 +154,6 @@ public class BinaryAttachment {
    * @return A binary attachment.
    * @throws IllegalArgumentException
    *           If {@code data} is {@code null} or {@code filename} is {@code null} or blank.
-   * @since 1.6.17
    */
   public static BinaryAttachment with(String filename, byte[] data) {
     return new BinaryAttachment(filename, data);
@@ -176,7 +171,6 @@ public class BinaryAttachment {
    * @return A binary attachment.
    * @throws IllegalArgumentException
    *           If {@code data} is {@code null} or {@code filename} is {@code null} or blank.
-   * @since 1.6.17
    */
   public static BinaryAttachment with(String fieldName, String filename, byte[] data) {
     return new BinaryAttachment(fieldName, filename, data);
@@ -194,7 +188,6 @@ public class BinaryAttachment {
    * @return A binary attachment.
    * @throws IllegalArgumentException
    *           If {@code data} is {@code null} or {@code filename} is {@code null} or blank.
-   * @since 1.6.17
    */
   public static BinaryAttachment with(String filename, byte[] data, String contentType) {
     return new BinaryAttachment(filename, data, contentType);
@@ -214,7 +207,6 @@ public class BinaryAttachment {
    * @return A binary attachment.
    * @throws IllegalArgumentException
    *           If {@code data} is {@code null} or {@code filename} is {@code null} or blank.
-   * @since 1.6.17
    */
   public static BinaryAttachment with(String fieldName, String filename, byte[] data,
       String contentType) {

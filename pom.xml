@@ -61,10 +61,10 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-	      <groupId>com.google.apis</groupId>
-	      <artifactId>google-api-services-oauth2</artifactId>
-	      <version>v1-rev145-1.25.0</version>
-	    </dependency>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-oauth2</artifactId>
+			<version>v1-rev145-1.25.0</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>
@@ -125,8 +125,12 @@
 							<includeTestSourceDirectory>true</includeTestSourceDirectory>
 							<propertyExpansion>basedir=${project.basedir}</propertyExpansion>
 							<excludes>**/DateFormatStrategy.java,**/DateFormatStrategy.java,
-							**/DateUtils.java,**/ReflectionUtils.java,**/SimpleDateFormatStrategy.java,
-							**/JsonMapper.java,**/DefaultJsonMapper.java</excludes>
+								**/DateUtils.java,**/ReflectionUtils.java,**/SimpleDateFormatStrategy.java,
+								**/JsonMapper.java,**/DefaultJsonMapper.java,**/BaseLinkedInClient.java,
+								**/BinaryAttachment.java,**/Connection.java,**/ConnectionIterator.java,
+								**/LinkedInClient.java,**/Parameter.java,**/WebRequestor.java,
+								**/LinkedInExceptionMapper.java,**/LinkedInNetworkException.java,
+								**/ResponseErrorJsonParsingException.java,**/URLUtils.java</excludes>
 						</configuration>
 						<goals>
 							<goal>check</goal>
