@@ -44,11 +44,6 @@ public class LinkedInAPIException extends LinkedInErrorMessageException {
   private final Integer httpStatusCode;
 
   /**
-   * The flag to indicate whether the exception is transient
-   */
-  private final Boolean isTransient;
-
-  /**
    * Creates an exception with the given error type and message.
    * 
    * @param errorMessage
@@ -57,19 +52,16 @@ public class LinkedInAPIException extends LinkedInErrorMessageException {
    *          Value of the LinkedIn response attribute {@code error.code}.
    * @param httpStatusCode
    *          The HTTP status code returned by the server, e.g. 500.
-   * @param isTransient
-   *          The flag to indicate whether the exception is transient
    * @param rawError
    *          The raw error JSON object
    */
   public LinkedInAPIException(String errorMessage, Integer errorCode, Integer httpStatusCode,
-      Boolean isTransient, JSONObject rawError) {
+      JSONObject rawError) {
     super(String.format("Received LinkedIn error response: %s (code %s)", errorMessage,
       errorCode));
     this.errorMessage = errorMessage;
     this.errorCode = errorCode;
     this.httpStatusCode = httpStatusCode;
-    this.isTransient = isTransient;
     setRawErrorJson(rawError);
   }
 
@@ -98,15 +90,6 @@ public class LinkedInAPIException extends LinkedInErrorMessageException {
    */
   public Integer getHttpStatusCode() {
     return httpStatusCode;
-  }
-
-  /**
-   * Gets the flag that determines if the exception is transient
-   * 
-   * @return flag to indeicate that the exception is transient
-   */
-  public Boolean getIsTransient() {
-    return isTransient;
   }
 
   /**

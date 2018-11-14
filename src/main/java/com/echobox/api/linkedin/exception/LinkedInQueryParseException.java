@@ -39,14 +39,12 @@ public class LinkedInQueryParseException extends LinkedInAPIException {
    *          LinkedIn exception error code field, e.g. 190.
    * @param httpStatusCode
    *          The HTTP status code returned by the server, e.g. 500.
-   * @param isTransient
-   *          Whether the error is transient
    * @param rawError
    *          raw error message as JSON
    */
-  public LinkedInQueryParseException(String errorMessage, Integer errorCode,
-      Integer httpStatusCode, Boolean isTransient, JSONObject rawError) {
-    super(errorMessage, errorCode, httpStatusCode, isTransient, rawError);
+  public LinkedInQueryParseException(String errorMessage, Integer errorCode, Integer httpStatusCode,
+      JSONObject rawError) {
+    super(errorMessage, errorCode, httpStatusCode, rawError);
   }
   
 }

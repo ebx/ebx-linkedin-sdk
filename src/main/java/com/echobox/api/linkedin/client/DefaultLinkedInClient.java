@@ -75,31 +75,9 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   protected static final String ERROR_CODE_ATTRIBUTE_NAME = "serviceErrorCode";
 
   /**
-   * API error response 'error_subcode' attribute name.
-   */
-  protected static final String ERROR_SUBCODE_ATTRIBUTE_NAME = "error_subcode";
-
-  /**
    * API error response 'message' attribute name.
    */
   protected static final String ERROR_MESSAGE_ATTRIBUTE_NAME = "message";
-
-  /**
-   * API error response 'type' attribute name.
-   */
-  protected static final String ERROR_TYPE_ATTRIBUTE_NAME = "type";
-
-  /**
-   * API error response 'error_user_msg' attribute name.
-   */
-  protected static final String ERROR_USER_MSG_ATTRIBUTE_NAME = "error_user_msg";
-
-  protected static final String ERROR_IS_TRANSIENT_NAME = "is_transient";
-
-  /**
-   * Reserved "multiple IDs" parameter name.
-   */
-  protected static final String IDS_PARAM_NAME = "ids";
 
   /**
    * Reserved "start" parameter name.
@@ -525,42 +503,38 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
         String message, Boolean isTransient, JSONObject rawError) {
       // Bad Request - client mistakes
       if (new Integer(400).equals(httpStatusCode)) {
-        return new LinkedInQueryParseException(message, errorCode, httpStatusCode, isTransient,
-            rawError);
+        return new LinkedInQueryParseException(message, errorCode, httpStatusCode, rawError);
       }
       
       // Unauthorised 
       if (new Integer(401).equals(httpStatusCode)) {
-        return new LinkedInOAuthException(message, errorCode, httpStatusCode, isTransient,
-            rawError);
+        return new LinkedInOAuthException(message, errorCode, httpStatusCode, rawError);
       }
       
       // Resource not found 
       if (new Integer(404).equals(httpStatusCode)) {
         return new LinkedInResourceNotFoundException(message, errorCode, httpStatusCode,
-            isTransient, rawError);
+            rawError);
       }
       
       // 429 Rate limit
       if (new Integer(429).equals(httpStatusCode)) {
-        return new LinkedInRateLimitException(message, errorCode, httpStatusCode, isTransient,
+        return new LinkedInRateLimitException(message, errorCode, httpStatusCode,
             rawError);
       }
       
       // Internal Server Error 
       if (new Integer(500).equals(httpStatusCode)) {
-        return new LinkedInInteralServerException(message, errorCode, httpStatusCode, isTransient,
-            rawError);
+        return new LinkedInInteralServerException(message, errorCode, httpStatusCode, rawError);
       }
       
       // Gateway timeout
       if (new Integer(504).equals(httpStatusCode)) {
-        return new LinkedInGatewayTimeoutException(message, errorCode, httpStatusCode, isTransient,
-            rawError);
+        return new LinkedInGatewayTimeoutException(message, errorCode, httpStatusCode, rawError);
       }
 
       // Don't recognize this exception type? Just go with the standard LinkedInAPIException.
-      return new LinkedInAPIException(message, errorCode, httpStatusCode, isTransient, rawError);
+      return new LinkedInAPIException(message, errorCode, httpStatusCode, rawError);
     }
   }
 
