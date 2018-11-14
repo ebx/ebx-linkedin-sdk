@@ -92,19 +92,45 @@ public class DefaultWebRequestor implements WebRequestor {
 
   private HttpRequestFactory requestFactory;
 
+  /**
+   * HTTP methods available
+   * @author Joanna
+   *
+   */
   protected enum HttpMethod {
     GET, DELETE, POST
   }
 
+  /**
+   * Initialise the default web requestor which uses OAuth2
+   * @param accessToken A LinkedIn OAuth access token
+   * @throws GeneralSecurityException Thrown when the OAuth2 client fails to initialise
+   * @throws IOException Thrown when the OAuth2 client fails to initialise
+   */
   public DefaultWebRequestor(String accessToken) throws GeneralSecurityException, IOException {
     this(null, null, accessToken);
   }
 
+  /**
+   * Initialise the default web requestor which uses OAuth2
+   * @param clientId A LinkedIn client id
+   * @param clientSecret A LinkedIn client secret
+   * @throws GeneralSecurityException thrown when the OAuth2 client fails to initialise
+   * @throws IOException thrown when the OAuth2 client fails to initialise
+   */
   public DefaultWebRequestor(String clientId, String clientSecret) throws GeneralSecurityException,
       IOException {
     this(clientId, clientSecret, null);
   }
 
+  /**
+   * Initialise the default web requestor which uses OAuth2
+   * @param clientId A LinkedIn client id
+   * @param clientSecret A LinkedIn client secret
+   * @param accessToken A LinkedIn OAuth access token
+   * @throws GeneralSecurityException thrown when the OAuth2 client fails to initialise
+   * @throws IOException thrown when the OAuth2 client fails to initialise
+   */
   public DefaultWebRequestor(String clientId, String clientSecret, String accessToken)
       throws GeneralSecurityException, IOException {
     this.requestFactory = authorize(clientId, clientSecret, accessToken);
@@ -214,8 +240,9 @@ public class DefaultWebRequestor implements WebRequestor {
 
     int read;
     byte[] chunk = new byte[bufferSize];
-    while ((read = source.read(chunk)) > 0)
-      destination.write(chunk, 0, read);
+    while ((read = source.read(chunk)) > 0) {
+      destination.write(chunk, 0, read);      
+    }
   }
 
   /**

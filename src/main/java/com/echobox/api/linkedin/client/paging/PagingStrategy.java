@@ -1,20 +1,52 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package com.echobox.api.linkedin.client.paging;
 
 import com.echobox.api.linkedin.util.URLUtils;
 
-import org.json.JSONObject;
-
 import lombok.Getter;
 
+import org.json.JSONObject;
+
+/**
+ * Discover and build the previous and next page URL if paging is available in the JSON object
+ * @author Joanna
+ *
+ */
 public abstract class PagingStrategy {
 
+  /**
+   * The previous page URL
+   */
   @Getter
   protected String previousPageUrl;
 
+  /**
+   * The next page URL
+   */
   @Getter
   protected String nextPageUrl;
 
+  /**
+   * Discover the paging URLs for the given JSON object and build it for the full endpoint
+   * @param jsonObject The JSON object to discover the paging
+   * @param fullEndpoint The full endpoint to build the next page URL
+   */
   public abstract void discoverPages(JSONObject jsonObject, String fullEndpoint);
 
   protected void setNextPageURL(String fullEndpoint, int start, int count) {
@@ -29,8 +61,10 @@ public abstract class PagingStrategy {
   }
   
   private String createPagedURL(String fullEndpoint, int start, int count) {
-    fullEndpoint = URLUtils.replaceOrAddQueryParameter(fullEndpoint, "start", Integer.toString(start));
-    fullEndpoint = URLUtils.replaceOrAddQueryParameter(fullEndpoint, "count", Integer.toString(count));
+    fullEndpoint = URLUtils.replaceOrAddQueryParameter(fullEndpoint, "start",
+        Integer.toString(start));
+    fullEndpoint = URLUtils.replaceOrAddQueryParameter(fullEndpoint, "count",
+        Integer.toString(count));
     return fullEndpoint;
   }
 

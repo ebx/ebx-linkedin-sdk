@@ -35,7 +35,6 @@ import java.util.Map;
 
 /**
  * @author <a href="http://restfb.com">Mark Allen</a>
- * @since 1.6.10
  */
 public final class URLUtils {
   /**
@@ -57,7 +56,8 @@ public final class URLUtils {
    * 
    * @param string
    *          The string to URL-encode.
-   * @return The URL-encoded version of the input string, or {@code null} if {@code string} is {@code null}.
+   * @return The URL-encoded version of the input string, or {@code null} if {@code string} is
+   *          {@code null}.
    * @throws IllegalStateException
    *           If unable to URL-encode because the JVM doesn't support {@value #ENCODING_CHARSET}.
    */
@@ -79,7 +79,8 @@ public final class URLUtils {
    * 
    * @param string
    *          The string to URL-decode.
-   * @return The URL-decoded version of the input string, or {@code null} if {@code string} is {@code null}.
+   * @return The URL-decoded version of the input string, or {@code null} if {@code string} is
+   *          {@code null}.
    * @throws IllegalStateException
    *           If unable to URL-decode because the JVM doesn't support {@value #ENCODING_CHARSET}.
    * @since 1.6.5
@@ -102,8 +103,8 @@ public final class URLUtils {
    * 
    * @param queryString
    *          The URL query string from which parameters are extracted.
-   * @return A mapping of query string parameter names to values. If {@code queryString} is {@code null}, an empty
-   *         {@code Map} is returned.
+   * @return A mapping of query string parameter names to values. If {@code queryString} is
+   *          {@code null}, an empty {@code Map} is returned.
    * @throws IllegalStateException
    *           If unable to URL-decode because the JVM doesn't support {@value #ENCODING_CHARSET}.
    */
@@ -125,8 +126,8 @@ public final class URLUtils {
    * 
    * @param url
    *          The URL from which parameters are extracted.
-   * @return A mapping of query string parameter names to values. If {@code url} is {@code null}, an empty {@code Map}
-   *         is returned.
+   * @return A mapping of query string parameter names to values. If {@code url} is {@code null},
+   *          an empty {@code Map} is returned.
    * @throws IllegalStateException
    *           If unable to URL-decode because the JVM doesn't support {@value #ENCODING_CHARSET}.
    */
@@ -135,7 +136,7 @@ public final class URLUtils {
       return emptyMap();
     }
 
-    Map<String, List<String>> parameters = new HashMap<String, List<String>>();
+    Map<String, List<String>> parameters = new HashMap<>();
 
     String[] urlParts = url.split("\\?");
 
@@ -154,7 +155,7 @@ public final class URLUtils {
         List<String> values = parameters.get(key);
 
         if (values == null) {
-          values = new ArrayList<String>();
+          values = new ArrayList<>();
           parameters.put(key, values);
         }
 
@@ -165,6 +166,13 @@ public final class URLUtils {
     return parameters;
   }
 
+  /**
+   * Replace of add a query parameter
+   * @param url the URL
+   * @param key the key to add
+   * @param value the value to add
+   * @return the URL with the updated query parameter
+   */
   public static String replaceOrAddQueryParameter(String url, String key, String value) {
     String[] urlParts = url.split("\\?");
     String qParameter = key + "=" + value;

@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.echobox.api.linkedin.client;
 
 import static java.lang.String.format;
@@ -136,7 +137,7 @@ public interface LinkedInClient {
    *          The files to include in the publish request.
    * @param parameters
    *          URL parameters to include in the API call.
-   * @return An instance of type {@code objectType} which contains the Facebook response to your
+   * @return An instance of type {@code objectType} which contains the LinkedIn response to your
    *          publish request.
    * @throws LinkedInException
    *           If an error occurs while performing the API call.
@@ -168,8 +169,7 @@ public interface LinkedInClient {
       Parameter... parameters);
 
   /**
-   * Performs a <a href="http://developers.facebook.com/docs/api#deleting">Graph API delete</a>
-   * operation on the given {@code object}.
+   * Performs a LinkedIn API delete operation on the given {@code object}.
    * 
    * @param object
    *          The ID of the object to delete.
@@ -214,7 +214,7 @@ public interface LinkedInClient {
    * @param appSecret
    *          The secret for the app for which you'd like to obtain an access token.
    * @return The access token for the application identified by {@code appId} and {@code appSecret}.
-   * @throws FacebookException
+   * @throws LinkedInException
    *           If an error occurs while attempting to obtain an access token.
    * @since 1.6.10
    */
@@ -296,7 +296,9 @@ public interface LinkedInClient {
       if (rawExpires != null) {
         try {
           expires = Long.valueOf(rawExpires);
-        } catch (NumberFormatException e) {}
+        } catch (NumberFormatException e) {
+          // No-op
+        }
         if (expires != null) {
           expires = new Date().getTime() + 1000L * expires;
         }

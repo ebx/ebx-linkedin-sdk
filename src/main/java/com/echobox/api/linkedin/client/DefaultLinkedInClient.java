@@ -129,7 +129,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   /**
    * Version of API endpoint.
    */
-  protected Version apiVersion = Version.V2;
+  protected Version apiVersion = Version.DEFAULT_VERSION;
 
   /**
    * By default this is <code>false</code>, so real http DELETE is used
@@ -137,25 +137,48 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   protected boolean httpDeleteFallback = false;
 
   /**
-   * Creates a Facebook Graph API client with the given {@code accessToken}.
+   * Creates a LinkedIn API client with the given {@code accessToken}.
    * 
    * @param accessToken
-   *          A Facebook OAuth access token.
-   * @param appSecret
-   *          A Facebook application secret.
-   * @param apiVersion
-   *          Version of the api endpoint
-   * @since 1.6.14
+   *          A LinkedIn OAuth access token.
+   * @throws GeneralSecurityException
+   *          If the DefaultWebRequestor fails to initialise
+   * @throws IOException
+   *          If the DefaultWebRequestor fails to initialise
    */
   public DefaultLinkedInClient(String accessToken) throws GeneralSecurityException, IOException {
     this(accessToken, Version.V2);
   }
 
+  /**
+   * Creates a LinkedIn API client with the given {@code accessToken}.
+   * 
+   * @param accessToken
+   *          A LinkedIn OAuth access token.
+   * @param apiVersion
+   *          Version of the API endpoint
+   * @throws GeneralSecurityException
+   *          If the DefaultWebRequestor fails to initialise
+   * @throws IOException
+   *          If the DefaultWebRequestor fails to initialise
+   */
   public DefaultLinkedInClient(String accessToken, Version apiVersion)
       throws GeneralSecurityException, IOException {
     this(new DefaultWebRequestor(accessToken), new DefaultJsonMapper(), apiVersion);
   }
 
+  /**
+   * Creates a LinkedIn API client with the given {@code accessToken}.
+   * 
+   * @param webRequestor
+   *          The {@link WebRequestor} implementation to use for sending requests to the API
+   *          endpoint.
+   * @param jsonMapper
+   *          The {@link JsonMapper} implementation to use for mapping API response JSON to Java
+   *          objects.
+   * @param apiVersion
+   *          Version of the API endpoint
+   */
   public DefaultLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper,
       Version apiVersion) {
     super();
@@ -248,8 +271,9 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
   @Override
   protected String createEndpointForApiCall(String apiCall, boolean hasAttachment) {
-    while (apiCall.startsWith("/"))
-      apiCall = apiCall.substring(1);
+    while (apiCall.startsWith("/")) {
+      apiCall = apiCall.substring(1);      
+    }
 
     String baseUrl = getLinkedInEndpointUrl();
 
@@ -389,9 +413,10 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   }
 
   /**
-   * returns if the fallback post method (<code>true</code>) is used or the http delete (<code>false</code>)
+   * returns if the fallback post method (<code>true</code>) is used or the http delete
+   * (<code>false</code>)
    * 
-   * @return
+   * @return a flag whether HTTP delete is a fallback
    */
   public boolean isHttpDeleteFallback() {
     return httpDeleteFallback;
@@ -438,6 +463,11 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     return json;
   }
 
+  /**
+   * Requestor interface to make requests to the LinkedIn API
+   * @author Joanna
+   *
+   */
   protected interface Requestor {
     Response makeRequest() throws IOException;
   }
@@ -446,11 +476,9 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    * Throws an exception if LinkedIn returned an error response. 
    * This method extracts relevant information from the error JSON and throws an exception which 
    * encapsulates it for end-user consumption.
-   * <p>
-   * For Graph API errors:
-   * <p>
-   * If the {@code error} JSON field is present, we've got a response status error for this API call.
-   * <p>
+   * For API errors:
+   * If the {@code error} JSON field is present, we've got a response status error for this API
+   * call.
    * 
    * @param json
    *          The JSON returned by LinkedIn in response to an API call.
@@ -503,35 +531,36 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
       
       // Unauthorised 
       if (new Integer(401).equals(httpStatusCode)) {
-        return new LinkedInOAuthException(message, errorCode, httpStatusCode,isTransient, rawError);
+        return new LinkedInOAuthException(message, errorCode, httpStatusCode, isTransient,
+            rawError);
       }
       
       // Resource not found 
       if (new Integer(404).equals(httpStatusCode)) {
-        return new LinkedInResourceNotFoundException(message, errorCode, httpStatusCode,isTransient,
-            rawError);
+        return new LinkedInResourceNotFoundException(message, errorCode, httpStatusCode,
+            isTransient, rawError);
       }
       
       // 429 Rate limit
       if (new Integer(429).equals(httpStatusCode)) {
-        return new LinkedInRateLimitException(message, errorCode, httpStatusCode,isTransient,
+        return new LinkedInRateLimitException(message, errorCode, httpStatusCode, isTransient,
             rawError);
       }
       
       // Internal Server Error 
       if (new Integer(500).equals(httpStatusCode)) {
-        return new LinkedInInteralServerException(message, errorCode, httpStatusCode,isTransient,
+        return new LinkedInInteralServerException(message, errorCode, httpStatusCode, isTransient,
             rawError);
       }
       
       // Gateway timeout
       if (new Integer(504).equals(httpStatusCode)) {
-        return new LinkedInGatewayTimeoutException(message, errorCode, httpStatusCode,isTransient,
+        return new LinkedInGatewayTimeoutException(message, errorCode, httpStatusCode, isTransient,
             rawError);
       }
 
       // Don't recognize this exception type? Just go with the standard LinkedInAPIException.
-      return new LinkedInAPIException( message, errorCode, httpStatusCode, isTransient, rawError);
+      return new LinkedInAPIException(message, errorCode, httpStatusCode, isTransient, rawError);
     }
   }
 

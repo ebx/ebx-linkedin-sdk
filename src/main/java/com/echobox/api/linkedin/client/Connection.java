@@ -47,7 +47,7 @@ import java.util.NoSuchElementException;
  * @param <T>
  */
 public class Connection<T> implements Iterable<List<T>> {
-  private LinkedInClient facebookClient;
+  private LinkedInClient linkedinClient;
   private Class<T> connectionType;
   private List<T> data;
   private String previousPageUrl;
@@ -180,7 +180,7 @@ public class Connection<T> implements Iterable<List<T>> {
     this.previousPageUrl = pagingStrategy.getPreviousPageUrl();
 
     this.data = unmodifiableList(dataList);
-    this.facebookClient = linkedinClient;
+    this.linkedinClient = linkedinClient;
     this.connectionType = connectionType;
   }
 
@@ -190,7 +190,7 @@ public class Connection<T> implements Iterable<List<T>> {
    * @return The next page of the connection.
    */
   protected Connection<T> fetchNextPage() {
-    return facebookClient.fetchConnectionPage(getNextPageUrl(), connectionType);
+    return linkedinClient.fetchConnectionPage(getNextPageUrl(), connectionType);
   }
 
   @Override

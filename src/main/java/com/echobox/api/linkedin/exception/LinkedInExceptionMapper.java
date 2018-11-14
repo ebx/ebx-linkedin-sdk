@@ -25,34 +25,27 @@ package com.echobox.api.linkedin.exception;
 import org.json.JSONObject;
 
 /**
- * Specifies a method for mapping Graph and Old REST API exceptions to corresponding instances of
- * {@code FacebookException}.
+ * Specifies a method for mapping LinkedIn API exceptions to corresponding instances of
+ * {@code LinkedInException}.
  * 
  * @author <a href="http://restfb.com">Mark Allen</a>
- * @since 1.6
  */
 public interface LinkedInExceptionMapper {
   /**
-   * Given a Facebook API exception type and message, generates an instance of the corresponding
-   * {@code FacebookGraphException} or one of its subclasses.
+   * Given a LinkedIn API exception type and message, generates an instance of the corresponding
+   * {@code LinkedInGraphException} or one of its subclasses.
    * 
    * @param errorCode
-   *          Old REST API exception error code field, e.g. 190.
-   * @param errorSubcode
-   *          Old REST API exception error subcode field, e.g. 459.
+   *          LinkedIn API exception error code field, e.g. 190.
    * @param httpStatusCode
    *          The HTTP status code returned by the server, e.g. 500.
-   * @param type
-   *          Graph API exception type field, e.g. "OAuthException".
    * @param message
-   *          Graph or Old REST API message field, e.g. "Invalid access token signature."
-   * @param userTitle
-   *          Graph API error_user_title field.
-   * @param userMessage
-   *          Graph API error_user_message field.
+   *          LinkedIn API message field, e.g. "Invalid access token signature."
+   * @param isTransient
+   *          Whether the error is transient
    * @param rawError
    *          raw error message as JSON
-   * @return An appropriate {@code FacebookException} subclass.
+   * @return An appropriate {@code LinkedInException} subclass.
    */
   LinkedInException exceptionForTypeAndMessage(Integer errorCode, Integer httpStatusCode,
       String message, Boolean isTransient, JSONObject rawError);
