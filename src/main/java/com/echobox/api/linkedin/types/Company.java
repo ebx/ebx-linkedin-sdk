@@ -17,15 +17,12 @@
 
 package com.echobox.api.linkedin.types;
 
-import com.echobox.api.linkedin.jsonmapper.JsonMapper;
-import com.echobox.api.linkedin.jsonmapper.JsonMapper.JsonMappingCompleted;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The company's profile model type
@@ -61,14 +58,6 @@ public class Company extends LinkedInIdAndNameType {
   private CodeAndNameType companyTypeRaw;
 
   /**
-   * The type of company.
-   * @see <a href="https://developer.linkedin.com/docs/fields/company-profile">Company types</a>
-   * for more information
-   */
-  @Getter
-  private CompanyType companyType;
-
-  /**
    * Company ticker identification for the stock exchange. Available only for public companies.
    */
   @Getter
@@ -92,14 +81,6 @@ public class Company extends LinkedInIdAndNameType {
   private List<CodeAndNameType> industriesRaw;
 
   /**
-   * A collection containing a code and name pertaining to the company's industry. 
-   * @see <a href="https://developer.linkedin.com/docs/reference/industry-codes">Industry Codes</a>
-   * for the list of industries available.
-   */
-  @Getter
-  private List<IndustryCode> industries;
-
-  /**
    * Company status.
    * @see <a href="https://developer.linkedin.com/docs/fields/company-profile">status</a> for more
    * information
@@ -107,9 +88,6 @@ public class Company extends LinkedInIdAndNameType {
   @Getter
   @LinkedIn("status")
   private CodeAndNameType statusRaw;
-
-  @Getter
-  private StatusType status;
 
   /**
    * URL for the company logo in JPG format.
@@ -149,14 +127,6 @@ public class Company extends LinkedInIdAndNameType {
   private CodeAndNameType employeeCountRangeRaw;
 
   /**
-   * Number range of employees at the company.
-   * @see <a href="https://developer.linkedin.com/docs/fields/company-profile">
-   * employee-count-range</a> for more information
-   */
-  @Getter
-  private EmployeeCountRange employeeCountRange;
-
-  /**
    * Company specialties. Retrieves information from string input.
    */
   @Getter
@@ -187,14 +157,6 @@ public class Company extends LinkedInIdAndNameType {
   private CodeAndNameType stockExchangeRaw;
 
   /**
-   * Stock exchange the company is in. Available only for public companies.
-   * @see <a href="https://developer.linkedin.com/docs/fields/company-profile">stock-exchange</a>
-   * for more information
-   */
-  @Getter
-  private StockExchange stockExchange;
-
-  /**
    * Year listed for the company's founding.
    */
   @Getter
@@ -214,27 +176,5 @@ public class Company extends LinkedInIdAndNameType {
   @Getter
   @LinkedIn
   private Integer numFollowers;
-
-  @JsonMappingCompleted
-  protected void jsonMappingCompleted(JsonMapper jsonMapper) {
-    if (companyTypeRaw != null && !companyTypeRaw.hasNullFields()) {
-      companyType = CompanyType.fromCode(companyTypeRaw.getCode());
-    }
-    if (industriesRaw != null && !industriesRaw.isEmpty()) {
-      industries = industriesRaw.stream()
-          .filter(codeName -> !codeName.hasNullFields())
-          .map(codeName -> IndustryCode.fromCode(Integer.parseInt(codeName.getCode())))
-          .collect(Collectors.toList());
-    }
-    if (statusRaw != null && !statusRaw.hasNullFields()) {
-      status = StatusType.fromCode(statusRaw.getCode());
-    }
-    if (employeeCountRangeRaw != null && !employeeCountRangeRaw.hasNullFields()) {
-      employeeCountRange = EmployeeCountRange.fromCode(employeeCountRangeRaw.getCode());
-    }
-    if (stockExchangeRaw != null && !stockExchangeRaw.hasNullFields()) {
-      stockExchange = StockExchange.fromCode(stockExchangeRaw.getCode());      
-    }
-  }
 
 }

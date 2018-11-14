@@ -23,12 +23,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import com.echobox.api.linkedin.jsonmapper.JsonMapper.JsonMappingCompleted;
+import com.echobox.api.linkedin.types.CodeAndNameType;
 import com.echobox.api.linkedin.types.Company;
-import com.echobox.api.linkedin.types.CompanyType;
-import com.echobox.api.linkedin.types.EmployeeCountRange;
-import com.echobox.api.linkedin.types.IndustryCode;
 import com.echobox.api.linkedin.types.Location;
-import com.echobox.api.linkedin.types.StatusType;
+
+import lombok.Getter;
 
 import org.junit.Test;
 
@@ -60,7 +60,7 @@ public class DefaultJsonMapperTest {
   @Test
   public void testToJavaObject() {
     String companyJSON = readFileToString(COMPANY_JSON);
-    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    LinkedInJsonMapper mapper = new LinkedInJsonMapper();
     Company company = mapper.toJavaObject(companyJSON, Company.class);
     
     List<Location> locations = company.getLocations();
@@ -71,17 +71,13 @@ public class DefaultJsonMapperTest {
     assertTrue(company.getEmailDomainsRaw().isEmpty());
     assertEquals("C", company.getCompanyTypeRaw().getCode());
     assertEquals("Public Company", company.getCompanyTypeRaw().getName());
-    assertEquals(CompanyType.PUBLIC_COMPANY, company.getCompanyType());
     assertNull(company.getTicker());
     assertEquals("http://123.com", company.getWebsiteURL());
     assertEquals(1, company.getIndustriesRaw().size());
     assertEquals("137", company.getIndustriesRaw().get(0).getCode());
     assertEquals("Human Resources", company.getIndustriesRaw().get(0).getName());
-    assertTrue(company.getIndustries().size() == 1);
-    assertEquals(IndustryCode.HUMAN_RESOURCES, company.getIndustries().get(0));
     assertEquals("ACQ", company.getStatusRaw().getCode());
     assertEquals("Acquired", company.getStatusRaw().getName());
-    assertEquals(StatusType.ACQUIRED, company.getStatus());
     assertEquals("https://media.licdn.com/dms/image/C560BAQG94DRkxZXHUg/company-logo_200_200/0?"
         + "e=1548288000&v=beta&t=Y1zXBOEPH8S7a1SU0qv-uXW8aKCgXR4egM5KQdnnZTg",
         company.getLogoURL());
@@ -92,7 +88,6 @@ public class DefaultJsonMapperTest {
     assertEquals("", company.getTwitterId());
     assertEquals("C", company.getEmployeeCountRangeRaw().getCode());
     assertEquals("11-50", company.getEmployeeCountRangeRaw().getName());
-    assertEquals(EmployeeCountRange.XS, company.getEmployeeCountRange());
     assertEquals(Arrays.asList("slacking", "computer science", "IT", "DevTest", "bug bash"),
         company.getSpecialties());
     
@@ -132,10 +127,34 @@ public class DefaultJsonMapperTest {
     
     assertEquals("Some sort of description", company.getDescription());
     assertNull(company.getStockExchangeRaw());
-    assertNull(company.getStockExchange());
     assertEquals(new Integer(2018), company.getFoundedYear());
     assertNull(company.getEndYear());
     assertEquals(new Integer(959), company.getNumFollowers());
+  }
+  
+  /**
+   * Test for the case LinkedIn may return a JSON array rather than the expected nested JSON array
+   * within an object can still convert to the correct object
+   */
+  @Test
+  public void testToJavaListForJSONArray() {
+    String json = "{\"sausages\": [{\"code\":\"123\",\"name\":\"Bratwurst\"}]}";
+    LinkedInJsonMapper mapper = new LinkedInJsonMapper();
+    TestJSONMapper result = mapper.toJavaObject(json, TestJSONMapper.class);
+    assertEquals(1, result.getSausages().size());
+    assertEquals("123", result.getSausages().get(0).getCode());
+    assertEquals("Bratwurst", result.getSausages().get(0).getName());
+  }
+  
+  /**
+   * Ensure that the JSONMappingCompleted annotation is called
+   */
+  @Test
+  public void testJSONMappingCompleted() {
+    LinkedInJsonMapper mapper = new LinkedInJsonMapper();
+    TestJSONMapper result = mapper.toJavaObject("{\"name\":\"test\"}", TestJSONMapper.class);
+    assertEquals("test", result.getName());
+    assertEquals("TEST", result.getDerivedName());
   }
   
   /**
@@ -146,9 +165,14 @@ public class DefaultJsonMapperTest {
     Company company = new Company();
     company.setId(123L);
     company.setName("Test \"Quote\"");
-    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    LinkedInJsonMapper mapper = new LinkedInJsonMapper();
     String json = mapper.toJson(company);
-    assertEquals("{\"name\":\"Test \\\"Quote\\\"\",\"id\":123}", json);
+    assertEquals("{\"stockExchange\":null,\"ticker\":null,\"companyType\":null,"
+        + "\"emailDomains\":null,\"description\":null,\"foundedYear\":null,\"endYear\":null,"
+        + "\"logoUrl\":null,\"twitterId\":null,\"employeeCountRange\":null,\"specialties\":null,"
+        + "\"websiteUrl\":null,\"squareLogoUrl\":null,\"industries\":null,\"numFollowers\":null,"
+        + "\"name\":\"Test \\\"Quote\\\"\",\"blogRSSURL\":null,\"locations\":null,\"universalName"
+        + "\":null,\"id\":123,\"status\":null}", json);
   }
   
   /**
@@ -159,7 +183,7 @@ public class DefaultJsonMapperTest {
   public void testToJSONWithIgnoreNullValuedProperties() {
     Company company = new Company();
     company.setId(123L);
-    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    LinkedInJsonMapper mapper = new LinkedInJsonMapper();
     String json = mapper.toJson(company, true);
     assertEquals("{\"id\":123}", json);
   }
@@ -172,9 +196,14 @@ public class DefaultJsonMapperTest {
   public void testToJSONWithDoNotIgnoreNullValuedProperties() {
     Company company = new Company();
     company.setId(123L);
-    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    LinkedInJsonMapper mapper = new LinkedInJsonMapper();
     String json = mapper.toJson(company, false);
-    assertEquals("{\"id\":123}", json);
+    assertEquals("{\"stockExchange\":null,\"ticker\":null,\"companyType\":null,"
+        + "\"emailDomains\":null,\"description\":null,\"foundedYear\":null,\"endYear\":null,"
+        + "\"logoUrl\":null,\"twitterId\":null,\"employeeCountRange\":null,\"specialties\":null,"
+        + "\"websiteUrl\":null,\"squareLogoUrl\":null,\"industries\":null,\"numFollowers\":null,"
+        + "\"name\":null,\"blogRSSURL\":null,\"locations\":null,\"universalName\":null,"
+        + "\"id\":123,\"status\":null}", json);
   }
   
   private String readFileToString(final String fileName) {
@@ -190,6 +219,31 @@ public class DefaultJsonMapperTest {
     } finally {
       if (lines != null) {
         lines.close();
+      }
+    }
+  }
+  
+  /**
+   * TestJSONMapper class
+   * @author Joanna
+   *
+   */
+  private static class TestJSONMapper {
+    @Getter
+    @LinkedIn
+    private String name;
+    
+    @Getter
+    private String derivedName;
+    
+    @Getter
+    @LinkedIn
+    private List<CodeAndNameType> sausages;
+    
+    @JsonMappingCompleted
+    public void completeMapping(JsonMapper jsonMapper) {
+      if (name != null) {
+        derivedName = name.toUpperCase();
       }
     }
   }

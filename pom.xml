@@ -126,7 +126,7 @@
 							<propertyExpansion>basedir=${project.basedir}</propertyExpansion>
 							<excludes>**/DateFormatStrategy.java,**/DateFormatStrategy.java,
 							**/DateUtils.java,**/ReflectionUtils.java,**/SimpleDateFormatStrategy.java,
-							**/JsonMapper.java</excludes>
+							**/JsonMapper.java,**/DefaultJsonMapper.java</excludes>
 						</configuration>
 						<goals>
 							<goal>check</goal>
@@ -160,6 +160,7 @@
 						<configuration>
 							<minimumTokens>50</minimumTokens>
 							<excludes>
+								<exclude>**/DefaultJsonMapper.java</exclude>
 							</excludes>
 						</configuration>
 					</execution>
