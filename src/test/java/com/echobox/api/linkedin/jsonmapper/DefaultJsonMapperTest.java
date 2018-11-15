@@ -18,143 +18,41 @@
 package com.echobox.api.linkedin.jsonmapper;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
-import com.echobox.api.linkedin.jsonmapper.JsonMapper.JsonMappingCompleted;
-import com.echobox.api.linkedin.types.CodeAndNameType;
+import com.echobox.api.linkedin.jsonmapper.LinkedInJsonMapperTest.TestJSONMapper;
 import com.echobox.api.linkedin.types.Company;
-import com.echobox.api.linkedin.types.Location;
-
-import lombok.Getter;
 
 import org.junit.Test;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 /**
- * DefaultJsonMapperTest
+ * Default Json Mapper test
  * @author Joanna
  *
  */
 public class DefaultJsonMapperTest {
   
   /**
-   * Valid Chartbeat JSON data file
-   */
-  private static final String COMPANY_JSON = "com.echobox.api.linkedin.jsonmapper/company.json";
-  
-  /**
-   * Test the JSON string can be serialised to a JSON object
+   * Ensure that the JSONMappingCompleted annotation is called
    */
   @Test
-  public void testToJavaObject() {
-    String companyJSON = readFileToString(COMPANY_JSON);
-    LinkedInJsonMapper mapper = new LinkedInJsonMapper();
-    Company company = mapper.toJavaObject(companyJSON, Company.class);
-    
-    List<Location> locations = company.getLocations();
-    
-    assertEquals(123, company.getId());
-    assertEquals("Test \"Quote\"​", company.getName());
-    assertEquals("test", company.getUniversalName());
-    assertTrue(company.getEmailDomainsRaw().isEmpty());
-    assertEquals("C", company.getCompanyTypeRaw().getCode());
-    assertEquals("Public Company", company.getCompanyTypeRaw().getName());
-    assertNull(company.getTicker());
-    assertEquals("http://123.com", company.getWebsiteURL());
-    assertEquals(1, company.getIndustriesRaw().size());
-    assertEquals("137", company.getIndustriesRaw().get(0).getCode());
-    assertEquals("Human Resources", company.getIndustriesRaw().get(0).getName());
-    assertEquals("ACQ", company.getStatusRaw().getCode());
-    assertEquals("Acquired", company.getStatusRaw().getName());
-    assertEquals("https://media.licdn.com/dms/image/C560BAQG94DRkxZXHUg/company-logo_200_200/0?"
-        + "e=1548288000&v=beta&t=Y1zXBOEPH8S7a1SU0qv-uXW8aKCgXR4egM5KQdnnZTg",
-        company.getLogoURL());
-    assertEquals("https://media.licdn.com/dms/image/C560BAQG94DRkxZXHUg/company-logo_200_200/0?"
-        + "e=1548288000&v=beta&t=Y1zXBOEPH8S7a1SU0qv-uXW8aKCgXR4egM5KQdnnZTg",
-        company.getSquareLogoURL());
-    assertNull(company.getBlogRSSURL());
-    assertEquals("", company.getTwitterId());
-    assertEquals("C", company.getEmployeeCountRangeRaw().getCode());
-    assertEquals("11-50", company.getEmployeeCountRangeRaw().getName());
-    assertEquals(Arrays.asList("slacking", "computer science", "IT", "DevTest", "bug bash"),
-        company.getSpecialties());
-    
-    assertEquals(2, locations.size());
-    
-    assertTrue(locations.get(0).isHeadquarters());
-    assertTrue(locations.get(0).isActive());
-    assertNotNull(locations.get(0).getAddress());
-    assertEquals("12 Swanee Dr", locations.get(0).getAddress().getFirstStreet());
-    assertNull(locations.get(0).getAddress().getSecondStreet());
-    assertEquals("Goddard", locations.get(0).getAddress().getCity());
-    assertEquals("Kansas", locations.get(0).getAddress().getState());
-    assertEquals("67051", locations.get(0).getAddress().getPostalCode());
-    assertEquals("us", locations.get(0).getAddress().getCountryCode());
-    assertEquals(new Integer(904), locations.get(0).getAddress().getRegionCode());
-    assertNotNull(locations.get(0).getContactInfo());
-    assertNull(locations.get(0).getContactInfo().getPhoneOne());
-    assertNull(locations.get(0).getContactInfo().getPhoneTwo());
-    assertNull(locations.get(0).getContactInfo().getFax());
-    assertNull(locations.get(0).getDescription());
-    
-    assertFalse(locations.get(1).isHeadquarters());
-    assertTrue(locations.get(1).isActive());
-    assertNotNull(locations.get(1).getAddress());
-    assertEquals("12345 Gigli Ct", locations.get(1).getAddress().getFirstStreet());
-    assertNull(locations.get(1).getAddress().getSecondStreet());
-    assertEquals("Los Altos Hills", locations.get(1).getAddress().getCity());
-    assertEquals("California", locations.get(1).getAddress().getState());
-    assertEquals("94857", locations.get(1).getAddress().getPostalCode());
-    assertEquals("us", locations.get(1).getAddress().getCountryCode());
-    assertEquals(new Integer(0), locations.get(1).getAddress().getRegionCode());
-    assertNotNull(locations.get(1).getContactInfo());
-    assertNull(locations.get(0).getContactInfo().getPhoneOne());
-    assertNull(locations.get(0).getContactInfo().getPhoneTwo());
-    assertNull(locations.get(0).getContactInfo().getFax());
-    assertNull(locations.get(1).getDescription());
-    
-    assertEquals("Some sort of description", company.getDescription());
-    assertNull(company.getStockExchangeRaw());
-    assertEquals(new Integer(2018), company.getFoundedYear());
-    assertNull(company.getEndYear());
-    assertEquals(new Integer(959), company.getNumFollowers());
-  }
-  
-  /**
-   * Test for the case LinkedIn may return a JSON array rather than the expected nested JSON array
-   * within an object can still convert to the correct object
-   */
-  @Test
-  public void testToJavaListForJSONArray() {
-    String json = "{\"sausages\": [{\"code\":\"123\",\"name\":\"Bratwurst\"}]}";
-    LinkedInJsonMapper mapper = new LinkedInJsonMapper();
-    TestJSONMapper result = mapper.toJavaObject(json, TestJSONMapper.class);
-    assertEquals(1, result.getSausages().size());
-    assertEquals("123", result.getSausages().get(0).getCode());
-    assertEquals("Bratwurst", result.getSausages().get(0).getName());
+  public void testJSONMappingCompleted() {
+    LinkedInJsonMapperV1 mapper = new LinkedInJsonMapperV1();
+    TestJSONMapper result = mapper.toJavaObject("{\"name\":\"test\"}", TestJSONMapper.class);
+    assertEquals("test", result.getName());
+    assertEquals("TEST", result.getDerivedName());
   }
   
   /**
    * Ensure that the JSONMappingCompleted annotation is called
    */
   @Test
-  public void testJSONMappingCompleted() {
-    LinkedInJsonMapper mapper = new LinkedInJsonMapper();
-    TestJSONMapper result = mapper.toJavaObject("{\"name\":\"test\"}", TestJSONMapper.class);
-    assertEquals("test", result.getName());
-    assertEquals("TEST", result.getDerivedName());
+  public void testJSONListMappingCompleted() {
+    LinkedInJsonMapperV1 mapper = new LinkedInJsonMapperV1();
+    TestJSONMapper result = mapper.toJavaObject(
+        "{\"sausages\":[{\"code\":\"F\",\"name\":\"frankfurter\"}]}", TestJSONMapper.class);
+    assertEquals(1, result.getSausages().size());
+    assertEquals("F", result.getSausages().get(0).getCode());
+    assertEquals("frankfurter", result.getSausages().get(0).getName());
   }
   
   /**
@@ -165,7 +63,7 @@ public class DefaultJsonMapperTest {
     Company company = new Company();
     company.setId(123L);
     company.setName("Test \"Quote\"");
-    LinkedInJsonMapper mapper = new LinkedInJsonMapper();
+    LinkedInJsonMapperV1 mapper = new LinkedInJsonMapperV1();
     String json = mapper.toJson(company);
     assertEquals("{\"stockExchange\":null,\"ticker\":null,\"companyType\":null,"
         + "\"emailDomains\":null,\"description\":null,\"foundedYear\":null,\"endYear\":null,"
@@ -183,7 +81,7 @@ public class DefaultJsonMapperTest {
   public void testToJSONWithIgnoreNullValuedProperties() {
     Company company = new Company();
     company.setId(123L);
-    LinkedInJsonMapper mapper = new LinkedInJsonMapper();
+    LinkedInJsonMapperV1 mapper = new LinkedInJsonMapperV1();
     String json = mapper.toJson(company, true);
     assertEquals("{\"id\":123}", json);
   }
@@ -196,7 +94,7 @@ public class DefaultJsonMapperTest {
   public void testToJSONWithDoNotIgnoreNullValuedProperties() {
     Company company = new Company();
     company.setId(123L);
-    LinkedInJsonMapper mapper = new LinkedInJsonMapper();
+    LinkedInJsonMapperV1 mapper = new LinkedInJsonMapperV1();
     String json = mapper.toJson(company, false);
     assertEquals("{\"stockExchange\":null,\"ticker\":null,\"companyType\":null,"
         + "\"emailDomains\":null,\"description\":null,\"foundedYear\":null,\"endYear\":null,"
@@ -204,48 +102,6 @@ public class DefaultJsonMapperTest {
         + "\"websiteUrl\":null,\"squareLogoUrl\":null,\"industries\":null,\"numFollowers\":null,"
         + "\"name\":null,\"blogRSSURL\":null,\"locations\":null,\"universalName\":null,"
         + "\"id\":123,\"status\":null}", json);
-  }
-  
-  private String readFileToString(final String fileName) {
-    Stream<String> lines = null;
-    try {
-      Path path = Paths.get(getClass().getClassLoader()
-          .getResource(fileName).toURI());
-      lines = Files.lines(path);
-      String data = lines.collect(Collectors.joining("\n"));
-      return data;
-    } catch (IOException | URISyntaxException ex) {
-      throw new RuntimeException(ex);
-    } finally {
-      if (lines != null) {
-        lines.close();
-      }
-    }
-  }
-  
-  /**
-   * TestJSONMapper class
-   * @author Joanna
-   *
-   */
-  private static class TestJSONMapper {
-    @Getter
-    @LinkedIn
-    private String name;
-    
-    @Getter
-    private String derivedName;
-    
-    @Getter
-    @LinkedIn
-    private List<CodeAndNameType> sausages;
-    
-    @JsonMappingCompleted
-    public void completeMapping(JsonMapper jsonMapper) {
-      if (name != null) {
-        derivedName = name.toUpperCase();
-      }
-    }
   }
 
 }

@@ -32,12 +32,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * LinkedIn implementation of a JSON-to-Java mapper.
+ * LinkedIn V1 implementation of a JSON-to-Java mapper.
  * 
  * @author Joanna
  *
  */
-public class LinkedInJsonMapper extends DefaultJsonMapper {
+public class LinkedInJsonMapperV1 extends DefaultJsonMapper {
 
   private static Logger LOGGER = LinkedInLogger.getLoggerInstance();
 
@@ -46,7 +46,7 @@ public class LinkedInJsonMapper extends DefaultJsonMapper {
    * {@link com.echobox.api.linkedin.exception.LinkedInJsonMappingException} whenever an error
    * occurs when mapping JSON data to Java objects.
    */
-  public LinkedInJsonMapper() {
+  public LinkedInJsonMapperV1() {
     super();
   }
 
@@ -59,7 +59,7 @@ public class LinkedInJsonMapper extends DefaultJsonMapper {
    * @throws IllegalArgumentException
    *           If {@code jsonMappingErrorHandler} is {@code null}.
    */
-  public LinkedInJsonMapper(JsonMappingErrorHandler jsonMappingErrorHandler) {
+  public LinkedInJsonMapperV1(JsonMappingErrorHandler jsonMappingErrorHandler) {
     super(jsonMappingErrorHandler);
   }
 
