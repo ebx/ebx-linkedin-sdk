@@ -40,29 +40,30 @@ public class V2PagingImpl extends PagingStrategy {
       // Pull out paging info, if present
       if (jsonObject.has("paging")) {
         JSONObject jsonPaging = jsonObject.getJSONObject("paging");
-        Integer count = jsonPaging.optInt("count");
-        Integer start = jsonPaging.optInt("start");
 
-        // You will know that you have reached the end of the dataset when your response
-        // contains less elements in the entities block of the response than your count
-        // parameter requested.
-        Map<String, List<String>> extractParametersFromUrl =
-            URLUtils.extractParametersFromUrl(fullEndpoint);
-        if (extractParametersFromUrl.containsKey("count")) {
-          // Check if the count is less than the elements returned - if so we're at the last page
-          int requestedCount = Integer.parseInt(extractParametersFromUrl.get("count").get(0));
-          if (elements.length() < requestedCount) {
-            nextPageUrl = null;
-            setPreviousPageURL(fullEndpoint, start, count);
-            return;
+        if (jsonPaging.has("count") && jsonPaging.has("start")) {
+          int count = jsonPaging.getInt("count");
+          int start = jsonPaging.getInt("start");
+          // You will know that you have reached the end of the dataset when your response
+          // contains less elements in the entities block of the response than your count
+          // parameter requested.
+          Map<String, List<String>> extractParametersFromUrl =
+              URLUtils.extractParametersFromUrl(fullEndpoint);
+          if (extractParametersFromUrl.containsKey("count")) {
+            // Check if the count is less than the elements returned - if so we're at the last page
+            int requestedCount = Integer.parseInt(extractParametersFromUrl.get("count").get(0));
+            if (elements.length() < requestedCount) {
+              nextPageUrl = null;
+              setPreviousPageURL(fullEndpoint, start, count);
+              return;
+            }
           }
-        }
 
-        // Paging is available
-        if (count != null && start != null) {
+          // Paging is available
           setNextPageURL(fullEndpoint, start, count);
           setPreviousPageURL(fullEndpoint, start, count);
         }
+
       } else {
         previousPageUrl = null;
         nextPageUrl = null;

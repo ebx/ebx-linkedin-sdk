@@ -65,7 +65,7 @@ public class BinaryAttachment {
    * @throws IllegalArgumentException
    *           If {@code data} is {@code null} or {@code filename} is {@code null} or blank.
    */
-  protected BinaryAttachment(String filename, byte[] data) {
+  private BinaryAttachment(String filename, byte[] data) {
     if (StringUtils.isBlank(filename)) {
       throw new IllegalArgumentException("Binary attachment filename cannot be blank.");
     }
@@ -89,7 +89,7 @@ public class BinaryAttachment {
    * @throws IllegalArgumentException
    *           If {@code data} is {@code null} or {@code filename} is {@code null} or blank.
    */
-  protected BinaryAttachment(String fieldName, String filename, byte[] data) {
+  private BinaryAttachment(String fieldName, String filename, byte[] data) {
     this(filename, data);
     if (StringUtils.isBlank(fieldName)) {
       throw new IllegalArgumentException("Field name cannot be null.");
@@ -111,7 +111,7 @@ public class BinaryAttachment {
    *           If {@code data} is {@code null}, {@code filename} is {@code null} or blank,
    *           or {@code contentType} is {@code null} or blank.
    */
-  protected BinaryAttachment(String filename, byte[] data, String contentType) {
+  private BinaryAttachment(String filename, byte[] data, String contentType) {
     this(filename, data);
     if (StringUtils.isBlank(contentType)) {
       throw new IllegalArgumentException("ContentType cannot be null.");
@@ -135,7 +135,7 @@ public class BinaryAttachment {
    *           If {@code data} is {@code null}, {@code filename} is {@code null} or blank, or
    *           {@code contentType} is {@code null} or blank.
    */
-  protected BinaryAttachment(String fieldName, String filename, byte[] data, String contentType) {
+  private BinaryAttachment(String fieldName, String filename, byte[] data, String contentType) {
     this(filename, data, contentType);
     if (StringUtils.isBlank(fieldName)) {
       throw new IllegalArgumentException("Field name cannot be null.");

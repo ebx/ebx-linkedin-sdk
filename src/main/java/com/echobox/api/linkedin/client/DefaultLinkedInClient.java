@@ -383,8 +383,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
       parameterStringBuilder.append(URLUtils.urlEncode(parameter.name));
       parameterStringBuilder.append("=");
-      parameterStringBuilder.append(urlEncodedValueForParameterName(parameter.name,
-          parameter.value));
+      parameterStringBuilder.append(urlEncodedValueForParameterName(parameter.value));
     }
 
     return parameterStringBuilder.toString();

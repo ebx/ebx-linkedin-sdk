@@ -101,7 +101,7 @@ abstract class BaseLinkedInClient {
   protected String queriesToJson(Map<String, String> queries) {
     verifyParameterPresence("queries", queries);
 
-    if (queries.keySet().isEmpty()) {
+    if (queries.isEmpty()) {
       throw new IllegalArgumentException("You must specify at least one query.");
     }
 
@@ -130,13 +130,11 @@ abstract class BaseLinkedInClient {
    * <p>
    * Parameter types should always be URL-encoded.
    * 
-   * @param name
-   *          The name of the parameter whose value should be URL-encoded and returned.
    * @param value
    *          The value of the parameter which should be URL-encoded and returned.
    * @return The URL-encoded version of the given {@code value}.
    */
-  protected String urlEncodedValueForParameterName(String name, String value) {
+  protected String urlEncodedValueForParameterName(String value) {
     // URL-encode as normal.
     return URLUtils.urlEncode(value);
   }
@@ -184,7 +182,7 @@ abstract class BaseLinkedInClient {
    */
   protected void verifyParameterPresence(String parameterName, String parameter) {
     verifyParameterPresence(parameterName, (Object) parameter);
-    if (parameter.trim().length() == 0) {
+    if (StringUtils.isBlank(parameter)) {
       throw new IllegalArgumentException("The '" + parameterName
           + "' parameter cannot be an empty string.");
     }
