@@ -19,7 +19,7 @@ package com.echobox.api.linkedin.jsonmapper;
 
 import static org.junit.Assert.assertEquals;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedInJsonMapperTest.TestJSONMapper;
+import com.echobox.api.linkedin.jsonmapper.LinkedInJsonMapperV1Test.TestJSONMapper;
 import com.echobox.api.linkedin.types.Company;
 
 import org.junit.Test;

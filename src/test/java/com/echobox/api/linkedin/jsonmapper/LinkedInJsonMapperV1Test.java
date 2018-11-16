@@ -47,7 +47,7 @@ import java.util.stream.Stream;
  * @author Joanna
  *
  */
-public class LinkedInJsonMapperTest {
+public class LinkedInJsonMapperV1Test {
   
   /**
    * Valid Chartbeat JSON data file
@@ -60,7 +60,7 @@ public class LinkedInJsonMapperTest {
   @Test
   public void testToJavaObject() {
     String companyJSON = readFileToString(COMPANY_JSON);
-    LinkedInJsonMapperV1 mapper = new LinkedInJsonMapperV1();
+    DefaultJsonMapper mapper = new LinkedInJsonMapperV1();
     Company company = mapper.toJavaObject(companyJSON, Company.class);
     
     List<Location> locations = company.getLocations();
@@ -139,7 +139,7 @@ public class LinkedInJsonMapperTest {
   @Test
   public void testToJavaListForJSONArray() {
     String json = "{\"sausages\": [{\"code\":\"123\",\"name\":\"Bratwurst\"}]}";
-    LinkedInJsonMapperV1 mapper = new LinkedInJsonMapperV1();
+    DefaultJsonMapper mapper = new LinkedInJsonMapperV1();
     TestJSONMapper result = mapper.toJavaObject(json, TestJSONMapper.class);
     assertEquals(1, result.getSausages().size());
     assertEquals("123", result.getSausages().get(0).getCode());
