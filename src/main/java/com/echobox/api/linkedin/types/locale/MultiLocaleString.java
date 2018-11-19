@@ -15,27 +15,33 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.locale;
 
 import lombok.Getter;
 
+import java.util.Map;
+
 /**
- * Local POJO
+ * Multi local string POJO
+ * @see <a href="https://developer.linkedin.com/docs/ref/v2/object-types#MultiLocaleString">
+ * MultiLocalString</a>
  * @author joanna
  *
  */
-public class Locale {
+public class MultiLocaleString {
+  
+  /**
+   * Maps a locale to a localized version of the string. Each key is a Locale record converted 
+   * to string format, with the language, country and variant separated by underscores. 
+   * Examples: 'en', 'de_DE', 'en_US_WIN', 'de_POSIX', 'fr_MAC'.
+   */
+  @Getter
+  private Map<String, String> localized;
+  
+  /**
+   * The preferred locale to use, based on standard rules
+   */
+  @Getter
+  private Locale preferredLocale;
 
-  /**
-   * An uppercase two-letter country code as defined by ISO-3166.
-   */
-  @Getter
-  private String country;
-  
-  /**
-   * A lowercase two-letter language code as defined by ISO-639.
-   */
-  @Getter
-  private String language;
-  
 }

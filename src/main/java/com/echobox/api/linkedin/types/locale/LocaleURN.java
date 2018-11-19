@@ -15,7 +15,9 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.locale;
+
+import com.echobox.api.linkedin.types.URN;
 
 import lombok.Getter;
 

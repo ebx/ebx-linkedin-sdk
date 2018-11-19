@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types;
 
+import com.echobox.api.linkedin.types.function.FunctionURN;
+import com.echobox.api.linkedin.types.locale.Locale;
 import com.echobox.api.linkedin.types.location.CountryGroupURN;
 import com.echobox.api.linkedin.types.location.CountryURN;
 import com.echobox.api.linkedin.types.location.PlaceURN;

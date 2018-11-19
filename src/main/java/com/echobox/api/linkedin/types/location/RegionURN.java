@@ -17,9 +17,9 @@
 
 package com.echobox.api.linkedin.types.location;
 
-import com.echobox.api.linkedin.types.LocaleURN;
-
 import lombok.Getter;
+
+import com.echobox.api.linkedin.types.locale.LocaleURN;
 
 import java.util.List;
 

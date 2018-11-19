@@ -15,33 +15,24 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.function;
+
+import com.echobox.api.linkedin.types.URN;
+import com.echobox.api.linkedin.types.locale.MultiLocaleString;
 
 import lombok.Getter;
 
-import java.util.Map;
-
 /**
- * Multi local string POJO
- * @see <a href="https://developer.linkedin.com/docs/ref/v2/object-types#MultiLocaleString">
- * MultiLocalString</a>
+ * Function URN
  * @author joanna
  *
  */
-public class MultiLocaleString {
+public class FunctionURN extends URN {
   
-  /**
-   * Maps a locale to a localized version of the string. Each key is a Locale record converted 
-   * to string format, with the language, country and variant separated by underscores. 
-   * Examples: 'en', 'de_DE', 'en_US_WIN', 'de_POSIX', 'fr_MAC'.
-   */
   @Getter
-  private Map<String, String> localized;
+  private int id;
   
-  /**
-   * The preferred locale to use, based on standard rules
-   */
   @Getter
-  private Locale preferredLocale;
-
+  private MultiLocaleString name;
+  
 }

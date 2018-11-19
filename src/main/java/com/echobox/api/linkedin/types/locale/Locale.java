@@ -15,21 +15,27 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.locale;
 
 import lombok.Getter;
 
 /**
- * Function URN
+ * Local POJO
  * @author joanna
  *
  */
-public class FunctionURN extends URN {
-  
+public class Locale {
+
+  /**
+   * An uppercase two-letter country code as defined by ISO-3166.
+   */
   @Getter
-  private int id;
+  private String country;
   
+  /**
+   * A lowercase two-letter language code as defined by ISO-639.
+   */
   @Getter
-  private MultiLocaleString name;
+  private String language;
   
 }
