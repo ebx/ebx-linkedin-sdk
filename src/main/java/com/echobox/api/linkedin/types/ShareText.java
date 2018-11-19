@@ -17,15 +17,29 @@
 
 package com.echobox.api.linkedin.types;
 
-import java.util.List;
-
 import lombok.Getter;
 
+import java.util.List;
+
+/**
+ * Share text POJO
+ * @see <a href="https://developer.linkedin.com/docs/guide/v2/shares/share-api#share-text">
+ * Share Text</a>
+ * @author joanna
+ *
+ */
 public class ShareText {
   
+  /**
+   * The content text
+   * Max 1300 characters
+   */
   @Getter
   private String text;
   
+  /**
+   * Allows links to other entities (such as members) within share text
+   */
   @Getter
   private List<Annotation> annotations;
 

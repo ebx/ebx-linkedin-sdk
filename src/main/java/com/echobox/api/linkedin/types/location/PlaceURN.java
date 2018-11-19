@@ -21,17 +21,37 @@ import com.echobox.api.linkedin.types.LocaleURN;
 
 import lombok.Getter;
 
+/**
+ * Place URN POJO
+ * @see <a href="https://developer.linkedin.com/docs/ref/v2/standardized-data/locations/places">
+ * Place URN</a>
+ * @author joanna
+ *
+ */
 public class PlaceURN extends LocaleURN {
   
+  /**
+   * The administrative level of the place
+   */
   @Getter
   private String adminLevel;
   
+  /**
+   * The country URN that owns the place
+   */
   @Getter
   private String country;
   
+  /**
+   * The parent place URN for this place. Can be null when this place is the top-level
+   * administrative division.
+   */
   @Getter
   private String parent;
   
+  /**
+   * The unique code within a country to identify the place
+   */
   @Getter
   private String placeCode;
 

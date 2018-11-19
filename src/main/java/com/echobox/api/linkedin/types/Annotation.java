@@ -19,14 +19,32 @@ package com.echobox.api.linkedin.types;
 
 import lombok.Getter;
 
+/**
+ * Annotation POJO
+ * @see <a href="https://developer.linkedin.com/docs/guide/v2/shares/share-api#share-text">
+ * Share Distribution Targets</a>
+ * @author joanna
+ *
+ */
 public class Annotation {
   
+  /**
+   * The starting character index beginning the annotation link
+   * Zero-based indexing
+   */
   @Getter
   private int start;
   
+  /**
+   * The length of the annotation link
+   */
   @Getter
   private int length;
   
+  /**
+   * The entity referred to in the share text.
+   * Must either be in the format urn:li:person:{id} or urn:li:company:{id}
+   */
   @Getter
   private int entity;
 

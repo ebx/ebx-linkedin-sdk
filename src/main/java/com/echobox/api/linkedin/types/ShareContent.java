@@ -17,9 +17,9 @@
 
 package com.echobox.api.linkedin.types;
 
-import java.util.List;
-
 import lombok.Getter;
+
+import java.util.List;
 
 /**
  * Share content POJO
@@ -28,16 +28,32 @@ import lombok.Getter;
  */
 public class ShareContent {
   
+  /**
+   * Content description
+   * This field is displayed to a small percentage of users on the mobile web version of our site
+   * It is not displayed on the desktop site or native mobile apps
+   * Max 256 characters
+   */
   @Getter
   private String description;
   
+  /**
+   * Content title
+   * Max 400 characters, recommended length is <70 characters
+   */
   @Getter
   private String title;
   
+  /**
+   * Details of content being shared
+   */
   @Getter
   private List<ContentEntity> contentEntities;
   
+  /**
+   * The type of media represented by the contentEntities
+   */
   @Getter
-  private AuditStamp created;
+  private String shareMediaCategory;
 
 }

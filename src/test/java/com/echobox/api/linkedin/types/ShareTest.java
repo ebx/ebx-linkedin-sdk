@@ -17,43 +17,13 @@
 
 package com.echobox.api.linkedin.types;
 
-import lombok.Getter;
-
-import java.util.List;
-
 /**
- * Content entity POJO
- * @see <a href="https://developer.linkedin.com/docs/guide/v2/shares/share-api#share-content">
- * Share Distribution Targets</a>
+ * Share serialisation test
  * @author joanna
  *
  */
-public class ContentEntity {
+public class ShareTest {
   
-  /**
-   * URN of the content being shared
-   * Typical URN format is urn:li:richMediaSummary:{id}
-   */
-  @Getter
-  private String entity;
   
-  /**
-   * URL of the content being shared
-   */
-  @Getter
-  private String entityLocation;
-  
-  /**
-   * URL to a thumbnail image to display for the content
-   */
-  @Getter
-  private List<Thumbnail> thumbanils;
-  
-  /**
-   * The type of media represented by the contentEntities. 
-   * Must correspond to the URN types in contentEntities.
-   */
-  @Getter
-  private String shareMediaCategory;
 
 }

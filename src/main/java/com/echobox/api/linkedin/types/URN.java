@@ -19,7 +19,12 @@ package com.echobox.api.linkedin.types;
 
 import lombok.Getter;
 
-public class URN {
+/**
+ * URN base class - all URNs will contain a URN
+ * @author joanna
+ *
+ */
+public abstract class URN {
   
   @Getter
   private String urn;

@@ -17,12 +17,12 @@
 
 package com.echobox.api.linkedin.types;
 
-import java.util.List;
-
 import lombok.Getter;
 
+import java.util.List;
+
 /**
- * Thumbnail POJO
+ * Thumbnail POJO - no specific documentation included
  * @author joanna
  *
  */

@@ -21,11 +21,24 @@ import com.echobox.api.linkedin.types.URN;
 
 import lombok.Getter;
 
+/**
+ * States URN POJO
+ * @see <a href="https://developer.linkedin.com/docs/ref/v2/standardized-data/locations/states">
+ * States URN</a>
+ * @author joanna
+ *
+ */
 public class StateURN extends URN {
   
+  /**
+   * The country URN that owns the state
+   */
   @Getter
   private String country;
 
+  /**
+   * The state code
+   */
   @Getter
   String stateCode;
   

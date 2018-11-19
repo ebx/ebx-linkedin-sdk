@@ -19,18 +19,34 @@ package com.echobox.api.linkedin.types.location;
 
 import com.echobox.api.linkedin.types.LocaleURN;
 
-import java.util.List;
-
 import lombok.Getter;
 
+import java.util.List;
+
+/**
+ * Region URN POJO
+ * @see <a href="https://developer.linkedin.com/docs/ref/v2/standardized-data/locations/regions">
+ * Region URN</a>
+ * @author joanna
+ *
+ */
 public class RegionURN extends LocaleURN {
   
+  /**
+   * The country URN for this region
+   */
   @Getter
   private String country;
   
+  /**
+   * The region code
+   */
   @Getter
   private String id;
   
+  /**
+   * The state URNs for this region. Represents an array and defaults to an empty
+   */
   @Getter
   private List<String> states;
 

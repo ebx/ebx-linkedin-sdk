@@ -17,16 +17,36 @@
 
 package com.echobox.api.linkedin.types;
 
+/**
+ * Admin level type enum
+ * @author joanna
+ *
+ */
 public enum AdminLevelType {
   
+  /**
+   * A large region of the country that can span over more than one state or province
+   */
   COUNTRY_AREA,
   
+  /**
+   * An aggregation of counties and/or cities. Usually a state or a province
+   */
   STATE,
   
+  /**
+   * An aggregation of cities. Usually a county, jurisdiction, or department
+   */
   COUNTY,
   
+  /**
+   * A group of postal codes. Usually a city or town
+   */
   CITY,
   
+  /**
+   * None of the above
+   */
   NULL;
 
 }

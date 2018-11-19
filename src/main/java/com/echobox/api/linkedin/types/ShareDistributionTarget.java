@@ -19,6 +19,11 @@ package com.echobox.api.linkedin.types;
 
 import lombok.Getter;
 
+/**
+ * 
+ * @author joanna
+ *
+ */
 public class ShareDistributionTarget {
   
   @Getter

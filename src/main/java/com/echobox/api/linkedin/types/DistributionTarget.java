@@ -23,13 +23,15 @@ import com.echobox.api.linkedin.types.location.PlaceURN;
 import com.echobox.api.linkedin.types.location.RegionURN;
 import com.echobox.api.linkedin.types.location.StateURN;
 
+import lombok.Getter;
+
 import java.util.List;
 import java.util.Map;
 
-import lombok.Getter;
-
 /**
  * Distribution target POJO
+ * @see <a href="https://developer.linkedin.com/docs/guide/v2/shares/share-api#distribution-
+ * targets">Share Distribution Targets</a>
  * @author joanna
  *
  */

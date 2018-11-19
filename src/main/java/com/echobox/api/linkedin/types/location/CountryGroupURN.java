@@ -21,8 +21,18 @@ import com.echobox.api.linkedin.types.LocaleURN;
 
 import lombok.Getter;
 
+/**
+ * Country Group URN
+ * @see <a href="https://developer.linkedin.com/docs/ref/v2/standardized-data/locations/country-
+ * groups">Country Group URN</a>
+ * @author joanna
+ *
+ */
 public class CountryGroupURN extends LocaleURN {
   
+  /**
+   * The country group code
+   */
   @Getter
   private String countryGroupCode;
 

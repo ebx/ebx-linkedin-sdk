@@ -26,9 +26,15 @@ import lombok.Getter;
  */
 public class Locale {
 
+  /**
+   * An uppercase two-letter country code as defined by ISO-3166.
+   */
   @Getter
   private String country;
   
+  /**
+   * A lowercase two-letter language code as defined by ISO-639.
+   */
   @Getter
   private String language;
   
