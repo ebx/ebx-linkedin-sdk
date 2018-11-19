@@ -22,7 +22,7 @@ package com.echobox.api.linkedin.exception;
  * @author Joanna
  *
  */
-public class LinkedInException extends RuntimeException {
+public abstract class LinkedInException extends RuntimeException {
 
   /**
    * Default serial version UID

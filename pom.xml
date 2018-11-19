@@ -120,6 +120,7 @@
 							<failsOnError>true</failsOnError>
 							<includeTestSourceDirectory>true</includeTestSourceDirectory>
 							<propertyExpansion>basedir=${project.basedir}</propertyExpansion>
+							<!-- Excluded as these are external dropins -->
 							<excludes>**/DateFormatStrategy.java,**/DateFormatStrategy.java,
 							**/DateUtils.java,**/ReflectionUtils.java,**/SimpleDateFormatStrategy.java,
 							**/JsonMapper.java,**/DefaultJsonMapper.java</excludes>
