@@ -46,7 +46,7 @@ import java.util.stream.Stream;
 public class LinkedInJsonMapperV1Test {
   
   /**
-   * Valid Chartbeat JSON data file
+   * Valid Company JSON data file
    */
   private static final String COMPANY_JSON = "com.echobox.api.linkedin.jsonmapper/company.json";
   
