@@ -17,19 +17,16 @@
 
 package com.echobox.api.linkedin.types;
 
-import lombok.Getter;
+public enum AdminLevelType {
+  
+  COUNTRY_AREA,
+  
+  STATE,
+  
+  COUNTY,
+  
+  CITY,
+  
+  NULL;
 
-/**
- * Function URN
- * @author joanna
- *
- */
-public class FunctionURN extends URN {
-  
-  @Getter
-  private int id;
-  
-  @Getter
-  private MultiLocaleString name;
-  
 }

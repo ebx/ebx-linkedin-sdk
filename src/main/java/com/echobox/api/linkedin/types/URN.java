@@ -19,17 +19,9 @@ package com.echobox.api.linkedin.types;
 
 import lombok.Getter;
 
-/**
- * Function URN
- * @author joanna
- *
- */
-public class FunctionURN extends URN {
+public class URN {
   
   @Getter
-  private int id;
-  
-  @Getter
-  private MultiLocaleString name;
-  
+  private String urn;
+
 }

@@ -17,19 +17,16 @@
 
 package com.echobox.api.linkedin.types;
 
+import java.util.List;
+
 import lombok.Getter;
 
-/**
- * Function URN
- * @author joanna
- *
- */
-public class FunctionURN extends URN {
+public class ShareText {
   
   @Getter
-  private int id;
+  private String text;
   
   @Getter
-  private MultiLocaleString name;
-  
+  private List<Annotation> annotations;
+
 }

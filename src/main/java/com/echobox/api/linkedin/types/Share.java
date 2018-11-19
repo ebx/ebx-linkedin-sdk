@@ -17,12 +17,47 @@
 
 package com.echobox.api.linkedin.types;
 
-public class Share {
+import lombok.Getter;
+
+public class Share extends LinkedInIdType {
   
+  @Getter
   private String activity;
   
+  @Getter
   private String agent;
   
+  @Getter
+  private ShareContent content;
   
+  @Getter
+  private AuditStamp created;
+  
+  @Getter
+  private ShareDistributionTarget distribution;
+  
+  @Getter
+  private Boolean edited;
+  
+  @Getter
+  private AuditStamp lastModified;
+  
+  @Getter
+  private String originalShare;
+  
+  @Getter
+  private String owner;
+  
+  @Getter
+  private String resharedShare;
+  
+  @Getter
+  private String subject;
+  
+  @Getter
+  private String serviceProvider;
+  
+  @Getter
+  private ShareText text;
 
 }

@@ -15,21 +15,23 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.location;
+
+import com.echobox.api.linkedin.types.LocaleURN;
+
+import java.util.List;
 
 import lombok.Getter;
 
-/**
- * Function URN
- * @author joanna
- *
- */
-public class FunctionURN extends URN {
+public class RegionURN extends LocaleURN {
   
   @Getter
-  private int id;
+  private String country;
   
   @Getter
-  private MultiLocaleString name;
+  private String id;
   
+  @Getter
+  private List<String> states;
+
 }

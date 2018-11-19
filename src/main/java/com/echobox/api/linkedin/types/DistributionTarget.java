@@ -17,7 +17,16 @@
 
 package com.echobox.api.linkedin.types;
 
+import com.echobox.api.linkedin.types.location.CountryGroupURN;
+import com.echobox.api.linkedin.types.location.CountryURN;
+import com.echobox.api.linkedin.types.location.PlaceURN;
+import com.echobox.api.linkedin.types.location.RegionURN;
+import com.echobox.api.linkedin.types.location.StateURN;
+
 import java.util.List;
+import java.util.Map;
+
+import lombok.Getter;
 
 /**
  * Distribution target POJO
@@ -26,12 +35,46 @@ import java.util.List;
  */
 public class DistributionTarget {
   
-  Boolean connectionsOnly;
+  @Getter
+  private Boolean connectionsOnly;
   
-  List<String> industries;
+  @Getter
+  private List<String> industries;
   
-  List<Locale> interfaceLocales;
+  @Getter
+  private List<Locale> interfaceLocales;
   
-  List<FunctionURN> jobFunctions;
+  @Getter
+  private List<FunctionURN> jobFunctions;
+  
+  /**
+   * This value will contain the raw locations - the complete JSON mapper will try and map to the
+   * correct location URN
+   */
+  private List<Map<String, String>> locationsRaw;
+  
+  @Getter
+  private List<CountryGroupURN> countryGroup;
+  
+  @Getter
+  private List<CountryURN> countries;
+  
+  @Getter
+  private List<StateURN> states;
+  
+  @Getter
+  private List<RegionURN> regions;
+  
+  @Getter
+  private List<PlaceURN> places;
+  
+  @Getter
+  private List<FunctionURN> seniorities;
+  
+  @Getter
+  private List<String> staffCountRanges;
+  
+  @Getter
+  private Boolean visibleToGuest;
 
 }
