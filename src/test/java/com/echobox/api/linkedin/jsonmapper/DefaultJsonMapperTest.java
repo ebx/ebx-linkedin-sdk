@@ -19,7 +19,6 @@ package com.echobox.api.linkedin.jsonmapper;
 
 import static org.junit.Assert.assertEquals;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedInJsonMapperV1Test.TestJSONMapper;
 import com.echobox.api.linkedin.types.Company;
 
 import org.junit.Test;
@@ -36,8 +35,8 @@ public class DefaultJsonMapperTest {
    */
   @Test
   public void testJSONMappingCompleted() {
-    LinkedInJsonMapperV1 mapper = new LinkedInJsonMapperV1();
-    TestJSONMapper result = mapper.toJavaObject("{\"name\":\"test\"}", TestJSONMapper.class);
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    SimpleJSON result = mapper.toJavaObject("{\"name\":\"test\"}", SimpleJSON.class);
     assertEquals("test", result.getName());
     assertEquals("TEST", result.getDerivedName());
   }
@@ -47,9 +46,9 @@ public class DefaultJsonMapperTest {
    */
   @Test
   public void testJSONListMappingCompleted() {
-    LinkedInJsonMapperV1 mapper = new LinkedInJsonMapperV1();
-    TestJSONMapper result = mapper.toJavaObject(
-        "{\"sausages\":[{\"code\":\"F\",\"name\":\"frankfurter\"}]}", TestJSONMapper.class);
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    SimpleJSON result = mapper.toJavaObject(
+        "{\"sausages\":[{\"code\":\"F\",\"name\":\"frankfurter\"}]}", SimpleJSON.class);
     assertEquals(1, result.getSausages().size());
     assertEquals("F", result.getSausages().get(0).getCode());
     assertEquals("frankfurter", result.getSausages().get(0).getName());
@@ -63,7 +62,7 @@ public class DefaultJsonMapperTest {
     Company company = new Company();
     company.setId(123L);
     company.setName("Test \"Quote\"");
-    LinkedInJsonMapperV1 mapper = new LinkedInJsonMapperV1();
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
     String json = mapper.toJson(company);
     assertEquals("{\"stockExchange\":null,\"ticker\":null,\"companyType\":null,"
         + "\"emailDomains\":null,\"description\":null,\"foundedYear\":null,\"endYear\":null,"
@@ -81,7 +80,7 @@ public class DefaultJsonMapperTest {
   public void testToJSONWithIgnoreNullValuedProperties() {
     Company company = new Company();
     company.setId(123L);
-    LinkedInJsonMapperV1 mapper = new LinkedInJsonMapperV1();
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
     String json = mapper.toJson(company, true);
     assertEquals("{\"id\":123}", json);
   }
@@ -94,7 +93,7 @@ public class DefaultJsonMapperTest {
   public void testToJSONWithDoNotIgnoreNullValuedProperties() {
     Company company = new Company();
     company.setId(123L);
-    LinkedInJsonMapperV1 mapper = new LinkedInJsonMapperV1();
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
     String json = mapper.toJson(company, false);
     assertEquals("{\"stockExchange\":null,\"ticker\":null,\"companyType\":null,"
         + "\"emailDomains\":null,\"description\":null,\"foundedYear\":null,\"endYear\":null,"

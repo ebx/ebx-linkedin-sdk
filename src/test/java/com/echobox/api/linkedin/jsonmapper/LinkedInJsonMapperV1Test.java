@@ -23,12 +23,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import com.echobox.api.linkedin.jsonmapper.JsonMapper.JsonMappingCompleted;
-import com.echobox.api.linkedin.types.CodeAndNameType;
 import com.echobox.api.linkedin.types.Company;
 import com.echobox.api.linkedin.types.Location;
-
-import lombok.Getter;
 
 import org.junit.Test;
 
@@ -60,7 +56,7 @@ public class LinkedInJsonMapperV1Test {
   @Test
   public void testToJavaObject() {
     String companyJSON = readFileToString(COMPANY_JSON);
-    DefaultJsonMapper mapper = new LinkedInJsonMapperV1();
+    LinkedInJsonMapperV1 mapper = new LinkedInJsonMapperV1();
     Company company = mapper.toJavaObject(companyJSON, Company.class);
     
     List<Location> locations = company.getLocations();
@@ -139,8 +135,8 @@ public class LinkedInJsonMapperV1Test {
   @Test
   public void testToJavaListForJSONArray() {
     String json = "{\"sausages\": [{\"code\":\"123\",\"name\":\"Bratwurst\"}]}";
-    DefaultJsonMapper mapper = new LinkedInJsonMapperV1();
-    TestJSONMapper result = mapper.toJavaObject(json, TestJSONMapper.class);
+    LinkedInJsonMapperV1 mapper = new LinkedInJsonMapperV1();
+    SimpleJSON result = mapper.toJavaObject(json, SimpleJSON.class);
     assertEquals(1, result.getSausages().size());
     assertEquals("123", result.getSausages().get(0).getCode());
     assertEquals("Bratwurst", result.getSausages().get(0).getName());
@@ -162,30 +158,4 @@ public class LinkedInJsonMapperV1Test {
       }
     }
   }
-  
-  /**
-   * TestJSONMapper class
-   * @author Joanna
-   *
-   */
-  static class TestJSONMapper {
-    @Getter
-    @LinkedIn
-    private String name;
-    
-    @Getter
-    private String derivedName;
-    
-    @Getter
-    @LinkedIn
-    private List<CodeAndNameType> sausages;
-    
-    @JsonMappingCompleted
-    public void completeMapping(JsonMapper jsonMapper) {
-      if (name != null) {
-        derivedName = name.toUpperCase();
-      }
-    }
-  }
-
 }
