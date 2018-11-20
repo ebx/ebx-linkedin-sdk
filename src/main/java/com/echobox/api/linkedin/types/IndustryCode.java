@@ -17,7 +17,11 @@
 
 package com.echobox.api.linkedin.types;
 
+import com.echobox.api.linkedin.logging.LinkedInLogger;
+
 import lombok.Getter;
+
+import org.slf4j.Logger;
 
 /**
  * Industry code
@@ -178,6 +182,8 @@ public enum IndustryCode implements CodeType<Integer> {
   WIRELESS(119, "Wireless", Group.TECH),
   WRITING_EDITING(103, "Writing and Editing", Group.ART, Group.MED, Group.REC);
   
+  private static Logger LOGGER = LinkedInLogger.getLoggerInstance();
+  
   @Getter
   private final Integer code;
   
@@ -204,6 +210,7 @@ public enum IndustryCode implements CodeType<Integer> {
         return industryCode;
       }
     }
+    LOGGER.warn("Could not get industry code from code " + code);
     return null;
   }
   

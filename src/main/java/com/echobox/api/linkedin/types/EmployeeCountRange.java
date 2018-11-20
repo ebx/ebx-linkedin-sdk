@@ -17,8 +17,12 @@
 
 package com.echobox.api.linkedin.types;
 
+import com.echobox.api.linkedin.logging.LinkedInLogger;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import org.slf4j.Logger;
 
 /**
  * EmployeeCountRange
@@ -37,6 +41,8 @@ public enum EmployeeCountRange implements CodeType<String> {
   XL("G", "1001-5000", 1001, 5000),
   XXL("H", "5001-10,000", 5001, 10000),
   XXXL("I", "10,000+", 10001, null);
+  
+  private static Logger LOGGER = LinkedInLogger.getLoggerInstance();
   
   @Getter
   private final String code;
@@ -62,6 +68,7 @@ public enum EmployeeCountRange implements CodeType<String> {
         return employeeCountRange;
       }
     }
+    LOGGER.warn("Could not get employee count range from code " + code);
     return null;
   }
 

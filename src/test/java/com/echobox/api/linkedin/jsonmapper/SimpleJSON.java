@@ -15,26 +15,40 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.jsonmapper;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.CodeAndNameType;
 
 import lombok.Getter;
-import lombok.Setter;
+
+import java.util.List;
 
 /**
- * Linked in types that contain an id field
- * @author Joanna
+ * SimpleJSON class
  *
+ * @author Joanna
  */
-public abstract class LinkedInIdType {
-  
-  /**
-   * Unique internal numeric identifier
-   */
+public class SimpleJSON {
   @Getter
-  @Setter
   @LinkedIn
-  private long id;
+  private String name;
 
+  @Getter
+  private String derivedName;
+
+  @Getter
+  @LinkedIn
+  private List<CodeAndNameType> sausages;
+
+  /**
+   * Complete mapping.
+   *
+   * @param jsonMapper the json mapper
+   */
+  @JsonMapper.JsonMappingCompleted
+  public void completeMapping(JsonMapper jsonMapper) {
+    if (name != null) {
+      derivedName = name.toUpperCase();
+    }
+  }
 }
