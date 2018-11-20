@@ -152,13 +152,8 @@ public final class URLUtils {
           value = urlDecode(pair[1]);
         }
 
-        List<String> values = parameters.get(key);
-
-        if (values == null) {
-          values = new ArrayList<>();
-          parameters.put(key, values);
-        }
-
+        List<String> values = parameters
+            .computeIfAbsent(key, k -> new ArrayList<>());
         values.add(value);
       }
     }

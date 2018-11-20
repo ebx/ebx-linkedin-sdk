@@ -243,7 +243,7 @@ public class Connection<T> implements Iterable<List<T>> {
    * otherwise.
    */
   public boolean hasPrevious() {
-    return !StringUtils.isBlank(getPreviousPageUrl());
+    return StringUtils.isNotBlank(getPreviousPageUrl());
   }
 
   /**
@@ -253,6 +253,6 @@ public class Connection<T> implements Iterable<List<T>> {
    * otherwise.
    */
   public boolean hasNext() {
-    return !StringUtils.isBlank(getNextPageUrl());
+    return StringUtils.isNotBlank(getNextPageUrl());
   }
 }
