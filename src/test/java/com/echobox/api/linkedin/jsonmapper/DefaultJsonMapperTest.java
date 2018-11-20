@@ -31,8 +31,11 @@ import com.echobox.api.linkedin.types.ShareDistribution;
 import com.echobox.api.linkedin.types.ShareText;
 import com.echobox.api.linkedin.types.Thumbnail;
 import com.echobox.api.linkedin.types.objectype.AuditStamp;
+import com.echobox.api.linkedin.types.objectype.MultiLocaleString;
 
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * Default Json Mapper test
@@ -253,6 +256,32 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     assertEquals("urn:li:person:123ABC", auditStamp.getActor());
     assertEquals(new Long(1332187798000L), auditStamp.getTime());
     assertNull(auditStamp.getImpersonator());
+  }
+  
+  /**
+   * Test multiLocaleString deserialisation form JSON to Java object
+   */
+  @Test
+  public void testMultiLocaleStringDeserialisesToJavaObject() {
+    String auditStampJSON = 
+        "  {" + 
+        "    \"preferredLocale\": {" + 
+        "      \"country\": \"US\"," + 
+        "      \"language\": \"en\"" + 
+        "    }," + 
+        "    \"localized\": {" + 
+        "      \"en_US\": \"2029 Stierlin Ct, Mountain View, CA 94043\"" + 
+        "    }" + 
+        "  }";
+    
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    MultiLocaleString multiLocaleString = mapper.toJavaObject(auditStampJSON,
+        MultiLocaleString.class);
+    
+    assertEquals("US", multiLocaleString.getPreferredLocale().getCountry());
+    assertEquals("en", multiLocaleString.getPreferredLocale().getLanguage());
+    Map<String, String> localized = multiLocaleString.getLocalized();
+    assertEquals("2029 Stierlin Ct, Mountain View, CA 94043", localized.get("en_US"));
   }
 
 }
