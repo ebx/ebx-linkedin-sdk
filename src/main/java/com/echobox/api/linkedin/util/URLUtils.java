@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+//Source - https://restfb.com/
 
 package com.echobox.api.linkedin.util;
 
@@ -114,7 +115,7 @@ public final class URLUtils {
 
     // If there is no ? character at the front of the string, append it.
     return extractParametersFromUrl(
-      format("restfb://url%s", queryString.startsWith("?") ? queryString : "?" + queryString));
+      format("ebx-linkedin-sdk://url%s", queryString.startsWith("?") ? queryString : "?" + queryString));
   }
 
   /**
