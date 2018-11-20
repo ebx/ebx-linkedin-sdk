@@ -15,35 +15,40 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.exception;
+package com.echobox.api.linkedin.jsonmapper;
+
+import com.echobox.api.linkedin.types.CodeAndNameType;
+
+import lombok.Getter;
+
+import java.util.List;
 
 /**
- * LinkedIn runtime exception
- * @author Joanna
+ * SimpleJSON class
  *
+ * @author Joanna
  */
-public abstract class LinkedInException extends RuntimeException {
+public class SimpleJSON {
+  @Getter
+  @LinkedIn
+  private String name;
+
+  @Getter
+  private String derivedName;
+
+  @Getter
+  @LinkedIn
+  private List<CodeAndNameType> sausages;
 
   /**
-   * Default serial version UID
+   * Complete mapping.
+   *
+   * @param jsonMapper the json mapper
    */
-  private static final long serialVersionUID = 1L;
-  
-  /**
-   * LinkiedIn exception initialised with a message
-   * @param message message
-   */
-  public LinkedInException(String message) {
-    super(message);
+  @JsonMapper.JsonMappingCompleted
+  public void completeMapping(JsonMapper jsonMapper) {
+    if (name != null) {
+      derivedName = name.toUpperCase();
+    }
   }
-  
-  /**
-   * LinkiedIn exception initialised with a message and a cause
-   * @param message message
-   * @param cause cause
-   */
-  public LinkedInException(String message, Throwable cause) {
-    super(message, cause);
-  }
-
 }

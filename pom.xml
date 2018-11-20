@@ -124,13 +124,26 @@
 							<failsOnError>true</failsOnError>
 							<includeTestSourceDirectory>true</includeTestSourceDirectory>
 							<propertyExpansion>basedir=${project.basedir}</propertyExpansion>
-							<excludes>**/DateFormatStrategy.java,**/DateFormatStrategy.java,
-								**/DateUtils.java,**/ReflectionUtils.java,**/SimpleDateFormatStrategy.java,
-								**/JsonMapper.java,**/DefaultJsonMapper.java,**/BaseLinkedInClient.java,
-								**/BinaryAttachment.java,**/Connection.java,**/ConnectionIterator.java,
-								**/LinkedInClient.java,**/Parameter.java,**/WebRequestor.java,
-								**/LinkedInExceptionMapper.java,**/LinkedInNetworkException.java,
-								**/ResponseErrorJsonParsingException.java,**/URLUtils.java</excludes>
+							<!-- Excluded as these are external dropins -->
+							<excludes>
+								**/DateFormatStrategy.java,
+								**/DateUtils.java,
+								**/ReflectionUtils.java,
+								**/SimpleDateFormatStrategy.java,
+								**/JsonMapper.java,
+								**/DefaultJsonMapper.java,
+								**/BaseLinkedInClient.java,
+								**/BinaryAttachment.java,
+								**/Connection.java,
+								**/ConnectionIterator.java,
+								**/LinkedInClient.java,
+								**/Parameter.java,
+								**/WebRequestor.java,
+								**/LinkedInExceptionMapper.java,
+								**/LinkedInNetworkException.java,
+								**/ResponseErrorJsonParsingException.java,
+								**/URLUtils.java
+							</excludes>
 						</configuration>
 						<goals>
 							<goal>check</goal>
