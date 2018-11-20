@@ -18,18 +18,12 @@
 package com.echobox.api.linkedin.types;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.function.FunctionURN;
-import com.echobox.api.linkedin.types.locale.Locale;
-import com.echobox.api.linkedin.types.location.CountryGroupURN;
-import com.echobox.api.linkedin.types.location.CountryURN;
-import com.echobox.api.linkedin.types.location.PlaceURN;
-import com.echobox.api.linkedin.types.location.RegionURN;
-import com.echobox.api.linkedin.types.location.StateURN;
+import com.echobox.api.linkedin.types.objectype.Locale;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Distribution target POJO
@@ -40,87 +34,74 @@ import java.util.Map;
  */
 public class DistributionTarget {
   
+  /**
+   * Restrict share to member's connections only.
+   * Not applicable to organization shares.
+   */
   @Getter
+  @Setter
   @LinkedIn
   private Boolean connectionsOnly;
   
   /**
-   * TODO URN's are strings but need to be broken down into the URN object
+   * Restrict share to specific industries.
+   * Not applicable to member shares.
    */
   @Getter
+  @Setter
   @LinkedIn
   private List<String> industries;
   
   /**
-   * TODO URN's are strings but need to be broken down into the URN object
+   * Restrict share to specific industries.
+   * Not applicable to member shares.
    */
   @Getter
-  private List<String> industriesURN;
-  
-  @Getter
+  @Setter
   @LinkedIn
-  private List<String> interfaceLocales;
+  private List<Locale> interfaceLocales;
   
+  /**
+   * Restrict share to specific functions.
+   * Not applicable to member shares.
+   */
   @Getter
-  private List<Locale> interfaceLocalesURN;
-  
-  @Getter
+  @Setter
   @LinkedIn
   private List<String> jobFunctions;
   
-  @Getter
-  private List<FunctionURN> jobFunctionsURN;
-  
   /**
-   * This value will contain the raw locations - the complete JSON mapper will try and map to the
-   * correct location URN
+   * Restrict share to specific locations.
+   * Not applicable to member shares.
    */
   @Getter
-  @LinkedIn("locations")
+  @Setter
+  @LinkedIn
   private List<String> locations;
   
   /**
-   * TODO - map after completion
+   * Restrict share to specific locations.
+   * Not applicable to member shares.
    */
   @Getter
-  private List<CountryGroupURN> countryGroupURN;
-  
-  /**
-   * TODO - map after completion
-   */
-  @Getter
-  private List<CountryURN> countriesURN;
-  
-  /**
-   * TODO - map after completion
-   */
-  @Getter
-  private List<StateURN> statesURN;
-  
-  /**
-   * TODO - map after completion
-   */
-  @Getter
-  private List<RegionURN> regions;
-  
-  /**
-   * TODO - map after completion
-   */
-  @Getter
-  private List<PlaceURN> places;
-  
-  @Getter
+  @Setter
   @LinkedIn
   private List<String> seniorities;
   
+  /**
+   * Restrict share to members working at organizations of specific sizes.
+   * Not applicable to member shares.
+   */
   @Getter
-  private List<String> senioritiesURN;
-  
-  @Getter
+  @Setter
   @LinkedIn
   private List<String> staffCountRanges;
   
+  /**
+   * Make share visible to everyone, even guests on LinkedIn 
+   */
   @Getter
+  @Setter
   @LinkedIn
   private Boolean visibleToGuest;
 

@@ -15,37 +15,21 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.locale;
-
-import lombok.Getter;
+package com.echobox.api.linkedin.types;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
-import java.util.Map;
+import lombok.Getter;
 
 /**
- * Multi local string POJO
- * @see <a href="https://developer.linkedin.com/docs/ref/v2/object-types#MultiLocaleString">
- * MultiLocalString</a>
+ * Distribution Target POJO
  * @author joanna
  *
  */
-public class MultiLocaleString {
+public class ShareDistribution {
   
-  /**
-   * Maps a locale to a localized version of the string. Each key is a Locale record converted 
-   * to string format, with the language, country and variant separated by underscores. 
-   * Examples: 'en', 'de_DE', 'en_US_WIN', 'de_POSIX', 'fr_MAC'.
-   */
   @Getter
-  @LinkedIn
-  private Map<String, String> localized;
-  
-  /**
-   * The preferred locale to use, based on standard rules
-   */
-  @Getter
-  @LinkedIn
-  private Locale preferredLocale;
+  @LinkedIn("linkedInDistributionTarget")
+  private DistributionTarget distributionTarget;
 
 }

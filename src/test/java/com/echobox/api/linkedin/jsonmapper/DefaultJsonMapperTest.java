@@ -18,8 +18,19 @@
 package com.echobox.api.linkedin.jsonmapper;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
+import com.echobox.api.linkedin.types.Annotation;
 import com.echobox.api.linkedin.types.Company;
+import com.echobox.api.linkedin.types.ContentEntity;
+import com.echobox.api.linkedin.types.DistributionTarget;
+import com.echobox.api.linkedin.types.Share;
+import com.echobox.api.linkedin.types.ShareContent;
+import com.echobox.api.linkedin.types.ShareDistribution;
+import com.echobox.api.linkedin.types.ShareText;
+import com.echobox.api.linkedin.types.Thumbnail;
+import com.echobox.api.linkedin.types.objectype.AuditStamp;
 
 import org.junit.Test;
 
@@ -28,7 +39,21 @@ import org.junit.Test;
  * @author Joanna
  *
  */
-public class DefaultJsonMapperTest {
+public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
+  
+  private static final String SHARE_JSON = "com.echobox.api.linkedin.jsonmapper/share.json";
+  
+  private static final String SHARE_TEXT_JSON =
+      "com.echobox.api.linkedin.jsonmapper/shareText.json";
+  
+  private static final String SHARE_DISTRIBUTION_TARGET_JSON =
+      "com.echobox.api.linkedin.jsonmapper/shareDistributionTarget.json";
+  
+  private static final String SHARE_CONTENT_JSON =
+      "com.echobox.api.linkedin.jsonmapper/shareContent.json";
+  
+  private static final String AUDIT_STAMP_JSON =
+      "com.echobox.api.linkedin.jsonmapper/auditStamp.json";
   
   /**
    * Ensure that the JSONMappingCompleted annotation is called
@@ -101,6 +126,133 @@ public class DefaultJsonMapperTest {
         + "\"websiteUrl\":null,\"squareLogoUrl\":null,\"industries\":null,\"numFollowers\":null,"
         + "\"name\":null,\"blogRSSURL\":null,\"locations\":null,\"universalName\":null,"
         + "\"id\":123,\"status\":null}", json);
+  }
+  
+  /**
+   * Test Share deserialisation form JSON to Java object
+   */
+  @Test
+  public void testShareDeserialisesToJavaObject() {
+    String shareJSON = readFileToString(SHARE_JSON);
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    Share share = mapper.toJavaObject(shareJSON, Share.class);
+    assertEquals("urn:li:activity:12345657", share.getActivity());
+    assertNull(share.getAgent());
+    assertNotNull(share.getContent());
+    assertNotNull(share.getCreated());
+    assertNotNull(share.getDistribution());
+    assertNull(share.getEdited());
+    assertNotNull(share.getLastModified());
+    assertNull(share.getOriginalShare());
+    assertEquals("urn:li:organization:1000", share.getOwner());
+    assertNull(share.getResharedShare());
+    assertNull(share.getSubject());
+    assertNull(share.getServiceProvider());
+    assertNotNull(share.getText());
+    
+    ShareContent content = share.getContent();
+    assertEquals(1, content.getContentEntities().size());
+    assertEquals("content description", content.getDescription());
+    assertEquals("Test Share with Content", content.getTitle());
+    assertNull(content.getShareMediaCategory());
+    ContentEntity contentEntity = content.getContentEntities().get(0);
+    assertEquals("urn:li:article:0", contentEntity.getEntity());
+    assertEquals("https://www.example.com/content.html", contentEntity.getEntityLocation());
+    assertNull(contentEntity.getShareMediaCategory());
+    assertEquals(1, contentEntity.getThumbnails().size());
+    Thumbnail thumbnail = contentEntity.getThumbnails().get(0);
+    assertEquals("https://www.example.com/image.jpg", thumbnail.getResolvedUrl());
+    assertNull(thumbnail.getImageSpecificContent().getWidth());
+    assertNull(thumbnail.getImageSpecificContent().getHeight());
+    
+    AuditStamp created = share.getCreated();
+    assertEquals("urn:li:person:A8xe03Qt10", created.getActor());
+    assertEquals(new Long(1471967236000L), created.getTime());
+    assertNull(created.getImpersonator());
+    
+    DistributionTarget distributionTarget = share.getDistribution().getDistributionTarget();
+    assertNotNull(distributionTarget);
+    assertEquals(2, distributionTarget.getIndustries().size());
+    assertEquals("urn:li:industry:12", distributionTarget.getIndustries().get(0));
+    assertEquals("urn:li:industry:37", distributionTarget.getIndustries().get(1));
+    assertEquals(2, distributionTarget.getSeniorities().size());
+    assertEquals("urn:li:seniority:4", distributionTarget.getSeniorities().get(0));
+    assertEquals("urn:li:seniority:8", distributionTarget.getSeniorities().get(1));
+    
+    assertEquals("Test Share!", share.getText().getText());
+  }
+  
+  /**
+   * Test share text deserialisation form JSON to Java object
+   */
+  @Test
+  public void testShareTextDeserialisesToJavaObject() {
+    String sharetextJSON = readFileToString(SHARE_TEXT_JSON);
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    ShareText shareText = mapper.toJavaObject(sharetextJSON, ShareText.class);
+    
+    assertEquals(1, shareText.getAnnotations().size());
+    Annotation annotation = shareText.getAnnotations().get(0);
+    assertEquals(new Integer(6), annotation.getStart());
+    assertEquals(new Integer(8), annotation.getLength());
+    assertEquals("urn:li:organization:1337", annotation.getEntity());
+    assertEquals("Hello LinkedIn world!", shareText.getText());
+  }
+  
+  /**
+   * Test share distribution deserialisation form JSON to Java object
+   */
+  @Test
+  public void testShareDistributionDeserialisesToJavaObject() {
+    String shareDistributionJSON = readFileToString(SHARE_DISTRIBUTION_TARGET_JSON);
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    ShareDistribution shareDistribution = mapper.toJavaObject(shareDistributionJSON,
+        ShareDistribution.class);
+    
+    DistributionTarget distributionTarget = shareDistribution.getDistributionTarget();
+    assertEquals(2, distributionTarget.getIndustries().size());
+    assertEquals("urn:li:industry:12", distributionTarget.getIndustries().get(0));
+    assertEquals("urn:li:industry:37", distributionTarget.getIndustries().get(1));
+    assertEquals(2, distributionTarget.getSeniorities().size());
+    assertEquals("urn:li:seniority:4", distributionTarget.getSeniorities().get(0));
+    assertEquals("urn:li:seniority:8", distributionTarget.getSeniorities().get(1));
+  }
+  
+  /**
+   * Test share content deserialisation form JSON to Java object
+   */
+  @Test
+  public void testShareContentDeserialisesToJavaObject() {
+    String shareContentJSON = readFileToString(SHARE_CONTENT_JSON);
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    ShareContent shareContent = mapper.toJavaObject(shareContentJSON, ShareContent.class);
+    
+    assertEquals("content description", shareContent.getDescription());
+    assertEquals("Test Company Share with Content", shareContent.getTitle());
+    assertEquals(1, shareContent.getContentEntities().size());
+    ContentEntity contentEntity = shareContent.getContentEntities().get(0);
+    assertEquals("https://www.example.com/content.html", contentEntity.getEntityLocation());
+    assertEquals("urn:li:article:0", contentEntity.getEntity());
+    assertEquals(1, contentEntity.getThumbnails().size());
+    Thumbnail thumbnails = contentEntity.getThumbnails().get(0);
+    assertNotNull(thumbnails.getImageSpecificContent());
+    assertNull(thumbnails.getImageSpecificContent().getHeight());
+    assertNull(thumbnails.getImageSpecificContent().getWidth());
+    assertEquals("https://www.example.com/image.jpg", thumbnails.getResolvedUrl());
+  }
+  
+  /**
+   * Test audit stamp deserialisation form JSON to Java object
+   */
+  @Test
+  public void testAuditStampDeserialisesToJavaObject() {
+    String auditStampJSON = readFileToString(AUDIT_STAMP_JSON);
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    AuditStamp auditStamp = mapper.toJavaObject(auditStampJSON, AuditStamp.class);
+    
+    assertEquals("urn:li:person:123ABC", auditStamp.getActor());
+    assertEquals(new Long(1332187798000L), auditStamp.getTime());
+    assertNull(auditStamp.getImpersonator());
   }
 
 }

@@ -18,6 +18,7 @@
 package com.echobox.api.linkedin.types;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.objectype.AuditStamp;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -69,7 +70,7 @@ public class Share extends LinkedInIdType {
   @Getter
   @Setter
   @LinkedIn
-  private ShareDistributionTarget distribution;
+  private ShareDistribution distribution;
   
   /**
    * A flag that indicates if this share was edited by a member.

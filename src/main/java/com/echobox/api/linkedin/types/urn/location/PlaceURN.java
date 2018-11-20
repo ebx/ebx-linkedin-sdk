@@ -15,18 +15,48 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.urn.location;
+
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.LocaleStringNameURN;
 
 import lombok.Getter;
 
 /**
- * URN base class - all URNs will contain a URN
+ * Place URN POJO
+ * @see <a href="https://developer.linkedin.com/docs/ref/v2/standardized-data/locations/places">
+ * Place URN</a>
  * @author joanna
  *
  */
-public abstract class URN {
+public class PlaceURN extends LocaleStringNameURN {
   
+  /**
+   * The administrative level of the place
+   */
   @Getter
-  private String urn;
+  @LinkedIn
+  private String adminLevel;
+  
+  /**
+   * The country URN that owns the place
+   */
+  @Getter
+  @LinkedIn
+  private String country;
+  
+  /**
+   * The parent place URN for this place. Can be null when this place is the top-level
+   * administrative division.
+   */
+  @Getter
+  @LinkedIn
+  private String parent;
+  
+  /**
+   * The unique code within a country to identify the place
+   */
+  @Getter
+  private String placeCode;
 
 }

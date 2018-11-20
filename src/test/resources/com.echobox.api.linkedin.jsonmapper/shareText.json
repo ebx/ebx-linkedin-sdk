@@ -1,0 +1,10 @@
+{
+    "annotations": [
+      {
+        "start": 6,
+        "length": 8,
+        "entity": "urn:li:organization:1337"
+      }
+    ],
+    "text": "Hello LinkedIn world!"
+}

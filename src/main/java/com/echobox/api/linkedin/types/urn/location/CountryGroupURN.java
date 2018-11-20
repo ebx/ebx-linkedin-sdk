@@ -15,27 +15,27 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.function;
+package com.echobox.api.linkedin.types.urn.location;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.URN;
-import com.echobox.api.linkedin.types.locale.MultiLocaleString;
+import com.echobox.api.linkedin.types.urn.LocaleStringNameURN;
 
 import lombok.Getter;
 
 /**
- * Function URN
+ * Country Group URN
+ * @see <a href="https://developer.linkedin.com/docs/ref/v2/standardized-data/locations/country-
+ * groups">Country Group URN</a>
  * @author joanna
  *
  */
-public class FunctionURN extends URN {
+public class CountryGroupURN extends LocaleStringNameURN {
   
+  /**
+   * The country group code
+   */
   @Getter
   @LinkedIn
-  private int id;
-  
-  @Getter
-  @LinkedIn
-  private MultiLocaleString name;
-  
+  private String countryGroupCode;
+
 }

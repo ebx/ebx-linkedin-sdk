@@ -15,39 +15,31 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.location;
+package com.echobox.api.linkedin.types.objectype;
 
 import lombok.Getter;
 
-import com.echobox.api.linkedin.types.locale.LocaleURN;
-
-import java.util.List;
-
 /**
- * Region URN POJO
- * @see <a href="https://developer.linkedin.com/docs/ref/v2/standardized-data/locations/regions">
- * Region URN</a>
+ * LocalURN POJO - The Locale object represents a country and language
+ * @see <a href="https://developer.linkedin.com/docs/ref/v2/object-types#LocaleString">
+ * LocaleString</a>
  * @author joanna
  *
  */
-public class RegionURN extends LocaleURN {
-  
-  /**
-   * The country URN for this region
-   */
-  @Getter
-  private String country;
-  
-  /**
-   * The region code
-   */
-  @Getter
-  private String id;
-  
-  /**
-   * The state URNs for this region. Represents an array and defaults to an empty
-   */
-  @Getter
-  private List<String> states;
+public class LocaleString {
 
+  /**
+   * Maps a locale to a localized version of the string. Each key is a Locale record converted to 
+   * string format, with the language, country and variant separated by underscores. 
+   * Examples: 'en', 'de_DE', 'en_US_WIN', 'de_POSIX', 'fr_MAC'.
+   */
+  @Getter
+  private Locale local;
+  
+  /**
+   * The value represented in string.
+   */
+  @Getter
+  private String value;
+  
 }

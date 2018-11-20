@@ -15,31 +15,39 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.location;
+package com.echobox.api.linkedin.types.urn.location;
 
-import com.echobox.api.linkedin.types.locale.LocaleURN;
+import com.echobox.api.linkedin.types.urn.LocaleStringNameURN;
 
 import lombok.Getter;
 
+import java.util.List;
+
 /**
- * Country URN POJO
- * @see <a href="https://developer.linkedin.com/docs/ref/v2/standardized-data/locations/countries">
- * Country URN</a>
+ * Region URN POJO
+ * @see <a href="https://developer.linkedin.com/docs/ref/v2/standardized-data/locations/regions">
+ * Region URN</a>
  * @author joanna
  *
  */
-public class CountryURN extends LocaleURN {
+public class RegionURN extends LocaleStringNameURN {
   
   /**
-   * The country code
+   * The country URN for this region
    */
   @Getter
-  private String countryCode;
+  private String country;
   
   /**
-   * The country group URN that this country belongs to
+   * The region code
    */
   @Getter
-  private String countryGroup;
+  private String id;
+  
+  /**
+   * The state URNs for this region. Represents an array and defaults to an empty
+   */
+  @Getter
+  private List<String> states;
 
 }

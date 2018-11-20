@@ -17,14 +17,14 @@
 
 package com.echobox.api.linkedin.types;
 
-import lombok.Getter;
-
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
+import lombok.Getter;
 
 import java.util.List;
 
 /**
- * Thumbnail POJO - no specific documentation included
+ * Thumbnail POJO
  * @author joanna
  *
  */

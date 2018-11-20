@@ -1,0 +1,16 @@
+{
+    "contentEntities": [
+      {
+        "entityLocation": "https://www.example.com/content.html",
+        "thumbnails": [
+          {
+            "imageSpecificContent": {},
+            "resolvedUrl": "https://www.example.com/image.jpg"
+          }
+        ],
+        "entity": "urn:li:article:0"
+      }
+    ],
+    "description": "content description",
+    "title": "Test Company Share with Content"
+}

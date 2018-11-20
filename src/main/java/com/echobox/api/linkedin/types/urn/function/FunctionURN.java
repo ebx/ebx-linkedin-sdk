@@ -15,44 +15,35 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.location;
+package com.echobox.api.linkedin.types.urn.function;
 
-import com.echobox.api.linkedin.types.locale.LocaleURN;
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.objectype.MultiLocaleString;
+import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
 
 /**
- * Place URN POJO
- * @see <a href="https://developer.linkedin.com/docs/ref/v2/standardized-data/locations/places">
- * Place URN</a>
+ * Function URN
+ * @see <a href="https://developer.linkedin.com/docs/ref/v2/standardized-data/functions">
+ * Function URN</a>
  * @author joanna
  *
  */
-public class PlaceURN extends LocaleURN {
+public class FunctionURN extends URN {
   
   /**
-   * The administrative level of the place
+   * Function id
    */
   @Getter
-  private String adminLevel;
+  @LinkedIn
+  private int id;
   
   /**
-   * The country URN that owns the place
+   * Function name in various locales
    */
   @Getter
-  private String country;
+  @LinkedIn
+  private MultiLocaleString name;
   
-  /**
-   * The parent place URN for this place. Can be null when this place is the top-level
-   * administrative division.
-   */
-  @Getter
-  private String parent;
-  
-  /**
-   * The unique code within a country to identify the place
-   */
-  @Getter
-  private String placeCode;
-
 }

@@ -1,0 +1,12 @@
+{
+  "linkedInDistributionTarget": {
+    "industries": [
+      "urn:li:industry:12",
+      "urn:li:industry:37"
+    ],
+    "seniorities": [
+      "urn:li:seniority:4",
+      "urn:li:seniority:8"
+    ]
+  }
+}

@@ -15,31 +15,18 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.locale;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+package com.echobox.api.linkedin.types.urn;
 
 import lombok.Getter;
 
 /**
- * Local POJO
+ * URN base class - all URNs will contain a URN
  * @author joanna
  *
  */
-public class Locale {
+public abstract class URN {
+  
+  @Getter
+  private String urn;
 
-  /**
-   * An uppercase two-letter country code as defined by ISO-3166.
-   */
-  @Getter
-  @LinkedIn
-  private String country;
-  
-  /**
-   * A lowercase two-letter language code as defined by ISO-639.
-   */
-  @Getter
-  @LinkedIn
-  private String language;
-  
 }

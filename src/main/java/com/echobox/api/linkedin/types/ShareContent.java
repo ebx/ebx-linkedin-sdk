@@ -17,17 +17,17 @@
 
 package com.echobox.api.linkedin.types;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import java.util.List;
 
 /**
  * Share content POJO
  * @see <a href="https://developer.linkedin.com/docs/guide/v2/shares/share-api#share-content">
- * Share Schema</a>
+ * Share Content Schema</a>
  * @author joanna
  *
  */

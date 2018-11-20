@@ -15,30 +15,34 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.locale;
+package com.echobox.api.linkedin.types.urn.location;
 
-import com.echobox.api.linkedin.types.URN;
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.LocaleStringNameURN;
 
 import lombok.Getter;
 
 /**
- * LocalURN POJO - The Locale object represents a country and language
- * @see <a href="https://developer.linkedin.com/docs/ref/v2/object-types#Locale">Locale</a>
+ * Country URN POJO
+ * @see <a href="https://developer.linkedin.com/docs/ref/v2/standardized-data/locations/countries">
+ * Country URN</a>
  * @author joanna
  *
  */
-public class LocaleURN extends URN {
-
-  /**
-   * An uppercase two-letter country code as defined by ISO-3166
-   */
-  @Getter
-  private Locale local;
+public class CountryURN extends LocaleStringNameURN {
   
   /**
-   * A lowercase two-letter language code as defined by ISO-639.
+   * The country code
    */
   @Getter
-  private String name;
+  @LinkedIn
+  private String countryCode;
+  
+  /**
+   * The country group URN that this country belongs to
+   */
+  @Getter
+  @LinkedIn
+  private String countryGroup;
   
 }

@@ -20,11 +20,12 @@ package com.echobox.api.linkedin.types;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Annotation POJO
  * @see <a href="https://developer.linkedin.com/docs/guide/v2/shares/share-api#share-text">
- * Share Distribution Targets</a>
+ * Annotations</a>
  * @author joanna
  *
  */
@@ -35,22 +36,25 @@ public class Annotation {
    * Zero-based indexing
    */
   @Getter
+  @Setter
   @LinkedIn
-  private int start;
+  private Integer start;
   
   /**
    * The length of the annotation link
    */
   @Getter
+  @Setter
   @LinkedIn
-  private int length;
+  private Integer length;
   
   /**
    * The entity referred to in the share text.
    * Must either be in the format urn:li:person:{id} or urn:li:company:{id}
    */
   @Getter
+  @Setter
   @LinkedIn
-  private int entity;
+  private String entity;
 
 }

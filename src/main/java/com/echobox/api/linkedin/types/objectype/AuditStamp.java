@@ -15,31 +15,42 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.location;
+package com.echobox.api.linkedin.types.objectype;
 
-import com.echobox.api.linkedin.types.URN;
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
 
 /**
- * States URN POJO
- * @see <a href="https://developer.linkedin.com/docs/ref/v2/standardized-data/locations/states">
- * States URN</a>
+ * Audit stamp POJO
+ * @see <a href="https://developer.linkedin.com/docs/ref/v2/object-types#AuditStamp">
+ * Audit Stamp Schema</a>
  * @author joanna
  *
  */
-public class StateURN extends URN {
-  
-  /**
-   * The country URN that owns the state
-   */
-  @Getter
-  private String country;
+public class AuditStamp {
 
   /**
-   * The state code
+   * The entity authorized the change
    */
   @Getter
-  String stateCode;
+  @LinkedIn
+  private String actor;
+  
+  /**
+   * The entity which performs the change on behalf of the actor. Must be authorized to act as the
+   * actor.
+   */
+  @Getter
+  @LinkedIn
+  private String impersonator;
+  
+  /**
+   * The entity which performs the change on behalf of the actor. Must be authorized to act as the
+   * actor.
+   */
+  @Getter
+  @LinkedIn
+  private Long time;
   
 }

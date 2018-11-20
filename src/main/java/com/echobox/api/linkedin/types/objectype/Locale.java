@@ -15,38 +15,33 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.objectype;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
 
 /**
- * Share text POJO
- * @see <a href="https://developer.linkedin.com/docs/guide/v2/shares/share-api#share-text">
+ * Locale POJO
+ * @see <a href="https://developer.linkedin.com/docs/ref/v2/object-types#Locale">
  * Share Text</a>
  * @author joanna
  *
  */
-public class ShareText {
-  
-  /**
-   * The content text
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private String text;
-  
-  /**
-   * Allows links to other entities (such as members) within share text
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private List<Annotation> annotations;
+public class Locale {
 
+  /**
+   * An uppercase two-letter country code as defined by ISO-3166.
+   */
+  @Getter
+  @LinkedIn
+  private String country;
+  
+  /**
+   * A lowercase two-letter language code as defined by ISO-639.
+   */
+  @Getter
+  @LinkedIn
+  private String language;
+  
 }
