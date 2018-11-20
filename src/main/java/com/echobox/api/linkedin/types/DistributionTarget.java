@@ -17,6 +17,7 @@
 
 package com.echobox.api.linkedin.types;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.function.FunctionURN;
 import com.echobox.api.linkedin.types.locale.Locale;
 import com.echobox.api.linkedin.types.location.CountryGroupURN;
@@ -40,45 +41,87 @@ import java.util.Map;
 public class DistributionTarget {
   
   @Getter
+  @LinkedIn
   private Boolean connectionsOnly;
   
+  /**
+   * TODO URN's are strings but need to be broken down into the URN object
+   */
   @Getter
+  @LinkedIn
   private List<String> industries;
   
+  /**
+   * TODO URN's are strings but need to be broken down into the URN object
+   */
   @Getter
-  private List<Locale> interfaceLocales;
+  private List<String> industriesURN;
   
   @Getter
-  private List<FunctionURN> jobFunctions;
+  @LinkedIn
+  private List<String> interfaceLocales;
+  
+  @Getter
+  private List<Locale> interfaceLocalesURN;
+  
+  @Getter
+  @LinkedIn
+  private List<String> jobFunctions;
+  
+  @Getter
+  private List<FunctionURN> jobFunctionsURN;
   
   /**
    * This value will contain the raw locations - the complete JSON mapper will try and map to the
    * correct location URN
    */
-  private List<Map<String, String>> locationsRaw;
-  
   @Getter
-  private List<CountryGroupURN> countryGroup;
+  @LinkedIn("locations")
+  private List<String> locations;
   
+  /**
+   * TODO - map after completion
+   */
   @Getter
-  private List<CountryURN> countries;
+  private List<CountryGroupURN> countryGroupURN;
   
+  /**
+   * TODO - map after completion
+   */
   @Getter
-  private List<StateURN> states;
+  private List<CountryURN> countriesURN;
   
+  /**
+   * TODO - map after completion
+   */
+  @Getter
+  private List<StateURN> statesURN;
+  
+  /**
+   * TODO - map after completion
+   */
   @Getter
   private List<RegionURN> regions;
   
+  /**
+   * TODO - map after completion
+   */
   @Getter
   private List<PlaceURN> places;
   
   @Getter
-  private List<FunctionURN> seniorities;
+  @LinkedIn
+  private List<String> seniorities;
   
   @Getter
+  private List<String> senioritiesURN;
+  
+  @Getter
+  @LinkedIn
   private List<String> staffCountRanges;
   
   @Getter
+  @LinkedIn
   private Boolean visibleToGuest;
 
 }

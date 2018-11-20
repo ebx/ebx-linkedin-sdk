@@ -17,6 +17,7 @@
 
 package com.echobox.api.linkedin.types.function;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.URN;
 import com.echobox.api.linkedin.types.locale.MultiLocaleString;
 
@@ -30,9 +31,11 @@ import lombok.Getter;
 public class FunctionURN extends URN {
   
   @Getter
+  @LinkedIn
   private int id;
   
   @Getter
+  @LinkedIn
   private MultiLocaleString name;
   
 }

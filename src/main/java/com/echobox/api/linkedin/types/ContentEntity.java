@@ -18,6 +18,9 @@
 package com.echobox.api.linkedin.types;
 
 import lombok.Getter;
+import lombok.Setter;
+
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import java.util.List;
 
@@ -35,25 +38,33 @@ public class ContentEntity {
    * Typical URN format is urn:li:richMediaSummary:{id}
    */
   @Getter
+  @Setter
+  @LinkedIn
   private String entity;
   
   /**
    * URL of the content being shared
    */
   @Getter
+  @Setter
+  @LinkedIn
   private String entityLocation;
   
   /**
    * URL to a thumbnail image to display for the content
    */
   @Getter
-  private List<Thumbnail> thumbanils;
+  @Setter
+  @LinkedIn
+  private List<Thumbnail> thumbnails;
   
   /**
    * The type of media represented by the contentEntities. 
    * Must correspond to the URN types in contentEntities.
    */
   @Getter
+  @Setter
+  @LinkedIn
   private String shareMediaCategory;
 
 }

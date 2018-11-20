@@ -19,6 +19,8 @@ package com.echobox.api.linkedin.types.locale;
 
 import lombok.Getter;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import java.util.Map;
 
 /**
@@ -36,12 +38,14 @@ public class MultiLocaleString {
    * Examples: 'en', 'de_DE', 'en_US_WIN', 'de_POSIX', 'fr_MAC'.
    */
   @Getter
+  @LinkedIn
   private Map<String, String> localized;
   
   /**
    * The preferred locale to use, based on standard rules
    */
   @Getter
+  @LinkedIn
   private Locale preferredLocale;
 
 }

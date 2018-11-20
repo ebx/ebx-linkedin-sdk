@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,6 +35,7 @@ public class Share extends LinkedInIdType {
    * Urn of the activity associated with this share.
    */
   @Getter
+  @LinkedIn
   private String activity;
   
   /**
@@ -42,6 +45,7 @@ public class Share extends LinkedInIdType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private String agent;
   
   /**
@@ -49,12 +53,14 @@ public class Share extends LinkedInIdType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private ShareContent content;
   
   /**
    * Time of creation
    */
   @Getter
+  @LinkedIn
   private AuditStamp created;
   
   /**
@@ -62,12 +68,14 @@ public class Share extends LinkedInIdType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private ShareDistributionTarget distribution;
   
   /**
    * A flag that indicates if this share was edited by a member.
    */
   @Getter
+  @LinkedIn
   private Boolean edited;
   
   /**
@@ -75,12 +83,14 @@ public class Share extends LinkedInIdType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private AuditStamp lastModified;
   
   /**
    * If this share is a reshare, then this is the urn of the original/root share that was reshared.
    */
   @Getter
+  @LinkedIn
   private String originalShare;
   
   /**
@@ -88,6 +98,7 @@ public class Share extends LinkedInIdType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private String owner;
   
   /**
@@ -95,6 +106,7 @@ public class Share extends LinkedInIdType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private String resharedShare;
   
   /**
@@ -102,6 +114,7 @@ public class Share extends LinkedInIdType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private String subject;
   
   /**
@@ -109,6 +122,7 @@ public class Share extends LinkedInIdType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private String serviceProvider;
   
   /**
@@ -116,6 +130,7 @@ public class Share extends LinkedInIdType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private ShareText text;
 
 }

@@ -18,11 +18,16 @@
 package com.echobox.api.linkedin.types;
 
 import lombok.Getter;
+import lombok.Setter;
+
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import java.util.List;
 
 /**
  * Share content POJO
+ * @see <a href="https://developer.linkedin.com/docs/guide/v2/shares/share-api#share-content">
+ * Share Schema</a>
  * @author joanna
  *
  */
@@ -32,9 +37,10 @@ public class ShareContent {
    * Content description
    * This field is displayed to a small percentage of users on the mobile web version of our site
    * It is not displayed on the desktop site or native mobile apps
-   * Max 256 characters
    */
   @Getter
+  @Setter
+  @LinkedIn
   private String description;
   
   /**
@@ -42,18 +48,24 @@ public class ShareContent {
    * Max 400 characters, recommended length is <70 characters
    */
   @Getter
+  @Setter
+  @LinkedIn
   private String title;
   
   /**
    * Details of content being shared
    */
   @Getter
+  @Setter
+  @LinkedIn
   private List<ContentEntity> contentEntities;
   
   /**
    * The type of media represented by the contentEntities
    */
   @Getter
+  @Setter
+  @LinkedIn
   private String shareMediaCategory;
 
 }

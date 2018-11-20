@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import lombok.Getter;
 
 /**
@@ -27,9 +29,11 @@ import lombok.Getter;
 public class ImageSpecificContent {
   
   @Getter
-  private int width;
+  @LinkedIn
+  private Integer width;
   
   @Getter
-  private int height;
+  @LinkedIn
+  private Integer height;
 
 }

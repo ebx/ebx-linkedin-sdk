@@ -19,6 +19,8 @@ package com.echobox.api.linkedin.types;
 
 import lombok.Getter;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import java.util.List;
 
 /**
@@ -28,27 +30,28 @@ import java.util.List;
  */
 public class Thumbnail {
   
-  /**
-   * This value doesn't seem to be used - LinkedIn doesn't seem to have any documentation on this
-   */
-//  private Object imageSpecificContent;
-  
   @Getter
+  @LinkedIn
   private List<String> publishers;
   
   @Getter
+  @LinkedIn
   private String resolvedUrl;
   
   @Getter
+  @LinkedIn
   private List<String> authors;
   
   @Getter
+  @LinkedIn
   private String mediaType;
   
   @Getter
+  @LinkedIn
   private String url;
   
   @Getter
+  @LinkedIn
   private ImageSpecificContent imageSpecificContent;
 
 }

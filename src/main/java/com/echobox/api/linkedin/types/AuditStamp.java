@@ -17,22 +17,38 @@
 
 package com.echobox.api.linkedin.types;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import lombok.Getter;
 
 /**
  * Audit stamp POJO
+ * @see <a href="https://developer.linkedin.com/docs/ref/v2/object-types#AuditStamp">
+ * Audit Stamp Schema</a>
  * @author joanna
  *
  */
 public class AuditStamp {
 
+  /**
+   * The entity authorized the change
+   */
   @Getter
+  @LinkedIn
   private String actor;
   
+  /**
+   * The entity which performs the change on behalf of the actor. Must be authorized to act as the actor.
+   */
   @Getter
+  @LinkedIn
   private String impersonator;
   
+  /**
+   * The entity which performs the change on behalf of the actor. Must be authorized to act as the actor.
+   */
   @Getter
+  @LinkedIn
   private Long time;
   
 }

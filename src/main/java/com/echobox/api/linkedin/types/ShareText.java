@@ -19,6 +19,8 @@ package com.echobox.api.linkedin.types;
 
 import lombok.Getter;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import java.util.List;
 
 /**
@@ -35,12 +37,14 @@ public class ShareText {
    * Max 1300 characters
    */
   @Getter
+  @LinkedIn
   private String text;
   
   /**
    * Allows links to other entities (such as members) within share text
    */
   @Getter
+  @LinkedIn
   private List<Annotation> annotations;
 
 }

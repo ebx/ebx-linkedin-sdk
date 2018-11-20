@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import lombok.Getter;
 
 /**
@@ -33,12 +35,14 @@ public class Annotation {
    * Zero-based indexing
    */
   @Getter
+  @LinkedIn
   private int start;
   
   /**
    * The length of the annotation link
    */
   @Getter
+  @LinkedIn
   private int length;
   
   /**
@@ -46,6 +50,7 @@ public class Annotation {
    * Must either be in the format urn:li:person:{id} or urn:li:company:{id}
    */
   @Getter
+  @LinkedIn
   private int entity;
 
 }
