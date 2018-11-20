@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import lombok.Getter;
 
 /**
@@ -30,29 +32,34 @@ public class Location {
    * Description of company location.
    */
   @Getter
+  @LinkedIn
   private String description;
   
   /**
    * Valid values are true or false. A value of true matches the Company headquarters location.
    */
   @Getter
-  private boolean isHeadQuarters;
+  @LinkedIn
+  private boolean isHeadquarters;
   
   /**
    * Valid values are true or false. A value of true matches the active location.
    */
   @Getter
-  private String isActive;
+  @LinkedIn
+  private boolean isActive;
   
   /**
    * Address of location.
    */
   @Getter
+  @LinkedIn
   private Address address;
   
   /**
    * Company contact information for the location.
    */
   @Getter
+  @LinkedIn
   private ContactInfo contactInfo;
 }

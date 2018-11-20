@@ -15,26 +15,33 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.logging;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
-import lombok.Getter;
-import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.ext.EventLogger;
+import org.slf4j.ext.LoggerWrapper;
 
 /**
- * Linked in types that contain an id field
+ * LinkedIn logger
  * @author Joanna
  *
  */
-public abstract class LinkedInIdType {
+public class LinkedInLogger extends LoggerWrapper {
+  
+  private static final String FQCN = EventLogger.class.getName();
+
+  private LinkedInLogger(Logger logger) {
+    super(logger, FQCN);
+  }
   
   /**
-   * Unique internal numeric identifier
+   * Get the LinkedIn logger instance
+   * @return the LinkedIn logger instance
    */
-  @Getter
-  @Setter
-  @LinkedIn
-  private long id;
+  public static Logger getLoggerInstance() {
+    String callingClassName = Thread.currentThread().getStackTrace()[2].getClassName();
+    return new LinkedInLogger(LoggerFactory.getLogger(callingClassName));
+  }
 
 }

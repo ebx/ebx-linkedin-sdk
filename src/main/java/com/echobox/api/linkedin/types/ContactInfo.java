@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import lombok.Getter;
 
 /**
@@ -30,17 +32,20 @@ public class ContactInfo {
    * Company phone number for the location.
    */
   @Getter
+  @LinkedIn("phone1")
   private String phoneOne;
 
   /**
    * Second company phone number for the location.
    */
   @Getter
+  @LinkedIn("phone2")
   private String phoneTwo;
 
   /**
    * Company fax number for the location.
    */
   @Getter
+  @LinkedIn
   private String fax;
 }

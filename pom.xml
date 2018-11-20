@@ -33,6 +33,33 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20180813</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.25</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-ext</artifactId>
+			<version>1.7.25</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback.contrib</groupId>
+			<artifactId>logback-json-classic</artifactId>
+			<version>0.1.2</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback.contrib</groupId>
+			<artifactId>logback-jackson</artifactId>
+			<version>0.1.2</version>
+			<scope>runtime</scope>
+		</dependency>
 
 	</dependencies>
 
@@ -93,6 +120,10 @@
 							<failsOnError>true</failsOnError>
 							<includeTestSourceDirectory>true</includeTestSourceDirectory>
 							<propertyExpansion>basedir=${project.basedir}</propertyExpansion>
+							<!-- Excluded as these are external dropins -->
+							<excludes>**/DateFormatStrategy.java,**/DateFormatStrategy.java,
+							**/DateUtils.java,**/ReflectionUtils.java,**/SimpleDateFormatStrategy.java,
+							**/JsonMapper.java,**/DefaultJsonMapper.java</excludes>
 						</configuration>
 						<goals>
 							<goal>check</goal>
@@ -126,6 +157,7 @@
 						<configuration>
 							<minimumTokens>50</minimumTokens>
 							<excludes>
+								<exclude>**/DefaultJsonMapper.java</exclude>
 							</excludes>
 						</configuration>
 					</execution>

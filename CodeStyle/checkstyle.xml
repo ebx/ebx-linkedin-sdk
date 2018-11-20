@@ -27,7 +27,6 @@
         </module>
         <module name="IllegalInstantiation">
             <property name="classes" value="java.security.InvalidParameterException"/>
-            <property name="classes" value="com.restfb.DefaultFacebookClient"/>
         </module>
         <module name="IllegalThrows">
             <property name="illegalClassNames" value="java.security.InvalidParameterException"/>

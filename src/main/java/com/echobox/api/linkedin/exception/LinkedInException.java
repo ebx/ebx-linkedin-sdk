@@ -15,26 +15,35 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
-import lombok.Getter;
-import lombok.Setter;
+package com.echobox.api.linkedin.exception;
 
 /**
- * Linked in types that contain an id field
+ * LinkedIn runtime exception
  * @author Joanna
  *
  */
-public abstract class LinkedInIdType {
+public abstract class LinkedInException extends RuntimeException {
+
+  /**
+   * Default serial version UID
+   */
+  private static final long serialVersionUID = 1L;
   
   /**
-   * Unique internal numeric identifier
+   * LinkiedIn exception initialised with a message
+   * @param message message
    */
-  @Getter
-  @Setter
-  @LinkedIn
-  private long id;
+  public LinkedInException(String message) {
+    super(message);
+  }
+  
+  /**
+   * LinkiedIn exception initialised with a message and a cause
+   * @param message message
+   * @param cause cause
+   */
+  public LinkedInException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
 }

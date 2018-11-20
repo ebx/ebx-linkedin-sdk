@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,6 +34,7 @@ public abstract class LinkedInIdAndNameType extends LinkedInIdType {
    */
   @Getter
   @Setter
+  @LinkedIn
   private String name;
 
 }

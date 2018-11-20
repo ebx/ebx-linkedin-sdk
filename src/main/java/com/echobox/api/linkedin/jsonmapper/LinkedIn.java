@@ -15,26 +15,28 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.jsonmapper;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
 /**
- * Linked in types that contain an id field
+ * LinkedIn annotation to map the attribute to the Java field
  * @author Joanna
  *
  */
-public abstract class LinkedInIdType {
+@Retention(RUNTIME)
+@Target(FIELD)
+public @interface LinkedIn {
   
   /**
-   * Unique internal numeric identifier
+   * Name of the LinkedIn API result attribute to map to - {@code affiliation}, for example.
+   * 
+   * @return Name of the LinkedIn API result attribute to map to.
    */
-  @Getter
-  @Setter
-  @LinkedIn
-  private long id;
+  String value() default "";
 
 }
