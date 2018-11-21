@@ -31,8 +31,15 @@ import com.echobox.api.linkedin.types.ShareDistribution;
 import com.echobox.api.linkedin.types.ShareText;
 import com.echobox.api.linkedin.types.Thumbnail;
 import com.echobox.api.linkedin.types.objectype.AuditStamp;
+import com.echobox.api.linkedin.types.objectype.Locale;
 import com.echobox.api.linkedin.types.objectype.LocaleString;
 import com.echobox.api.linkedin.types.objectype.MultiLocaleString;
+import com.echobox.api.linkedin.types.urn.function.FunctionURN;
+import com.echobox.api.linkedin.types.urn.location.CountryGroupURN;
+import com.echobox.api.linkedin.types.urn.location.CountryURN;
+import com.echobox.api.linkedin.types.urn.location.PlaceURN;
+import com.echobox.api.linkedin.types.urn.location.RegionURN;
+import com.echobox.api.linkedin.types.urn.location.StateURN;
 
 import org.junit.Test;
 
@@ -290,7 +297,7 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
    */
   @Test
   public void testLocaleStringDeserialisesToJavaObject() {
-    String auditStampJSON = 
+    String localeStringJSON = 
         "{" + 
         "    \"locale\": {" + 
         "      \"country\": \"US\"," + 
@@ -300,11 +307,211 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
         "  }";
     
     DefaultJsonMapper mapper = new DefaultJsonMapper();
-    LocaleString localeString = mapper.toJavaObject(auditStampJSON, LocaleString.class);
+    LocaleString localeString = mapper.toJavaObject(localeStringJSON, LocaleString.class);
     
     assertEquals("US", localeString.getLocale().getCountry());
     assertEquals("en", localeString.getLocale().getLanguage());
     assertEquals("California", localeString.getValue());
+  }
+  
+  /**
+   * Test Locale deserialisation form JSON to Java object
+   */
+  @Test
+  public void testLocaleDeserialisesToJavaObject() {
+    String localeJSON = 
+        "{" + 
+        "    \"country\": \"US\"," + 
+        "    \"language\": \"en\"" + 
+        "  }";
+    
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    Locale locale = mapper.toJavaObject(localeJSON, Locale.class);
+    
+    assertEquals("US", locale.getCountry());
+    assertEquals("en", locale.getLanguage());
+  }
+  
+  /**
+   * Test Function URN deserialisation form JSON to Java object
+   */
+  @Test
+  public void testFunctionURNDeserialisesToJavaObject() {
+    String functionURNJSON = 
+        "{" + 
+        "  \"name\": {" + 
+        "    \"localized\": {" + 
+        "      \"en_US\": \"Information Technology\"" + 
+        "    }" + 
+        "  }," + 
+        "  \"$URN\": \"urn:li:function:13\"," + 
+        "  \"id\": 13" + 
+        "}";
+    
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    FunctionURN functionURN = mapper.toJavaObject(functionURNJSON, FunctionURN.class);
+    
+    assertEquals(13, functionURN.getId());
+    assertEquals("urn:li:function:13", functionURN.getUrn());
+    assertEquals(1, functionURN.getName().getLocalized().size());
+    assertEquals("Information Technology", functionURN.getName().getLocalized().get("en_US"));
+  }
+  
+  /**
+   * Test country group URN deserialisation form JSON to Java object
+   */
+  @Test
+  public void testCountryGroupURNDeserialisesToJavaObject() {
+    String countryGroupURNJSON = 
+        "{" + 
+        "  \"name\": {" + 
+        "    \"locale\": {" + 
+        "      \"country\": \"US\"," + 
+        "      \"language\": \"en\"" + 
+        "    }," + 
+        "    \"value\": \"Africa\"" + 
+        "  },\r\n" + 
+        "  \"$URN\": \"urn:li:countryGroup:AF\"," + 
+        "  \"countryGroupCode\": \"AF\"" + 
+        "}";
+    
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    CountryGroupURN countryGroupURN = mapper.toJavaObject(countryGroupURNJSON, CountryGroupURN.class);
+    
+    assertEquals("AF", countryGroupURN.getCountryGroupCode());
+    assertEquals("urn:li:countryGroup:AF", countryGroupURN.getUrn());
+    assertEquals("US", countryGroupURN.getName().getLocale().getCountry());
+    assertEquals("en", countryGroupURN.getName().getLocale().getLanguage());
+    assertEquals("Africa", countryGroupURN.getName().getValue());
+  }
+  
+  /**
+   * Test country URN deserialisation form JSON to Java object
+   */
+  @Test
+  public void testCountryURNDeserialisesToJavaObject() {
+    String countryURNJSON = 
+        "{" + 
+        "  \"name\": {" + 
+        "    \"locale\": {" + 
+        "      \"country\": \"US\"," + 
+        "      \"language\": \"en\"" + 
+        "    }," + 
+        "    \"value\": \"United States\"" + 
+        "  }," + 
+        "  \"countryGroup\": \"urn:li:countryGroup:NA\"," + 
+        "  \"$URN\": \"urn:li:country:us\"," + 
+        "  \"countryCode\": \"us\"" + 
+        "}";
+    
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    CountryURN countryURN = mapper.toJavaObject(countryURNJSON, CountryURN.class);
+    
+    assertEquals("us", countryURN.getCountryCode());
+    assertEquals("urn:li:countryGroup:NA", countryURN.getCountryGroup());
+    assertEquals("urn:li:country:us", countryURN.getUrn());
+    assertEquals("US", countryURN.getName().getLocale().getCountry());
+    assertEquals("en", countryURN.getName().getLocale().getLanguage());
+    assertEquals("United States", countryURN.getName().getValue());
+  }
+  
+  /**
+   * Test state URN deserialisation form JSON to Java object
+   */
+  @Test
+  public void testStateURNDeserialisesToJavaObject() {
+    String stateURNJSON = 
+        "{" + 
+        "  \"name\": {" + 
+        "    \"locale\": {" + 
+        "      \"country\": \"US\"," + 
+        "      \"language\": \"en\"" + 
+        "    }," + 
+        "    \"value\": \"California\"" + 
+        "  }," + 
+        "  \"country\": \"urn:li:country:us\"," + 
+        "  \"stateCode\": \"CA\"," + 
+        "  \"$URN\": \"urn:li:state:(urn:li:country:us,CA)\"" + 
+        "}";
+    
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    StateURN stateURN = mapper.toJavaObject(stateURNJSON, StateURN.class);
+    
+    assertEquals("urn:li:country:us", stateURN.getCountry());
+    assertEquals("urn:li:state:(urn:li:country:us,CA)", stateURN.getUrn());
+    assertEquals("CA", stateURN.getStateCode());
+    assertEquals("California", stateURN.getName().getValue());
+    assertEquals("US", stateURN.getName().getLocale().getCountry());
+    assertEquals("en", stateURN.getName().getLocale().getLanguage());
+  }
+  
+  /**
+   * Test region URN deserialisation form JSON to Java object
+   */
+  @Test
+  public void testRegionGroupURNDeserialisesToJavaObject() {
+    String regionURNJSON = 
+        "{" + 
+        "  \"name\": {" + 
+        "    \"locale\": {" + 
+        "      \"country\": \"US\"," + 
+        "      \"language\": \"en\"" + 
+        "    }," + 
+        "    \"value\": \"San Francisco Bay Area\"" + 
+        "  }," + 
+        "  \"country\": \"urn:li:country:us\"," + 
+        "  \"id\": 84," + 
+        "  \"$URN\": \"urn:li:region:84\"," + 
+        "  \"states\": [" + 
+        "    \"urn:li:state:(urn:li:country:us,CA)\"" + 
+        "  ]" + 
+        "}";
+    
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    RegionURN regionURN = mapper.toJavaObject(regionURNJSON, RegionURN.class);
+    
+    assertEquals("urn:li:country:us", regionURN.getCountry());
+    assertEquals(new Integer(84), regionURN.getId());
+    assertEquals("urn:li:region:84", regionURN.getUrn());
+    assertEquals("San Francisco Bay Area", regionURN.getName().getValue());
+    assertEquals("US", regionURN.getName().getLocale().getCountry());
+    assertEquals("en", regionURN.getName().getLocale().getLanguage());
+    assertEquals(1, regionURN.getStates().size());
+    assertEquals("urn:li:state:(urn:li:country:us,CA)", regionURN.getStates().get(0));
+  }
+  
+  /**
+   * Test place URN deserialisation form JSON to Java object
+   */
+  @Test
+  public void testPlaceURNDeserialisesToJavaObject() {
+    String placeURNJSON = 
+        "{" + 
+        "    \"$URN\": \"urn:li:place:(urn:li:country:us,7-1-0-43-18)\"," + 
+        "    \"name\": {" + 
+        "        \"locale\": {" + 
+        "            \"country\": \"US\"," + 
+        "            \"language\": \"en\"" + 
+        "        }," + 
+        "        \"value\": \"San Francisco, California\"" + 
+        "    }," + 
+        "    \"parent\": \"urn:li:place:(urn:li:country:us,7-1-0-43)\"," + 
+        "    \"placeCode\": \"7-1-0-43-18\"," + 
+        "    \"country\": \"urn:li:country:us\"," + 
+        "    \"adminLevel\": \"CITY\"" + 
+        "}";
+    
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    PlaceURN placeURN = mapper.toJavaObject(placeURNJSON, PlaceURN.class);
+    
+    assertEquals("CITY", placeURN.getAdminLevel());
+    assertEquals("urn:li:country:us", placeURN.getCountry());
+    assertEquals("urn:li:place:(urn:li:country:us,7-1-0-43-18)", placeURN.getUrn());
+    assertEquals("San Francisco, California", placeURN.getName().getValue());
+    assertEquals("US", placeURN.getName().getLocale().getCountry());
+    assertEquals("en", placeURN.getName().getLocale().getLanguage());
+    assertEquals("urn:li:place:(urn:li:country:us,7-1-0-43)", placeURN.getParent());
+    assertEquals("7-1-0-43-18", placeURN.getPlaceCode());
   }
 
 }

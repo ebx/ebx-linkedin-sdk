@@ -17,6 +17,7 @@
 
 package com.echobox.api.linkedin.types.urn.location;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.urn.LocaleStringNameURN;
 
 import lombok.Getter;
@@ -36,18 +37,21 @@ public class RegionURN extends LocaleStringNameURN {
    * The country URN for this region
    */
   @Getter
+  @LinkedIn
   private String country;
   
   /**
    * The region code
    */
   @Getter
-  private String id;
+  @LinkedIn
+  private Integer id;
   
   /**
    * The state URNs for this region. Represents an array and defaults to an empty
    */
   @Getter
+  @LinkedIn
   private List<String> states;
 
 }

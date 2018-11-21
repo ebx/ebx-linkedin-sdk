@@ -57,6 +57,7 @@ public class PlaceURN extends LocaleStringNameURN {
    * The unique code within a country to identify the place
    */
   @Getter
+  @LinkedIn
   private String placeCode;
 
 }

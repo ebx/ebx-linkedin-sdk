@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types.urn;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import lombok.Getter;
 
 /**
@@ -27,6 +29,7 @@ import lombok.Getter;
 public abstract class URN {
   
   @Getter
+  @LinkedIn("$URN")
   private String urn;
 
 }
