@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types.objectype;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import lombok.Getter;
 
 /**
@@ -34,12 +36,14 @@ public class LocaleString {
    * Examples: 'en', 'de_DE', 'en_US_WIN', 'de_POSIX', 'fr_MAC'.
    */
   @Getter
-  private Locale local;
+  @LinkedIn
+  private Locale locale;
   
   /**
    * The value represented in string.
    */
   @Getter
+  @LinkedIn
   private String value;
   
 }

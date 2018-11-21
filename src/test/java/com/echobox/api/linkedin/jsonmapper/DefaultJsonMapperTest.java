@@ -31,6 +31,7 @@ import com.echobox.api.linkedin.types.ShareDistribution;
 import com.echobox.api.linkedin.types.ShareText;
 import com.echobox.api.linkedin.types.Thumbnail;
 import com.echobox.api.linkedin.types.objectype.AuditStamp;
+import com.echobox.api.linkedin.types.objectype.LocaleString;
 import com.echobox.api.linkedin.types.objectype.MultiLocaleString;
 
 import org.junit.Test;
@@ -263,7 +264,7 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
    */
   @Test
   public void testMultiLocaleStringDeserialisesToJavaObject() {
-    String auditStampJSON = 
+    String mulitLocaleStringJSON = 
         "  {" + 
         "    \"preferredLocale\": {" + 
         "      \"country\": \"US\"," + 
@@ -275,13 +276,35 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
         "  }";
     
     DefaultJsonMapper mapper = new DefaultJsonMapper();
-    MultiLocaleString multiLocaleString = mapper.toJavaObject(auditStampJSON,
+    MultiLocaleString multiLocaleString = mapper.toJavaObject(mulitLocaleStringJSON,
         MultiLocaleString.class);
     
     assertEquals("US", multiLocaleString.getPreferredLocale().getCountry());
     assertEquals("en", multiLocaleString.getPreferredLocale().getLanguage());
     Map<String, String> localized = multiLocaleString.getLocalized();
     assertEquals("2029 Stierlin Ct, Mountain View, CA 94043", localized.get("en_US"));
+  }
+  
+  /**
+   * Test localeString deserialisation form JSON to Java object
+   */
+  @Test
+  public void testLocaleStringDeserialisesToJavaObject() {
+    String auditStampJSON = 
+        "{" + 
+        "    \"locale\": {" + 
+        "      \"country\": \"US\"," + 
+        "      \"language\": \"en\"" + 
+        "    }," + 
+        "    \"value\": \"California\"" + 
+        "  }";
+    
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    LocaleString localeString = mapper.toJavaObject(auditStampJSON, LocaleString.class);
+    
+    assertEquals("US", localeString.getLocale().getCountry());
+    assertEquals("en", localeString.getLocale().getLanguage());
+    assertEquals("California", localeString.getValue());
   }
 
 }
