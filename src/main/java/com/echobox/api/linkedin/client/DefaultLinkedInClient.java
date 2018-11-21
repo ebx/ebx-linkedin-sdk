@@ -36,6 +36,7 @@ import com.echobox.api.linkedin.logging.LinkedInLogger;
 import com.echobox.api.linkedin.util.URLUtils;
 import com.echobox.api.linkedin.version.Version;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -223,7 +224,27 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
   @Override
   public boolean deleteObject(String object, Parameter... parameters) {
-    throw new UnsupportedOperationException("Delete is not yet implemented");
+    verifyParameterPresence("object", object);
+
+    String responseString = makeRequest(object, false, true, null, parameters);
+    try {
+      boolean isSuccess = false;
+      JSONObject jObj = new JSONObject(responseString);
+      if (jObj.has("success")) {
+        isSuccess = jObj.getBoolean("success");
+      }
+      if (jObj.has("result")) {
+        isSuccess = jObj.getString("result").contains("Successfully deleted");
+      }
+      return isSuccess;
+    } catch (JSONException jex) {
+      if (LOGGER.isTraceEnabled()) {
+        LOGGER.trace("no valid JSON returned while deleting a object, using returned String "
+            + "instead", jex);
+      }
+    }
+
+    return "true".equals(responseString);
   }
 
   @Override
@@ -320,7 +341,9 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     final String fullEndpoint =
         createEndpointForApiCall(endpoint, binaryAttachments != null && !binaryAttachments
             .isEmpty());
-    final String parameterString = toParameterString(parameters);
+    String parameterString = toParameterString(parameters);
+    final String finalParameterString =
+        StringUtils.isBlank(parameterString) ? "" : ("?" + parameterString);
 
     return makeRequestAndProcessResponse(new Requestor() {
       /**
@@ -329,13 +352,13 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
       @Override
       public Response makeRequest() throws IOException {
         if (executeAsDelete && !isHttpDeleteFallback()) {
-          return webRequestor.executeDelete(fullEndpoint + "?" + parameterString);
+          return webRequestor.executeDelete(fullEndpoint + finalParameterString);
         } else {
           return executeAsPost
               ? webRequestor.executePost(fullEndpoint, parameterString,
                   binaryAttachments == null ? null
                       : binaryAttachments.toArray(new BinaryAttachment[binaryAttachments.size()]))
-              : webRequestor.executeGet(fullEndpoint + "?" + parameterString);
+              : webRequestor.executeGet(fullEndpoint + finalParameterString);
         }
       }
     });
@@ -351,7 +374,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    *           If an error occurs when building the parameter string.
    */
   protected String toParameterString(Parameter... parameters) {
-    return toParameterString(true, parameters);
+    return toParameterString(apiVersion.isSpecifyFormat(), parameters);
   }
 
   /**
