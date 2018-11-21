@@ -256,7 +256,7 @@ public class DefaultWebRequestor implements WebRequestor {
 
   @Override
   public Response executeDelete(String url) throws IOException {
-     return execute(url, HttpMethod.DELETE);
+    return execute(url, HttpMethod.DELETE);
   }
 
   @Override
