@@ -36,7 +36,6 @@ import java.util.*;
  * @author <a href="http://restfb.com">Mark Allen</a>
  * @author Igor Kabiljo
  * @author Scott Hernandez
- * @since 1.6
  */
 public final class ReflectionUtils {
   /**
@@ -138,7 +137,6 @@ public final class ReflectionUtils {
    * @param annotationType
    *          The annotation type token.
    * @return A list of methods with the given annotation.
-   * @since 1.6.11
    */
   public static <T extends Annotation> List<Method> findMethodsWithAnnotation(Class<?> type, Class<T> annotationType) {
     ClassAnnotationCacheKey cacheKey = new ClassAnnotationCacheKey(type, annotationType);
@@ -375,7 +373,7 @@ public final class ReflectionUtils {
    * @param type
    *          Type token.
    * @return A new instance of {@code type}.
-   * @throws FacebookJsonMappingException
+   * @throws LinkedInJsonMappingException
    *           If an error occurs when creating a new instance ({@code type} is inaccessible, doesn't have a no-arg
    *           constructor, etc.)
    */
