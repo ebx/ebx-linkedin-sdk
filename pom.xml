@@ -34,11 +34,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20180813</version>
-		</dependency>
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.25</version>
@@ -60,7 +55,11 @@
 			<version>0.1.2</version>
 			<scope>runtime</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>com.eclipsesource.minimal-json</groupId>
+			<artifactId>minimal-json</artifactId>
+			<version>0.9.5</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>
@@ -121,9 +120,15 @@
 							<includeTestSourceDirectory>true</includeTestSourceDirectory>
 							<propertyExpansion>basedir=${project.basedir}</propertyExpansion>
 							<!-- Excluded as these are external dropins -->
-							<excludes>**/DateFormatStrategy.java,**/DateFormatStrategy.java,
-							**/DateUtils.java,**/ReflectionUtils.java,**/SimpleDateFormatStrategy.java,
-							**/JsonMapper.java,**/DefaultJsonMapper.java</excludes>
+							<excludes>**/DateFormatStrategy.java,
+								**/DateFormatStrategy.java,
+								**/DateUtils.java,
+								**/ReflectionUtils.java,
+								**/SimpleDateFormatStrategy.java,
+								**/JsonMapper.java,
+								**/DefaultJsonMapper.java,
+								**/JsonHelper.java,
+								**/ObjectUtil.java</excludes>
 						</configuration>
 						<goals>
 							<goal>check</goal>
