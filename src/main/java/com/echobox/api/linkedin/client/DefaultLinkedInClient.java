@@ -228,15 +228,14 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
     String responseString = makeRequest(object, false, true, null, parameters);
     try {
-      boolean isSuccess = false;
       JSONObject jObj = new JSONObject(responseString);
-      if (jObj.has("success")) {
-        isSuccess = jObj.getBoolean("success");
-      }
       if (jObj.has("result")) {
-        isSuccess = jObj.getString("result").contains("Successfully deleted");
+        return jObj.getString("result").contains("Successfully deleted");
       }
-      return isSuccess;
+      if (jObj.has("success")) {
+        return jObj.getBoolean("success");
+      }
+      return false;
     } catch (JSONException jex) {
       if (LOGGER.isTraceEnabled()) {
         LOGGER.trace("no valid JSON returned while deleting a object, using returned String "
