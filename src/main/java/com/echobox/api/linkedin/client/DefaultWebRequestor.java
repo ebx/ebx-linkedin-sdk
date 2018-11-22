@@ -20,18 +20,23 @@ package com.echobox.api.linkedin.client;
 import static java.lang.String.format;
 
 import com.echobox.api.linkedin.logging.LinkedInLogger;
+import com.echobox.api.linkedin.util.URLUtils;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential.Builder;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.InputStreamContent;
+import com.google.api.client.http.MultipartContent;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -42,6 +47,7 @@ import org.slf4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -58,6 +64,11 @@ import java.util.Map;
 public class DefaultWebRequestor implements WebRequestor {
 
   private static final Logger LOGGER = LinkedInLogger.getLoggerInstance();
+  
+  /**
+   * Arbitrary unique boundary marker for multipart {@code POST}s.
+   */
+  private static final String MULTIPART_BOUNDARY = "**boundarystringwhichwill**neverbeencounteredinthewild**";
 
   /**
    * Default charset to use for encoding/decoding strings.
@@ -91,6 +102,11 @@ public class DefaultWebRequestor implements WebRequestor {
   private DebugHeaderInfo debugHeaderInfo;
 
   private HttpRequestFactory requestFactory;
+  
+  /**
+   * By default this is true, to prevent breaking existing usage
+   */
+  private boolean autocloseBinaryAttachmentStream = true;
 
   /**
    * HTTP methods available
@@ -191,7 +207,100 @@ public class DefaultWebRequestor implements WebRequestor {
   @Override
   public Response executePost(String url, String parameters, BinaryAttachment... binaryAttachments)
       throws IOException {
-    throw new UnsupportedOperationException("POST has not been implemented yet");
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Executing a POST to " + url + " with parameters "
+          + (binaryAttachments.length > 0 ? "" : "(sent in request body): ")
+          + URLUtils.urlDecode(parameters)
+          + (binaryAttachments.length > 0 ? " and " + binaryAttachments.length
+              + " binary attachment[s]." : ""));
+    }
+    
+    if (binaryAttachments == null) {
+      binaryAttachments = new BinaryAttachment[0];
+    }
+
+    HttpResponse httpResponse = null;
+    try {
+      GenericUrl genericUrl = new GenericUrl(url);
+      
+      HttpRequest request = null;
+      if (binaryAttachments.length > 0) {
+        // Set the multipart content
+        MultipartContent content = new MultipartContent().setMediaType(
+            new HttpMediaType("multipart/form-data").setParameter("boundary", MULTIPART_BOUNDARY));
+        for (BinaryAttachment binaryAttachment : binaryAttachments) {
+          HttpContent byteContent = new InputStreamContent(binaryAttachment.getContentType(), binaryAttachment.getData());
+          MultipartContent.Part part = new MultipartContent.Part(byteContent);
+          part.setHeaders(new HttpHeaders().set(
+              "Content-Disposition",
+              String.format("form-data; name=\"content\"; filename=\"%s\"", binaryAttachment
+                  .getFilename())));
+
+          content.addPart(part);
+        }
+        request = requestFactory.buildPostRequest(genericUrl, content);
+      } else {
+        request = requestFactory.buildPostRequest(genericUrl, null);
+      }
+
+      request.setReadTimeout(DEFAULT_READ_TIMEOUT_IN_MS);
+      
+      // Allow subclasses to customize the connection if they'd like to - set their own headers,
+      // timeouts, etc.
+      customizeConnection(request);
+      
+      if (binaryAttachments.length > 0) {
+        request.setHeaders(new HttpHeaders().set("Connection", "Keep-Alive"));
+      }
+      
+      httpResponse = request.execute();
+      
+      fillHeaderAndDebugInfo(httpResponse.getHeaders());
+
+      Response response = fetchResponse(httpResponse);
+
+      if (LOGGER.isDebugEnabled()) {
+        LOGGER.debug(format("LinkedIn responded with %s", response));
+      }
+
+      return response;
+    } catch (HttpResponseException ex) {
+      fillHeaderAndDebugInfo(ex.getHeaders());
+
+      Response response = fetchResponse(ex.getStatusCode(), ex.getContent());
+
+      if (LOGGER.isDebugEnabled()) {
+        LOGGER.debug(format("LinkedIn responded with an error %s", response));
+      }
+
+      return response;
+    } finally {
+      if (autocloseBinaryAttachmentStream && binaryAttachments.length > 0) {
+        for (BinaryAttachment binaryAttachment : binaryAttachments) {
+          closeQuietly(binaryAttachment.getData());
+        }
+      }
+      
+      closeQuietly(httpResponse);
+    }
+  }
+  
+  /**
+   * Creates the form field name for the binary attachment filename by stripping off the file extension - for example,
+   * the filename "test.png" would return "test".
+   * 
+   * @param binaryAttachment
+   *          The binary attachment for which to create the form field name.
+   * @return The form field name for the given binary attachment.
+   */
+  protected String createFormFieldName(BinaryAttachment binaryAttachment) {
+    if (binaryAttachment.getFieldName() != null) {
+      return binaryAttachment.getFieldName();
+    }
+
+    String name = binaryAttachment.getFilename();
+    int fileExtensionIndex = name.lastIndexOf('.');
+    return fileExtensionIndex > 0 ? name.substring(0, fileExtensionIndex) : name;
   }
 
   /**
@@ -204,6 +313,26 @@ public class DefaultWebRequestor implements WebRequestor {
     // This implementation is a no-op
   }
 
+  /**
+   * Attempts to cleanly close a resource, swallowing any exceptions that might occur since there's no way to recover
+   * anyway.
+   * <p>
+   * It's OK to pass {@code null} in, this method will no-op in that case.
+   * 
+   * @param closeable
+   *          The resource to close.
+   */
+  protected void closeQuietly(Closeable closeable) {
+    if (closeable == null) {
+      return;
+    }
+    try {
+      closeable.close();
+    } catch (Exception t) {
+      LOGGER.warn(format("Unable to close %s: ", closeable), t);
+    }
+  }
+  
   /**
    * Attempts to cleanly disconnect the response, swallowing any exceptions that might occur since
    * there's no way to recover anyway.

@@ -43,6 +43,7 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -206,19 +207,28 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
   @Override
   public <T> T publish(String connection, Class<T> objectType, Parameter... parameters) {
-    throw new UnsupportedOperationException("Publish is not yet implemented");
+    return publish(connection, objectType, (List<BinaryAttachment>) null, parameters);
   }
 
   @Override
   public <T> T publish(String connection, Class<T> objectType,
       List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
-    throw new UnsupportedOperationException("Publish is not yet implemented");
+    verifyParameterPresence("connection", connection);
+
+    return jsonMapper.toJavaObject(makeRequest(connection, true, false, binaryAttachments, 
+        parameters), objectType);
   }
 
   @Override
   public <T> T publish(String connection, Class<T> objectType, BinaryAttachment binaryAttachment,
       Parameter... parameters) {
-    throw new UnsupportedOperationException("Publish is not yet implemented");
+    List<BinaryAttachment> attachments = null;
+    if (binaryAttachment != null) {
+      attachments = new ArrayList<>();
+      attachments.add(binaryAttachment);
+    }
+
+    return publish(connection, objectType, attachments, parameters);
   }
 
   @Override
