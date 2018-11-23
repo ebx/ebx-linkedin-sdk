@@ -22,7 +22,7 @@ package com.echobox.api.linkedin.types;
  * @author joanna
  *
  */
-public enum ShareMediaCetegory {
+public enum ShareMediaCategory {
   
   /**
    * Represents shared content that does not contain any media.
