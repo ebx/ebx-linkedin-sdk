@@ -143,8 +143,8 @@ public interface LinkedInClient {
    * @throws LinkedInException
    *           If an error occurs while performing the API call.
    */
-  <T> T publish(String connection, Class<T> objectType, Object jsonBody, List<BinaryAttachment> binaryAttachments,
-      Parameter... parameters);
+  <T> T publish(String connection, Class<T> objectType, Object jsonBody,
+      List<BinaryAttachment> binaryAttachments, Parameter... parameters);
 
   /**
    * Performs a LinkedIn API publish operation on the given {@code connection} and includes a 

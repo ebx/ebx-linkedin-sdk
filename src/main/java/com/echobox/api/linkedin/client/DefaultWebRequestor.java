@@ -352,6 +352,7 @@ public class DefaultWebRequestor implements WebRequestor {
   }
 
   /**
+<<<<<<< HEAD
    * Attempts to cleanly close a resource, swallowing any exceptions that might occur since 
    * there's no way to recover
    * anyway.
@@ -373,6 +374,8 @@ public class DefaultWebRequestor implements WebRequestor {
   }
 
   /**
+=======
+>>>>>>> master
    * Attempts to cleanly disconnect the response, swallowing any exceptions that might occur since
    * there's no way to recover anyway.
    * 
