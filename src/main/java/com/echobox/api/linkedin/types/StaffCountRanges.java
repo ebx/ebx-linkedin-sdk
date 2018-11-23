@@ -21,13 +21,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Staff count range enum
+ * Staff count ranges enum
  * This can be used to determine the integer ranges of the staff count
  * @author joanna
  *
  */
 @RequiredArgsConstructor
-public enum StaffCountRange {
+public enum StaffCountRanges {
   
   /**
    * 1 staff

@@ -61,7 +61,8 @@ public class ShareContent {
   private List<ContentEntity> contentEntities;
   
   /**
-   * The type of media represented by the contentEntities
+   * The type of media represented by the contentEntities. 
+   * Must correspond to the URN types in contentEntities.
    */
   @Getter
   @Setter

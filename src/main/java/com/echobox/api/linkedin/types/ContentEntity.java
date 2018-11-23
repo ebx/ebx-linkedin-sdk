@@ -57,14 +57,5 @@ public class ContentEntity {
   @Setter
   @LinkedIn
   private List<Thumbnail> thumbnails;
-  
-  /**
-   * The type of media represented by the contentEntities. 
-   * Must correspond to the URN types in contentEntities.
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private String shareMediaCategory;
 
 }
