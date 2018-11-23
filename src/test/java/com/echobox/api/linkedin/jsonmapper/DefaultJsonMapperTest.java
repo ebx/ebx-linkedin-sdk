@@ -169,7 +169,6 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     ContentEntity contentEntity = content.getContentEntities().get(0);
     assertEquals("urn:li:article:0", contentEntity.getEntity());
     assertEquals("https://www.example.com/content.html", contentEntity.getEntityLocation());
-    assertNull(contentEntity.getShareMediaCategory());
     assertEquals(1, contentEntity.getThumbnails().size());
     Thumbnail thumbnail = contentEntity.getThumbnails().get(0);
     assertEquals("https://www.example.com/image.jpg", thumbnail.getResolvedUrl());
