@@ -221,9 +221,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
         parameters), objectType);
   }
 
-  /**
-   * TODO: JSON BODY
-   */
   @Override
   public <T> T publish(String connection, Class<T> objectType, Object jsonBody,
       BinaryAttachment binaryAttachment, Parameter... parameters) {
@@ -349,7 +346,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
           return executeAsPost
               ? webRequestor.executePost(fullEndpoint, parameterString, 
                   jsonBody == null ? null : jsonMapper.toJson(jsonBody, true),
-//                  jsonBody,
                   binaryAttachments == null ? null
                       : binaryAttachments.toArray(new BinaryAttachment[binaryAttachments.size()]))
               : webRequestor.executeGet(fullEndpoint + "?" + parameterString);

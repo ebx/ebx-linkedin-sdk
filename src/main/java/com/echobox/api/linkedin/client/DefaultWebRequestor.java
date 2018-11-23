@@ -90,6 +90,10 @@ public class DefaultWebRequestor implements WebRequestor {
    * Default charset to use for encoding/decoding strings.
    */
   public static final String ENCODING_CHARSET = "UTF-8";
+  
+  private static final String CONTENT_TYPE = "application/json";
+  
+  private static final String FORMAT_HEADER = "x-li-format";
 
   /**
    * By default, how long should we wait for a response (in ms)?
@@ -226,8 +230,7 @@ public class DefaultWebRequestor implements WebRequestor {
     HttpResponse httpResponse = null;
     try {
       GenericUrl genericUrl = new GenericUrl(url + (!StringUtils.isEmpty(parameters)
-          ? "?" + parameters
-          : ""));
+          ? "?" + parameters : ""));
 
       HttpRequest request = null;
       if (binaryAttachments.length > 0) {
@@ -259,10 +262,10 @@ public class DefaultWebRequestor implements WebRequestor {
 
           // Ensure the headers are set to JSON
           request.setHeaders(new HttpHeaders()
-              .setContentType("application/json").set("x-li-format", "json"));
+              .setContentType(CONTENT_TYPE).set(FORMAT_HEADER, "json"));
 
           // Ensure the response headers are also set to JSON
-          request.setResponseHeaders(new HttpHeaders().set("x-li-format", "json"));
+          request.setResponseHeaders(new HttpHeaders().set(FORMAT_HEADER, "json"));
         } else {
           // Plain old POST request
           request = requestFactory.buildPostRequest(genericUrl, null);
