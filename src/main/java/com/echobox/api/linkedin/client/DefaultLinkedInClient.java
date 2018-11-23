@@ -206,22 +206,27 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   }
 
   @Override
-  public <T> T publish(String connection, Class<T> objectType, Parameter... parameters) {
-    return publish(connection, objectType, (List<BinaryAttachment>) null, parameters);
+  public <T> T publish(String connection, Class<T> objectType, Object jsonBody,
+      Parameter... parameters) {
+    return publish(connection, objectType, jsonBody, new ArrayList<>(), parameters);
   }
 
   @Override
-  public <T> T publish(String connection, Class<T> objectType,
+  public <T> T publish(String connection, Class<T> objectType, Object jsonBody,
       List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
     verifyParameterPresence("connection", connection);
 
-    return jsonMapper.toJavaObject(makeRequest(connection, true, false, binaryAttachments, 
+    return jsonMapper.toJavaObject(makeRequest(connection, true, false, jsonBody,
+        binaryAttachments,
         parameters), objectType);
   }
 
+  /**
+   * TODO: JSON BODY
+   */
   @Override
-  public <T> T publish(String connection, Class<T> objectType, BinaryAttachment binaryAttachment,
-      Parameter... parameters) {
+  public <T> T publish(String connection, Class<T> objectType, Object jsonBody,
+      BinaryAttachment binaryAttachment, Parameter... parameters) {
     List<BinaryAttachment> attachments = null;
     if (binaryAttachment != null) {
       attachments = new ArrayList<>();
@@ -290,7 +295,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    *           If an error occurs while making the LinkedIn API POST or processing the response.
    */
   protected String makeRequest(String endpoint, Parameter... parameters) {
-    return makeRequest(endpoint, false, false, null, parameters);
+    return makeRequest(endpoint, false, false, null, null, parameters);
   }
 
   /**
@@ -314,7 +319,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    *           If an error occurs while making the LinkedIn API POST or processing the response.
    */
   protected String makeRequest(String endpoint, final boolean executeAsPost,
-      final boolean executeAsDelete,
+      final boolean executeAsDelete, Object jsonBody,
       final List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
     verifyParameterLegality(parameters);
 
@@ -342,7 +347,9 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
           return webRequestor.executeDelete(fullEndpoint + "?" + parameterString);
         } else {
           return executeAsPost
-              ? webRequestor.executePost(fullEndpoint, parameterString,
+              ? webRequestor.executePost(fullEndpoint, parameterString, 
+                  jsonBody == null ? null : jsonMapper.toJson(jsonBody, true),
+//                  jsonBody,
                   binaryAttachments == null ? null
                       : binaryAttachments.toArray(new BinaryAttachment[binaryAttachments.size()]))
               : webRequestor.executeGet(fullEndpoint + "?" + parameterString);

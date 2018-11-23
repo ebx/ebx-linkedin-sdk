@@ -37,9 +37,11 @@ import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.http.MultipartContent;
+import com.google.api.client.http.json.JsonHttpContent;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.GenericData;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -55,6 +57,11 @@ import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.util.Map;
 
+import java.lang.reflect.Type;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 /**
  * Default implementation of a service that sends HTTP requests to the LinkedIn API endpoint.
  * 
@@ -68,7 +75,8 @@ public class DefaultWebRequestor implements WebRequestor {
   /**
    * Arbitrary unique boundary marker for multipart {@code POST}s.
    */
-  private static final String MULTIPART_BOUNDARY = "**boundarystringwhichwill**neverbeencounteredinthewild**";
+  private static final String MULTIPART_BOUNDARY =
+      "**boundarystringwhichwill**neverbeencounteredinthewild**";
 
   /**
    * Default charset to use for encoding/decoding strings.
@@ -96,6 +104,8 @@ public class DefaultWebRequestor implements WebRequestor {
   private static final int DEFAULT_READ_TIMEOUT_IN_MS = 180000;
 
   private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+  
+  private static final Gson GSON = new Gson();
 
   private Map<String, Object> currentHeaders;
 
@@ -200,12 +210,13 @@ public class DefaultWebRequestor implements WebRequestor {
   }
 
   @Override
-  public Response executePost(String url, String parameters) throws IOException {
-    return executePost(url, parameters, (BinaryAttachment[]) null);
+  public Response executePost(String url, String parameters, String jsonBody) throws IOException {
+    return executePost(url, parameters, jsonBody, new BinaryAttachment[0]);
   }
 
   @Override
-  public Response executePost(String url, String parameters, BinaryAttachment... binaryAttachments)
+  public Response executePost(String url, String parameters, String jsonBody,
+      BinaryAttachment... binaryAttachments)
       throws IOException {
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug("Executing a POST to " + url + " with parameters "
@@ -221,7 +232,7 @@ public class DefaultWebRequestor implements WebRequestor {
 
     HttpResponse httpResponse = null;
     try {
-      GenericUrl genericUrl = new GenericUrl(url);
+      GenericUrl genericUrl = new GenericUrl(url + (!StringUtils.isEmpty(parameters) ? "?" + parameters : ""));
       
       HttpRequest request = null;
       if (binaryAttachments.length > 0) {
@@ -229,7 +240,8 @@ public class DefaultWebRequestor implements WebRequestor {
         MultipartContent content = new MultipartContent().setMediaType(
             new HttpMediaType("multipart/form-data").setParameter("boundary", MULTIPART_BOUNDARY));
         for (BinaryAttachment binaryAttachment : binaryAttachments) {
-          HttpContent byteContent = new InputStreamContent(binaryAttachment.getContentType(), binaryAttachment.getData());
+          HttpContent byteContent = new InputStreamContent(binaryAttachment.getContentType(),
+              binaryAttachment.getData());
           MultipartContent.Part part = new MultipartContent.Part(byteContent);
           part.setHeaders(new HttpHeaders().set(
               "Content-Disposition",
@@ -240,7 +252,16 @@ public class DefaultWebRequestor implements WebRequestor {
         }
         request = requestFactory.buildPostRequest(genericUrl, content);
       } else {
-        request = requestFactory.buildPostRequest(genericUrl, null);
+        if (jsonBody != null) {
+          Type type = new TypeToken<Map<String, Object>>(){}.getType();
+          Map<String, String> myMap = GSON.fromJson(jsonBody, type);
+          JsonHttpContent jsonHttpContent = new JsonHttpContent(new JacksonFactory(), myMap);
+          request = requestFactory.buildPostRequest(genericUrl, jsonHttpContent);
+          request.setHeaders(new HttpHeaders().setAcceptEncoding(null).setContentType("application/json").set("x-li-format", "json"));
+          request.setResponseHeaders(new HttpHeaders().set("x-li-format", "json"));
+        } else {
+          request = requestFactory.buildPostRequest(genericUrl, null);
+        }
       }
 
       request.setReadTimeout(DEFAULT_READ_TIMEOUT_IN_MS);
@@ -253,27 +274,9 @@ public class DefaultWebRequestor implements WebRequestor {
         request.setHeaders(new HttpHeaders().set("Connection", "Keep-Alive"));
       }
       
-      httpResponse = request.execute();
-      
-      fillHeaderAndDebugInfo(httpResponse.getHeaders());
-
-      Response response = fetchResponse(httpResponse);
-
-      if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug(format("LinkedIn responded with %s", response));
-      }
-
-      return response;
+      return getResponse(request);
     } catch (HttpResponseException ex) {
-      fillHeaderAndDebugInfo(ex.getHeaders());
-
-      Response response = fetchResponse(ex.getStatusCode(), ex.getContent());
-
-      if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug(format("LinkedIn responded with an error %s", response));
-      }
-
-      return response;
+      return handleException(ex);
     } finally {
       if (autocloseBinaryAttachmentStream && binaryAttachments.length > 0) {
         for (BinaryAttachment binaryAttachment : binaryAttachments) {
@@ -285,8 +288,35 @@ public class DefaultWebRequestor implements WebRequestor {
     }
   }
   
+  private Response getResponse(HttpRequest request) throws IOException {
+    HttpResponse httpResponse = request.execute();
+    
+    fillHeaderAndDebugInfo(httpResponse.getHeaders());
+
+    Response response = fetchResponse(httpResponse);
+    
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug(format("LinkedIn responded with %s", response));
+    }
+    
+    return response;
+  }
+  
+  private Response handleException(HttpResponseException ex) {
+    fillHeaderAndDebugInfo(ex.getHeaders());
+
+    Response response = fetchResponse(ex.getStatusCode(), ex.getContent());
+
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug(format("LinkedIn responded with an error %s", response));
+    }
+
+    return response;
+  }
+  
   /**
-   * Creates the form field name for the binary attachment filename by stripping off the file extension - for example,
+   * Creates the form field name for the binary attachment filename by stripping off the 
+   * file extension - for example,
    * the filename "test.png" would return "test".
    * 
    * @param binaryAttachment
@@ -314,7 +344,8 @@ public class DefaultWebRequestor implements WebRequestor {
   }
 
   /**
-   * Attempts to cleanly close a resource, swallowing any exceptions that might occur since there's no way to recover
+   * Attempts to cleanly close a resource, swallowing any exceptions that might occur since 
+   * there's no way to recover
    * anyway.
    * <p>
    * It's OK to pass {@code null} in, this method will no-op in that case.
@@ -408,27 +439,10 @@ public class DefaultWebRequestor implements WebRequestor {
       // Allow subclasses to customize the connection if they'd like to - set their own headers,
       // timeouts, etc.
       customizeConnection(request);
-      httpResponse = request.execute();
 
-      fillHeaderAndDebugInfo(httpResponse.getHeaders());
-
-      Response response = fetchResponse(httpResponse);
-
-      if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug(format("LinkedIn responded with %s", response));
-      }
-
-      return response;
+      return getResponse(request);
     } catch (HttpResponseException ex) {
-      fillHeaderAndDebugInfo(ex.getHeaders());
-
-      Response response = fetchResponse(ex.getStatusCode(), ex.getContent());
-
-      if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug(format("LinkedIn responded with an error %s", response));
-      }
-
-      return response;
+      return handleException(ex);
     } finally {
       closeQuietly(httpResponse);
     }
