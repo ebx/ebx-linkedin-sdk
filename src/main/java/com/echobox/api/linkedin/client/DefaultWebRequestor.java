@@ -26,22 +26,19 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential.Builder;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.InputStreamContent;
-import com.google.api.client.http.MultipartContent;
 import com.google.api.client.http.json.JsonHttpContent;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.GenericData;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -54,13 +51,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.security.GeneralSecurityException;
 import java.util.Map;
-
-import java.lang.reflect.Type;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 /**
  * Default implementation of a service that sends HTTP requests to the LinkedIn API endpoint.
@@ -71,7 +64,7 @@ import com.google.gson.reflect.TypeToken;
 public class DefaultWebRequestor implements WebRequestor {
 
   private static final Logger LOGGER = LinkedInLogger.getLoggerInstance();
-  
+
   /**
    * Arbitrary unique boundary marker for multipart {@code POST}s.
    */
@@ -104,7 +97,7 @@ public class DefaultWebRequestor implements WebRequestor {
   private static final int DEFAULT_READ_TIMEOUT_IN_MS = 180000;
 
   private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-  
+
   private static final Gson GSON = new Gson();
 
   private Map<String, Object> currentHeaders;
@@ -112,7 +105,7 @@ public class DefaultWebRequestor implements WebRequestor {
   private DebugHeaderInfo debugHeaderInfo;
 
   private HttpRequestFactory requestFactory;
-  
+
   /**
    * By default this is true, to prevent breaking existing usage
    */
@@ -225,55 +218,67 @@ public class DefaultWebRequestor implements WebRequestor {
           + (binaryAttachments.length > 0 ? " and " + binaryAttachments.length
               + " binary attachment[s]." : ""));
     }
-    
+
     if (binaryAttachments == null) {
       binaryAttachments = new BinaryAttachment[0];
     }
 
     HttpResponse httpResponse = null;
     try {
-      GenericUrl genericUrl = new GenericUrl(url + (!StringUtils.isEmpty(parameters) ? "?" + parameters : ""));
-      
+      GenericUrl genericUrl = new GenericUrl(url + (!StringUtils.isEmpty(parameters)
+          ? "?" + parameters
+          : ""));
+
       HttpRequest request = null;
       if (binaryAttachments.length > 0) {
         // Set the multipart content
-        MultipartContent content = new MultipartContent().setMediaType(
-            new HttpMediaType("multipart/form-data").setParameter("boundary", MULTIPART_BOUNDARY));
-        for (BinaryAttachment binaryAttachment : binaryAttachments) {
-          HttpContent byteContent = new InputStreamContent(binaryAttachment.getContentType(),
-              binaryAttachment.getData());
-          MultipartContent.Part part = new MultipartContent.Part(byteContent);
-          part.setHeaders(new HttpHeaders().set(
-              "Content-Disposition",
-              String.format("form-data; name=\"content\"; filename=\"%s\"", binaryAttachment
-                  .getFilename())));
-
-          content.addPart(part);
-        }
-        request = requestFactory.buildPostRequest(genericUrl, content);
+        // does not need to be implemented until rich media implemetation
+        // MultipartContent content = new MultipartContent().setMediaType(
+        // new HttpMediaType("multipart/form-data")
+        // .setParameter("boundary", MULTIPART_BOUNDARY));
+        // for (BinaryAttachment binaryAttachment : binaryAttachments) {
+        // HttpContent byteContent = new InputStreamContent(binaryAttachment.getContentType(),
+        // binaryAttachment.getData());
+        // MultipartContent.Part part = new MultipartContent.Part(byteContent);
+        // part.setHeaders(new HttpHeaders().set(
+        // "Content-Disposition",
+        // String.format("form-data; name=\"content\"; filename=\"%s\"", binaryAttachment
+        // .getFilename())));
+        //
+        // content.addPart(part);
+        // }
+        // request = requestFactory.buildPostRequest(genericUrl, content);
       } else {
         if (jsonBody != null) {
-          Type type = new TypeToken<Map<String, Object>>(){}.getType();
+          // Convert the JSON into a map
+          Type type = new TypeToken<Map<String, Object>>() {}.getType();
           Map<String, String> myMap = GSON.fromJson(jsonBody, type);
+
           JsonHttpContent jsonHttpContent = new JsonHttpContent(new JacksonFactory(), myMap);
           request = requestFactory.buildPostRequest(genericUrl, jsonHttpContent);
-          request.setHeaders(new HttpHeaders().setAcceptEncoding(null).setContentType("application/json").set("x-li-format", "json"));
+
+          // Ensure the headers are set to JSON
+          request.setHeaders(new HttpHeaders()
+              .setContentType("application/json").set("x-li-format", "json"));
+
+          // Ensure the response headers are also set to JSON
           request.setResponseHeaders(new HttpHeaders().set("x-li-format", "json"));
         } else {
+          // Plain old POST request
           request = requestFactory.buildPostRequest(genericUrl, null);
         }
       }
 
       request.setReadTimeout(DEFAULT_READ_TIMEOUT_IN_MS);
-      
+
       // Allow subclasses to customize the connection if they'd like to - set their own headers,
       // timeouts, etc.
       customizeConnection(request);
-      
+
       if (binaryAttachments.length > 0) {
         request.setHeaders(new HttpHeaders().set("Connection", "Keep-Alive"));
       }
-      
+
       return getResponse(request);
     } catch (HttpResponseException ex) {
       return handleException(ex);
@@ -283,25 +288,25 @@ public class DefaultWebRequestor implements WebRequestor {
           closeQuietly(binaryAttachment.getData());
         }
       }
-      
+
       closeQuietly(httpResponse);
     }
   }
-  
+
   private Response getResponse(HttpRequest request) throws IOException {
     HttpResponse httpResponse = request.execute();
-    
+
     fillHeaderAndDebugInfo(httpResponse.getHeaders());
 
     Response response = fetchResponse(httpResponse);
-    
+
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug(format("LinkedIn responded with %s", response));
     }
-    
+
     return response;
   }
-  
+
   private Response handleException(HttpResponseException ex) {
     fillHeaderAndDebugInfo(ex.getHeaders());
 
@@ -313,7 +318,7 @@ public class DefaultWebRequestor implements WebRequestor {
 
     return response;
   }
-  
+
   /**
    * Creates the form field name for the binary attachment filename by stripping off the 
    * file extension - for example,
@@ -363,7 +368,7 @@ public class DefaultWebRequestor implements WebRequestor {
       LOGGER.warn(format("Unable to close %s: ", closeable), t);
     }
   }
-  
+
   /**
    * Attempts to cleanly disconnect the response, swallowing any exceptions that might occur since
    * there's no way to recover anyway.
@@ -401,7 +406,7 @@ public class DefaultWebRequestor implements WebRequestor {
     int read;
     byte[] chunk = new byte[bufferSize];
     while ((read = source.read(chunk)) > 0) {
-      destination.write(chunk, 0, read);      
+      destination.write(chunk, 0, read);
     }
   }
 
