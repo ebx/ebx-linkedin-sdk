@@ -56,10 +56,16 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-oauth2</artifactId>
+			<version>v1-rev145-1.25.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.eclipsesource.minimal-json</groupId>
 			<artifactId>minimal-json</artifactId>
 			<version>0.9.5</version>
 		</dependency>
+
 	</dependencies>
 
 	<repositories>
@@ -120,15 +126,27 @@
 							<includeTestSourceDirectory>true</includeTestSourceDirectory>
 							<propertyExpansion>basedir=${project.basedir}</propertyExpansion>
 							<!-- Excluded as these are external dropins -->
-							<excludes>**/DateFormatStrategy.java,
+							<excludes>
 								**/DateFormatStrategy.java,
 								**/DateUtils.java,
 								**/ReflectionUtils.java,
 								**/SimpleDateFormatStrategy.java,
 								**/JsonMapper.java,
 								**/DefaultJsonMapper.java,
+								**/BaseLinkedInClient.java,
+								**/BinaryAttachment.java,
+								**/Connection.java,
+								**/ConnectionIterator.java,
+								**/LinkedInClient.java,
+								**/Parameter.java,
+								**/WebRequestor.java,
+								**/LinkedInExceptionMapper.java,
+								**/LinkedInNetworkException.java,
+								**/ResponseErrorJsonParsingException.java,
+								**/URLUtils.java,
 								**/JsonHelper.java,
-								**/ObjectUtil.java</excludes>
+								**/ObjectUtil.java
+							</excludes>
 						</configuration>
 						<goals>
 							<goal>check</goal>
