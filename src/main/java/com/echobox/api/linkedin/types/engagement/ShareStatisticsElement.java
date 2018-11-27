@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * Encapsulate share statistic elements
  * @author clementcaylux on 27/11/2018.
  */
 class ShareStatisticsElement {

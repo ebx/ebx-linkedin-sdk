@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * class containing statistics based on a share
  * @author clementcaylux on 27/11/2018.
  */
 class TotalShareStatistics {

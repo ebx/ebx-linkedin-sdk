@@ -27,12 +27,17 @@ import java.util.List;
 /**
  * @author clementcaylux on 27/11/2018.
  */
-public class EngagementTest {
-  
+public class ShareTest {
+
+  /**
+   * test that an engagement JSON is correctly deserialized
+   * json taken from : 
+   * https://developer.linkedin.com/docs/guide/v2/organizations/share-statistics#specific
+   */
   @Test
   public void testEngagementJson() {
     Gson gson = new Gson();
-    ShareStatistics shareStatistics = gson.fromJson(
+    Share shareStatistics = gson.fromJson(
         "{\n" + "  \"elements\": [\n" + "    {\n" + "      \"totalShareStatistics\": {\n"
             + "        \"shareCount\": 5,\n" + "        \"clickCount\": 78,\n"
             + "        \"engagement\": 0.022886324947985624,\n" + "        \"likeCount\": 14,\n"
@@ -46,7 +51,7 @@ public class EngagementTest {
             + "      \"share\": \"urn:li:share:1000001\",\n"
             + "      \"organizationalEntity\": \"urn:li:organization:2414183\"\n" + "    }\n"
             + "  ],\n" + "  \"paging\": {\n" + "    \"count\": 10,\n" + "    \"start\": 0,\n"
-            + "    \"links\": []\n" + "  }\n" + "}", ShareStatistics.class);
+            + "    \"links\": []\n" + "  }\n" + "}", Share.class);
 
     Paging paging = shareStatistics.getPaging();
     
