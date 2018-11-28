@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types.engagement;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,13 +30,16 @@ class ShareStatisticsElement {
   
   @Getter
   @Setter
+  @LinkedIn
   private TotalShareStatistics totalShareStatistics;
   
   @Getter
   @Setter
+  @LinkedIn
   private String share;
   
   @Getter
   @Setter
+  @LinkedIn
   private String organizationalEntity;
 }

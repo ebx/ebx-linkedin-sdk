@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types.engagement;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,26 +30,32 @@ class TotalShareStatistics {
   
   @Getter 
   @Setter
+  @LinkedIn
   private int shareCount;
 
   @Getter 
   @Setter
+  @LinkedIn
   private int clickCount;
 
   @Getter 
   @Setter
+  @LinkedIn
   private double engagement;
 
   @Getter 
   @Setter
+  @LinkedIn
   private int likeCount;
 
   @Getter 
   @Setter
+  @LinkedIn
   private int impressionCount;
 
   @Getter 
   @Setter
+  @LinkedIn
   private int commentCount;
   
 }

@@ -17,7 +17,7 @@
 
 package com.echobox.api.linkedin.types.engagement;
 
-import com.google.gson.Gson;
+import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapper;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -36,8 +36,8 @@ public class ShareTest {
    */
   @Test
   public void testEngagementJson() {
-    Gson gson = new Gson();
-    Share shareStatistics = gson.fromJson(
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    Share shareStatistics = mapper.toJavaObject(
         "{\n" + "  \"elements\": [\n" + "    {\n" + "      \"totalShareStatistics\": {\n"
             + "        \"shareCount\": 5,\n" + "        \"clickCount\": 78,\n"
             + "        \"engagement\": 0.022886324947985624,\n" + "        \"likeCount\": 14,\n"

@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types.engagement;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,14 +32,17 @@ class Paging {
 
   @Getter 
   @Setter
+  @LinkedIn
   private int count;
 
   @Getter 
   @Setter
+  @LinkedIn
   private int start;
 
   @Getter 
   @Setter
+  @LinkedIn
   List<String> links;
   
 }
