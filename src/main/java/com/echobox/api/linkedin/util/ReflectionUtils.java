@@ -140,7 +140,6 @@ public final class ReflectionUtils {
    * @param annotationType
    *          The annotation type token.
    * @return A list of methods with the given annotation.
-   * @since 1.6.11
    */
   public static <T extends Annotation> List<Method> findMethodsWithAnnotation(Class<?> type, Class<T> annotationType) {
     ClassAnnotationCacheKey cacheKey = new ClassAnnotationCacheKey(type, annotationType);
