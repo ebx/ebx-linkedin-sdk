@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.engagement;
+package com.echobox.api.linkedin.types.statistics;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.Paging;
@@ -27,20 +27,18 @@ import java.util.List;
 
 
 /**
- * The class containing all information regarding a share
- * @author clementcaylux on 27/11/2018.
+ * @author clementcaylux on 03/12/2018.
  */
-public class Share {
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  private List<ShareStatisticsElement> elements;
+public class OrganizationFollowerStatistics {
   
   @Getter
   @Setter
   @LinkedIn
   private Paging paging;
   
+  @Getter
+  @Setter
+  @LinkedIn
+  private List<OrganizationFollowerStatisticsElement> elements;
   
 }

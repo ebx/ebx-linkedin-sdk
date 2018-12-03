@@ -15,34 +15,25 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.engagement;
+package com.echobox.api.linkedin.types.statistics;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
-
 /**
- * @author clementcaylux on 27/11/2018.
+ * @author clementcaylux on 03/12/2018.
  */
-class Paging {
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  private int count;
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  private int start;
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  List<String> links;
+public class CountByIndustry {
   
+  @Getter
+  @Setter
+  @LinkedIn
+  private FollowerCount followerCounts;
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private String industry;
 }
