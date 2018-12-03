@@ -521,17 +521,17 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
   
   @Test
   public void testSocialActionJSONToJavaObject() {
-    String socialActionJSON = "{\n"  
-        + "\"commentsSummary\": " 
+    String socialActionJSON = "{\n"
+        + "\"commentsSummary\": "
         + "{\n"
-        + " \"totalFirstLevelComments\": 7,\n" 
+        + " \"totalFirstLevelComments\": 7,\n"
         + " \"aggregatedTotalComments\": 10\n"
-        + "},\n" 
-        + "\"likesSummary\": {\n" 
-        + "        \"totalLikes\": 3\n" 
+        + "},\n"
+        + "\"likesSummary\": {\n"
+        + "        \"totalLikes\": 3\n"
         + "},\n"
         + "\"$URN\": \"urn:li:activity:6250751010101421234\"\n" + "}";
-  
+    
     DefaultJsonMapper mapper = new DefaultJsonMapper();
     SocialAction socialAction = mapper.toJavaObject(socialActionJSON, SocialAction.class);
     
@@ -545,20 +545,20 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
   
   @Test
   public void testLikeActionJSONToJavaObject() {
-    String likeActionJSON = "{\n" 
+    String likeActionJSON = "{\n"
         + "\"actor\": \"urn:li:person:YI9MSsWFny\",\n"
         + "\"created\": {\n"
         + "     \"actor\": \"urn:li:person:YI9MSsWFny\",\n"
-        + "     \"time\": 1501865637259\n" 
+        + "     \"time\": 1501865637259\n"
         + " },\n"
         + "\"lastModified\": {\n"
         + "     \"actor\": \"urn:li:person:YI9MSsWFny\",\n"
-        + "     \"time\": 1501865637259\n" 
+        + "     \"time\": 1501865637259\n"
         + " },\n"
         + "\"object\": \"urn:li:activity:62990729270024273898\",\n"
         + "\"$URN\": \"urn:li:like:(urn:li:person:123ABC,urn:li:activity:62990729270024273898)\"\n"
         + " }";
-  
+    
     DefaultJsonMapper mapper = new DefaultJsonMapper();
     LikeAction likeAction = mapper.toJavaObject(likeActionJSON, LikeAction.class);
     
@@ -570,64 +570,64 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     assertEquals(new Long(1501865637259L), likeAction.getLastModified().getTime());
     assertNull(likeAction.getLastModified().getImpersonator());
     assertEquals("urn:li:activity:62990729270024273898", likeAction.getObject());
-    assertEquals("urn:li:like:(urn:li:person:123ABC," 
+    assertEquals("urn:li:like:(urn:li:person:123ABC,"
         + "urn:li:activity:62990729270024273898)", likeAction.getUrn());
   }
   
   @Test
   public void testCommentActionJSONToJavaObject() {
-    String commentActionJSON = "{\n" 
+    String commentActionJSON = "{\n"
         + "\"actor\": \"urn:li:person:PPT1JOhhnE\",\n"
-        + " \"content\": [\n" 
+        + " \"content\": [\n"
         + "  {\n"
         + "   \"type\": \"IMAGE\",\n"
-        + "   \"url\": \"http://image-store.slidesharecdn.com/dcdd972a-5142-499" 
+        + "   \"url\": \"http://image-store.slidesharecdn.com/dcdd972a-5142-499"
         + "1-af1b-5d6094039c5b-original.png\"\n"
-        + "  }\n" 
-        + " ],\n" 
+        + "  }\n"
+        + " ],\n"
         + " \"created\": {\n"
         + "    \"actor\": \"urn:li:person:PPT1JOhhnE\",\n"
-        + "    \"time\": 1497973425097\n" 
+        + "    \"time\": 1497973425097\n"
         + " },\n"
-        + " \"id\": \"6282955928685940736\",\n" 
+        + " \"id\": \"6282955928685940736\",\n"
         + " \"lastModified\": {\n"
         + "   \"actor\": \"6282955928685940736\",\n"
-        + "   \"time\": 1497973425097\n" 
+        + "   \"time\": 1497973425097\n"
         + " },\n"
-        + " \"likesSummary\": {\n" 
+        + " \"likesSummary\": {\n"
         + "   \"aggregatedTotalLikes\": 2,\n"
         + "   \"likedByCurrentUser\": false,\n"
         + "   \"selectedLikes\": [\n"
         + "      \"urn:li:like:(urn:li:person:y2eHFCCpWi,urn:li:activity:6273189577469632512)\",\n"
         + "      \"urn:li:like:(urn:li:person:V4MtLfifrq,urn:li:activity:6273189577469632512)\"\n"
         + "    ],\n"
-        + "   \"totalLikes\": 2\n" 
+        + "   \"totalLikes\": 2\n"
         + "  },\n"
-        + "  \"message\": {\n" 
+        + "  \"message\": {\n"
         + "    \"attributes\": [],\n"
-        + "    \"text\": \"Test Pic in comment\"\n" 
+        + "    \"text\": \"Test Pic in comment\"\n"
         + "  },\n"
         + "  \"object\": \"urn:li:activity:6273189577469632512\",\n"
-        + "  \"$URN\": \"urn:li:comment:(urn:li:activity:" 
+        + "  \"$URN\": \"urn:li:comment:(urn:li:activity:"
         + "6273189577469632512,6282955928685940736)\"\n"
         + "}";
-  
+    
     DefaultJsonMapper mapper = new DefaultJsonMapper();
     CommentAction commentAction = mapper.toJavaObject(commentActionJSON, CommentAction.class);
     
     assertEquals("urn:li:person:PPT1JOhhnE", commentAction.getActor());
     assertEquals(1, commentAction.getContent().size());
     assertEquals("IMAGE", commentAction.getContent().get(0).getType());
-    assertEquals("http://image-store.slidesharecdn.com/dcdd972a-5142" 
-            + "-4991-af1b-5d6094039c5b-original.png", commentAction.getContent().get(0).getUrl());
+    assertEquals("http://image-store.slidesharecdn.com/dcdd972a-5142"
+        + "-4991-af1b-5d6094039c5b-original.png", commentAction.getContent().get(0).getUrl());
     assertEquals(new Long(6282955928685940736L), commentAction.getId());
     assertEquals(new Integer(2), commentAction.getLikesSummary().getAggregatedTotalLikes());
     assertEquals(new Integer(2), commentAction.getLikesSummary().getTotalLikes());
     assertFalse(commentAction.getLikesSummary().getLikedByCurrentUser());
     assertEquals(2, commentAction.getLikesSummary().getSelectedLikes().size());
-    assertEquals("urn:li:like:(urn:li:person:y2eHFCCpWi,urn:li:activity:" 
+    assertEquals("urn:li:like:(urn:li:person:y2eHFCCpWi,urn:li:activity:"
         + "6273189577469632512)", commentAction.getLikesSummary().getSelectedLikes().get(0));
-    assertEquals("urn:li:like:(urn:li:person:V4MtLfifrq,urn:li:activity" 
+    assertEquals("urn:li:like:(urn:li:person:V4MtLfifrq,urn:li:activity"
         + ":6273189577469632512)", commentAction.getLikesSummary().getSelectedLikes().get(1));
     
     assertTrue(commentAction.getMessage().getAttributes().isEmpty());
