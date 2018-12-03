@@ -1,16 +1,18 @@
-/**
- * ***********************************************************************
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- * ECHOBOX CONFIDENTIAL
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * All Rights Reserved.
- *
- * NOTICE: All information contained herein is, and remains the property of Echobox Ltd. and its
- * suppliers, if any. The intellectual and technical concepts contained herein are proprietary to
- * Echobox Ltd. and its suppliers and may be covered by Patents, patents in process, and are
- * protected by trade secret or copyright law. Dissemination of this information or reproduction of
- * this material, in any format, is strictly forbidden unless prior written permission is obtained
- * from Echobox Ltd.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.echobox.api.linkedin.types.statistics;
@@ -29,7 +31,8 @@ public class StatisticsTest {
 
   /**
    * test that an statistics JSON is correctly deserialized
-   * json taken from : https://developer.linkedin.com/docs/guide/v2/organizations/follower-statistics
+   * json taken from : https://developer.linkedin.com/docs/guide/v2/organizations/
+   * follower-statistics
    * 
    */
   @Test
@@ -56,13 +59,7 @@ public class StatisticsTest {
         + "          \"staffCountRange\": \"SIZE_501_TO_1000\"\n" + "        },\n" + "        {\n"
         + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 1,\n"
         + "            \"paidFollowerCount\": 0\n" + "          },\n"
-        + "          \"staffCountRange\": \"SIZE_1001_TO_5000\"\n" + "        },\n" + "        {\n"
-        + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 25,\n"
-        + "            \"paidFollowerCount\": 0\n" + "          },\n"
-        + "          \"staffCountRange\": \"SIZE_5001_TO_10000\"\n" + "        },\n" + "        {\n"
-        + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 51,\n"
-        + "            \"paidFollowerCount\": 0\n" + "          },\n"
-        + "          \"staffCountRange\": \"SIZE_10001_OR_MORE\"\n" + "        }\n" + "      ],\n"
+        + "          \"staffCountRange\": \"SIZE_1001_TO_5000\"\n" + "        }\n" + "      ],\n"
         + "      \"followerCountsByIndustry\": [\n" + "        {\n"
         + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 0,\n"
         + "            \"paidFollowerCount\": 18\n" + "          },\n"
@@ -73,31 +70,10 @@ public class StatisticsTest {
         + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 24,\n"
         + "            \"paidFollowerCount\": 0\n" + "          },\n"
         + "          \"industry\": \"ACCOUNTING\"\n" + "        },\n" + "        {\n"
-        + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 0,\n"
-        + "            \"paidFollowerCount\": 0\n" + "          },\n"
-        + "          \"industry\": \"EDUCATION_MANAGEMENT\"\n" + "        },\n" + "        {\n"
-        + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 2,\n"
-        + "            \"paidFollowerCount\": 0\n" + "          },\n"
-        + "          \"industry\": \"COMPUTER_SOFTWARE\"\n" + "        },\n" + "        {\n"
-        + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 0,\n"
-        + "            \"paidFollowerCount\": 0\n" + "          },\n"
-        + "          \"industry\": \"ALTERNATIVE_MEDICINE\"\n" + "        },\n" + "        {\n"
         + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 1,\n"
         + "            \"paidFollowerCount\": 0\n" + "          },\n"
-        + "          \"industry\": \"ANIMATION\"\n" + "        },\n" + "        {\n"
-        + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 1,\n"
-        + "            \"paidFollowerCount\": 0\n" + "          },\n"
-        + "          \"industry\": \"APPAREL_AND_FASHION\"\n" + "        },\n" + "        {\n"
-        + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 0,\n"
-        + "            \"paidFollowerCount\": 12\n" + "          },\n"
-        + "          \"industry\": \"LIBRARIES\"\n" + "        },\n" + "        {\n"
-        + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 1,\n"
-        + "            \"paidFollowerCount\": 0\n" + "          },\n"
-        + "          \"industry\": \"INFORMATION_TECHNOLOGY_AND_SERVICES\"\n" + "        },\n"
-        + "        {\n" + "          \"followerCounts\": {\n"
-        + "            \"organicFollowerCount\": 1,\n" + "            \"paidFollowerCount\": 0\n"
-        + "          },\n" + "          \"industry\": \"FINANCIAL_SERVICES\"\n" + "        }\n"
-        + "      ],\n" + "      \"followerCountsByFunction\": [\n" + "        {\n"
+        + "          \"industry\": \"FINANCIAL_SERVICES\"\n" + "        }\n" + "      ],\n"
+        + "      \"followerCountsByFunction\": [\n" + "        {\n"
         + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 1662,\n"
         + "            \"paidFollowerCount\": 0\n" + "          },\n"
         + "          \"function\": \"urn:li:function:22\"\n" + "        },\n" + "        {\n"
@@ -136,22 +112,7 @@ public class StatisticsTest {
         + "          \"function\": \"urn:li:function:3\"\n" + "        },\n" + "        {\n"
         + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 1,\n"
         + "            \"paidFollowerCount\": 0\n" + "          },\n"
-        + "          \"function\": \"urn:li:function:4\"\n" + "        },\n" + "        {\n"
-        + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 2,\n"
-        + "            \"paidFollowerCount\": 0\n" + "          },\n"
-        + "          \"function\": \"urn:li:function:5\"\n" + "        },\n" + "        {\n"
-        + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 3,\n"
-        + "            \"paidFollowerCount\": 0\n" + "          },\n"
-        + "          \"function\": \"urn:li:function:6\"\n" + "        },\n" + "        {\n"
-        + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 1,\n"
-        + "            \"paidFollowerCount\": 0\n" + "          },\n"
-        + "          \"function\": \"urn:li:function:7\"\n" + "        },\n" + "        {\n"
-        + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 1237,\n"
-        + "            \"paidFollowerCount\": 18\n" + "          },\n"
-        + "          \"function\": \"urn:li:function:8\"\n" + "        },\n" + "        {\n"
-        + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 22,\n"
-        + "            \"paidFollowerCount\": 0\n" + "          },\n"
-        + "          \"function\": \"urn:li:function:10\"\n" + "        }\n" + "      ],\n"
+        + "          \"function\": \"urn:li:function:4\"\n" + "        }\n" + "      ],\n"
         + "      \"followerCountsByAssociationType\": [\n" + "        {\n"
         + "          \"followerCounts\": {\n" + "            \"organicFollowerCount\": 1228,\n"
         + "            \"paidFollowerCount\": 184\n" + "          }\n" + "        }\n"
@@ -181,7 +142,7 @@ public class StatisticsTest {
         + "            \"paidFollowerCount\": 0\n" + "          },\n"
         + "          \"seniority\": \"urn:li:seniority:9\"\n" + "        }\n" + "      ],\n"
         + "      \"organizationalEntity\": \"urn:li:organization:1234\"\n" + "    }\n" + "  ]\n"
-        + "}\n";
+        + "}";
 
     DefaultJsonMapper defaultJsonMapper = new DefaultJsonMapper();
     OrganizationFollowerStatistics organizationFollowerStatistics =
