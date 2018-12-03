@@ -20,6 +20,8 @@ import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapper;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.List;
+
 /**
  * @author clementcaylux on 03/12/2018.
  */
@@ -185,8 +187,36 @@ public class StatisticsTest {
     OrganizationFollowerStatistics organizationFollowerStatistics =
         defaultJsonMapper.toJavaObject(json, OrganizationFollowerStatistics.class);
 
-    OrganizationFollowerStatisticsElement organizationFollowerStatisticsElement =
+    OrganizationFollowerStatisticsElement firstElement =
         organizationFollowerStatistics.getElements().get(0);
+
+    FollowerCount totalFollowerCounts = firstElement.getTotalFollowerCounts();
+    List<CountByStaffCountRange> followerCountsByStaffCountRange =
+        firstElement.getFollowerCountsByStaffCountRange();
+    List<CountByIndustry> followerCountsByIndustry = firstElement.getFollowerCountsByIndustry();
+    List<CountByFunction> followerCountsByFunction = firstElement.getFollowerCountsByFunction();
+    List<CountBySeniority> followerCountsBySeniority = firstElement.getFollowerCountsBySeniority();
+    List<CountByAssociationType> followerCountsByAssociationType =
+        firstElement.getFollowerCountsByAssociationType();
+
+    Assert.assertEquals(33916, totalFollowerCounts.getOrganicFollowerCount());
+    Assert.assertEquals(268, totalFollowerCounts.getPaidFollowerCount());
+    Assert.assertEquals(6, 
+        followerCountsByStaffCountRange.get(0).getFollowerCounts().getOrganicFollowerCount());
+    Assert.assertEquals("SIZE_2_TO_10", 
+        followerCountsByStaffCountRange.get(1).getStaffCountRange());
+    Assert.assertEquals(18, 
+        followerCountsByIndustry.get(0).getFollowerCounts().getPaidFollowerCount());
+    Assert.assertEquals("FUNDRAISING", followerCountsByIndustry.get(1).getIndustry());
+    Assert.assertEquals(1662, 
+        followerCountsByFunction.get(0).getFollowerCounts().getOrganicFollowerCount());
+    Assert.assertEquals("urn:li:function:12", followerCountsByFunction.get(2).getFunction());
+    Assert.assertEquals(1228, 
+        followerCountsByAssociationType.get(0).getFollowerCounts().getOrganicFollowerCount());
+    Assert.assertEquals(1, 
+        followerCountsBySeniority.get(0).getFollowerCounts().getOrganicFollowerCount());
+    Assert.assertEquals("urn:li:seniority:3", followerCountsBySeniority.get(1).getSeniority());
+    Assert.assertEquals("urn:li:organization:1234", firstElement.getOrganizationalEntity());
 
   }
 }

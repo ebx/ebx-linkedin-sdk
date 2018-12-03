@@ -38,27 +38,27 @@ public class OrganizationFollowerStatisticsElement {
   @Getter
   @Setter
   @LinkedIn
-  private List<CountByStaffCountRange> followerCountByStaffCountRanges;
+  private List<CountByStaffCountRange> followerCountsByStaffCountRange;
 
   @Getter
   @Setter
   @LinkedIn
-  private List<CountByIndustry> followerCountByIndustrys;
+  private List<CountByIndustry> followerCountsByIndustry;
 
   @Getter
   @Setter
   @LinkedIn
-  private List<CountByFunction> followerCountByFunctions;
+  private List<CountByFunction> followerCountsByFunction;
 
   @Getter
   @Setter
   @LinkedIn
-  private List<CountByAssociationType> followerCountByAssociationTypes;
+  private List<CountByAssociationType> followerCountsByAssociationType;
 
   @Getter
   @Setter
   @LinkedIn
-  private List<CountBySeniority> followerCountBySeniority;
+  private List<CountBySeniority> followerCountsBySeniority;
 
   @Getter
   @Setter
