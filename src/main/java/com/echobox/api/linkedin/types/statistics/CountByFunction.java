@@ -18,6 +18,7 @@
 package com.echobox.api.linkedin.types.statistics;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -36,4 +37,13 @@ public class CountByFunction {
   @Setter
   @LinkedIn
   private String function;
+
+  /**
+   * Gets urn from function.
+   *
+   * @return the urn from function
+   */
+  public URN getURNFromFunction() {
+    return URN.extractFromString(function);
+  }
 }

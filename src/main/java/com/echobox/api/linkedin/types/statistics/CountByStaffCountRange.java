@@ -18,6 +18,7 @@
 package com.echobox.api.linkedin.types.statistics;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -36,5 +37,13 @@ public class CountByStaffCountRange {
   @Setter
   @LinkedIn
   private String staffCountRange;
-  
+
+  /**
+   * Gets urn from staff count range.
+   *
+   * @return the urn from staff count range
+   */
+  public URN getURNFromStaffCountRange() {
+    return URN.extractFromString(staffCountRange);
+  }
 }

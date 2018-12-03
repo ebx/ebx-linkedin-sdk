@@ -18,6 +18,7 @@
 package com.echobox.api.linkedin.types.statistics;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -36,4 +37,13 @@ public class CountByIndustry {
   @Setter
   @LinkedIn
   private String industry;
+
+  /**
+   * Gets urn from industry.
+   *
+   * @return the urn from industry
+   */
+  public URN getURNFromIndustry() {
+    return URN.extractFromString(industry);
+  }
 }

@@ -18,6 +18,7 @@
 package com.echobox.api.linkedin.types.statistics;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -64,4 +65,13 @@ public class OrganizationFollowerStatisticsElement {
   @Setter
   @LinkedIn
   private String organizationalEntity;
+
+  /**
+   * Gets urn from organizational entity.
+   *
+   * @return the urn from organizational entity
+   */
+  public URN getURNFromOrganizationalEntity() {
+    return URN.extractFromString(organizationalEntity);
+  }
 }
