@@ -73,7 +73,7 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
   private static final String AUDIT_STAMP_JSON =
       "com.echobox.api.linkedin.jsonmapper/auditStamp.json";
   
-  private static final String ORGANIZATION_STAISTICS_JSON = "com.echobox.api.linkedin" 
+  private static final String ORGANIZATION_STAISTICS_JSON = "com.echobox.api.linkedin"
       + ".jsonmapper/organizationStatistics.json";
 
   /**
@@ -717,40 +717,40 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
   @Test
   public void testOrganizationStatistcsWithTimeRange() {
     String organizationStatisticsJson = "{\n"
-        + "      \"organization\": \"urn:li:organization:1000\",\n" 
+        + "      \"organization\": \"urn:li:organization:1000\",\n"
         + "      \"timeRange\": {\n"
-        + "        \"start\": 1451606400000,\n" 
-        + "        \"end\": 1451692800000\n" 
+        + "        \"start\": 1451606400000,\n"
+        + "        \"end\": 1451692800000\n"
         + "      },\n"
-        + "      \"totalPageStatistics\": {\n" 
+        + "      \"totalPageStatistics\": {\n"
         + "        \"clicks\": {\n"
         + "          \"careersPageClicks\": {\n"
         + "            \"careersPageBannerPromoClicks\": 0,\n"
         + "            \"careersPagePromoLinksClicks\": 0,\n"
         + "            \"careersPageEmployeesClicks\": 0,\n"
-        + "            \"careersPageJobsClicks\": 0\n" 
-        + "          }\n" 
+        + "            \"careersPageJobsClicks\": 0\n"
+        + "          }\n"
         + "        },\n"
-        + "        \"views\": {\n" 
+        + "        \"views\": {\n"
         + "          \"careersPageViews\": {\n"
-        + "            \"uniquePageViews\": 0,\n" 
-        + "            \"pageViews\": 0\n"
-        + "          },\n" 
-        + "          \"overviewPageViews\": {\n"
-        + "            \"uniquePageViews\": 0,\n" 
+        + "            \"uniquePageViews\": 0,\n"
         + "            \"pageViews\": 0\n"
         + "          },\n"
-        + "          \"allPageViews\": {\n" 
+        + "          \"overviewPageViews\": {\n"
+        + "            \"uniquePageViews\": 0,\n"
         + "            \"pageViews\": 0\n"
-        + "          }\n" 
+        + "          },\n"
+        + "          \"allPageViews\": {\n"
+        + "            \"pageViews\": 0\n"
+        + "          }\n"
         + "        }\n"
-        + "      }\n" 
+        + "      }\n"
         + "    }";
     
     DefaultJsonMapper mapper = new DefaultJsonMapper();
     Statistics.OrganizationStatistics organizationStatistics = mapper.toJavaObject(
         organizationStatisticsJson, Statistics.OrganizationStatistics.class);
-  
+    
     assertNotNull(organizationStatistics);
     assertNotNull(organizationStatistics.getTimeRange());
     assertEquals("urn:li:organization:1000", organizationStatistics.getOrganization());
@@ -766,40 +766,40 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     assertNull(organizationStatistics.getPageStatisticsByStaffCountRange());
   }
   
-  @Test 
-  public void testBrandStatistics() { 
-    String brandStatisticsJson = "{\n" 
+  @Test
+  public void testBrandStatistics() {
+    String brandStatisticsJson = "{\n"
         + "      \"pageStatisticsBySeniority\": [],\n"
-        + "      \"pageStatisticsByCountry\": [],\n" 
+        + "      \"pageStatisticsByCountry\": [],\n"
         + "      \"pageStatisticsByIndustry\": [],\n"
-        + "      \"totalPageStatistics\": {\n" 
+        + "      \"totalPageStatistics\": {\n"
         + "        \"views\": {\n"
-        + "          \"overviewPageViews\": {\n" 
+        + "          \"overviewPageViews\": {\n"
         + "            \"pageViews\": 1\n"
-        + "          },\n" 
+        + "          },\n"
         + "          \"allDesktopPageViews\": {\n"
-        + "            \"pageViews\": 1\n" 
+        + "            \"pageViews\": 1\n"
         + "          },\n"
-        + "          \"mobileOverviewPageViews\": {\n" 
+        + "          \"mobileOverviewPageViews\": {\n"
         + "            \"pageViews\": 0\n"
-        + "          },\n" 
-        + "          \"allMobilePageViews\": {\n"
-        + "            \"pageViews\": 0\n" 
         + "          },\n"
-        + "          \"desktopOverviewPageViews\": {\n" 
+        + "          \"allMobilePageViews\": {\n"
+        + "            \"pageViews\": 0\n"
+        + "          },\n"
+        + "          \"desktopOverviewPageViews\": {\n"
         + "            \"pageViews\": 1\n"
-        + "          },\n" 
-        + "          \"allPageViews\": {\n" 
+        + "          },\n"
+        + "          \"allPageViews\": {\n"
         + "            \"pageViews\": 1\n"
-        + "          }\n" 
-        + "        }\n" 
+        + "          }\n"
+        + "        }\n"
         + "      },\n"
         + "      \"brand\": \"urn:li:organizationBrand:18085185\",\n"
         + "      \"pageStatisticsByStaffCountRange\": [],\n"
-        + "      \"pageStatisticsByRegion\": [],\n" 
+        + "      \"pageStatisticsByRegion\": [],\n"
         + "      \"pageStatisticsByFunction\": []\n"
         + "    }" ;
-   
+    
     DefaultJsonMapper mapper = new DefaultJsonMapper();
     Statistics.BrandStatistics brandStatistics = mapper.toJavaObject(
         brandStatisticsJson, Statistics.BrandStatistics.class);
@@ -819,4 +819,5 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     assertEquals(new Integer(1), brandStatistics.getTotalPageStatistics()
         .getViews().getAllPageViews().getPageViews());
   }
+
 }

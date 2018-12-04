@@ -65,7 +65,7 @@
 			<artifactId>google-api-services-oauth2</artifactId>
 			<version>v1-rev145-1.25.0</version>
 		</dependency>
-	</dependencies>
+    </dependencies>
 
 	<repositories>
 		<repository>
