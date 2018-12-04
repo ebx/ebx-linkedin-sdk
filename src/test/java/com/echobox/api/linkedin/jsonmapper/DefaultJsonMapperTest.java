@@ -39,6 +39,8 @@ import com.echobox.api.linkedin.types.objectype.MultiLocaleString;
 import com.echobox.api.linkedin.types.social.actions.CommentAction;
 import com.echobox.api.linkedin.types.social.actions.LikeAction;
 import com.echobox.api.linkedin.types.social.actions.SocialAction;
+import com.echobox.api.linkedin.types.statistics.Statistics;
+import com.echobox.api.linkedin.types.statistics.TotalPageStatistics;
 import com.echobox.api.linkedin.types.urn.function.FunctionURN;
 import com.echobox.api.linkedin.types.urn.location.CountryGroupURN;
 import com.echobox.api.linkedin.types.urn.location.CountryURN;
@@ -70,6 +72,9 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
 
   private static final String AUDIT_STAMP_JSON =
       "com.echobox.api.linkedin.jsonmapper/auditStamp.json";
+  
+  private static final String ORGANIZATION_STAISTICS_JSON = "com.echobox.api.linkedin" 
+      + ".jsonmapper/organizationStatistics.json";
 
   /**
    * Ensure that the JSONMappingCompleted annotation is called
@@ -636,5 +641,182 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     assertEquals("urn:li:activity:6273189577469632512", commentAction.getObject());
     assertEquals("urn:li:comment:(urn:li:activity:"
         + "6273189577469632512,6282955928685940736)", commentAction.getUrn());
+  }
+  
+  @Test
+  public void organizationStatisticsTest() {
+    String organizationStatisticsJson = readFileToString(ORGANIZATION_STAISTICS_JSON);
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    Statistics.OrganizationStatistics organizationStatistics = mapper.toJavaObject(
+        organizationStatisticsJson, Statistics.OrganizationStatistics.class);
+    assertNotNull(organizationStatistics);
+    assertNull(organizationStatistics.getTimeRange());
+    assertEquals("urn:li:organization:2414183", organizationStatistics.getOrganization());
+    assertNotNull(organizationStatistics.getTotalPageStatistics());
+    TotalPageStatistics totalPageStatistics = organizationStatistics.getTotalPageStatistics();
+    assertEquals(new Integer(0), totalPageStatistics.getClicks()
+        .getCareersPageClicks().getCareersPageBannerPromoClicks());
+    assertEquals(new Integer(0), totalPageStatistics.getClicks()
+        .getCareersPageClicks().getCareersPageEmployeesClicks());
+    assertEquals(new Integer(0), totalPageStatistics.getClicks()
+        .getCareersPageClicks().getCareersPagePromoLinksClicks());
+    assertEquals(new Integer(0), totalPageStatistics.getClicks()
+        .getCareersPageClicks().getCareersPageJobsClicks());
+    assertEquals(new Integer(0), totalPageStatistics.getClicks()
+        .getMobileCareersPageClicks().getCareersPageJobsClicks());
+    assertEquals(new Integer(0), totalPageStatistics.getClicks()
+        .getMobileCareersPageClicks().getCareersPageJobsClicks());
+    assertEquals(new Integer(0), totalPageStatistics.getClicks()
+        .getMobileCareersPageClicks().getCareersPageJobsClicks());
+    
+    assertEquals(new Integer(0), totalPageStatistics.getViews()
+        .getMobileJobsPageViews().getPageViews());
+    assertEquals(new Integer(5), totalPageStatistics.getViews()
+        .getCareersPageViews().getPageViews());
+    assertEquals(new Integer(0), totalPageStatistics.getViews()
+        .getMobileLifeAtPageViews().getPageViews());
+    assertEquals(new Integer(17321), totalPageStatistics.getViews()
+        .getAllDesktopPageViews().getPageViews());
+    assertEquals(new Integer(465), totalPageStatistics.getViews()
+        .getAllMobilePageViews().getPageViews());
+    assertEquals(new Integer(0), totalPageStatistics.getViews()
+        .getJobsPageViews().getPageViews());
+    assertEquals(new Integer(17781), totalPageStatistics.getViews()
+        .getOverviewPageViews().getPageViews());
+    assertEquals(new Integer(5), totalPageStatistics.getViews()
+        .getDesktopCareersPageViews().getPageViews());
+    assertEquals(new Integer(465), totalPageStatistics.getViews()
+        .getMobileOverviewPageViews().getPageViews());
+    assertEquals(new Integer(5), totalPageStatistics.getViews()
+        .getLifeAtPageViews().getPageViews());
+    assertEquals(new Integer(17316), totalPageStatistics.getViews()
+        .getDesktopOverviewPageViews().getPageViews());
+    assertEquals(new Integer(5), totalPageStatistics.getViews()
+        .getDesktopLifeAtPageViews().getPageViews());
+    assertEquals(new Integer(0), totalPageStatistics.getViews()
+        .getMobileCareersPageViews().getPageViews());
+    assertEquals(new Integer(17786), totalPageStatistics.getViews()
+        .getAllPageViews().getPageViews());
+    
+    assertEquals("urn:li:seniority:10",
+        organizationStatistics.getPageStatisticsBySeniority().get(0).getSeniority());
+    assertEquals("urn:li:country:us",
+        organizationStatistics.getPageStatisticsByCountry().get(0).getCountry());
+    assertEquals("urn:li:country:us",
+        organizationStatistics.getPageStatisticsByCountry().get(0).getCountry());
+    assertEquals("urn:li:industry:1", organizationStatistics.getPageStatisticsByIndustry()
+        .get(0).getIndustry());
+    assertEquals("SIZE_10001_OR_MORE",
+        organizationStatistics.getPageStatisticsByStaffCountRange().get(0).getStaffCountRange());
+    assertEquals("urn:li:region:7", organizationStatistics.getPageStatisticsByRegion()
+        .get(0).getRegion());
+    assertEquals("urn:li:function:1", organizationStatistics.getPageStatisticsByFunction()
+        .get(0).getFunction());
+  }
+  
+  @Test
+  public void testOrganizationStatistcsWithTimeRange() {
+    String organizationStatisticsJson = "{\n"
+        + "      \"organization\": \"urn:li:organization:1000\",\n" 
+        + "      \"timeRange\": {\n"
+        + "        \"start\": 1451606400000,\n" 
+        + "        \"end\": 1451692800000\n" 
+        + "      },\n"
+        + "      \"totalPageStatistics\": {\n" 
+        + "        \"clicks\": {\n"
+        + "          \"careersPageClicks\": {\n"
+        + "            \"careersPageBannerPromoClicks\": 0,\n"
+        + "            \"careersPagePromoLinksClicks\": 0,\n"
+        + "            \"careersPageEmployeesClicks\": 0,\n"
+        + "            \"careersPageJobsClicks\": 0\n" 
+        + "          }\n" 
+        + "        },\n"
+        + "        \"views\": {\n" 
+        + "          \"careersPageViews\": {\n"
+        + "            \"uniquePageViews\": 0,\n" 
+        + "            \"pageViews\": 0\n"
+        + "          },\n" 
+        + "          \"overviewPageViews\": {\n"
+        + "            \"uniquePageViews\": 0,\n" 
+        + "            \"pageViews\": 0\n"
+        + "          },\n"
+        + "          \"allPageViews\": {\n" 
+        + "            \"pageViews\": 0\n"
+        + "          }\n" 
+        + "        }\n"
+        + "      }\n" 
+        + "    }";
+    
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    Statistics.OrganizationStatistics organizationStatistics = mapper.toJavaObject(
+        organizationStatisticsJson, Statistics.OrganizationStatistics.class);
+  
+    assertNotNull(organizationStatistics);
+    assertNotNull(organizationStatistics.getTimeRange());
+    assertEquals("urn:li:organization:1000", organizationStatistics.getOrganization());
+    assertEquals(new Long(1451606400000L), organizationStatistics.getTimeRange().getStart());
+    assertEquals(new Long(1451692800000L), organizationStatistics.getTimeRange().getEnd());
+    assertEquals(new Integer(0), organizationStatistics.getTotalPageStatistics()
+        .getViews().getCareersPageViews().getUniquePageViews());
+    assertNotNull(organizationStatistics.getTotalPageStatistics());
+    assertNull(organizationStatistics.getPageStatisticsByCountry());
+    assertNull(organizationStatistics.getPageStatisticsBySeniority());
+    assertNull(organizationStatistics.getPageStatisticsByIndustry());
+    assertNull(organizationStatistics.getPageStatisticsByFunction());
+    assertNull(organizationStatistics.getPageStatisticsByStaffCountRange());
+  }
+  
+  @Test 
+  public void testBrandStatistics() { 
+    String brandStatisticsJson = "{\n" 
+        + "      \"pageStatisticsBySeniority\": [],\n"
+        + "      \"pageStatisticsByCountry\": [],\n" 
+        + "      \"pageStatisticsByIndustry\": [],\n"
+        + "      \"totalPageStatistics\": {\n" 
+        + "        \"views\": {\n"
+        + "          \"overviewPageViews\": {\n" 
+        + "            \"pageViews\": 1\n"
+        + "          },\n" 
+        + "          \"allDesktopPageViews\": {\n"
+        + "            \"pageViews\": 1\n" 
+        + "          },\n"
+        + "          \"mobileOverviewPageViews\": {\n" 
+        + "            \"pageViews\": 0\n"
+        + "          },\n" 
+        + "          \"allMobilePageViews\": {\n"
+        + "            \"pageViews\": 0\n" 
+        + "          },\n"
+        + "          \"desktopOverviewPageViews\": {\n" 
+        + "            \"pageViews\": 1\n"
+        + "          },\n" 
+        + "          \"allPageViews\": {\n" 
+        + "            \"pageViews\": 1\n"
+        + "          }\n" 
+        + "        }\n" 
+        + "      },\n"
+        + "      \"brand\": \"urn:li:organizationBrand:18085185\",\n"
+        + "      \"pageStatisticsByStaffCountRange\": [],\n"
+        + "      \"pageStatisticsByRegion\": [],\n" 
+        + "      \"pageStatisticsByFunction\": []\n"
+        + "    }" ;
+   
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    Statistics.BrandStatistics brandStatistics = mapper.toJavaObject(
+        brandStatisticsJson, Statistics.BrandStatistics.class);
+    assertNotNull(brandStatistics);
+    assertEquals("urn:li:organizationBrand:18085185", brandStatistics.getBrand());
+    assertTrue(brandStatistics.getPageStatisticsBySeniority().isEmpty());
+    assertEquals(new Integer(1), brandStatistics.getTotalPageStatistics()
+        .getViews().getOverviewPageViews().getPageViews());
+    assertEquals(new Integer(1), brandStatistics.getTotalPageStatistics()
+        .getViews().getAllDesktopPageViews().getPageViews());
+    assertEquals(new Integer(0), brandStatistics.getTotalPageStatistics()
+        .getViews().getMobileOverviewPageViews().getPageViews());
+    assertEquals(new Integer(0), brandStatistics.getTotalPageStatistics()
+        .getViews().getAllMobilePageViews().getPageViews());
+    assertEquals(new Integer(1), brandStatistics.getTotalPageStatistics()
+        .getViews().getDesktopOverviewPageViews().getPageViews());
+    assertEquals(new Integer(1), brandStatistics.getTotalPageStatistics()
+        .getViews().getAllPageViews().getPageViews());
   }
 }

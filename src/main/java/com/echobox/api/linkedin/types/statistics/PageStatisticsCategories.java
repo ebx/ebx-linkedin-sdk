@@ -22,8 +22,6 @@ import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 /**
  * A Wrapper Class for all different Page Statistics Categories
  * @author Alexandros
@@ -33,7 +31,7 @@ public abstract class PageStatisticsCategories {
   @Getter
   @Setter
   @LinkedIn
-  private List<PageStatistics> pageStatistics;
+  private PageStatistics pageStatistics;
   
   /**
    * A page statics by seniority model

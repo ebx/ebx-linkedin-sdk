@@ -23,6 +23,8 @@ import com.echobox.api.linkedin.types.TimeRange;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 /**
  * A abstract wrapper for statistics models
  * @author Alexandros
@@ -42,32 +44,33 @@ public abstract class Statistics {
   @Getter
   @Setter
   @LinkedIn
-  private PageStatisticsCategories.PageStatisticsBySeniority pageStatisticsBySeniority;
+  private List<PageStatisticsCategories.PageStatisticsBySeniority> pageStatisticsBySeniority;
   
   @Getter
   @Setter
   @LinkedIn
-  private PageStatisticsCategories.PageStatisticsByCountry pageStatisticsByCountry;
+  private List<PageStatisticsCategories.PageStatisticsByCountry> pageStatisticsByCountry;
   
   @Setter
   @Getter
   @LinkedIn
-  private PageStatisticsCategories.PageStatisticsByIndustry pageStatisticsByIndustry;
+  private List<PageStatisticsCategories.PageStatisticsByIndustry> pageStatisticsByIndustry;
   
   @Getter
   @Setter
   @LinkedIn
-  private PageStatisticsCategories.PageStatisticsByStaffCountRange pageStatisticsByStaffCountRange;
+  private List<PageStatisticsCategories.PageStatisticsByStaffCountRange> 
+      pageStatisticsByStaffCountRange;
   
   @Getter
   @Setter
   @LinkedIn
-  private PageStatisticsCategories.PageStatisticsByRegion pageStatisticsByRegion;
+  private List<PageStatisticsCategories.PageStatisticsByRegion> pageStatisticsByRegion;
   
   @Getter
   @Setter
   @LinkedIn
-  private PageStatisticsCategories.PageStatisticsByFunction pageStatisticsByFunction;
+  private List<PageStatisticsCategories.PageStatisticsByFunction> pageStatisticsByFunction;
   
   /**
    * Organization Statistics Model
