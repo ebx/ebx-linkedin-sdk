@@ -28,22 +28,15 @@ import com.echobox.api.linkedin.types.Location;
 
 import org.junit.Test;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * DefaultJsonMapperTest
  * @author Joanna
  *
  */
-public class LinkedInJsonMapperV1Test {
+public class LinkedInJsonMapperV1Test extends DefaultJsonMapperTestBase {
   
   /**
    * Valid Company JSON data file
@@ -140,22 +133,5 @@ public class LinkedInJsonMapperV1Test {
     assertEquals(1, result.getSausages().size());
     assertEquals("123", result.getSausages().get(0).getCode());
     assertEquals("Bratwurst", result.getSausages().get(0).getName());
-  }
-  
-  private String readFileToString(final String fileName) {
-    Stream<String> lines = null;
-    try {
-      Path path = Paths.get(getClass().getClassLoader()
-          .getResource(fileName).toURI());
-      lines = Files.lines(path);
-      String data = lines.collect(Collectors.joining("\n"));
-      return data;
-    } catch (IOException | URISyntaxException ex) {
-      throw new RuntimeException(ex);
-    } finally {
-      if (lines != null) {
-        lines.close();
-      }
-    }
   }
 }
