@@ -114,6 +114,8 @@ public interface LinkedInClient {
    *          The Connection to publish to.
    * @param objectType
    *          Object type token.
+   * @param jsonBody
+   *          The json body to publish.
    * @param parameters
    *          URL parameters to include in the API call.
    * @return An instance of type {@code objectType} which contains the LinkedIn response to your
@@ -134,6 +136,8 @@ public interface LinkedInClient {
    *          The Connection to publish to.
    * @param objectType
    *          Object type token.
+   * @param jsonBody
+   *          The json body to publish.
    * @param binaryAttachments
    *          The files to include in the publish request.
    * @param parameters
@@ -157,6 +161,8 @@ public interface LinkedInClient {
    *          The Connection to publish to.
    * @param objectType
    *          Object type token.
+   * @param jsonBody
+   *          The json body to publish.
    * @param binaryAttachment
    *          The file to include in the publish request.
    * @param parameters
