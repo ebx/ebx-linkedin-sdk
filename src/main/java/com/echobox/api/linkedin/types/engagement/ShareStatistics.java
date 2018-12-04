@@ -30,7 +30,7 @@ import java.util.List;
  * The class containing all information regarding a share
  * @author clementcaylux on 27/11/2018.
  */
-public class Share {
+public class ShareStatistics {
 
   @Getter 
   @Setter

@@ -25,9 +25,9 @@ import lombok.Setter;
 import java.util.List;
 
 /**
- * Share content POJO
+ * ShareStatistics content POJO
  * @see <a href="https://developer.linkedin.com/docs/guide/v2/shares/share-api#share-content">
- * Share Content Schema</a>
+ * ShareStatistics Content Schema</a>
  * @author joanna
  *
  */

@@ -18,7 +18,7 @@
 package com.echobox.api.linkedin.types;
 
 /**
- * Share media category enum
+ * ShareStatistics media category enum
  * @author joanna
  *
  */
