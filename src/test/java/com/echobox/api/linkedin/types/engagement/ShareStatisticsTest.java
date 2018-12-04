@@ -18,7 +18,10 @@
 package com.echobox.api.linkedin.types.engagement;
 
 import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapper;
+<<<<<<< HEAD
 import com.echobox.api.linkedin.types.Paging;
+=======
+>>>>>>> b73bc08f1b5a9d1b30995d39a3db6cb12e0b05b9
 
 import org.junit.Assert;
 import org.junit.Test;
