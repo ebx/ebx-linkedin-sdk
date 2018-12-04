@@ -1,0 +1,44 @@
+{
+  "owner": "urn:li:organization:1000",
+  "created": {
+    "actor": "urn:li:person:A8xe03Qt10",
+    "time": 1471967236000
+  },
+  "id": "6173878065928642560",
+  "activity": "urn:li:activity:12345657",
+  "lastModified": {
+    "actor": "urn:li:person:A8xe03Qt10",
+    "time": 1471967237000
+  },
+  "text": {
+    "text": "Test Share!"
+  },
+  "distribution": {
+    "linkedInDistributionTarget": {
+		"industries": [
+		  "urn:li:industry:12",
+		  "urn:li:industry:37"
+		],
+		"seniorities": [
+		  "urn:li:seniority:4",
+		  "urn:li:seniority:8"
+		]
+	}
+  },
+  "content": {
+    "contentEntities": [
+      {
+        "entityLocation": "https://www.example.com/content.html",
+        "thumbnails": [
+          {
+            "imageSpecificContent": {},
+            "resolvedUrl": "https://www.example.com/image.jpg"
+          }
+        ],
+        "entity": "urn:li:article:0"
+      }
+    ],
+    "description": "content description",
+    "title": "Test Share with Content"
+  }
+}
