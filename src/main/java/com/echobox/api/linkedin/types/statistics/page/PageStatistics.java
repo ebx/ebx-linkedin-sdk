@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.statistics;
+package com.echobox.api.linkedin.types.statistics.page;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 

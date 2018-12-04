@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.statistics;
+package com.echobox.api.linkedin.types.statistics.page;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
@@ -23,79 +23,62 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * A Wrapper Class for all different Page Statistics Categories
+ * Total Page Statistics Model
  * @author Alexandros
  */
-public abstract class PageStatisticsCategories {
+public class TotalPageStatistics {
   
   @Getter
   @Setter
   @LinkedIn
-  private PageStatistics pageStatistics;
+  private Clicks clicks;
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private PageStatistics.Views views;
   
   /**
-   * A page statics by seniority model
+   * Clicks Model 
    */
-  public static class PageStatisticsBySeniority extends PageStatisticsCategories {
+  public static class Clicks {
     
     @Getter
     @Setter
     @LinkedIn
-    private String seniority;
+    private PageClicks careersPageClicks;
+  
+    @Getter
+    @Setter
+    @LinkedIn
+    private PageClicks mobileCareersPageClicks;
   }
   
+  
   /**
-   * A page statics by county model
+   * Page Clicks Model
    */
-  public static class PageStatisticsByCountry extends PageStatisticsCategories {
+  public static class PageClicks {
     
     @Getter
     @Setter
     @LinkedIn
-    private String country;
-  }
+    private Integer careersPageBannerPromoClicks;
   
-  /**
-   * A page statics by industry model
-   */
-  public static class PageStatisticsByIndustry extends PageStatisticsCategories {
+    @Getter
+    @Setter
+    @LinkedIn
+    private Integer careersPageEmployeesClicks;
+  
+    @Getter
+    @Setter
+    @LinkedIn
+    private Integer careersPagePromoLinksClicks;
+  
+    @Getter
+    @Setter
+    @LinkedIn
+    private Integer careersPageJobsClicks;
     
-    @Getter
-    @Setter
-    @LinkedIn
-    private String industry;
-  }
-  
-  /**
-   * A page statics by staff count model
-   */
-  public static class PageStatisticsByStaffCountRange extends PageStatisticsCategories {
-    
-    @Getter
-    @Setter
-    @LinkedIn
-    private String staffCountRange;
-  }
-  
-  /**
-   * A page statics by region model
-   */
-  public static class PageStatisticsByRegion extends PageStatisticsCategories {
-    
-    @Getter
-    @Setter
-    @LinkedIn
-    private String region;
-  }
-  
-  /**
-   * A page statics by function model
-   */
-  public static class PageStatisticsByFunction extends PageStatisticsCategories {
-  
-    @Getter
-    @Setter
-    @LinkedIn
-    private String function;
   }
 }
