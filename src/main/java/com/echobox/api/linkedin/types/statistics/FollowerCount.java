@@ -30,10 +30,10 @@ public class FollowerCount {
   @Getter
   @Setter
   @LinkedIn
-  private long organicFollowerCount;
+  private Long organicFollowerCount;
   
   @Getter
   @Setter
   @LinkedIn
-  private long paidFollowerCount;
+  private Long paidFollowerCount;
 }
