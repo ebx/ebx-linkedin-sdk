@@ -637,4 +637,5 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     assertEquals("urn:li:comment:(urn:li:activity:"
         + "6273189577469632512,6282955928685940736)", commentAction.getUrn());
   }
+
 }

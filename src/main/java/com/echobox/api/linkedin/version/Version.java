@@ -39,12 +39,12 @@ public enum Version {
   /**
    * LinkedIn V1 API version
    */
-  V1("v1", new V1PagingImpl()),
+  V1("v1", new V1PagingImpl(), true),
   
   /**
    * LinkedIn V2 API version
    */
-  V2("v2", new V2PagingImpl());
+  V2("v2", new V2PagingImpl(), false);
   
   private static Logger LOGGER = LinkedInLogger.getLoggerInstance();
   
@@ -58,6 +58,9 @@ public enum Version {
   
   @Getter
   private final PagingStrategy pagingStrategy;
+  
+  @Getter
+  private final boolean specifyFormat;
   
   /**
    * Convert the provided URL element into a version
