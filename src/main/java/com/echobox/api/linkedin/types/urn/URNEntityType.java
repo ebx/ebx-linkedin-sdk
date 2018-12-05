@@ -17,19 +17,17 @@
 
 package com.echobox.api.linkedin.types.urn;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
-import lombok.Getter;
-
 /**
- * URN base class - all URNs will contain a URN
- * @author joanna
- *
+ * The enum Urn entity type.
+ * @author clementcaylux 
  */
-public abstract class ContainsURN {
-  
-  @Getter
-  @LinkedIn("$URN")
-  private URN urn;
+public enum URNEntityType {
 
+    PlACE,
+    COUNTRY,
+    ORGANIZATION,
+    SENIORITY,
+    FUNCTION,
+    SHARE
+  
 }

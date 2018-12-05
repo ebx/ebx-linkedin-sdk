@@ -29,6 +29,8 @@ import static java.util.Collections.unmodifiableSet;
 
 import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
 import com.echobox.api.linkedin.logging.LinkedInLogger;
+import com.echobox.api.linkedin.types.urn.URN;
+import com.echobox.api.linkedin.types.urn.URNEntityType;
 import com.echobox.api.linkedin.util.DateUtils;
 import com.echobox.api.linkedin.util.ReflectionUtils;
 import com.echobox.api.linkedin.util.ReflectionUtils.FieldWithAnnotation;
@@ -709,6 +711,17 @@ public class DefaultJsonMapper implements JsonMapper {
     // Short-circuit right off the bat if we've got a null value.
     if (JSONObject.NULL.equals(rawValue)) {
       return null;
+    }
+
+    if (URN.class.equals(type) && rawValue.toString().startsWith("urn:li:")) {
+      String[] split = rawValue.toString().split(":", 4);
+      if (split.length != 4) {
+        throw new IllegalArgumentException("Could not parse the urn " + rawValue.toString());
+      }
+      String urnType = split[2].toUpperCase();
+      String urnId = split[3];
+      URN urn = new URN(urnType, urnId);
+      return urn;
     }
 
     if (String.class.equals(type)) {
