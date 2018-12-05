@@ -26,7 +26,7 @@ import lombok.Getter;
  * @author joanna
  *
  */
-public abstract class URN {
+public abstract class ContainsURN {
   
   @Getter
   @LinkedIn("$URN")
