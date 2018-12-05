@@ -42,6 +42,7 @@ import com.echobox.api.linkedin.types.urn.location.PlaceURN;
 import com.echobox.api.linkedin.types.urn.location.RegionURN;
 import com.echobox.api.linkedin.types.urn.location.StateURN;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Map;
@@ -514,5 +515,33 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     assertEquals(new URN("place", "(urn:li:country:us,7-1-0-43)"), placeURN.getParent());
     assertEquals("7-1-0-43-18", placeURN.getPlaceCode());
   }
+
+  /**
+   * Test urns are serialized as strings
+   */
+  @Test
+  public void testURNsAreSerializedAsStrings() {
+    String placeURNJSON =
+        "{"
+            + "    \"$URN\": \"urn:li:place:(urn:li:country:us,7-1-0-43-18)\","
+            + "    \"name\": {"
+            + "        \"locale\": {"
+            + "            \"country\": \"US\","
+            + "            \"language\": \"en\""
+            + "        },"
+            + "        \"value\": \"San Francisco, California\""
+            + "    },"
+            + "    \"parent\": \"urn:li:place:(urn:li:country:us,7-1-0-43)\","
+            + "    \"placeCode\": \"7-1-0-43-18\","
+            + "    \"country\": \"urn:li:country:us\","
+            + "    \"adminLevel\": \"CITY\""
+            + "}";
+    DefaultJsonMapper defaultJsonMapper = new DefaultJsonMapper();
+    PlaceURN placeURN = defaultJsonMapper.toJavaObject(placeURNJSON, PlaceURN.class);
+    String serialized = defaultJsonMapper.toJson(placeURN, true);
+    
+    Assert.assertTrue(serialized.contains("\"country\":\"urn:li:country:us\""));
+    
+  } 
 
 }

@@ -557,6 +557,10 @@ public class DefaultJsonMapper implements JsonMapper {
     if (ReflectionUtils.isPrimitive(object)) {
       return object;
     }
+    
+    if (object instanceof URN) {
+      return object.toString();
+    }
 
     if (object instanceof BigInteger) {
       return ((BigInteger) object).longValue();

@@ -60,7 +60,7 @@ public class URN {
 
   @Override
   public String toString() {
-    return "urn:li:" + entityType + ":" + id;
+    return "urn:li:" + entityType.toLowerCase() + ":" + id;
   }
   
   @Override
