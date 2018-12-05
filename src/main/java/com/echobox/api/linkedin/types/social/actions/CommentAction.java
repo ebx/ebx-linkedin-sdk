@@ -18,6 +18,8 @@
 package com.echobox.api.linkedin.types.social.actions;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.URN;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,7 +28,7 @@ import java.util.List;
 /**
  * @author Alexandros
  */
-public class CommentAction {
+public class CommentAction extends URN {
   
   @Getter
   @Setter
@@ -62,11 +64,6 @@ public class CommentAction {
   @Setter
   @LinkedIn
   private String object;
-  
-  @Getter
-  @Setter
-  @LinkedIn("$URN")
-  private String urn;
   
   /**
    * A Model to describe the content of a comment

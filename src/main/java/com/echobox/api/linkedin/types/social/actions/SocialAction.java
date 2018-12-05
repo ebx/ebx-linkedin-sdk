@@ -18,6 +18,8 @@
 package com.echobox.api.linkedin.types.social.actions;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.URN;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,7 +27,7 @@ import lombok.Setter;
  * Social Action Model
  * @author Alexandros
  */
-public class SocialAction {
+public class SocialAction extends URN {
   
   @Getter
   @Setter
@@ -41,10 +43,5 @@ public class SocialAction {
   @Setter
   @LinkedIn
   private String target;
-  
-  @Getter
-  @Setter
-  @LinkedIn("$URN")
-  private String urn;
   
 }
