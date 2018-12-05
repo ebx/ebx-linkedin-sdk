@@ -34,6 +34,7 @@ import com.echobox.api.linkedin.types.objectype.AuditStamp;
 import com.echobox.api.linkedin.types.objectype.Locale;
 import com.echobox.api.linkedin.types.objectype.LocaleString;
 import com.echobox.api.linkedin.types.objectype.MultiLocaleString;
+import com.echobox.api.linkedin.types.organization.Organization;
 import com.echobox.api.linkedin.types.urn.function.FunctionURN;
 import com.echobox.api.linkedin.types.urn.location.CountryGroupURN;
 import com.echobox.api.linkedin.types.urn.location.CountryURN;
@@ -114,7 +115,7 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
    */
   @Test
   public void testToJSONWithIgnoreNullValuedProperties() {
-    Company company = new Company();
+    Organization company = new Organization();
     company.setId(123L);
     DefaultJsonMapper mapper = new DefaultJsonMapper();
     String json = mapper.toJson(company, true);
@@ -127,16 +128,21 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
    */
   @Test
   public void testToJSONWithDoNotIgnoreNullValuedProperties() {
-    Company company = new Company();
+    Organization company = new Organization();
     company.setId(123L);
+    company.setDeletedTime(456L);
     DefaultJsonMapper mapper = new DefaultJsonMapper();
     String json = mapper.toJson(company, false);
-    assertEquals("{\"stockExchange\":null,\"ticker\":null,\"companyType\":null,"
-        + "\"emailDomains\":null,\"description\":null,\"foundedYear\":null,\"endYear\":null,"
-        + "\"logoUrl\":null,\"twitterId\":null,\"employeeCountRange\":null,\"specialties\":null,"
-        + "\"websiteUrl\":null,\"squareLogoUrl\":null,\"industries\":null,\"numFollowers\":null,"
-        + "\"name\":null,\"blogRSSURL\":null,\"locations\":null,\"universalName\":null,"
-        + "\"id\":123,\"status\":null}", json);
+    assertEquals("{\"parentRelationshipRelationshipStatus\":null,\"description\":null," 
+        + "\"parentRelationshipParent\":null,\"alternativeNames\":null,\"staffCountRange\":null," 
+        + "\"localizedSpecialties\":null,\"id\":123,\"deletedTime\":456," 
+        + "\"localizedDescription\":null,\"localizedWebsite\":null,\"logoV2\":null," 
+        + "\"parentRelationShipOrganizationRelationshipType\":null,\"vanityName\":null," 
+        + "\"localizedName\":null,\"website\":null,\"specialitiesTags\":null,\"foundedOn\":null," 
+        + "\"schoolAttributes\":null,\"coverPhoto\":null,\"overviewPhotov2\":null," 
+        + "\"groups\":null,\"versionTag\":null,\"organizationStatus\":null,\"coverPhotoV2\":null," 
+        + "\"defaultLocale\":null,\"organizationType\":null,\"industries\":null,\"name\":null," 
+        + "\"locations\":null,\"overviewPhoto\":null}", json);
   }
 
   /**

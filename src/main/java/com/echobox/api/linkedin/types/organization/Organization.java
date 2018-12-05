@@ -51,7 +51,7 @@ public class Organization {
   @Getter
   @Setter
   @LinkedIn
-  private  long deletedTime;
+  private  Long deletedTime;
 
   @Getter
   @Setter
