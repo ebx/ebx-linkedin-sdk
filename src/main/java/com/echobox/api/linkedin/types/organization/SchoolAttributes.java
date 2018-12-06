@@ -22,6 +22,10 @@ import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * The type School attributes.
+ * @author clementcaylux 
+ */
 public class SchoolAttributes {
 
   @Getter

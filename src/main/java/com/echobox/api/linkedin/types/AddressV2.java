@@ -17,4 +17,45 @@
 
 package com.echobox.api.linkedin.types;
 
-public class AddressV2 {}
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * The type Address type for the linkedin V2 api
+ * @author clementcaylux 
+ */
+public class AddressV2 {
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private String postalCode;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private String country;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private String geographicalArea;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private String line1;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private String line2;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private String city;
+  
+}

@@ -50,6 +50,25 @@ public class URN {
   }
 
   /**
+   * Instantiates a new Urn.
+   *
+   * @param urnString the urn string
+   */
+  public URN(String urnString) {
+    if (!urnString.startsWith("urn:li:")) {
+      throw new IllegalArgumentException("A linkedin urn should start with urn:li:");
+    }
+
+    String[] split = urnString.split(":", 4);
+    if (split.length != 4) {
+      throw new IllegalArgumentException("the urn " + urnString + " is malformed");
+    }
+    
+    this.entityType = split[2].toUpperCase();
+    this.id = split[3];
+  }
+
+  /**
    * Gets urn entity type.
    *
    * @return the urn entity type

@@ -17,4 +17,30 @@
 
 package com.echobox.api.linkedin.types.organization;
 
-public class LocationInfo {}
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.AddressV2;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * The type Location info.
+ * @author clementcaylux 
+ */
+public class LocationInfo {
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private String staffCountRange;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private String locationType;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private AddressV2 address;
+}

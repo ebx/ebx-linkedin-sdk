@@ -18,16 +18,21 @@
 package com.echobox.api.linkedin.types.organization;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.Location;
+import com.echobox.api.linkedin.types.objectype.Locale;
 import com.echobox.api.linkedin.types.objectype.LocaleString;
 import com.echobox.api.linkedin.types.objectype.MultiLocaleString;
 import com.echobox.api.linkedin.types.urn.URN;
 
-import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
+
+/**
+ * The type Organization.
+ * @author clementcaylux 
+ */
 public class Organization {
   
   @Getter
@@ -106,7 +111,7 @@ public class Organization {
   @Getter
   @Setter
   @LinkedIn
-  private List<Location> locations;
+  private List<LocationInfo> locations;
   
   @Getter
   @Setter

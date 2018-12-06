@@ -18,10 +18,15 @@
 package com.echobox.api.linkedin.types.organization;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * The type Cropped image.
+ * @author clementcaylux 
+ */
 public class CroppedImage {
   
   @Getter
@@ -32,10 +37,10 @@ public class CroppedImage {
   @Getter
   @Setter
   @LinkedIn
-  private String cropped;
+  private URN cropped;
 
   @Getter
   @Setter
   @LinkedIn
-  private String original;
+  private URN original;
 }

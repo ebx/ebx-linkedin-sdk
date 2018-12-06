@@ -23,10 +23,8 @@ import lombok.Getter;
 
 /**
  * Locale POJO
- * @see <a href="https://developer.linkedin.com/docs/ref/v2/object-types#Locale">
- * Share Text</a>
+ * @see  <a href="https://developer.linkedin.com/docs/ref/v2/object-types#Locale"> Locale</a>  
  * @author joanna
- *
  */
 public class Locale {
 

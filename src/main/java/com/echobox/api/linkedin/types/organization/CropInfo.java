@@ -22,24 +22,28 @@ import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * The type Crop info.
+ * @author clementcaylux 
+ */
 public class CropInfo {
-    @Getter
-    @Setter
-    @LinkedIn
-    private int height;
+  @Getter
+  @Setter
+  @LinkedIn
+  private int height;
 
-    @Getter
-    @Setter
-    @LinkedIn
-    private int width;
+  @Getter
+  @Setter
+  @LinkedIn
+  private int width;
 
-    @Getter
-    @Setter
-    @LinkedIn
-    private int x;
+  @Getter
+  @Setter
+  @LinkedIn
+  private int xAxis;
 
-    @Getter
-    @Setter
-    @LinkedIn
-    private int y;
+  @Getter
+  @Setter
+  @LinkedIn
+  private int yAxis;
 }

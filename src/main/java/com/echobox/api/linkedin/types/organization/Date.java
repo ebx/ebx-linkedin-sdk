@@ -22,6 +22,10 @@ import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * The type Date.
+ * @author clementcaylux
+ */
 public class Date {
 
   @Getter
