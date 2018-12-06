@@ -20,16 +20,69 @@ package com.echobox.api.linkedin.types.urn;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
- * URN base class - all URNs will contain a URN
- * @author joanna
- *
+ * The type Urn.
+ * @author clementcaylux 
  */
-public abstract class URN {
-  
-  @Getter
-  @LinkedIn("$URN")
-  private String urn;
+public class URN {
 
+  @Getter
+  @Setter
+  @LinkedIn
+  private String entityType;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private String id;
+
+  /**
+   * Instantiates a new Urn.
+   *
+   * @param entityType the entity type 
+   * @param id the id
+   */
+  public URN(String entityType, String id) {
+    this.entityType = entityType.toUpperCase();
+    this.id = id;
+  }
+
+  /**
+   * Gets urn entity type.
+   *
+   * @return the urn entity type
+   */
+  public URNEntityType getURNEntityType() {
+    return URNEntityType.valueOf(entityType);
+  }
+
+  @Override
+  public String toString() {
+    return "urn:li:" + entityType.toLowerCase() + ":" + id;
+  }
+  
+  @Override
+  public boolean equals(Object other) {
+    
+    if (!(other instanceof URN)) {
+      return false;
+    }
+    
+    URN otherURN = (URN) other;
+    if (!otherURN.getEntityType().equals(this.entityType)) {
+      return false;
+    }
+
+    return otherURN.getId().equals(this.id);
+  }
+  
+  @Override
+  public int hashCode() {
+    int result = 17;
+    result = 31 * result + entityType.hashCode();
+    return 31 * result + id.hashCode();
+  }
+  
 }

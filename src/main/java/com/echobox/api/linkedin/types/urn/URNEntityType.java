@@ -15,22 +15,19 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.organization;
+package com.echobox.api.linkedin.types.urn;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+/**
+ * The enum Urn entity type.
+ * @author clementcaylux 
+ */
+public enum URNEntityType {
 
-import lombok.Getter;
-import lombok.Setter;
-
-public class Locale {
+    PlACE,
+    COUNTRY,
+    ORGANIZATION,
+    SENIORITY,
+    FUNCTION,
+    SHARE
   
-  @Getter
-  @Setter
-  @LinkedIn
-  private String country;
-  
-  @Getter
-  @Setter
-  @LinkedIn
-  private String language;
 }

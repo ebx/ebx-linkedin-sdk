@@ -19,7 +19,9 @@ package com.echobox.api.linkedin.types.organization;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.Location;
+import com.echobox.api.linkedin.types.objectype.LocaleString;
 import com.echobox.api.linkedin.types.objectype.MultiLocaleString;
+import com.echobox.api.linkedin.types.urn.URN;
 
 import java.util.List;
 
@@ -31,7 +33,7 @@ public class Organization {
   @Getter
   @Setter
   @LinkedIn
-  private List<String> alternativeNames;
+  private List<LocaleString> alternativeNames;
 
   @Getter
   @Setter
@@ -67,7 +69,7 @@ public class Organization {
   @Getter
   @Setter
   @LinkedIn
-  private List<String> groups;
+  private List<URN> groups;
   
   @Getter
   @Setter
@@ -79,7 +81,7 @@ public class Organization {
   @Getter
   @Setter
   @LinkedIn
-  private List<String> industries;
+  private List<URN> industries;
   
   @Getter
   @Setter
