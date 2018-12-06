@@ -15,33 +15,32 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.objectype;
+package com.echobox.api.linkedin.types.engagement;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.Paging;
 
 import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+
 
 /**
- * Locale POJO
- * @see <a href="https://developer.linkedin.com/docs/ref/v2/object-types#Locale">
- * Locale</a>
- * @author joanna
- *
+ * The class containing all information regarding a share
+ * @author clementcaylux on 27/11/2018.
  */
-public class Locale {
+public class ShareStatistics {
 
-  /**
-   * An uppercase two-letter country code as defined by ISO-3166.
-   */
-  @Getter
+  @Getter 
+  @Setter
   @LinkedIn
-  private String country;
+  private List<ShareStatisticsElement> elements;
   
-  /**
-   * A lowercase two-letter language code as defined by ISO-639.
-   */
   @Getter
+  @Setter
   @LinkedIn
-  private String language;
+  private Paging paging;
+  
   
 }

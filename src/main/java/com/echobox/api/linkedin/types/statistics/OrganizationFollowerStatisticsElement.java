@@ -15,33 +15,53 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.objectype;
+package com.echobox.api.linkedin.types.statistics;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+
 
 /**
- * Locale POJO
- * @see <a href="https://developer.linkedin.com/docs/ref/v2/object-types#Locale">
- * Locale</a>
- * @author joanna
- *
+ * @author clementcaylux on 03/12/2018.
  */
-public class Locale {
+public class OrganizationFollowerStatisticsElement {
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private FollowerCount totalFollowerCounts;
 
-  /**
-   * An uppercase two-letter country code as defined by ISO-3166.
-   */
   @Getter
+  @Setter
   @LinkedIn
-  private String country;
-  
-  /**
-   * A lowercase two-letter language code as defined by ISO-639.
-   */
+  private List<CountByStaffCountRange> followerCountsByStaffCountRange;
+
   @Getter
+  @Setter
   @LinkedIn
-  private String language;
-  
+  private List<CountByIndustry> followerCountsByIndustry;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private List<CountByFunction> followerCountsByFunction;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private List<CountByAssociationType> followerCountsByAssociationType;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private List<CountBySeniority> followerCountsBySeniority;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private String organizationalEntity;
 }
