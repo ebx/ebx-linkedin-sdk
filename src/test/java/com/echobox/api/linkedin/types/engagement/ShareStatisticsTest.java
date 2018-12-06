@@ -18,6 +18,8 @@
 package com.echobox.api.linkedin.types.engagement;
 
 import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapper;
+import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapperTestBase;
+import com.echobox.api.linkedin.types.Paging;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,7 +29,7 @@ import java.util.List;
 /**
  * @author clementcaylux on 27/11/2018.
  */
-public class ShareTest {
+public class ShareStatisticsTest extends DefaultJsonMapperTestBase {
 
   /**
    * test that an engagement JSON is correctly deserialized
@@ -37,7 +39,7 @@ public class ShareTest {
   @Test
   public void testEngagementJson() {
     DefaultJsonMapper mapper = new DefaultJsonMapper();
-    Share shareStatistics = mapper.toJavaObject(
+    ShareStatistics shareStatistics = mapper.toJavaObject(
         "{\n" + "  \"elements\": [\n" + "    {\n" + "      \"totalShareStatistics\": {\n"
             + "        \"shareCount\": 5,\n" + "        \"clickCount\": 78,\n"
             + "        \"engagement\": 0.022886324947985624,\n" + "        \"likeCount\": 14,\n"
@@ -51,7 +53,7 @@ public class ShareTest {
             + "      \"share\": \"urn:li:share:1000001\",\n"
             + "      \"organizationalEntity\": \"urn:li:organization:2414183\"\n" + "    }\n"
             + "  ],\n" + "  \"paging\": {\n" + "    \"count\": 10,\n" + "    \"start\": 0,\n"
-            + "    \"links\": []\n" + "  }\n" + "}", Share.class);
+            + "    \"links\": []\n" + "  }\n" + "}", ShareStatistics.class);
 
     Paging paging = shareStatistics.getPaging();
     
