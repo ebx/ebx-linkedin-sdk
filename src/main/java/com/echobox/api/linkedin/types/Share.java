@@ -24,9 +24,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * ShareStatistics POJO
+ * Share POJO
  * @see <a href="https://developer.linkedin.com/docs/guide/v2/shares/share-api#share-schema">
- * ShareStatistics Schema</a>
+ * Share Schema</a>
  * @author joanna
  *
  */
@@ -41,8 +41,8 @@ public class Share extends LinkedInIdType {
   
   /**
    * Agent which acted on behalf of the owner. This permission has to be delegated. 
-   * Use this field to create Direct Sponsored Content ShareStatistics by specifying 
-   * a Sponsored Account URN when creating the share.
+   * Use this field to create Direct Sponsored Content Share by specifying a Sponsored Account
+   * URN when creating the share.
    */
   @Getter
   @Setter
@@ -103,7 +103,7 @@ public class Share extends LinkedInIdType {
   private String owner;
   
   /**
-   * ShareStatistics being reshared
+   * Share being reshared
    */
   @Getter
   @Setter
@@ -111,7 +111,7 @@ public class Share extends LinkedInIdType {
   private String resharedShare;
   
   /**
-   * ShareStatistics subject
+   * Share subject
    */
   @Getter
   @Setter

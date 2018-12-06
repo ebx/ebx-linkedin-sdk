@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Distribution target POJO
  * @see <a href="https://developer.linkedin.com/docs/guide/v2/shares/share-api#distribution-
- * targets">ShareStatistics Distribution Targets</a>
+ * targets">Share Distribution Targets</a>
  * @author joanna
  *
  */

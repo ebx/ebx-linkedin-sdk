@@ -24,7 +24,7 @@ import lombok.Getter;
 /**
  * Locale POJO
  * @see <a href="https://developer.linkedin.com/docs/ref/v2/object-types#Locale">
- * ShareStatistics Text</a>
+ * Share Text</a>
  * @author joanna
  *
  */
