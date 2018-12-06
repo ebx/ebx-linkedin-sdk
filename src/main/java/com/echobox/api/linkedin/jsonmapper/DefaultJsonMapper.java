@@ -288,6 +288,11 @@ public class DefaultJsonMapper implements JsonMapper {
         return null;
       }
 
+      if (URN.class.equals(type)) {
+        URN urn = new URN(json);
+        return (T) urn;
+      }
+
       JSONObject jsonObject = new JSONObject(json);
       T instance = createInstance(type);
 
