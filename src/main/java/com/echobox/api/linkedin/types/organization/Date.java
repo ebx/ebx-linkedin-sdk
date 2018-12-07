@@ -31,15 +31,15 @@ public class Date {
   @Getter
   @Setter
   @LinkedIn
-  private int day;
+  private Integer day;
 
   @Getter
   @Setter
   @LinkedIn
-  private int month;
+  private Integer month;
 
   @Getter
   @Setter
   @LinkedIn
-  private int year;
+  private Integer year;
 }
