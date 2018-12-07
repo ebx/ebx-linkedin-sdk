@@ -122,17 +122,7 @@ public class Organization {
   @Getter
   @Setter
   @LinkedIn
-  private String parentRelationshipParent;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String parentRelationShipOrganizationRelationshipType;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String parentRelationshipRelationshipStatus;
+  private ParentRelationship parentRelationship;
 
   @Getter
   @Setter
@@ -173,6 +163,11 @@ public class Organization {
   @Setter
   @LinkedIn
   private CroppedImage overviewPhotov2;
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private CroppedImage logo;
 
   @Getter
   @Setter

@@ -22,28 +22,25 @@ import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import lombok.Getter;
 import lombok.Setter;
 
+
 /**
- * The type Crop info.
- * @author clementcaylux 
+ * ParentRelationship model
+ * @author Alexandros
  */
-public class CropInfo {
+public class ParentRelationship {
+  
   @Getter
   @Setter
   @LinkedIn
-  private int height;
-
+  private String parent;
+  
   @Getter
   @Setter
   @LinkedIn
-  private int width;
-
+  private String organizationRelationshipType;
+ 
   @Getter
   @Setter
-  @LinkedIn("x")
-  private int xAxis;
-
-  @Getter
-  @Setter
-  @LinkedIn("y")
-  private int yAxis;
+  @LinkedIn
+  private String relationshipStatus;
 }

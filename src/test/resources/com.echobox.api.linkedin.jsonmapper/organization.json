@@ -16,10 +16,10 @@
   "entityStatus": "ACTIVE",
   "logo": {
     "cropInfo": {
-      "y": 0,
+      "y": 10,
       "width": 800,
       "height": 800,
-      "x": 0
+      "x": 10
     },
     "original": "urn:li:media:/AAEAAQAAAAAAAAH-AAAAJDRRlZTNlZDQwLTk4YTIt.png",
     "cropped": "urn:li:media:/AAEAAQAAAAAAAANyAAAAJGRlZTNlZDQwLTk4YTIt.png"

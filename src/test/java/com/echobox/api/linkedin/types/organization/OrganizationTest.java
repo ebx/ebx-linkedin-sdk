@@ -46,6 +46,9 @@ public class OrganizationTest extends DefaultJsonMapperTestBase {
     List<LocaleString> alternativeNames = organization.getAlternativeNames();
     LocationInfo location = organization.getLocations().get(0);
     
+    Assert.assertEquals(10, organization.getLogo().getCropInfo().getXAxis());
+    Assert.assertEquals(10, organization.getLogo().getCropInfo().getYAxis());
+    
     Assert.assertEquals("Mountain View", location.getAddress().getCity());
     Assert.assertEquals("HEADQUARTERS", location.getLocationType());
     Assert.assertEquals("linkedin", organization.getVanityName());
