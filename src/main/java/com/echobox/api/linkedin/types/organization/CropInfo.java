@@ -39,11 +39,11 @@ public class CropInfo {
 
   @Getter
   @Setter
-  @LinkedIn
+  @LinkedIn("x")
   private int xAxis;
 
   @Getter
   @Setter
-  @LinkedIn
+  @LinkedIn("y")
   private int yAxis;
 }
