@@ -23,7 +23,7 @@ package com.echobox.api.linkedin.types.urn;
  */
 public enum URNEntityType {
 
-    PlACE,
+    PLACE,
     COUNTRY,
     ORGANIZATION,
     SENIORITY,

@@ -723,14 +723,7 @@ public class DefaultJsonMapper implements JsonMapper {
     }
 
     if (URN.class.equals(type) && rawValue.toString().startsWith("urn:li:")) {
-      String[] split = rawValue.toString().split(":", 4);
-      if (split.length != 4) {
-        throw new IllegalArgumentException("Could not parse the urn " + rawValue.toString());
-      }
-      String urnType = split[2].toUpperCase();
-      String urnId = split[3];
-      URN urn = new URN(urnType, urnId);
-      return urn;
+      return new URN(rawValue.toString());
     }
 
     if (String.class.equals(type)) {

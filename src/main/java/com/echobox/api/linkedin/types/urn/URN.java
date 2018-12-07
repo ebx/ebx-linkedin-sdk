@@ -45,6 +45,10 @@ public class URN {
    * @param id the id
    */
   public URN(String entityType, String id) {
+    if (entityType == null || id == null) {
+      throw new IllegalArgumentException("No argument provided can be null"); 
+    }
+    
     this.entityType = entityType.toUpperCase();
     this.id = id;
   }

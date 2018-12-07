@@ -23,7 +23,7 @@ import com.echobox.api.linkedin.types.urn.LocaleStringNameURN;
 import lombok.Getter;
 
 /**
- * Country ContainsURN POJO
+ * Country URN POJO
  * @see <a href="https://developer.linkedin.com/docs/ref/v2/standardized-data/locations/countries">
  * Country ContainsURN</a>
  * @author joanna
