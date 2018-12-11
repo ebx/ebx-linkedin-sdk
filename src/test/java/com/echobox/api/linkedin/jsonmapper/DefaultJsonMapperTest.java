@@ -102,12 +102,12 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     company.setName("Test \"Quote\"");
     DefaultJsonMapper mapper = new DefaultJsonMapper();
     String json = mapper.toJson(company);
-    assertEquals("{\"stockExchange\":null,\"ticker\":null,\"companyType\":null,"
-        + "\"emailDomains\":null,\"description\":null,\"foundedYear\":null,\"endYear\":null,"
-        + "\"logoUrl\":null,\"twitterId\":null,\"employeeCountRange\":null,\"specialties\":null,"
-        + "\"websiteUrl\":null,\"squareLogoUrl\":null,\"industries\":null,\"numFollowers\":null,"
-        + "\"name\":\"Test \\\"Quote\\\"\",\"blogRSSURL\":null,\"locations\":null,\"universalName"
-        + "\":null,\"id\":123,\"status\":null}", json);
+    assertEquals("{\"universalName\":null,\"emailDomains\":null,\"companyType\":null,"
+        + "\"ticker\":null,\"websiteUrl\":null,\"industries\":null,\"status\":null,"
+        + "\"logoUrl\":null,\"squareLogoUrl\":null,\"blogRSSURL\":null,\"twitterId\":null,"
+        + "\"employeeCountRange\":null,\"specialties\":null,\"locations\":null,"
+        + "\"description\":null,\"stockExchange\":null,\"foundedYear\":null,\"endYear\":null,"
+        + "\"numFollowers\":null,\"name\":\"Test \\\"Quote\\\"\",\"id\":123}", json);
   }
 
   /**
@@ -133,12 +133,12 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     company.setId(123L);
     DefaultJsonMapper mapper = new DefaultJsonMapper();
     String json = mapper.toJson(company, false);
-    assertEquals("{\"stockExchange\":null,\"ticker\":null,\"companyType\":null,"
-        + "\"emailDomains\":null,\"description\":null,\"foundedYear\":null,\"endYear\":null,"
-        + "\"logoUrl\":null,\"twitterId\":null,\"employeeCountRange\":null,\"specialties\":null,"
-        + "\"websiteUrl\":null,\"squareLogoUrl\":null,\"industries\":null,\"numFollowers\":null,"
-        + "\"name\":null,\"blogRSSURL\":null,\"locations\":null,\"universalName\":null,"
-        + "\"id\":123,\"status\":null}", json);
+    assertEquals("{\"universalName\":null,\"emailDomains\":null,\"companyType\":null,"
+        + "\"ticker\":null,\"websiteUrl\":null,\"industries\":null,\"status\":null,"
+        + "\"logoUrl\":null,\"squareLogoUrl\":null,\"blogRSSURL\":null,\"twitterId\":null,"
+        + "\"employeeCountRange\":null,\"specialties\":null,\"locations\":null,"
+        + "\"description\":null,\"stockExchange\":null,\"foundedYear\":null,\"endYear\":null,"
+        + "\"numFollowers\":null,\"name\":null,\"id\":123}", json);
   }
 
   /**

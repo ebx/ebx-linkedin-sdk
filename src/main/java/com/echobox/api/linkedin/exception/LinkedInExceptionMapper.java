@@ -18,7 +18,7 @@
 
 package com.echobox.api.linkedin.exception;
 
-import org.json.JSONObject;
+import com.eclipsesource.json.JsonObject;
 
 /**
  * Specifies a method for mapping LinkedIn API exceptions to corresponding instances of
@@ -44,5 +44,5 @@ public interface LinkedInExceptionMapper {
    * @return An appropriate {@code LinkedInException} subclass.
    */
   LinkedInException exceptionForTypeAndMessage(Integer errorCode, Integer httpStatusCode,
-      String message, Boolean isTransient, JSONObject rawError);
+      String message, Boolean isTransient, JsonObject rawError);
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2017 Mark Allen, Norbert Bartels.
+ * Copyright (c) 2010-2018 Mark Allen, Norbert Bartels.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,11 +26,10 @@ package com.echobox.api.linkedin.util;
 import static java.lang.String.format;
 import static java.util.Collections.*;
 
+import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
+
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -107,14 +106,14 @@ public final class ReflectionUtils {
       return cachedResults;
     }
 
-    List<FieldWithAnnotation<T>> fieldsWithAnnotation = new ArrayList<FieldWithAnnotation<T>>();
+    List<FieldWithAnnotation<T>> fieldsWithAnnotation = new ArrayList<>();
 
     // Walk all superclasses looking for annotated fields until we hit Object
     while (!Object.class.equals(type) && type != null) {
       for (Field field : type.getDeclaredFields()) {
         T annotation = field.getAnnotation(annotationType);
         if (annotation != null) {
-          fieldsWithAnnotation.add(new FieldWithAnnotation<T>(field, annotation));
+          fieldsWithAnnotation.add(new FieldWithAnnotation<>(field, annotation));
         }
 
       }
@@ -149,7 +148,7 @@ public final class ReflectionUtils {
       return cachedResults;
     }
 
-    List<Method> methodsWithAnnotation = new ArrayList<Method>();
+    List<Method> methodsWithAnnotation = new ArrayList<>();
 
     // Walk all superclasses looking for annotated methods until we hit Object
     while (!Object.class.equals(type)) {
@@ -220,8 +219,7 @@ public final class ReflectionUtils {
       throw new IllegalArgumentException("The 'clazz' parameter cannot be null.");
     }
 
-    List<Method> methods = new ArrayList<Method>();
-
+    List<Method> methods = new ArrayList<>();
     for (Method method : clazz.getMethods()) {
       String methodName = method.getName();
       if (!"getClass".equals(methodName) && !"hashCode".equals(methodName) && method.getReturnType() != null
@@ -343,7 +341,7 @@ public final class ReflectionUtils {
     }
 
     // Only compare accessors that are present in both classes
-    Set<Method> accessorMethodsIntersection = new HashSet<Method>(getAccessors(object1.getClass()));
+    Set<Method> accessorMethodsIntersection = new HashSet<>(getAccessors(object1.getClass()));
     accessorMethodsIntersection.retainAll(getAccessors(object2.getClass()));
 
     for (Method method : accessorMethodsIntersection) {
@@ -365,6 +363,41 @@ public final class ReflectionUtils {
     }
 
     return true;
+  }
+
+  /**
+   * Creates a new instance of the given {@code type}.
+   * <p>
+   *
+   *
+   * @param <T>
+   *          Java type to map to.
+   * @param type
+   *          Type token.
+   * @return A new instance of {@code type}.
+   * @throws LinkedInJsonMappingException
+   *           If an error occurs when creating a new instance ({@code type} is inaccessible, doesn't have a no-arg
+   *           constructor, etc.)
+   */
+  public static <T> T createInstance(Class<T> type) {
+    String errorMessage = "Unable to create an instance of " + type
+            + ". Please make sure that if it's a nested class, is marked 'static'. "
+            + "It should have a no-argument constructor.";
+
+    try {
+      Constructor<T> defaultConstructor = type.getDeclaredConstructor();
+
+      if (defaultConstructor == null) {
+        throw new LinkedInJsonMappingException("Unable to find a default constructor for " + type);
+      }
+
+      // Allows protected, private, and package-private constructors to be
+      // invoked
+      defaultConstructor.setAccessible(true);
+      return defaultConstructor.newInstance();
+    } catch (Exception e) {
+      throw new LinkedInJsonMappingException(errorMessage, e);
+    }
   }
 
   /**
