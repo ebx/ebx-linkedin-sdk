@@ -17,7 +17,7 @@
 
 package com.echobox.api.linkedin.exception;
 
-import org.json.JSONObject;
+import com.eclipsesource.json.JsonObject;
 
 /**
  * LinkedIn query parse exception
@@ -43,7 +43,7 @@ public class LinkedInQueryParseException extends LinkedInAPIException {
    *          raw error message as JSON
    */
   public LinkedInQueryParseException(String errorMessage, Integer errorCode, Integer httpStatusCode,
-      JSONObject rawError) {
+      JsonObject rawError) {
     super(errorMessage, errorCode, httpStatusCode, rawError);
   }
   
