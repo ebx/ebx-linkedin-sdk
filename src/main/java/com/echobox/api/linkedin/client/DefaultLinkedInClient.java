@@ -218,8 +218,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     verifyParameterPresence("connection", connection);
 
     return jsonMapper.toJavaObject(makeRequest(connection, true, false, jsonBody,
-        binaryAttachments,
-        parameters), objectType);
+        binaryAttachments, parameters), objectType);
   }
 
   @Override
@@ -238,7 +237,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   public boolean deleteObject(String object, Parameter... parameters) {
     verifyParameterPresence("object", object);
 
-    String responseString = makeRequest(object, false, true, null, parameters);
+    String responseString = makeRequest(object, false, true, null, null, parameters);
     try {
       JSONObject jObj = new JSONObject(responseString);
       if (jObj.has("result")) {
