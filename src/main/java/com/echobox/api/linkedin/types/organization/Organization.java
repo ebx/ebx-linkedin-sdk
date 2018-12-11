@@ -21,7 +21,7 @@ import com.echobox.api.linkedin.jsonmapper.JsonMapper;
 import com.echobox.api.linkedin.jsonmapper.JsonMapper.JsonMappingCompleted;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.Deleted;
-import com.echobox.api.linkedin.types.LinkedInIdType;
+import com.echobox.api.linkedin.types.LinkedInIdAndURNType;
 import com.echobox.api.linkedin.types.objectype.Locale;
 import com.echobox.api.linkedin.types.objectype.LocaleString;
 import com.echobox.api.linkedin.types.objectype.MultiLocaleString;
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * #schema">Organization Schema</a>
  * @author clementcaylux 
  */
-public class Organization extends LinkedInIdType {
+public class Organization extends LinkedInIdAndURNType {
   
   /**
    * Alternative names of the entity. There can be multiple names per locale.
@@ -284,14 +284,6 @@ public class Organization extends LinkedInIdType {
   @Setter
   @LinkedIn
   private String organizationType;
-  
-  /**
-   * Type of organization.
-   */
-  @Getter
-  @Setter
-  @LinkedIn("$URN")
-  private URN urn;
   
   @JsonMappingCompleted
   protected void jsonMappingCompleted(JsonMapper jsonMapper) {

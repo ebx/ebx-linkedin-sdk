@@ -286,7 +286,7 @@ public class DefaultJsonMapper implements JsonMapper {
         }
         return null;
       }
-      
+
       JSONObject jsonObject = new JSONObject(json);
       T instance = createInstance(type);
 
