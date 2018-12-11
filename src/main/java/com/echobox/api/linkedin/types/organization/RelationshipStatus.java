@@ -17,36 +17,21 @@
 
 package com.echobox.api.linkedin.types.organization;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
-import lombok.Getter;
-import lombok.Setter;
-
 /**
- * The type Crop info.
- * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-
- * lookup-api#croppedimg"> Cropped Image Schema</a>
- * @author clementcaylux 
+ * The status of a relationship between organizations
+ * @author joanna
+ *
  */
-public class CropInfo {
+public enum RelationshipStatus {
   
-  @Getter
-  @Setter
-  @LinkedIn
-  private int height;
+  /**
+   * The relationship is active.
+   */
+  ACTIVE,
+  
+  /**
+   * The relationship is inactive.
+   */
+  INACTIVE;
 
-  @Getter
-  @Setter
-  @LinkedIn
-  private int width;
-
-  @Getter
-  @Setter
-  @LinkedIn("x")
-  private int xAxis;
-
-  @Getter
-  @Setter
-  @LinkedIn("y")
-  private int yAxis;
 }

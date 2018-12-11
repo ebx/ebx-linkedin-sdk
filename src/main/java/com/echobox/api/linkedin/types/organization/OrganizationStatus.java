@@ -17,36 +17,36 @@
 
 package com.echobox.api.linkedin.types.organization;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
-import lombok.Getter;
-import lombok.Setter;
-
 /**
- * The type Crop info.
- * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-
- * lookup-api#croppedimg"> Cropped Image Schema</a>
- * @author clementcaylux 
+ * Status of the organization, such as operating or out of business
+ * @author joanna
+ *
  */
-public class CropInfo {
+public enum OrganizationStatus {
   
-  @Getter
-  @Setter
-  @LinkedIn
-  private int height;
+  /**
+   * Currently operating
+   */
+  OPERATING,
+  
+  /**
+   * Operating as a subsidiary
+   */
+  OPERATING_SUBSIDIARY,
+  
+  /**
+   * Undergoing reorganization
+   */
+  REORGANIZING,
+  
+  /**
+   * Out of business
+   */
+  OUT_OF_BUSINESS,
+  
+  /**
+   * Acquired by another organization
+   */
+  ACQUIRED;
 
-  @Getter
-  @Setter
-  @LinkedIn
-  private int width;
-
-  @Getter
-  @Setter
-  @LinkedIn("x")
-  private int xAxis;
-
-  @Getter
-  @Setter
-  @LinkedIn("y")
-  private int yAxis;
 }

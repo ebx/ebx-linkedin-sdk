@@ -18,6 +18,7 @@
 package com.echobox.api.linkedin.types.organization;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,16 +30,25 @@ import lombok.Setter;
  */
 public class ParentRelationship {
   
+  /**
+   * Urn of the parent organization.
+   */
   @Getter
   @Setter
   @LinkedIn
-  private String parent;
+  private URN parent;
   
+  /**
+   * Type of relationship from child to parent organizations
+   */
   @Getter
   @Setter
   @LinkedIn
   private String organizationRelationshipType;
  
+  /**
+   * The status of a relationship between organizations
+   */
   @Getter
   @Setter
   @LinkedIn

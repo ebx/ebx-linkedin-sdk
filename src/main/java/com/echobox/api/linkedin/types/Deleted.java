@@ -15,37 +15,24 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.organization;
+package com.echobox.api.linkedin.types;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
- * The type School attributes.
- * @author clementcaylux 
+ * Deleted POJO for LinkedIn V2
+ * @author joanna
+ *
  */
-public class SchoolAttributes {
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String hierarchyClassification;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String legacySchool;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String type;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String yearLevel;
+public class Deleted {
   
+  /**
+   * Deleted timestamp
+   */
+  @Getter
+  @LinkedIn
+  private Long time;
+
 }

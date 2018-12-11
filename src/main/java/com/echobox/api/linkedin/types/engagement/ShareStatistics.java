@@ -18,7 +18,6 @@
 package com.echobox.api.linkedin.types.engagement;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.Paging;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -36,11 +35,5 @@ public class ShareStatistics {
   @Setter
   @LinkedIn
   private List<ShareStatisticsElement> elements;
-  
-  @Getter
-  @Setter
-  @LinkedIn
-  private Paging paging;
-  
-  
+
 }

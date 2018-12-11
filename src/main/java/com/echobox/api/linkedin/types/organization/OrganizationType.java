@@ -17,36 +17,51 @@
 
 package com.echobox.api.linkedin.types.organization;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
-import lombok.Getter;
-import lombok.Setter;
-
 /**
- * The type Crop info.
- * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-
- * lookup-api#croppedimg"> Cropped Image Schema</a>
- * @author clementcaylux 
+ * Type of organization
+ * @author joanna
+ *
  */
-public class CropInfo {
+public enum OrganizationType {
   
-  @Getter
-  @Setter
-  @LinkedIn
-  private int height;
+  /**
+   * A public company
+   */
+  PUBLIC_COMPANY,
+  
+  /**
+   * An educational institution
+   */
+  EDUCATIONAL,
+  
+  /**
+   * A self-employed business
+   */
+  SELF_EMPLOYED,
+  
+  /**
+   * A government agency
+   */
+  GOVERNMENT_AGENCY,
+  
+  /**
+   * A non-profit organization
+   */
+  NON_PROFIT,
+  
+  /**
+   * A self-owned business
+   */
+  SELF_OWNED,
+  
+  /**
+   * A privately held business
+   */
+  PRIVATELY_HELD,
+  
+  /**
+   * A partnership
+   */
+  PARTNERSHIP;
 
-  @Getter
-  @Setter
-  @LinkedIn
-  private int width;
-
-  @Getter
-  @Setter
-  @LinkedIn("x")
-  private int xAxis;
-
-  @Getter
-  @Setter
-  @LinkedIn("y")
-  private int yAxis;
 }

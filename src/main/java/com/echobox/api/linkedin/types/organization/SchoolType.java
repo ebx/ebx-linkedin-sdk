@@ -15,34 +15,31 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
-
+package com.echobox.api.linkedin.types.organization;
 
 /**
- * @author clementcaylux on 27/11/2018.
+ * The type of institution
+ * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-lookup-api
+ * #schoolattr">School Attributes Schema</a>
+ * @author joanna
+ *
  */
-public class Paging {
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  private int count;
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  private int start;
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  List<String> links;
+public enum SchoolType {
   
+  /**
+   * A public school operated by the state, as opposed to being a private enterprise.
+   */
+  PUBLIC,
+  
+  /**
+   * A private school, also known as independent school, non-governmental, or nonstate school, 
+   * not administered by a government.
+   */
+  PRIVATE,
+  
+  /**
+   * A for-profit school operated by a private, profit-seeking business.
+   */
+  PROFIT;
+
 }

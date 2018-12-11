@@ -17,36 +17,27 @@
 
 package com.echobox.api.linkedin.types.organization;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
-import lombok.Getter;
-import lombok.Setter;
-
 /**
- * The type Crop info.
- * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-
- * lookup-api#croppedimg"> Cropped Image Schema</a>
- * @author clementcaylux 
+ * Type of relationship from child to parent organizations
+ * @author joanna
+ *
  */
-public class CropInfo {
+public enum OrganizationRelationshipType {
   
-  @Getter
-  @Setter
-  @LinkedIn
-  private int height;
+  /**
+   * This organization is a subsidiary of the parent.
+   */
+  SUBSIDIARY,
+  
+  /**
+   * This organization was acquired by the parent.
+   */
+  ACQUISITION,
+  
+  /**
+   * An associated school of the parent organization. 
+   * For example, a University's School of Law or a remote campus, or a company-owned university.
+   */
+  SCHOOL;
 
-  @Getter
-  @Setter
-  @LinkedIn
-  private int width;
-
-  @Getter
-  @Setter
-  @LinkedIn("x")
-  private int xAxis;
-
-  @Getter
-  @Setter
-  @LinkedIn("y")
-  private int yAxis;
 }

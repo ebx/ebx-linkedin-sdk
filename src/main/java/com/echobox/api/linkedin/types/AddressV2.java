@@ -41,7 +41,7 @@ public class AddressV2 {
   @Getter
   @Setter
   @LinkedIn
-  private String geographicalArea;
+  private String geographicArea;
 
   @Getter
   @Setter

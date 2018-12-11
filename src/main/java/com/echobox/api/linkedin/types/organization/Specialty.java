@@ -18,35 +18,28 @@
 package com.echobox.api.linkedin.types.organization;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.objectype.Locale;
 
 import lombok.Getter;
-import lombok.Setter;
+
+import java.util.List;
 
 /**
- * The type Crop info.
- * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-
- * lookup-api#croppedimg"> Cropped Image Schema</a>
- * @author clementcaylux 
+ * Speciality POJO
+ * @author joanna
+ *
  */
-public class CropInfo {
+public class Specialty {
   
   @Getter
-  @Setter
   @LinkedIn
-  private int height;
-
+  private Locale locale;
+  
+  /**
+   * Admin-defined specialty tags of the entity.
+   */
   @Getter
-  @Setter
   @LinkedIn
-  private int width;
+  private List<String> tags;
 
-  @Getter
-  @Setter
-  @LinkedIn("x")
-  private int xAxis;
-
-  @Getter
-  @Setter
-  @LinkedIn("y")
-  private int yAxis;
 }

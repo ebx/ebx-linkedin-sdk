@@ -19,7 +19,7 @@ package com.echobox.api.linkedin.types.organization;
 
 import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapper;
 import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapperTestBase;
-import com.echobox.api.linkedin.types.objectype.LocaleString;
+import com.echobox.api.linkedin.types.objectype.MultiLocaleString;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -43,22 +43,94 @@ public class OrganizationTest extends DefaultJsonMapperTestBase {
     DefaultJsonMapper defaultJsonMapper = new DefaultJsonMapper();
     
     Organization organization = defaultJsonMapper.toJavaObject(json, Organization.class);
-    List<LocaleString> alternativeNames = organization.getAlternativeNames();
-    LocationInfo location = organization.getLocations().get(0);
     
-    Assert.assertEquals(10, organization.getLogo().getCropInfo().getXAxis());
-    Assert.assertEquals(10, organization.getLogo().getCropInfo().getYAxis());
+    Assert.assertFalse(organization.getLocalizedDescription().isEmpty());
+    Assert.assertEquals(1, organization.getLocations().size());
+    LocationInfo locationInfo = organization.getLocations().get(0);
+    Assert.assertEquals("SIZE_1", locationInfo.getStaffCountRange());
+    Assert.assertEquals("HEADQUARTERS", locationInfo.getLocationType());
+    Assert.assertEquals("94043", locationInfo.getAddress().getPostalCode());
+    Assert.assertEquals("US", locationInfo.getAddress().getCountry());
+    Assert.assertEquals("CA", locationInfo.getAddress().getGeographicArea());
+    Assert.assertEquals("2029 Stierlin Court", locationInfo.getAddress().getLine1());
+    Assert.assertEquals("Mountain View", locationInfo.getAddress().getCity());
     
-    Assert.assertEquals("Mountain View", location.getAddress().getCity());
-    Assert.assertEquals("HEADQUARTERS", location.getLocationType());
+    Assert.assertEquals("ACTIVE", organization.getEntityStatus());
+    
+    CroppedImage logo = organization.getLogo();
+    CropInfo cropInfo = logo.getCropInfo();
+    Assert.assertEquals(10, cropInfo.getXAxis());
+    Assert.assertEquals(10, cropInfo.getYAxis());
+    Assert.assertEquals(800, cropInfo.getWidth());
+    Assert.assertEquals(800, cropInfo.getHeight());
+    Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAAH-AAAAJDRRlZTNlZDQwLTk4YTIt.png", 
+        logo.getOriginal().toString());
+    Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAANyAAAAJGRlZTNlZDQwLTk4YTIt.png", 
+        logo.getCropped().toString());
+    
     Assert.assertEquals("linkedin", organization.getVanityName());
+    
+    Assert.assertTrue(organization.getAlternativeNames().isEmpty());
+
+    Assert.assertEquals(1337, organization.getId());
+    
+    Assert.assertEquals(1, organization.getIndustries().size());
+    Assert.assertEquals("urn:li:industry:47", organization.getIndustries().get(0).toString());
+    
+    Assert.assertEquals("urn:li:organization:1337", organization.getUrn().toString());
+    
+    Assert.assertEquals("LinkedIn", organization.getLocalizedName());
+    
+    Assert.assertEquals(new Integer(2003), organization.getFoundedOn().getYear());
+
+    Assert.assertEquals("http://www.linkedin.com", organization.getLocalizedWebsite());
+
+    MultiLocaleString website = organization.getWebsite();
+    Assert.assertEquals("US", website.getPreferredLocale().getCountry());
+    Assert.assertEquals("en", website.getPreferredLocale().getLanguage());
+    Assert.assertEquals("http://www.linkedin.com", website.getLocalized().get("en_US"));
+
     Assert.assertEquals("OPERATING", organization.getOrganizationStatus());
-    Assert.assertEquals("US", organization.getDescription().getPreferredLocale().getCountry());
-    Assert.assertTrue(organization.getName().getLocalized().keySet().contains("fr_FR"));
+    
+    MultiLocaleString description = organization.getDescription();
+    Assert.assertEquals("US", description.getPreferredLocale().getCountry());
+    Assert.assertEquals("en", description.getPreferredLocale().getLanguage());
+    Assert.assertTrue(description.getLocalized().containsKey("ja_JP"));
+    Assert.assertTrue(description.getLocalized().containsKey("en_US"));
+
     Assert.assertEquals("PUBLIC_COMPANY", organization.getOrganizationType());
-    Assert.assertEquals("Online Professional Network", organization.getLocalizedSpecialties()
-        .get(0));
+    
+    Assert.assertTrue(organization.getGroups().isEmpty());
+    
+    Assert.assertEquals("US", organization.getDefaultLocale().getCountry());
+    Assert.assertEquals("en", organization.getDefaultLocale().getLanguage());
+
+    Assert.assertEquals(8, organization.getLocalizedSpecialties().size());
+
+    MultiLocaleString name = organization.getName();
+    Assert.assertEquals("US", name.getPreferredLocale().getCountry());
+    Assert.assertEquals("en", name.getPreferredLocale().getLanguage());
+    Assert.assertEquals(22, name.getLocalized().size());
+
     Assert.assertEquals("SIZE_5001_TO_10000", organization.getStaffCountRange());
+    
+    List<Specialty> specialties = organization.getSpecialties();
+    Assert.assertEquals(1, specialties.size());
+    Specialty specialty = specialties.get(0);
+    Assert.assertEquals("US", specialty.getLocale().getCountry());
+    Assert.assertEquals("en", specialty.getLocale().getLanguage());
+    Assert.assertEquals(8, specialty.getTags().size());
+
+    CroppedImage coverPhoto = organization.getCoverPhoto();
+    CropInfo cropInfoCoverPhoto = coverPhoto.getCropInfo();
+    Assert.assertEquals(0, cropInfoCoverPhoto.getXAxis());
+    Assert.assertEquals(0, cropInfoCoverPhoto.getYAxis());
+    Assert.assertEquals(646, cropInfoCoverPhoto.getWidth());
+    Assert.assertEquals(220, cropInfoCoverPhoto.getHeight());
+    Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAAfmAAAAJDQwLTk4YTItNGNlLWRj.png", 
+        coverPhoto.getOriginal().toString());
+    Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAAkOAAAAJDA3NmYwMzRkLTA2MTAt.png", 
+        coverPhoto.getCropped().toString());
   }
 
 }

@@ -25,6 +25,8 @@ import lombok.Setter;
 
 /**
  * The type Cropped image.
+ * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-
+ * lookup-api#croppedimg"> Cropped Image Schema</a>
  * @author clementcaylux 
  */
 public class CroppedImage {

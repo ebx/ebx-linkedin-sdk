@@ -23,30 +23,45 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * The type Crop info.
- * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-
- * lookup-api#croppedimg"> Cropped Image Schema</a>
+ * The type School attributes.
+ * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-lookup-
+ * api#schoolattr">School Attribute Schema</a>
  * @author clementcaylux 
  */
-public class CropInfo {
+public class SchoolAttribute {
+
+  /**
+   * The classification for school hierarchy
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private String hierarchyClassification;
+
+  /**
+   * Legacy school urn for the organization.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private String legacySchool;
+
+  /**
+   * The type of institution.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private String type;
+
+  /**
+   * Classification of the length of the institution's educational programs. 
+   * These levels are defined by the National Center for Education Statistics 
+   * (http://nces.ed.gov/pubs2015/2015097rev.pdf).
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private String yearLevel;
   
-  @Getter
-  @Setter
-  @LinkedIn
-  private int height;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private int width;
-
-  @Getter
-  @Setter
-  @LinkedIn("x")
-  private int xAxis;
-
-  @Getter
-  @Setter
-  @LinkedIn("y")
-  private int yAxis;
 }

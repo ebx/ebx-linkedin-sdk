@@ -30,7 +30,6 @@ import static java.util.Collections.unmodifiableSet;
 import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
 import com.echobox.api.linkedin.logging.LinkedInLogger;
 import com.echobox.api.linkedin.types.urn.URN;
-import com.echobox.api.linkedin.types.urn.URNEntityType;
 import com.echobox.api.linkedin.util.DateUtils;
 import com.echobox.api.linkedin.util.ReflectionUtils;
 import com.echobox.api.linkedin.util.ReflectionUtils.FieldWithAnnotation;
@@ -288,11 +287,6 @@ public class DefaultJsonMapper implements JsonMapper {
         return null;
       }
       
-      if (URN.class.equals(type)) {
-        URN urn = new URN(json);
-        return (T) urn;
-      }
-
       JSONObject jsonObject = new JSONObject(json);
       T instance = createInstance(type);
 
@@ -799,6 +793,9 @@ public class DefaultJsonMapper implements JsonMapper {
     }
     if (Map.class.equals(type)) {
       return convertJsonObjectToMap(rawValue.toString(), fieldWithAnnotation.getField());
+    }
+    if (URN.class.equals(type)) {
+      return new URN(jsonObject.getString(linkedinFieldName));
     }
 
     if (type.isEnum()) {

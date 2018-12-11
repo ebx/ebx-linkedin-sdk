@@ -17,36 +17,38 @@
 
 package com.echobox.api.linkedin.types.organization;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
-import lombok.Getter;
-import lombok.Setter;
-
 /**
- * The type Crop info.
+ * The classification for school hierarchy.
  * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-
- * lookup-api#croppedimg"> Cropped Image Schema</a>
- * @author clementcaylux 
+ * lookup-api#schoolattr">School Attributes Schema</a>
+ * @author joanna
+ *
  */
-public class CropInfo {
+public enum SchoolHierarchyClassification {
   
-  @Getter
-  @Setter
-  @LinkedIn
-  private int height;
+  /**
+   * A collection of schools and education providers.
+   */
+  CONSORTIUM_SYSTEM,
+  
+  /**
+   * A university, typically containing individual schools within it.
+   */
+  UNIVERSITY,
+  
+  /**
+   * Provides degrees, certs, etc., but typically does not contain individual schools within it.
+   */
+  INDEPENDENT_SCHOOL_COLLEGE_PROVIDER,
+  
+  /**
+   * A separate campus that is at a distance from the primary college area.
+   */
+  REMOTE_CAMPUS,
+  
+  /**
+   * A school that provides education solely through online channels.
+   */
+  DISTANCE_LEARNING;
 
-  @Getter
-  @Setter
-  @LinkedIn
-  private int width;
-
-  @Getter
-  @Setter
-  @LinkedIn("x")
-  private int xAxis;
-
-  @Getter
-  @Setter
-  @LinkedIn("y")
-  private int yAxis;
 }
