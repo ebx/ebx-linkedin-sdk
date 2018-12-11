@@ -19,10 +19,10 @@ package com.echobox.api.linkedin.types.urn;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
-import org.apache.commons.lang3.StringUtils;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * The type Urn.

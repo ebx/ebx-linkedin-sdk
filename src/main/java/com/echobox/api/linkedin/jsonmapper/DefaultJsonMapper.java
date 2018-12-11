@@ -515,7 +515,7 @@ public class DefaultJsonMapper implements JsonMapper {
     }
     
     if (object instanceof URN) {
-      return object.toString();
+      return Json.value(((URN) object).toString());
     }
 
     if (object instanceof BigInteger) {
@@ -731,7 +731,7 @@ public class DefaultJsonMapper implements JsonMapper {
       return convertJsonObjectToMap(rawValue.toString(), fieldWithAnnotation.getField());
     }
     if (URN.class.equals(type)) {
-      return new URN(jsonObject.getString(linkedinFieldName));
+      return new URN(rawValue.asString());
     }
 
     if (type.isEnum()) {
