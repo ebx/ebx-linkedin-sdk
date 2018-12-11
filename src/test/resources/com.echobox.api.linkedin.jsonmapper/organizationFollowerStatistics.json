@@ -1,0 +1,346 @@
+{
+  "paging": {
+    "count": 10,
+    "start": 0
+  },
+  "elements": [
+    {
+      "totalFollowerCounts": {
+        "organicFollowerCount": 33916,
+        "paidFollowerCount": 268
+      },
+      "followerCountsByStaffCountRange": [
+        {
+          "followerCounts": {
+            "organicFollowerCount": 6,
+            "paidFollowerCount": 0
+          },
+          "staffCountRange": "SIZE_1"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 29,
+            "paidFollowerCount": 0
+          },
+          "staffCountRange": "SIZE_2_TO_10"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 5,
+            "paidFollowerCount": 0
+          },
+          "staffCountRange": "SIZE_11_TO_50"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 29,
+            "paidFollowerCount": 0
+          },
+          "staffCountRange": "SIZE_51_TO_200"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 2,
+            "paidFollowerCount": 0
+          },
+          "staffCountRange": "SIZE_501_TO_1000"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 1,
+            "paidFollowerCount": 0
+          },
+          "staffCountRange": "SIZE_1001_TO_5000"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 25,
+            "paidFollowerCount": 0
+          },
+          "staffCountRange": "SIZE_5001_TO_10000"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 51,
+            "paidFollowerCount": 0
+          },
+          "staffCountRange": "SIZE_10001_OR_MORE"
+        }
+      ],
+      "followerCountsByIndustry": [
+        {
+          "followerCounts": {
+            "organicFollowerCount": 0,
+            "paidFollowerCount": 18
+          },
+          "industry": "REAL_ESTATE"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 0,
+            "paidFollowerCount": 34
+          },
+          "industry": "FUNDRAISING"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 24,
+            "paidFollowerCount": 0
+          },
+          "industry": "ACCOUNTING"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 0,
+            "paidFollowerCount": 0
+          },
+          "industry": "EDUCATION_MANAGEMENT"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 2,
+            "paidFollowerCount": 0
+          },
+          "industry": "COMPUTER_SOFTWARE"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 0,
+            "paidFollowerCount": 0
+          },
+          "industry": "ALTERNATIVE_MEDICINE"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 1,
+            "paidFollowerCount": 0
+          },
+          "industry": "ANIMATION"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 1,
+            "paidFollowerCount": 0
+          },
+          "industry": "APPAREL_AND_FASHION"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 0,
+            "paidFollowerCount": 12
+          },
+          "industry": "LIBRARIES"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 1,
+            "paidFollowerCount": 0
+          },
+          "industry": "INFORMATION_TECHNOLOGY_AND_SERVICES"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 1,
+            "paidFollowerCount": 0
+          },
+          "industry": "FINANCIAL_SERVICES"
+        }
+      ],
+      "followerCountsByFunction": [
+        {
+          "followerCounts": {
+            "organicFollowerCount": 1662,
+            "paidFollowerCount": 0
+          },
+          "function": "urn:li:function:22"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 21,
+            "paidFollowerCount": 0
+          },
+          "function": "urn:li:function:11"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 3,
+            "paidFollowerCount": 0
+          },
+          "function": "urn:li:function:12"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 674,
+            "paidFollowerCount": 0
+          },
+          "function": "urn:li:function:13"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 62,
+            "paidFollowerCount": 0
+          },
+          "function": "urn:li:function:25"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 1,
+            "paidFollowerCount": 0
+          },
+          "function": "urn:li:function:15"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 5,
+            "paidFollowerCount": 0
+          },
+          "function": "urn:li:function:16"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 1,
+            "paidFollowerCount": 9
+          },
+          "function": "urn:li:function:17"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 22,
+            "paidFollowerCount": 0
+          },
+          "function": "urn:li:function:18"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 1,
+            "paidFollowerCount": 0
+          },
+          "function": "urn:li:function:1"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 1,
+            "paidFollowerCount": 0
+          },
+          "function": "urn:li:function:2"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 1,
+            "paidFollowerCount": 0
+          },
+          "function": "urn:li:function:3"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 1,
+            "paidFollowerCount": 0
+          },
+          "function": "urn:li:function:4"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 2,
+            "paidFollowerCount": 0
+          },
+          "function": "urn:li:function:5"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 3,
+            "paidFollowerCount": 0
+          },
+          "function": "urn:li:function:6"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 1,
+            "paidFollowerCount": 0
+          },
+          "function": "urn:li:function:7"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 1237,
+            "paidFollowerCount": 18
+          },
+          "function": "urn:li:function:8"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 22,
+            "paidFollowerCount": 0
+          },
+          "function": "urn:li:function:10"
+        }
+      ],
+      "followerCountsByAssociationType": [
+        {
+          "followerCounts": {
+            "organicFollowerCount": 1228,
+            "paidFollowerCount": 184
+          }
+        }
+      ],
+      "followerCountsBySeniority": [
+        {
+          "followerCounts": {
+            "organicFollowerCount": 1,
+            "paidFollowerCount": 0
+          },
+          "seniority": "urn:li:seniority:2"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 2484,
+            "paidFollowerCount": 18
+          },
+          "seniority": "urn:li:seniority:3"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 799,
+            "paidFollowerCount": 0
+          },
+          "seniority": "urn:li:seniority:4"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 708,
+            "paidFollowerCount": 204
+          },
+          "seniority": "urn:li:seniority:5"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 3,
+            "paidFollowerCount": 0
+          },
+          "seniority": "urn:li:seniority:6"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 2,
+            "paidFollowerCount": 0
+          },
+          "seniority": "urn:li:seniority:7"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 3,
+            "paidFollowerCount": 0
+          },
+          "seniority": "urn:li:seniority:8"
+        },
+        {
+          "followerCounts": {
+            "organicFollowerCount": 1,
+            "paidFollowerCount": 0
+          },
+          "seniority": "urn:li:seniority:9"
+        }
+      ],
+      "organizationalEntity": "urn:li:organization:1234"
+    }
+  ]
+}

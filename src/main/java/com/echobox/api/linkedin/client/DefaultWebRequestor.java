@@ -256,8 +256,7 @@ public class DefaultWebRequestor implements WebRequestor {
 
   @Override
   public Response executeDelete(String url) throws IOException {
-    throw new UnsupportedOperationException("DELETE has not been implemented yet");
-    // return execute(url, HttpMethod.DELETE);
+    return execute(url, HttpMethod.DELETE);
   }
 
   @Override
