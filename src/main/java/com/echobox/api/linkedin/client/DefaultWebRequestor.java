@@ -21,6 +21,7 @@ import static java.lang.String.format;
 
 import com.echobox.api.linkedin.logging.LinkedInLogger;
 import com.echobox.api.linkedin.util.URLUtils;
+import com.eclipsesource.json.JsonObject;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential.Builder;
@@ -41,7 +42,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 
 import java.io.BufferedReader;
@@ -166,9 +166,9 @@ public class DefaultWebRequestor implements WebRequestor {
     GoogleClientSecrets clientSecrets = null;
     if (clientId != null && clientSecret != null) {
       // Load client secrets
-      JSONObject appTokens = new JSONObject().put(CLIENT_ID_KEY, clientId)
-          .put(CLIENT_SECRET_KEY, clientSecret);
-      String installedAppTokens = new JSONObject().put(INSTALLED_KEY, appTokens).toString();
+      JsonObject appTokens = new JsonObject().add(CLIENT_ID_KEY, clientId)
+          .add(CLIENT_SECRET_KEY, clientSecret);
+      String installedAppTokens = new JsonObject().add(INSTALLED_KEY, appTokens).toString();
       clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
           new InputStreamReader(new ByteArrayInputStream(installedAppTokens.getBytes())));
     }
