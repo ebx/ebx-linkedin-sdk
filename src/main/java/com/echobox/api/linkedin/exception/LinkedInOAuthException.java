@@ -17,7 +17,7 @@
 
 package com.echobox.api.linkedin.exception;
 
-import org.json.JSONObject;
+import com.eclipsesource.json.JsonObject;
 
 /**
  * The LinkedIn OAuth exception
@@ -43,7 +43,7 @@ public class LinkedInOAuthException extends LinkedInAPIException {
    *          raw error message as JSON
    */
   public LinkedInOAuthException(String errorMessage, Integer errorCode, Integer httpStatusCode,
-      JSONObject rawError) {
+      JsonObject rawError) {
     super(errorMessage, errorCode, httpStatusCode, rawError);
   }
 

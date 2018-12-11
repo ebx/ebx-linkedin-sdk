@@ -17,8 +17,8 @@
 
 package com.echobox.api.linkedin.client.paging;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
 
 /**
  * The paging strategy for V1 JSON responses
@@ -28,14 +28,15 @@ import org.json.JSONObject;
 public class V1PagingImpl extends PagingStrategy {
 
   @Override
-  protected void discoverPages(JSONObject jsonObject, String fullEndpoint) {
-    if (jsonObject.has("values")) {
-      JSONArray values = jsonObject.getJSONArray("values");
-      if (jsonObject.has("_count") && jsonObject.has("_start") && jsonObject.has("_total")) {
+  protected void discoverPages(JsonObject jsonObject, String fullEndpoint) {
+    if (jsonObject.get("values") != null) {
+      JsonArray values = jsonObject.get("values").asArray();
+      if (jsonObject.get("_count") != null && jsonObject.get("_start") != null
+          && jsonObject.get("_total") != null) {
         // Paging is available
-        int count = jsonObject.getInt("_count");
-        int start = jsonObject.getInt("_start");
-        int total = jsonObject.getInt("_total");
+        int count = jsonObject.getInt("_count", 0);
+        int start = jsonObject.getInt("_start", 0);
+        int total = jsonObject.getInt("_total", 0);
         // You will have paged through all the results once your
         // start value + count value >= the value of "_total" in the result set.
         if (start + count >= total || values.isEmpty()) {
