@@ -17,7 +17,7 @@
 
 package com.echobox.api.linkedin.exception;
 
-import org.json.JSONObject;
+import com.eclipsesource.json.JsonObject;
 
 /**
  * LinkedIn resource not found exception
@@ -43,7 +43,7 @@ public class LinkedInResourceNotFoundException extends LinkedInAPIException {
    *          raw error message as JSON
    */
   public LinkedInResourceNotFoundException(String errorMessage, Integer errorCode,
-      Integer httpStatusCode, JSONObject rawError) {
+      Integer httpStatusCode, JsonObject rawError) {
     super(errorMessage, errorCode, httpStatusCode, rawError);
   }
 

@@ -39,6 +39,7 @@ import com.echobox.api.linkedin.types.objectype.MultiLocaleString;
 import com.echobox.api.linkedin.types.social.actions.CommentAction;
 import com.echobox.api.linkedin.types.social.actions.LikeAction;
 import com.echobox.api.linkedin.types.social.actions.SocialAction;
+import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.urn.function.FunctionURN;
 import com.echobox.api.linkedin.types.urn.location.CountryGroupURN;
 import com.echobox.api.linkedin.types.urn.location.CountryURN;
@@ -46,6 +47,7 @@ import com.echobox.api.linkedin.types.urn.location.PlaceURN;
 import com.echobox.api.linkedin.types.urn.location.RegionURN;
 import com.echobox.api.linkedin.types.urn.location.StateURN;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Map;
@@ -105,12 +107,12 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     company.setName("Test \"Quote\"");
     DefaultJsonMapper mapper = new DefaultJsonMapper();
     String json = mapper.toJson(company);
-    assertEquals("{\"stockExchange\":null,\"ticker\":null,\"companyType\":null,"
-        + "\"emailDomains\":null,\"description\":null,\"foundedYear\":null,\"endYear\":null,"
-        + "\"logoUrl\":null,\"twitterId\":null,\"employeeCountRange\":null,\"specialties\":null,"
-        + "\"websiteUrl\":null,\"squareLogoUrl\":null,\"industries\":null,\"numFollowers\":null,"
-        + "\"name\":\"Test \\\"Quote\\\"\",\"blogRSSURL\":null,\"locations\":null,\"universalName"
-        + "\":null,\"id\":123,\"status\":null}", json);
+    assertEquals("{\"universalName\":null,\"emailDomains\":null,\"companyType\":null,"
+        + "\"ticker\":null,\"websiteUrl\":null,\"industries\":null,\"status\":null,"
+        + "\"logoUrl\":null,\"squareLogoUrl\":null,\"blogRSSURL\":null,\"twitterId\":null,"
+        + "\"employeeCountRange\":null,\"specialties\":null,\"locations\":null,"
+        + "\"description\":null,\"stockExchange\":null,\"foundedYear\":null,\"endYear\":null,"
+        + "\"numFollowers\":null,\"name\":\"Test \\\"Quote\\\"\",\"id\":123}", json);
   }
 
   /**
@@ -136,12 +138,12 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     company.setId(123L);
     DefaultJsonMapper mapper = new DefaultJsonMapper();
     String json = mapper.toJson(company, false);
-    assertEquals("{\"stockExchange\":null,\"ticker\":null,\"companyType\":null,"
-        + "\"emailDomains\":null,\"description\":null,\"foundedYear\":null,\"endYear\":null,"
-        + "\"logoUrl\":null,\"twitterId\":null,\"employeeCountRange\":null,\"specialties\":null,"
-        + "\"websiteUrl\":null,\"squareLogoUrl\":null,\"industries\":null,\"numFollowers\":null,"
-        + "\"name\":null,\"blogRSSURL\":null,\"locations\":null,\"universalName\":null,"
-        + "\"id\":123,\"status\":null}", json);
+    assertEquals("{\"universalName\":null,\"emailDomains\":null,\"companyType\":null,"
+        + "\"ticker\":null,\"websiteUrl\":null,\"industries\":null,\"status\":null,"
+        + "\"logoUrl\":null,\"squareLogoUrl\":null,\"blogRSSURL\":null,\"twitterId\":null,"
+        + "\"employeeCountRange\":null,\"specialties\":null,\"locations\":null,"
+        + "\"description\":null,\"stockExchange\":null,\"foundedYear\":null,\"endYear\":null,"
+        + "\"numFollowers\":null,\"name\":null,\"id\":123}", json);
   }
 
   /**
@@ -356,7 +358,7 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     FunctionURN functionURN = mapper.toJavaObject(functionURNJSON, FunctionURN.class);
 
     assertEquals(13, functionURN.getId());
-    assertEquals("urn:li:function:13", functionURN.getUrn());
+    assertEquals(new URN("function", "13"), functionURN.getUrn());
     assertEquals(1, functionURN.getName().getLocalized().size());
     assertEquals("Information Technology", functionURN.getName().getLocalized().get("en_US"));
   }
@@ -384,7 +386,7 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
         CountryGroupURN.class);
 
     assertEquals("AF", countryGroupURN.getCountryGroupCode());
-    assertEquals("urn:li:countryGroup:AF", countryGroupURN.getUrn());
+    assertEquals(new URN("countryGroup", "AF"), countryGroupURN.getUrn());
     assertEquals("US", countryGroupURN.getName().getLocale().getCountry());
     assertEquals("en", countryGroupURN.getName().getLocale().getLanguage());
     assertEquals("Africa", countryGroupURN.getName().getValue());
@@ -414,7 +416,7 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
 
     assertEquals("us", countryURN.getCountryCode());
     assertEquals("urn:li:countryGroup:NA", countryURN.getCountryGroup());
-    assertEquals("urn:li:country:us", countryURN.getUrn());
+    assertEquals(new URN("country", "us"), countryURN.getUrn());
     assertEquals("US", countryURN.getName().getLocale().getCountry());
     assertEquals("en", countryURN.getName().getLocale().getLanguage());
     assertEquals("United States", countryURN.getName().getValue());
@@ -443,7 +445,7 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     StateURN stateURN = mapper.toJavaObject(stateURNJSON, StateURN.class);
 
     assertEquals("urn:li:country:us", stateURN.getCountry());
-    assertEquals("urn:li:state:(urn:li:country:us,CA)", stateURN.getUrn());
+    assertEquals(new URN("state", "(urn:li:country:us,CA)"), stateURN.getUrn());
     assertEquals("CA", stateURN.getStateCode());
     assertEquals("California", stateURN.getName().getValue());
     assertEquals("US", stateURN.getName().getLocale().getCountry());
@@ -477,7 +479,7 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
 
     assertEquals("urn:li:country:us", regionURN.getCountry());
     assertEquals(new Integer(84), regionURN.getId());
-    assertEquals("urn:li:region:84", regionURN.getUrn());
+    assertEquals(new URN("region", "84"), regionURN.getUrn());
     assertEquals("San Francisco Bay Area", regionURN.getName().getValue());
     assertEquals("US", regionURN.getName().getLocale().getCountry());
     assertEquals("en", regionURN.getName().getLocale().getLanguage());
@@ -510,12 +512,12 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     PlaceURN placeURN = mapper.toJavaObject(placeURNJSON, PlaceURN.class);
 
     assertEquals("CITY", placeURN.getAdminLevel());
-    assertEquals("urn:li:country:us", placeURN.getCountry());
-    assertEquals("urn:li:place:(urn:li:country:us,7-1-0-43-18)", placeURN.getUrn());
+    assertEquals(new URN("country", "us"), placeURN.getCountry());
+    assertEquals(new URN("place", "(urn:li:country:us,7-1-0-43-18)"), placeURN.getUrn());
     assertEquals("San Francisco, California", placeURN.getName().getValue());
     assertEquals("US", placeURN.getName().getLocale().getCountry());
     assertEquals("en", placeURN.getName().getLocale().getLanguage());
-    assertEquals("urn:li:place:(urn:li:country:us,7-1-0-43)", placeURN.getParent());
+    assertEquals(new URN("place", "(urn:li:country:us,7-1-0-43)"), placeURN.getParent());
     assertEquals("7-1-0-43-18", placeURN.getPlaceCode());
   }
   
@@ -637,5 +639,33 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     assertEquals("urn:li:comment:(urn:li:activity:"
         + "6273189577469632512,6282955928685940736)", commentAction.getUrn());
   }
+
+  /**
+   * Test urns are serialized as strings
+   */
+  @Test
+  public void testURNsAreSerializedAsStrings() {
+    String placeURNJSON =
+        "{"
+            + "    \"$URN\": \"urn:li:place:(urn:li:country:us,7-1-0-43-18)\","
+            + "    \"name\": {"
+            + "        \"locale\": {"
+            + "            \"country\": \"US\","
+            + "            \"language\": \"en\""
+            + "        },"
+            + "        \"value\": \"San Francisco, California\""
+            + "    },"
+            + "    \"parent\": \"urn:li:place:(urn:li:country:us,7-1-0-43)\","
+            + "    \"placeCode\": \"7-1-0-43-18\","
+            + "    \"country\": \"urn:li:country:us\","
+            + "    \"adminLevel\": \"CITY\""
+            + "}";
+    DefaultJsonMapper defaultJsonMapper = new DefaultJsonMapper();
+    PlaceURN placeURN = defaultJsonMapper.toJavaObject(placeURNJSON, PlaceURN.class);
+    String serialized = defaultJsonMapper.toJson(placeURN, true);
+    
+    Assert.assertTrue(serialized.contains("\"country\":\"urn:li:country:us\""));
+    
+  } 
 
 }

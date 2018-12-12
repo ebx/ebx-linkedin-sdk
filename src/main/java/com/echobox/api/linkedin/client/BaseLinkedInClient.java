@@ -28,12 +28,8 @@ import com.echobox.api.linkedin.jsonmapper.JsonMapper;
 import com.echobox.api.linkedin.util.URLUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -87,43 +83,6 @@ abstract class BaseLinkedInClient {
     System.arraycopy(parameters, 0, updatedParameters, 0, parameters.length);
     updatedParameters[parameters.length] = parameter;
     return updatedParameters;
-  }
-
-  /**
-   * Given a map of query names to queries, verify that it contains valid data and convert it to a
-   * JSON object string.
-   * 
-   * @param queries
-   *          The query map to convert.
-   * @return The {@code queries} in JSON string format.
-   * @throws IllegalArgumentException
-   *           If the provided {@code queries} are invalid.
-   */
-  protected String queriesToJson(Map<String, String> queries) {
-    verifyParameterPresence("queries", queries);
-
-    if (queries.isEmpty()) {
-      throw new IllegalArgumentException("You must specify at least one query.");
-    }
-
-    JSONObject jsonObject = new JSONObject();
-
-    for (Entry<String, String> entry : queries.entrySet()) {
-      if (StringUtils.isBlank(entry.getKey()) || StringUtils.isBlank(entry.getValue())) {
-        throw new IllegalArgumentException(
-            "Provided queries must have non-blank keys and values. You provided: " + queries);
-      }
-
-      try {
-        jsonObject.put(StringUtils.trimToEmpty(entry.getKey()),
-            StringUtils.trimToEmpty(entry.getValue()));
-      } catch (JSONException e) {
-        // Shouldn't happen unless bizarre input is provided
-        throw new IllegalArgumentException("Unable to convert " + queries + " to JSON.", e);
-      }
-    }
-
-    return jsonObject.toString();
   }
 
   /**

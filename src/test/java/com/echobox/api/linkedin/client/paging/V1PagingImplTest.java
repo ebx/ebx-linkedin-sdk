@@ -20,7 +20,9 @@ package com.echobox.api.linkedin.client.paging;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import org.json.JSONObject;
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonObject;
+
 import org.junit.Test;
 
 /**
@@ -36,7 +38,7 @@ public class V1PagingImplTest {
   @Test(expected = IllegalStateException.class)
   public void testNullFullendpointShouldThrowException() {
     PagingStrategy strategy = new V1PagingImpl();
-    strategy.populatePages(new JSONObject(), null);
+    strategy.populatePages(new JsonObject(), null);
   }
 
   /**
@@ -58,7 +60,7 @@ public class V1PagingImplTest {
   public void testNextAndPrevURLsAreBothNull() {
     PagingStrategy strategy = new V1PagingImpl();
     strategy.populatePages(
-        new JSONObject("{\"_count\":5,\"_start\":0,\"_total\":5,\"values\":[1,2,3,4,5]}"),
+        Json.parse("{\"_count\":5,\"_start\":0,\"_total\":5,\"values\":[1,2,3,4,5]}").asObject(),
         "https://test.com/test");
     assertNull(strategy.getNextPageUrl());
     assertNull(strategy.getPreviousPageUrl());
@@ -71,7 +73,7 @@ public class V1PagingImplTest {
   public void testNextPageURLIsAvailableButPrevURLIsNull() {
     PagingStrategy strategy = new V1PagingImpl();
     strategy.populatePages(
-        new JSONObject("{\"_count\":5,\"_start\":0,\"_total\":10,\"values\":[1,2,3,4,5]}"),
+        Json.parse("{\"_count\":5,\"_start\":0,\"_total\":10,\"values\":[1,2,3,4,5]}").asObject(),
         "https://test.com/test");
     assertEquals("https://test.com/test?start=5&count=5", strategy.getNextPageUrl());
     assertNull(strategy.getPreviousPageUrl());
@@ -85,7 +87,7 @@ public class V1PagingImplTest {
   public void testNextAndPrevURLsAvailable() {
     PagingStrategy strategy = new V1PagingImpl();
     strategy.populatePages(
-        new JSONObject("{\"_count\":5,\"_start\":5,\"_total\":20,\"values\":[1,2,3,4,5]}"),
+        Json.parse("{\"_count\":5,\"_start\":5,\"_total\":20,\"values\":[1,2,3,4,5]}").asObject(),
         "https://test.com/test");
     assertEquals("https://test.com/test?start=10&count=5", strategy.getNextPageUrl());
     assertEquals("https://test.com/test?start=0&count=5", strategy.getPreviousPageUrl());
@@ -99,7 +101,7 @@ public class V1PagingImplTest {
   public void testNextURLIsNullAndPrevURLsAvailable() {
     PagingStrategy strategy = new V1PagingImpl();
     strategy.populatePages(
-        new JSONObject("{\"_count\":5,\"_start\":15,\"_total\":20,\"values\":[1,2,3,4,5]}"),
+        Json.parse("{\"_count\":5,\"_start\":15,\"_total\":20,\"values\":[1,2,3,4,5]}").asObject(),
         "https://test.com/test");
     assertNull(strategy.getNextPageUrl());
     assertEquals("https://test.com/test?start=10&count=5", strategy.getPreviousPageUrl());

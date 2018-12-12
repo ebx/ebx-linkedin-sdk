@@ -35,10 +35,12 @@ import com.echobox.api.linkedin.jsonmapper.JsonMapper;
 import com.echobox.api.linkedin.logging.LinkedInLogger;
 import com.echobox.api.linkedin.util.URLUtils;
 import com.echobox.api.linkedin.version.Version;
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import com.eclipsesource.json.ParseException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -228,15 +230,17 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
     String responseString = makeRequest(object, false, true, null, parameters);
     try {
-      JSONObject jObj = new JSONObject(responseString);
-      if (jObj.has("result")) {
-        return jObj.getString("result").contains("Successfully deleted");
+      JsonValue jObj = Json.parse(responseString);
+      if (jObj.isObject()) {
+        if (jObj.asObject().get("result") != null) {
+          return jObj.asObject().get("result").asString().contains("Successfully deleted");
+        }
+        if (jObj.asObject().get("success") != null) {
+          return jObj.asObject().get("success").asBoolean();
+        }
+        return false;
       }
-      if (jObj.has("success")) {
-        return jObj.getBoolean("success");
-      }
-      return false;
-    } catch (JSONException jex) {
+    } catch (ParseException jex) {
       if (LOGGER.isTraceEnabled()) {
         LOGGER.trace("no valid JSON returned while deleting a object, using returned String "
             + "instead", jex);
@@ -270,7 +274,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   @Override
   protected String createEndpointForApiCall(String apiCall, boolean hasAttachment) {
     while (apiCall.startsWith("/")) {
-      apiCall = apiCall.substring(1);      
+      apiCall = apiCall.substring(1);
     }
 
     String baseUrl = getLinkedInEndpointUrl();
@@ -438,9 +442,9 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     if (HttpURLConnection.HTTP_OK != response.getStatusCode()
         && HttpURLConnection.HTTP_BAD_REQUEST != response.getStatusCode()
         && HttpURLConnection.HTTP_UNAUTHORIZED != response.getStatusCode()
-        && HttpURLConnection.HTTP_NOT_FOUND != response .getStatusCode()
+        && HttpURLConnection.HTTP_NOT_FOUND != response.getStatusCode()
         && HttpURLConnection.HTTP_INTERNAL_ERROR != response.getStatusCode()
-        && HttpURLConnection.HTTP_FORBIDDEN != response .getStatusCode()
+        && HttpURLConnection.HTTP_FORBIDDEN != response.getStatusCode()
         && HttpURLConnection.HTTP_NOT_MODIFIED != response.getStatusCode()
         && HttpURLConnection.HTTP_GATEWAY_TIMEOUT != response.getStatusCode()
         && 429 != response.getStatusCode()) {
@@ -495,21 +499,21 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     try {
       skipResponseStatusExceptionParsing(json);
 
-      JSONObject errorObject = new JSONObject(json);
-      
-      if (!errorObject.has(ERROR_ATTRIBUTE_NAME)) {
+      JsonObject errorObject = Json.parse(json).asObject();
+
+      if (errorObject.get(ERROR_ATTRIBUTE_NAME) == null) {
         return;
       }
 
       // If there's an Integer error code, pluck it out.
-      Integer errorCode = errorObject.has(ERROR_CODE_ATTRIBUTE_NAME)
-          ? errorObject.getString(ERROR_CODE_ATTRIBUTE_NAME) == null ? null
-              : Integer.parseInt(errorObject.getString(ERROR_CODE_ATTRIBUTE_NAME))
+      Integer errorCode = errorObject.get(ERROR_CODE_ATTRIBUTE_NAME) != null
+          ? Integer.parseInt(errorObject.get(ERROR_CODE_ATTRIBUTE_NAME).toString())
           : null;
 
       throw linkedinExceptionMapper.exceptionForTypeAndMessage(errorCode,
-          httpStatusCode, errorObject.getString(ERROR_MESSAGE_ATTRIBUTE_NAME), false, errorObject);
-    } catch (JSONException e) {
+          httpStatusCode, errorObject.getString(ERROR_MESSAGE_ATTRIBUTE_NAME, ""), false,
+          errorObject);
+    } catch (ParseException e) {
       throw new LinkedInJsonMappingException("Unable to process the LinkedIn API response", e);
     } catch (ResponseErrorJsonParsingException ex) {
       if (LOGGER.isTraceEnabled()) {
@@ -525,34 +529,34 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   protected static class DefaultLinkedInExceptionMapper implements LinkedInExceptionMapper {
     @Override
     public LinkedInException exceptionForTypeAndMessage(Integer errorCode, Integer httpStatusCode,
-        String message, Boolean isTransient, JSONObject rawError) {
+        String message, Boolean isTransient, JsonObject rawError) {
       // Bad Request - client mistakes
       if (new Integer(400).equals(httpStatusCode)) {
         return new LinkedInQueryParseException(message, errorCode, httpStatusCode, rawError);
       }
-      
-      // Unauthorised 
+
+      // Unauthorised
       if (new Integer(401).equals(httpStatusCode)) {
         return new LinkedInOAuthException(message, errorCode, httpStatusCode, rawError);
       }
-      
-      // Resource not found 
+
+      // Resource not found
       if (new Integer(404).equals(httpStatusCode)) {
         return new LinkedInResourceNotFoundException(message, errorCode, httpStatusCode,
             rawError);
       }
-      
+
       // 429 Rate limit
       if (new Integer(429).equals(httpStatusCode)) {
         return new LinkedInRateLimitException(message, errorCode, httpStatusCode,
             rawError);
       }
-      
-      // Internal Server Error 
+
+      // Internal Server Error
       if (new Integer(500).equals(httpStatusCode)) {
         return new LinkedInInteralServerException(message, errorCode, httpStatusCode, rawError);
       }
-      
+
       // Gateway timeout
       if (new Integer(504).equals(httpStatusCode)) {
         return new LinkedInGatewayTimeoutException(message, errorCode, httpStatusCode, rawError);

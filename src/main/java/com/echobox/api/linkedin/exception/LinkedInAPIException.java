@@ -17,7 +17,7 @@
 
 package com.echobox.api.linkedin.exception;
 
-import org.json.JSONObject;
+import com.eclipsesource.json.JsonObject;
 
 /**
  * Indicates that the LinkedIn API endpoint returned JSON which indicates an error condition.
@@ -56,7 +56,7 @@ public class LinkedInAPIException extends LinkedInErrorMessageException {
    *          The raw error JSON object
    */
   public LinkedInAPIException(String errorMessage, Integer errorCode, Integer httpStatusCode,
-      JSONObject rawError) {
+      JsonObject rawError) {
     super(String.format("Received LinkedIn error response: %s (code %s)", errorMessage,
       errorCode));
     this.errorMessage = errorMessage;
@@ -101,11 +101,7 @@ public class LinkedInAPIException extends LinkedInErrorMessageException {
    * @return the LinkedIn API error {@code requestId}
    */
   public String getLinkedInRequestId() {
-    if (getRawErrorJson() != null) {
-      return getRawErrorJson().optString("requestId");
-    }
-
-    return "";
+    return getRawErrorJson().getString("requestId", "");
   }
 
 }
