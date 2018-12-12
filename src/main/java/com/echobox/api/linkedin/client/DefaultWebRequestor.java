@@ -255,9 +255,9 @@ public class DefaultWebRequestor implements WebRequestor {
         if (jsonBody != null) {
           // Convert the JSON into a map
           Type type = new TypeToken<Map<String, Object>>() {}.getType();
-          Map<String, String> myMap = GSON.fromJson(jsonBody, type);
+          Map<String, String> jsonMap = GSON.fromJson(jsonBody, type);
 
-          JsonHttpContent jsonHttpContent = new JsonHttpContent(new JacksonFactory(), myMap);
+          JsonHttpContent jsonHttpContent = new JsonHttpContent(new JacksonFactory(), jsonMap);
           request = requestFactory.buildPostRequest(genericUrl, jsonHttpContent);
 
           // Ensure the headers are set to JSON
