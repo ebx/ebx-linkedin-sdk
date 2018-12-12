@@ -265,11 +265,6 @@ public class DefaultJsonMapper implements JsonMapper {
         return null;
       }
 
-      if (URN.class.equals(type)) {
-        URN urn = new URN(json);
-        return (T) urn;
-      }
-
       JsonValue jsonValue = Json.parse(json);
       T instance = ReflectionUtils.createInstance(type);
 
@@ -665,10 +660,6 @@ public class DefaultJsonMapper implements JsonMapper {
       return null;
     }
 
-    if (URN.class.equals(type) && rawValue.toString().startsWith("urn:li:")) {
-      return new URN(rawValue.toString());
-    }
-
     if (String.class.equals(type)) {
       /*
        * Special handling here for better error checking.
@@ -701,7 +692,9 @@ public class DefaultJsonMapper implements JsonMapper {
        */
       return jsonHelper.getStringFrom(rawValue);
     }
-
+    if (URN.class.equals(type)) {
+      return new URN(rawValue.asString());
+    }
     if (Integer.class.equals(type) || Integer.TYPE.equals(type)) {
       return jsonHelper.getIntegerFrom(rawValue);
     }
