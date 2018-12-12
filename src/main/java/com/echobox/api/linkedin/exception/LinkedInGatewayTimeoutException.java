@@ -17,7 +17,7 @@
 
 package com.echobox.api.linkedin.exception;
 
-import org.json.JSONObject;
+import com.eclipsesource.json.JsonObject;
 
 /**
  * Exception for LinkedIn gateway timeout errors
@@ -43,7 +43,7 @@ public class LinkedInGatewayTimeoutException extends LinkedInAPIException {
    *          raw error message as JSON
    */
   public LinkedInGatewayTimeoutException(String errorMessage, Integer errorCode,
-      Integer httpStatusCode, JSONObject rawError) {
+      Integer httpStatusCode, JsonObject rawError) {
     super(errorMessage, errorCode, httpStatusCode, rawError);
   }
 

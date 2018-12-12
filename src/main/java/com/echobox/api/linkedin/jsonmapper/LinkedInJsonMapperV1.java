@@ -21,11 +21,13 @@ import static java.util.Collections.unmodifiableList;
 
 import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
 import com.echobox.api.linkedin.logging.LinkedInLogger;
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import com.eclipsesource.json.ParseException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -92,22 +94,24 @@ public class LinkedInJsonMapperV1 extends DefaultJsonMapper {
       // LinkedIn returns arrays wrapped in an object
       // Extract the values out of the JSON response
       try {
-        JSONObject jsonObject = new JSONObject(json);
-        int total = jsonObject.optInt("_total");
-        JSONArray values = jsonObject.optJSONArray("values");
-        if (values == null) {
+        JsonObject jsonObject = Json.parse(json).asObject();
+        JsonValue totalJsonValue = jsonObject.get("_total");
+        JsonValue valuesJsonValue = jsonObject.get("values");
+        if (valuesJsonValue == null || valuesJsonValue.isNull()) {
           if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("No values provided in the JSON, carrying on...");
           }
           return new ArrayList<>();
         }
-        if (total != values.length()) {
+        if (totalJsonValue == null || totalJsonValue.isNull() 
+            || totalJsonValue.asInt() != valuesJsonValue.asArray().size()) {
           LOGGER
               .error("The total number of object expected was different to the size or the array."
-                  + "Total was " + total + " but response contained " + values.length());
+                  + "Total was " + totalJsonValue.asInt() + " but response contained "
+                  + valuesJsonValue.asArray().size());
         }
-        return toJavaListInternal(values, type);
-      } catch (JSONException ex) {
+        return toJavaListInternal(valuesJsonValue.asArray(), type);
+      } catch (ParseException ex) {
         // Should never get here, but just in case...
         if (jsonMappingErrorHandler.handleMappingError(json, type, ex)) {
           return null;
@@ -120,16 +124,16 @@ public class LinkedInJsonMapperV1 extends DefaultJsonMapper {
 
     } else {
       // If LinkedIn returns an actual array, at least we handle it here...
-      return toJavaListInternal(new JSONArray(json), type);      
+      return toJavaListInternal(Json.parse(json).asArray(), type);      
     }
   }
 
-  private <T> List<T> toJavaListInternal(JSONArray jsonArray, Class<T> type) {
+  private <T> List<T> toJavaListInternal(JsonArray jsonArray, Class<T> type) {
     try {
       List<T> list = new ArrayList<>();
-      for (int i = 0; i < jsonArray.length(); i++) {
+      for (int i = 0; i < jsonArray.size(); i++) {
         String rebuildJson = jsonArray.get(i).toString();
-        if (jsonArray.optJSONArray(i) == null && rebuildJson.startsWith("[")) {
+        if (jsonArray.get(i).isString() && rebuildJson.startsWith("[")) {
           // the inner JSON starts with square brackets but the parser don't think this is a JSON
           // array so we think the parser is right and add quotes around the string
           list.add(toJavaObject('"' + rebuildJson + '"', type));

@@ -29,11 +29,12 @@ import com.echobox.api.linkedin.client.paging.PagingStrategy;
 import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
 import com.echobox.api.linkedin.util.ReflectionUtils;
 import com.echobox.api.linkedin.version.Version;
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.ParseException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -156,19 +157,19 @@ public class Connection<T> implements Iterable<List<T>> {
       throw new LinkedInJsonMappingException("You must supply non-null connection JSON.");
     }
 
-    JSONObject jsonObject;
+    JsonObject jsonObject;
 
     try {
-      jsonObject = new JSONObject(json);
-    } catch (JSONException e) {
+      jsonObject = Json.parse(json).asObject();
+    } catch (ParseException e) {
       throw new LinkedInJsonMappingException("The connection JSON you provided was invalid: "
           + json, e);
     }
 
     // Pull out data
-    JSONArray jsonData = jsonObject.getJSONArray("values");
-    for (int i = 0; i < jsonData.length(); i++) {
-      dataList.add(connectionType.equals(JSONObject.class) ? (T) jsonData.get(i)
+    JsonArray jsonData = jsonObject.get("values").asArray();
+    for (int i = 0; i < jsonData.size(); i++) {
+      dataList.add(connectionType.equals(JsonObject.class) ? (T) jsonData.get(i)
           : linkedinClient.getJsonMapper().toJavaObject(jsonData.get(i).toString(),
               connectionType));
     }
