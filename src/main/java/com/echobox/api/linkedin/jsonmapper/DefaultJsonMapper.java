@@ -521,7 +521,7 @@ public class DefaultJsonMapper implements JsonMapper {
     }
     
     if (object instanceof URN) {
-      return object.toString();
+      return Json.value(object.toString());
     }
 
     if (object instanceof BigInteger) {
