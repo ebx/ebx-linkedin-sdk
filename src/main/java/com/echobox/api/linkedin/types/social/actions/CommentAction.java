@@ -18,6 +18,7 @@
 package com.echobox.api.linkedin.types.social.actions;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.ContainsURN;
 import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
@@ -28,7 +29,7 @@ import java.util.List;
 /**
  * @author Alexandros
  */
-public class CommentAction extends URN {
+public class CommentAction extends ContainsURN {
   
   @Getter
   @Setter
@@ -38,7 +39,7 @@ public class CommentAction extends URN {
   @Getter
   @Setter
   @LinkedIn
-  private String actor;
+  private URN actor;
   
   @Getter
   @Setter
@@ -53,7 +54,7 @@ public class CommentAction extends URN {
   @Getter
   @Setter
   @LinkedIn
-  private String parentComment;
+  private URN parentComment;
   
   @Getter
   @Setter
@@ -63,7 +64,7 @@ public class CommentAction extends URN {
   @Getter
   @Setter
   @LinkedIn
-  private String object;
+  private URN object;
   
   /**
    * A Model to describe the content of a comment
@@ -89,11 +90,82 @@ public class CommentAction extends URN {
     @Getter
     @Setter
     @LinkedIn
-    private List<String> attributes;
+    private List<MessageAttribute> attributes;
     
     @Getter
     @Setter
     @LinkedIn
     private String text;
+  }
+  
+  /**
+   * Message attribute model
+   */
+  public static class MessageAttribute {
+    
+    @Getter
+    @Setter
+    @LinkedIn
+    private Integer length;
+    
+    @Getter
+    @Setter
+    @LinkedIn
+    private Integer start;
+    
+    @Getter
+    @Setter
+    @LinkedIn("value")
+    private CompanyAttributedEntity companyValue;
+  
+    @Getter
+    @Setter
+    @LinkedIn("value")
+    private MemberAttributedEntity memberVaue;
+  }
+  
+  
+  /**
+   * Company Attributed Entity
+   */
+  public static class CompanyAttributedEntity  {
+    
+    @Getter
+    @Setter
+    @LinkedIn("com.linkedin.common.CompanyAttributedEntity")
+    private CompanyURN company;
+  }
+  
+  /**
+   * Company URN
+   */
+  public static class CompanyURN {
+    
+    @Setter
+    @Getter
+    @LinkedIn
+    private URN company;
+  }
+  
+  /**
+   * Member Attributed Entity
+   */
+  public static class MemberAttributedEntity  {
+    
+    @Getter
+    @Setter
+    @LinkedIn("com.linkedin.common.MemberAttributedEntity")
+    private MemberURN member;
+  }
+  
+  /**
+   * Member URN
+   */
+  public static class MemberURN {
+    
+    @Setter
+    @Getter
+    @LinkedIn
+    private URN member;
   }
 }

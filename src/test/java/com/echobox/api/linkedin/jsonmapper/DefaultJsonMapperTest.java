@@ -542,7 +542,7 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     assertEquals(new Integer(3), socialAction.getLikesSummary().getTotalLikes());
     assertNull(socialAction.getLikesSummary().getSelectedLikes());
     assertNull(socialAction.getLikesSummary().getAggregatedTotalLikes());
-    assertEquals("urn:li:activity:6250751010101421234", socialAction.getUrn());
+    assertEquals("urn:li:activity:6250751010101421234", socialAction.getUrn().toString());
   }
   
   @Test
@@ -573,7 +573,7 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     assertNull(likeAction.getLastModified().getImpersonator());
     assertEquals("urn:li:activity:62990729270024273898", likeAction.getObject());
     assertEquals("urn:li:like:(urn:li:person:123ABC,"
-        + "urn:li:activity:62990729270024273898)", likeAction.getUrn());
+        + "urn:li:activity:62990729270024273898)", likeAction.getUrn().toString());
   }
   
   @Test
@@ -617,7 +617,7 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     DefaultJsonMapper mapper = new DefaultJsonMapper();
     CommentAction commentAction = mapper.toJavaObject(commentActionJSON, CommentAction.class);
     
-    assertEquals("urn:li:person:PPT1JOhhnE", commentAction.getActor());
+    assertEquals("PPT1JOhhnE", commentAction.getActor().getId());
     assertEquals(1, commentAction.getContent().size());
     assertEquals("IMAGE", commentAction.getContent().get(0).getType());
     assertEquals("http://image-store.slidesharecdn.com/dcdd972a-5142"
@@ -635,11 +635,61 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     assertTrue(commentAction.getMessage().getAttributes().isEmpty());
     assertEquals("Test Pic in comment", commentAction.getMessage().getText());
     
-    assertEquals("urn:li:activity:6273189577469632512", commentAction.getObject());
+    assertEquals("6273189577469632512", commentAction.getObject().getId());
     assertEquals("urn:li:comment:(urn:li:activity:"
-        + "6273189577469632512,6282955928685940736)", commentAction.getUrn());
+        + "6273189577469632512,6282955928685940736)", commentAction.getUrn().toString());
   }
-
+  
+  @Test
+  public void testMessageJson() {
+    String commentMessageJSON = " {\n" 
+        + "        \"attributes\": [\n" 
+        + "            {\n"
+        + "                \"length\": 17,\n" 
+        + "                \"start\": 0,\n"
+        + "                \"value\": {\n"
+        + "                    \"com.linkedin.common.CompanyAttributedEntity\": {\n"
+        + "                        \"company\": \"urn:li:organization:2414183\"\n"
+        + "                    }\n" 
+        + "                }\n" 
+        + "            },\n" 
+        + "            {\n"
+        + "                \"length\": 14,\n" 
+        + "                \"start\": 38,\n"
+        + "                \"value\": {\n"
+        + "                    \"com.linkedin.common.MemberAttributedEntity\": {\n"
+        + "                        \"member\": \"urn:li:person:uOeeiwWoxO\"\n"
+        + "                    }\n" 
+        + "                }\n" 
+        + "            }\n" 
+        + "        ],\n"
+        + "        \"text\": \"Dunder Mifflin's Dundie Award goes to Dwight Schrute!\"\n" 
+        + "    }";
+    
+    DefaultJsonMapper mapper = new DefaultJsonMapper();
+    CommentAction.CommentMessage commentMessage = mapper.toJavaObject(commentMessageJSON,
+        CommentAction.CommentMessage.class);
+    
+    assertNotNull(commentMessage);
+    assertEquals("Dunder Mifflin's Dundie Award goes to Dwight Schrute!", 
+        commentMessage.getText());
+    assertEquals(2, commentMessage.getAttributes().size());
+    CommentAction.MessageAttribute companyAttribute = commentMessage.getAttributes().get(0);
+    assertEquals(new Integer(17), companyAttribute.getLength());
+    assertEquals(new Integer(0), companyAttribute.getStart());
+    assertNull(companyAttribute.getMemberVaue().getMember());
+    assertEquals("2414183", companyAttribute
+        .getCompanyValue().getCompany().getCompany().getId());
+  
+    CommentAction.MessageAttribute memberAttribute = commentMessage.getAttributes().get(1);
+  
+    assertNull(memberAttribute.getCompanyValue().getCompany());
+    assertEquals("uOeeiwWoxO", memberAttribute
+        .getMemberVaue().getMember().getMember().getId());
+    
+  }
+  
+  
   /**
    * Test urns are serialized as strings
    */
