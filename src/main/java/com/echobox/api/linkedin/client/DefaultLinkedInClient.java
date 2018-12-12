@@ -19,6 +19,7 @@ package com.echobox.api.linkedin.client;
 
 import com.echobox.api.linkedin.client.WebRequestor.Response;
 import com.echobox.api.linkedin.exception.LinkedInAPIException;
+import com.echobox.api.linkedin.exception.LinkedInAccessTokenException;
 import com.echobox.api.linkedin.exception.LinkedInException;
 import com.echobox.api.linkedin.exception.LinkedInExceptionMapper;
 import com.echobox.api.linkedin.exception.LinkedInGatewayTimeoutException;
@@ -47,6 +48,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -147,6 +149,18 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   public DefaultLinkedInClient(String accessToken, Version apiVersion)
       throws GeneralSecurityException, IOException {
     this(new DefaultWebRequestor(accessToken), new DefaultJsonMapper(), apiVersion);
+  }
+
+  /**
+   * Creates a LinkedIn API client with the given {@code apiVersion}.
+   *
+   * @param apiVersion
+   *          Version of the api endpoint
+   */
+  public DefaultLinkedInClient(Version apiVersion) {
+    this.webRequestor = null;
+    this.jsonMapper = new DefaultJsonMapper();
+    this.apiVersion = apiVersion;
   }
 
   /**
@@ -264,7 +278,36 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   @Override
   public AccessToken obtainUserAccessToken(String appId, String appSecret, String redirectUri,
       String verificationCode) {
-    throw new UnsupportedOperationException("Obtain user access token is not yet implemented");
+    verifyParameterPresence("appId", appId);
+    verifyParameterPresence("appSecret", appSecret);
+    verifyParameterPresence("redirectUri", redirectUri);
+    verifyParameterPresence("verificationCode", verificationCode);
+
+    try {
+      this.webRequestor = new DefaultWebRequestor(appId, appSecret);
+
+      final String endpoint = "https://www.linkedin.com/oauth/v2/accessToken";
+      final String response =
+          makeRequest(endpoint, true, false, new JsonObject(), Collections.emptyList(),
+              Parameter.with("grant_type", "authorization_code"),
+              Parameter.with("code", verificationCode), Parameter.with("redirect_uri", redirectUri),
+              Parameter.with("client_id", appId), Parameter.with("client_secret", appSecret));
+
+      final AccessToken accessToken = getAccessTokenFromResponse(response);
+      return accessToken;
+    } catch (Exception ex) {
+      throw new LinkedInAccessTokenException(ex);
+    }
+  }
+
+  private AccessToken getAccessTokenFromResponse(String response) {
+    try {
+      return getJsonMapper().toJavaObject(response, AccessToken.class);
+    } catch (LinkedInJsonMappingException ex) {
+      LOGGER.trace("could not map response to access token class try to fetch directly from String",
+          ex);
+      return AccessToken.fromQueryString(response);
+    }
   }
 
   @Override
@@ -348,13 +391,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
           parameters);
     }
 
-    if (!endpoint.startsWith("/")) {
-      endpoint = "/" + endpoint;
-    }
-
-    final String fullEndpoint =
-        createEndpointForApiCall(endpoint, binaryAttachments != null && !binaryAttachments
-            .isEmpty());
+    final String fullEndpoint = endpoint;
     String parameterString = toParameterString(parameters);
     final String finalParameterString =
         StringUtils.isBlank(parameterString) ? "" : ("?" + parameterString);

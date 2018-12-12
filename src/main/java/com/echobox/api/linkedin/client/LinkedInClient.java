@@ -36,6 +36,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+
 /**
  * Specifies how a LinkedIn API client must operate.
  * @author Joanna
@@ -247,14 +251,19 @@ public interface LinkedInClient {
    * 
    * @author Joanna
    */
+  @EqualsAndHashCode
+  @ToString
   class AccessToken {
+
+    @Getter
     @LinkedIn("access_token")
     private String accessToken;
 
     @LinkedIn("expires_in")
     private Long rawExpires;
 
-    private Long expires;
+    @Getter
+    private Date expires;
 
     /**
      * Given a query string of the form {@code access_token=XXX} or
@@ -312,47 +321,14 @@ public interface LinkedInClient {
 
       AccessToken accessToken = new AccessToken();
       accessToken.accessToken = extendedAccessToken;
-      accessToken.expires = expires;
+      accessToken.expires = new Date(expires);
       return accessToken;
-    }
-
-    @Override
-    public int hashCode() {
-      return ReflectionUtils.hashCode(this);
-    }
-
-    @Override
-    public boolean equals(Object that) {
-      return ReflectionUtils.equals(this, that);
-    }
-
-    @Override
-    public String toString() {
-      return ReflectionUtils.toString(this);
-    }
-
-    /**
-     * The access token's value.
-     * 
-     * @return The access token's value.
-     */
-    public String getAccessToken() {
-      return accessToken;
-    }
-
-    /**
-     * The date on which the access token expires.
-     * 
-     * @return The date on which the access token expires.
-     */
-    public Date getExpires() {
-      return expires == null ? null : new Date(expires);
     }
 
     @JsonMappingCompleted
     void convertExpires() {
       if (rawExpires != null) {
-        expires = new Date().getTime() + 1000L * rawExpires;
+        expires = new Date(new Date().getTime() + 1000L * rawExpires);
       }
     }
 
