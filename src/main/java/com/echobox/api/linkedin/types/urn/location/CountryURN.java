@@ -25,7 +25,7 @@ import lombok.Getter;
 /**
  * Country URN POJO
  * @see <a href="https://developer.linkedin.com/docs/ref/v2/standardized-data/locations/countries">
- * Country ContainsURN</a>
+ * Country URN</a>
  * @author joanna
  *
  */
@@ -39,7 +39,7 @@ public class CountryURN extends LocaleStringNameURN {
   private String countryCode;
   
   /**
-   * The country group ContainsURN that this country belongs to
+   * The country group URN that this country belongs to
    */
   @Getter
   @LinkedIn
