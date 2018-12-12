@@ -20,16 +20,92 @@ package com.echobox.api.linkedin.types.urn;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
- * URN base class - all URNs will contain a URN
- * @author joanna
- *
+ * The type Urn.
+ * @author clementcaylux 
  */
-public abstract class URN {
-  
-  @Getter
-  @LinkedIn("$URN")
-  private String urn;
+public class URN {
 
+  @Getter
+  @Setter
+  @LinkedIn
+  private String entityType;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private String id;
+
+  /**
+   * Instantiates a new Urn.
+   *
+   * @param entityType the entity type 
+   * @param id the id
+   */
+  public URN(String entityType, String id) {
+    if (entityType == null || id == null) {
+      throw new IllegalArgumentException("No argument provided can be null"); 
+    }
+    
+    this.entityType = entityType.toUpperCase();
+    this.id = id;
+  }
+
+  /**
+   * Instantiates a new Urn.
+   *
+   * @param urnString the urn string
+   */
+  public URN(String urnString) {
+    if (urnString == null || !urnString.startsWith("urn:li:")) {
+      throw new IllegalArgumentException("A linkedin urn should start with urn:li:");
+    }
+
+    String[] split = urnString.split(":", 4);
+    if (split.length != 4) {
+      throw new IllegalArgumentException("the urn " + urnString + " is malformed");
+    }
+    
+    this.entityType = split[2].toUpperCase();
+    this.id = split[3];
+  }
+
+  /**
+   * Gets urn entity type.
+   *
+   * @return the urn entity type
+   */
+  public URNEntityType getURNEntityType() {
+    return URNEntityType.valueOf(entityType);
+  }
+
+  @Override
+  public String toString() {
+    return "urn:li:" + entityType.toLowerCase() + ":" + id;
+  }
+  
+  @Override
+  public boolean equals(Object other) {
+    
+    if (!(other instanceof URN)) {
+      return false;
+    }
+    
+    URN otherURN = (URN) other;
+    if (!otherURN.getEntityType().equals(this.entityType)) {
+      return false;
+    }
+
+    return otherURN.getId().equals(this.id);
+  }
+  
+  @Override
+  public int hashCode() {
+    int result = 17;
+    result = 31 * result + entityType.hashCode();
+    return 31 * result + id.hashCode();
+  }
+  
 }

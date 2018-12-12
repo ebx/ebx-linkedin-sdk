@@ -19,6 +19,7 @@ package com.echobox.api.linkedin.types.urn.location;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.urn.LocaleStringNameURN;
+import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
 
@@ -43,7 +44,7 @@ public class PlaceURN extends LocaleStringNameURN {
    */
   @Getter
   @LinkedIn
-  private String country;
+  private URN country;
   
   /**
    * The parent place URN for this place. Can be null when this place is the top-level
@@ -51,7 +52,7 @@ public class PlaceURN extends LocaleStringNameURN {
    */
   @Getter
   @LinkedIn
-  private String parent;
+  private URN parent;
   
   /**
    * The unique code within a country to identify the place

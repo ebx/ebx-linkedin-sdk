@@ -29,6 +29,8 @@ import static java.util.Collections.unmodifiableSet;
 
 import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
 import com.echobox.api.linkedin.logging.LinkedInLogger;
+import com.echobox.api.linkedin.types.urn.URN;
+import com.echobox.api.linkedin.types.urn.URNEntityType;
 import com.echobox.api.linkedin.util.DateUtils;
 import com.echobox.api.linkedin.util.ObjectUtil;
 import com.echobox.api.linkedin.util.ReflectionUtils;
@@ -512,6 +514,10 @@ public class DefaultJsonMapper implements JsonMapper {
     if (ReflectionUtils.isPrimitive(object)) {
       return primitiveToJsonValue(object);
     }
+    
+    if (object instanceof URN) {
+      return Json.value(object.toString());
+    }
 
     if (object instanceof BigInteger) {
       return Json.value(((BigInteger) object).longValue());
@@ -686,7 +692,9 @@ public class DefaultJsonMapper implements JsonMapper {
        */
       return jsonHelper.getStringFrom(rawValue);
     }
-
+    if (URN.class.equals(type)) {
+      return new URN(rawValue.asString());
+    }
     if (Integer.class.equals(type) || Integer.TYPE.equals(type)) {
       return jsonHelper.getIntegerFrom(rawValue);
     }

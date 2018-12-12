@@ -17,23 +17,17 @@
 
 package com.echobox.api.linkedin.types.urn;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.objectype.LocaleString;
-
-import lombok.Getter;
-
 /**
- * Name URN which is represented by a LocalString
- * @author Joanna
- *
+ * The enum Urn entity type.
+ * @author clementcaylux 
  */
-public abstract class LocaleStringNameURN extends ContainsURN {
-  
-  /**
-   * Name represented by a LocalString
-   */
-  @Getter
-  @LinkedIn
-  private LocaleString name;
+public enum URNEntityType {
+
+    PLACE,
+    COUNTRY,
+    ORGANIZATION,
+    SENIORITY,
+    FUNCTION,
+    SHARE
   
 }
