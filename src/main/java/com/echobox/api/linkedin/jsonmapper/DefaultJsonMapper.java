@@ -264,6 +264,11 @@ public class DefaultJsonMapper implements JsonMapper {
         return null;
       }
 
+      if (URN.class.equals(type)) {
+        URN urn = new URN(json);
+        return (T) urn;
+      }
+
       JsonValue jsonValue = Json.parse(json);
       T instance = ReflectionUtils.createInstance(type);
 
@@ -515,7 +520,7 @@ public class DefaultJsonMapper implements JsonMapper {
     }
     
     if (object instanceof URN) {
-      return Json.value(((URN) object).toString());
+      return Json.value(object.toString());
     }
 
     if (object instanceof BigInteger) {
@@ -660,14 +665,7 @@ public class DefaultJsonMapper implements JsonMapper {
     }
 
     if (URN.class.equals(type) && rawValue.toString().startsWith("urn:li:")) {
-      String[] split = rawValue.toString().split(":", 4);
-      if (split.length != 4) {
-        throw new IllegalArgumentException("Could not parse the urn " + rawValue.toString());
-      }
-      String urnType = split[2].toUpperCase();
-      String urnId = split[3];
-      URN urn = new URN(urnType, urnId);
-      return urn;
+      return new URN(rawValue.toString());
     }
 
     if (String.class.equals(type)) {
