@@ -15,33 +15,25 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.objectype;
+package com.echobox.api.linkedin.types.statistics;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
- * Locale POJO
- * @see <a href="https://developer.linkedin.com/docs/ref/v2/object-types#Locale">
- * Locale</a>
- * @author joanna
- *
+ * @author clementcaylux on 03/12/2018.
  */
-public class Locale {
-
-  /**
-   * An uppercase two-letter country code as defined by ISO-3166.
-   */
-  @Getter
-  @LinkedIn
-  private String country;
+public class CountByFunction {
   
-  /**
-   * A lowercase two-letter language code as defined by ISO-639.
-   */
   @Getter
+  @Setter
   @LinkedIn
-  private String language;
+  private FollowerCount followerCounts;
   
+  @Getter
+  @Setter
+  @LinkedIn
+  private String function;
 }

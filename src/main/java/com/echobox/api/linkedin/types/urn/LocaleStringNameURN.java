@@ -27,7 +27,7 @@ import lombok.Getter;
  * @author Joanna
  *
  */
-public abstract class LocaleStringNameURN extends URN {
+public abstract class LocaleStringNameURN extends ContainsURN {
   
   /**
    * Name represented by a LocalString

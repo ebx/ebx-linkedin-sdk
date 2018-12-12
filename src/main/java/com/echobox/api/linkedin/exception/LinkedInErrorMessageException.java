@@ -17,7 +17,7 @@
 
 package com.echobox.api.linkedin.exception;
 
-import org.json.JSONObject;
+import com.eclipsesource.json.JsonObject;
 
 /**
  * Abstract class to provide access to the JSON LinkedIn provides in case of an error
@@ -31,7 +31,7 @@ public abstract class LinkedInErrorMessageException extends LinkedInException {
    */
   private static final long serialVersionUID = 1L;
   
-  private JSONObject rawErrorJson;
+  private JsonObject rawErrorJson;
 
   /**
    * Initialise the LinkedIn error message exception
@@ -55,11 +55,11 @@ public abstract class LinkedInErrorMessageException extends LinkedInException {
    * 
    * @return raw error
    */
-  public JSONObject getRawErrorJson() {
+  public JsonObject getRawErrorJson() {
     return rawErrorJson;
   }
 
-  protected void setRawErrorJson(JSONObject rawError) {
+  protected void setRawErrorJson(JsonObject rawError) {
     rawErrorJson = rawError;
   }
 }

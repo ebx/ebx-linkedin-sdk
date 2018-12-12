@@ -15,33 +15,19 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.objectype;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
-import lombok.Getter;
+package com.echobox.api.linkedin.types.urn;
 
 /**
- * Locale POJO
- * @see <a href="https://developer.linkedin.com/docs/ref/v2/object-types#Locale">
- * Locale</a>
- * @author joanna
- *
+ * The enum Urn entity type.
+ * @author clementcaylux 
  */
-public class Locale {
+public enum URNEntityType {
 
-  /**
-   * An uppercase two-letter country code as defined by ISO-3166.
-   */
-  @Getter
-  @LinkedIn
-  private String country;
-  
-  /**
-   * A lowercase two-letter language code as defined by ISO-639.
-   */
-  @Getter
-  @LinkedIn
-  private String language;
+    PLACE,
+    COUNTRY,
+    ORGANIZATION,
+    SENIORITY,
+    FUNCTION,
+    SHARE
   
 }

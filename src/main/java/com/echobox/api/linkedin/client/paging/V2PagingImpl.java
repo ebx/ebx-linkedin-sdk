@@ -18,9 +18,8 @@
 package com.echobox.api.linkedin.client.paging;
 
 import com.echobox.api.linkedin.util.URLUtils;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
 
 import java.util.List;
 import java.util.Map;
@@ -33,17 +32,17 @@ import java.util.Map;
 public class V2PagingImpl extends PagingStrategy {
 
   @Override
-  protected void discoverPages(JSONObject jsonObject, String fullEndpoint) {
-    if (jsonObject.has("elements")) {
-      JSONArray elements = jsonObject.getJSONArray("elements");
+  protected void discoverPages(JsonObject jsonObject, String fullEndpoint) {
+    if (jsonObject.get("elements") != null) {
+      JsonArray elements = jsonObject.get("elements").asArray();
 
       // Pull out paging info, if present
-      if (jsonObject.has("paging")) {
-        JSONObject jsonPaging = jsonObject.getJSONObject("paging");
+      if (jsonObject.get("paging") != null) {
+        JsonObject jsonPaging = jsonObject.get("paging").asObject();
 
-        if (jsonPaging.has("count") && jsonPaging.has("start")) {
-          int count = jsonPaging.getInt("count");
-          int start = jsonPaging.getInt("start");
+        if (jsonPaging.get("count") != null && jsonPaging.get("start") != null) {
+          int count = jsonPaging.getInt("count", 0);
+          int start = jsonPaging.getInt("start", 0);
           // You will know that you have reached the end of the dataset when your response
           // contains less elements in the entities block of the response than your count
           // parameter requested.
@@ -52,7 +51,7 @@ public class V2PagingImpl extends PagingStrategy {
           if (extractParametersFromUrl.containsKey("count")) {
             // Check if the count is less than the elements returned - if so we're at the last page
             int requestedCount = Integer.parseInt(extractParametersFromUrl.get("count").get(0));
-            if (elements.length() < requestedCount) {
+            if (elements.size() < requestedCount) {
               nextPageUrl = null;
               setPreviousPageURL(fullEndpoint, start, count);
               return;
