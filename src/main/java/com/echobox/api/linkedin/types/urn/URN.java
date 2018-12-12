@@ -61,11 +61,7 @@ public class URN {
    * @param urnString the urn string
    */
   public URN(String urnString) {
-    if (StringUtils.isBlank(urnString)) {
-      throw new IllegalArgumentException("A linkedin urn cannot be empty");
-    }
-    
-    if (!urnString.startsWith("urn:li:")) {
+    if (urnString == null || !urnString.startsWith("urn:li:")) {
       throw new IllegalArgumentException("A linkedin urn should start with urn:li:");
     }
 
