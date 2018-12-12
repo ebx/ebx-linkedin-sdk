@@ -731,7 +731,7 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
         organizationStatisticsJson, Statistics.OrganizationStatistics.class);
     assertNotNull(organizationStatistics);
     assertNull(organizationStatistics.getTimeRange());
-    assertEquals("urn:li:organization:2414183", organizationStatistics.getOrganization());
+    assertEquals("2414183", organizationStatistics.getOrganization().getId());
     assertNotNull(organizationStatistics.getTotalPageStatistics());
     TotalPageStatistics totalPageStatistics = organizationStatistics.getTotalPageStatistics();
     assertEquals(new Integer(0), totalPageStatistics.getClicks()
@@ -778,20 +778,18 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     assertEquals(new Integer(17786), totalPageStatistics.getViews()
         .getAllPageViews().getPageViews());
     
-    assertEquals("urn:li:seniority:10",
-        organizationStatistics.getPageStatisticsBySeniority().get(0).getSeniority());
-    assertEquals("urn:li:country:us",
-        organizationStatistics.getPageStatisticsByCountry().get(0).getCountry());
-    assertEquals("urn:li:country:us",
-        organizationStatistics.getPageStatisticsByCountry().get(0).getCountry());
-    assertEquals("urn:li:industry:1", organizationStatistics.getPageStatisticsByIndustry()
-        .get(0).getIndustry());
+    assertEquals("10",
+        organizationStatistics.getPageStatisticsBySeniority().get(0).getSeniority().getId());
+    assertEquals("us",
+        organizationStatistics.getPageStatisticsByCountry().get(0).getCountry().getId());
+    assertEquals("1", organizationStatistics.getPageStatisticsByIndustry()
+        .get(0).getIndustry().getId());
     assertEquals("SIZE_10001_OR_MORE",
         organizationStatistics.getPageStatisticsByStaffCountRange().get(0).getStaffCountRange());
-    assertEquals("urn:li:region:7", organizationStatistics.getPageStatisticsByRegion()
-        .get(0).getRegion());
-    assertEquals("urn:li:function:1", organizationStatistics.getPageStatisticsByFunction()
-        .get(0).getFunction());
+    assertEquals("7", organizationStatistics.getPageStatisticsByRegion()
+        .get(0).getRegion().getId());
+    assertEquals("1", organizationStatistics.getPageStatisticsByFunction()
+        .get(0).getFunction().getId());
   }
   
   @Test
@@ -833,7 +831,7 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     
     assertNotNull(organizationStatistics);
     assertNotNull(organizationStatistics.getTimeRange());
-    assertEquals("urn:li:organization:1000", organizationStatistics.getOrganization());
+    assertEquals("1000", organizationStatistics.getOrganization().getId());
     assertEquals(new Long(1451606400000L), organizationStatistics.getTimeRange().getStart());
     assertEquals(new Long(1451692800000L), organizationStatistics.getTimeRange().getEnd());
     assertEquals(new Integer(0), organizationStatistics.getTotalPageStatistics()
@@ -884,7 +882,7 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     Statistics.BrandStatistics brandStatistics = mapper.toJavaObject(
         brandStatisticsJson, Statistics.BrandStatistics.class);
     assertNotNull(brandStatistics);
-    assertEquals("urn:li:organizationBrand:18085185", brandStatistics.getBrand());
+    assertEquals("18085185", brandStatistics.getBrand().getId());
     assertTrue(brandStatistics.getPageStatisticsBySeniority().isEmpty());
     assertEquals(new Integer(1), brandStatistics.getTotalPageStatistics()
         .getViews().getOverviewPageViews().getPageViews());

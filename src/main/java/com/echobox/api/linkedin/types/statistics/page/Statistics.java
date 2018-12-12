@@ -19,6 +19,7 @@ package com.echobox.api.linkedin.types.statistics.page;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.TimeRange;
+import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -80,7 +81,7 @@ public abstract class Statistics {
     @Getter
     @Setter
     @LinkedIn
-    private String organization;
+    private URN organization;
   }
   
   /**
@@ -91,6 +92,6 @@ public abstract class Statistics {
     @Getter
     @Setter
     @LinkedIn
-    private String brand;
+    private URN brand;
   }
 }

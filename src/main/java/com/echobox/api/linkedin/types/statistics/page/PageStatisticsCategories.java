@@ -18,6 +18,7 @@
 package com.echobox.api.linkedin.types.statistics.page;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -41,7 +42,7 @@ public abstract class PageStatisticsCategories {
     @Getter
     @Setter
     @LinkedIn
-    private String seniority;
+    private URN seniority;
   }
   
   /**
@@ -52,7 +53,7 @@ public abstract class PageStatisticsCategories {
     @Getter
     @Setter
     @LinkedIn
-    private String country;
+    private URN country;
   }
   
   /**
@@ -63,7 +64,7 @@ public abstract class PageStatisticsCategories {
     @Getter
     @Setter
     @LinkedIn
-    private String industry;
+    private URN industry;
   }
   
   /**
@@ -85,7 +86,7 @@ public abstract class PageStatisticsCategories {
     @Getter
     @Setter
     @LinkedIn
-    private String region;
+    private URN region;
   }
   
   /**
@@ -96,6 +97,6 @@ public abstract class PageStatisticsCategories {
     @Getter
     @Setter
     @LinkedIn
-    private String function;
+    private URN function;
   }
 }
