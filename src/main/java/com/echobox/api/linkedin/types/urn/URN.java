@@ -22,8 +22,6 @@ import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.apache.commons.lang3.StringUtils;
-
 /**
  * The type Urn.
  * @author clementcaylux 
