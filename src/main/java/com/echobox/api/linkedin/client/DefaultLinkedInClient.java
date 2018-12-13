@@ -158,9 +158,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    *          Version of the api endpoint
    */
   public DefaultLinkedInClient(Version apiVersion) {
-    this.webRequestor = null;
-    this.jsonMapper = new DefaultJsonMapper();
-    this.apiVersion = apiVersion;
+    this(null, new DefaultJsonMapper(), apiVersion, new DefaultLinkedInExceptionMapper());
   }
 
   /**
@@ -177,14 +175,34 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    */
   public DefaultLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper,
       Version apiVersion) {
-    super();
-
-    verifyParameterPresence("jsonMapper", jsonMapper);
+    this(webRequestor, jsonMapper, apiVersion, new DefaultLinkedInExceptionMapper());
     verifyParameterPresence("webRequestor", webRequestor);
+  }
+
+  /**
+   * Creates a LinkedIn API client with the given {@code accessToken}.
+   *
+   * @param webRequestor
+   *          The {@link WebRequestor} implementation to use for sending requests to the API
+   *          endpoint.
+   * @param jsonMapper
+   *          The {@link JsonMapper} implementation to use for mapping API response JSON to Java
+   *          objects.
+   * @param apiVersion
+   *          Version of the API endpoint
+   * @param linkedinExceptionMapper
+   *          Mapper class to handle LinkedIn exceptions
+   */
+  public DefaultLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper, Version apiVersion,
+      LinkedInExceptionMapper linkedinExceptionMapper) {
+    verifyParameterPresence("jsonMapper", jsonMapper);
+    verifyParameterPresence("apiVersion", apiVersion);
+    verifyParameterPresence("linkedinExceptionMapper", linkedinExceptionMapper);
 
     this.webRequestor = webRequestor;
     this.jsonMapper = jsonMapper;
     this.apiVersion = apiVersion;
+    this.linkedinExceptionMapper = linkedinExceptionMapper;
   }
 
   @Override
@@ -288,13 +306,12 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
       final String endpoint = "https://www.linkedin.com/oauth/v2/accessToken";
       final String response =
-          makeRequest(endpoint, true, false, new JsonObject(), Collections.emptyList(),
+          makeRequestFull(endpoint, true, false, new JsonObject(), Collections.emptyList(),
               Parameter.with("grant_type", "authorization_code"),
               Parameter.with("code", verificationCode), Parameter.with("redirect_uri", redirectUri),
               Parameter.with("client_id", appId), Parameter.with("client_secret", appSecret));
 
-      final AccessToken accessToken = getAccessTokenFromResponse(response);
-      return accessToken;
+      return getAccessTokenFromResponse(response);
     } catch (Exception ex) {
       throw new LinkedInAccessTokenException(ex);
     }
@@ -363,7 +380,8 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
   /**
    * Coordinates the process of executing the API request GET/POST and processing the response we 
-   * receive from the endpoint.
+   * receive from the endpoint, will append this endpoint on to the base LinkedIn API endpoint 
+   * before calling.
    * 
    * @param endpoint
    *          LinkedIn Graph API endpoint.
@@ -384,6 +402,42 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   protected String makeRequest(String endpoint, final boolean executeAsPost,
       final boolean executeAsDelete, Object jsonBody,
       final List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
+
+    if (!endpoint.startsWith("/")) {
+      endpoint = "/" + endpoint;
+    }
+
+    final String fullEndpoint = createEndpointForApiCall(endpoint,
+        binaryAttachments != null && !binaryAttachments.isEmpty());
+
+    return makeRequestFull(fullEndpoint, executeAsPost, executeAsDelete, jsonBody,
+        binaryAttachments, parameters);
+  }
+
+  /**
+   * Coordinates the process of executing the API request GET/POST and processing the response we 
+   * receive from a full endpoint, will call this endpoint directly without further processing 
+   * the URL.
+   *
+   * @param endpoint
+   *          LinkedIn Graph API endpoint.
+   * @param executeAsPost
+   *          {@code true} to execute the web request as a {@code POST}, {@code false} to execute 
+   *          as a {@code GET}.
+   * @param executeAsDelete
+   *          {@code true} to add a special 'treat this request as a {@code DELETE}' parameter.
+   * @param binaryAttachments
+   *          A list of binary files to include in a {@code POST} request. Pass {@code null} if no 
+   *          attachment should be sent.
+   * @param parameters
+   *          Arbitrary number of parameters to send along to LinkedIn as part of the API call.
+   * @return The JSON returned by LinkedIn for the API call.
+   * @throws LinkedInException
+   *           If an error occurs while making the LinkedIn API POST or processing the response.
+   */
+  protected String makeRequestFull(String fullEndpoint, final boolean executeAsPost,
+      final boolean executeAsDelete, Object jsonBody,
+      final List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
     verifyParameterLegality(parameters);
 
     if (executeAsDelete && isHttpDeleteFallback()) {
@@ -391,7 +445,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
           parameters);
     }
 
-    final String fullEndpoint = endpoint;
     String parameterString = toParameterString(parameters);
     final String finalParameterString =
         StringUtils.isBlank(parameterString) ? "" : ("?" + parameterString);
@@ -559,9 +612,10 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
           ? Integer.parseInt(errorObject.get(ERROR_CODE_ATTRIBUTE_NAME).toString())
           : null;
 
-      throw linkedinExceptionMapper.exceptionForTypeAndMessage(errorCode,
-          httpStatusCode, errorObject.getString(ERROR_MESSAGE_ATTRIBUTE_NAME, ""), false,
-          errorObject);
+      if (linkedinExceptionMapper != null) {
+        throw linkedinExceptionMapper.exceptionForTypeAndMessage(errorCode, httpStatusCode,
+            errorObject.getString(ERROR_MESSAGE_ATTRIBUTE_NAME, ""), false, errorObject);
+      }
     } catch (ParseException e) {
       throw new LinkedInJsonMappingException("Unable to process the LinkedIn API response", e);
     } catch (ResponseErrorJsonParsingException ex) {
