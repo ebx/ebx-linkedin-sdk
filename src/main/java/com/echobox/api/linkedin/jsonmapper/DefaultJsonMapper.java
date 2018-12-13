@@ -721,9 +721,6 @@ public class DefaultJsonMapper implements JsonMapper {
     if (Map.class.equals(type)) {
       return convertJsonObjectToMap(rawValue.toString(), fieldWithAnnotation.getField());
     }
-    if (URN.class.equals(type)) {
-      return new URN(rawValue.asString());
-    }
 
     if (type.isEnum()) {
       Class<? extends Enum> enumType = type.asSubclass(Enum.class);
