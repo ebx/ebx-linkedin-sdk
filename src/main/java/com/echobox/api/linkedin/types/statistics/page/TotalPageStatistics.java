@@ -26,7 +26,7 @@ import lombok.Setter;
 /**
  * Total Page Statistics Model
  * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/page-statistics">
- *   Totale Statistics
+ *   Total Statistics
  * </a>
  * @author Alexandros
  */
