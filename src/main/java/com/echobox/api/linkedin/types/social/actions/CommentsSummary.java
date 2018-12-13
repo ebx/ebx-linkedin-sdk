@@ -15,25 +15,24 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.urn;
+package com.echobox.api.linkedin.types.social.actions;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.objectype.LocaleString;
-
 import lombok.Getter;
+import lombok.Setter;
 
 /**
- * Name URN which is represented by a LocalString
- * @author Joanna
- *
+ * @author Alexandros
  */
-public abstract class LocaleStringNameURN extends ContainsURN {
+public class CommentsSummary {
   
-  /**
-   * Name represented by a LocalString
-   */
   @Getter
+  @Setter
   @LinkedIn
-  private LocaleString name;
+  private Integer totalFirstLevelComments;
   
+  @Getter
+  @Setter
+  @LinkedIn
+  private Integer aggregatedTotalComments;
 }

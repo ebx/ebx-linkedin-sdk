@@ -15,25 +15,34 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.urn;
+package com.echobox.api.linkedin.types.social.actions;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.objectype.LocaleString;
+import com.echobox.api.linkedin.types.urn.ContainsURN;
+import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
- * Name URN which is represented by a LocalString
- * @author Joanna
- *
+ * Social Action Model
+ * @author Alexandros
  */
-public abstract class LocaleStringNameURN extends ContainsURN {
+public class SocialAction extends ContainsURN {
   
-  /**
-   * Name represented by a LocalString
-   */
   @Getter
+  @Setter
   @LinkedIn
-  private LocaleString name;
+  private CommentsSummary commentsSummary;
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private LikesSummary likesSummary;
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private URN target;
   
 }

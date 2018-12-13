@@ -15,25 +15,26 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.urn;
+package com.echobox.api.linkedin.types;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.objectype.LocaleString;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
- * Name URN which is represented by a LocalString
- * @author Joanna
- *
+ * Time range model
+ * @author Alexandros 
  */
-public abstract class LocaleStringNameURN extends ContainsURN {
+public class TimeRange {
   
-  /**
-   * Name represented by a LocalString
-   */
   @Getter
+  @Setter
   @LinkedIn
-  private LocaleString name;
+  private Long start;
   
+  @Getter
+  @Setter
+  @LinkedIn
+  private Long end;
 }

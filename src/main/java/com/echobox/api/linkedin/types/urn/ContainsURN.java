@@ -18,22 +18,18 @@
 package com.echobox.api.linkedin.types.urn;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.objectype.LocaleString;
 
 import lombok.Getter;
 
 /**
- * Name URN which is represented by a LocalString
- * @author Joanna
+ * URN base class - all URNs will contain a URN
+ * @author joanna
  *
  */
-public abstract class LocaleStringNameURN extends ContainsURN {
+public abstract class ContainsURN {
   
-  /**
-   * Name represented by a LocalString
-   */
   @Getter
-  @LinkedIn
-  private LocaleString name;
-  
+  @LinkedIn("$URN")
+  private URN urn;
+
 }
