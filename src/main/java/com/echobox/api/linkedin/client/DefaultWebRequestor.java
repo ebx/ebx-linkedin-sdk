@@ -234,7 +234,8 @@ public class DefaultWebRequestor implements WebRequestor {
         // TODO: binary attachments are not supported yet
       } else {
         if (jsonBody != null) {
-          // Convert the JSON into a map
+          // Convert the JSON into a map - annoyingly JsonHttpContent data object has to be a
+          // key/value object i.e. map
           JsonObject asObject = Json.parse(jsonBody).asObject();
           Map<String, Object> map = JsonUtils.toMap(asObject);
 
