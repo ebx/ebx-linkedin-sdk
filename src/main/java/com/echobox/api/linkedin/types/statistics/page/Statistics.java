@@ -19,6 +19,12 @@ package com.echobox.api.linkedin.types.statistics.page;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.TimeRange;
+import com.echobox.api.linkedin.types.statistics.page.PageStatisticsCategories.PageStatisticsByCountry;
+import com.echobox.api.linkedin.types.statistics.page.PageStatisticsCategories.PageStatisticsByFunction;
+import com.echobox.api.linkedin.types.statistics.page.PageStatisticsCategories.PageStatisticsByIndustry;
+import com.echobox.api.linkedin.types.statistics.page.PageStatisticsCategories.PageStatisticsByRegion;
+import com.echobox.api.linkedin.types.statistics.page.PageStatisticsCategories.PageStatisticsBySeniority;
+import com.echobox.api.linkedin.types.statistics.page.PageStatisticsCategories.PageStatisticsByStaffCountRange;
 import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
@@ -45,33 +51,32 @@ public abstract class Statistics {
   @Getter
   @Setter
   @LinkedIn
-  private List<PageStatisticsCategories.PageStatisticsBySeniority> pageStatisticsBySeniority;
+  private List<PageStatisticsBySeniority> pageStatisticsBySeniority;
   
   @Getter
   @Setter
   @LinkedIn
-  private List<PageStatisticsCategories.PageStatisticsByCountry> pageStatisticsByCountry;
+  private List<PageStatisticsByCountry> pageStatisticsByCountry;
   
   @Setter
   @Getter
   @LinkedIn
-  private List<PageStatisticsCategories.PageStatisticsByIndustry> pageStatisticsByIndustry;
+  private List<PageStatisticsByIndustry> pageStatisticsByIndustry;
   
   @Getter
   @Setter
   @LinkedIn
-  private List<PageStatisticsCategories.PageStatisticsByStaffCountRange> 
-      pageStatisticsByStaffCountRange;
+  private List<PageStatisticsByStaffCountRange> pageStatisticsByStaffCountRange;
   
   @Getter
   @Setter
   @LinkedIn
-  private List<PageStatisticsCategories.PageStatisticsByRegion> pageStatisticsByRegion;
+  private List<PageStatisticsByRegion> pageStatisticsByRegion;
   
   @Getter
   @Setter
   @LinkedIn
-  private List<PageStatisticsCategories.PageStatisticsByFunction> pageStatisticsByFunction;
+  private List<PageStatisticsByFunction> pageStatisticsByFunction;
   
   /**
    * Organization Statistics Model

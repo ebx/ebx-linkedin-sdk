@@ -18,6 +18,7 @@
 package com.echobox.api.linkedin.types.statistics.page;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.statistics.page.PageStatistics.Views;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -36,7 +37,7 @@ public class TotalPageStatistics {
   @Getter
   @Setter
   @LinkedIn
-  private PageStatistics.Views views;
+  private Views views;
   
   /**
    * Clicks Model 
