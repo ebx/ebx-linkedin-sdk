@@ -20,7 +20,9 @@ package com.echobox.api.linkedin.client;
 import static java.lang.String.format;
 
 import com.echobox.api.linkedin.logging.LinkedInLogger;
+import com.echobox.api.linkedin.util.JsonUtils;
 import com.echobox.api.linkedin.util.URLUtils;
+import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
@@ -38,8 +40,6 @@ import com.google.api.client.http.json.JsonHttpContent;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -51,7 +51,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.lang.reflect.Type;
 import java.security.GeneralSecurityException;
 import java.util.Map;
 
@@ -101,8 +100,6 @@ public class DefaultWebRequestor implements WebRequestor {
   private static final int DEFAULT_READ_TIMEOUT_IN_MS = 180000;
 
   private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-
-  private static final Gson GSON = new Gson();
 
   private Map<String, Object> currentHeaders;
 
@@ -234,30 +231,14 @@ public class DefaultWebRequestor implements WebRequestor {
 
       HttpRequest request = null;
       if (binaryAttachments.length > 0) {
-        // Set the multipart content
-        // does not need to be implemented until rich media implemetation
-        // MultipartContent content = new MultipartContent().setMediaType(
-        // new HttpMediaType("multipart/form-data")
-        // .setParameter("boundary", MULTIPART_BOUNDARY));
-        // for (BinaryAttachment binaryAttachment : binaryAttachments) {
-        // HttpContent byteContent = new InputStreamContent(binaryAttachment.getContentType(),
-        // binaryAttachment.getData());
-        // MultipartContent.Part part = new MultipartContent.Part(byteContent);
-        // part.setHeaders(new HttpHeaders().set(
-        // "Content-Disposition",
-        // String.format("form-data; name=\"content\"; filename=\"%s\"", binaryAttachment
-        // .getFilename())));
-        //
-        // content.addPart(part);
-        // }
-        // request = requestFactory.buildPostRequest(genericUrl, content);
+        // TODO: binary attachments are not supported yet
       } else {
         if (jsonBody != null) {
           // Convert the JSON into a map
-          Type type = new TypeToken<Map<String, Object>>() {}.getType();
-          Map<String, String> jsonMap = GSON.fromJson(jsonBody, type);
+          JsonObject asObject = Json.parse(jsonBody).asObject();
+          Map<String, Object> map = JsonUtils.toMap(asObject);
 
-          JsonHttpContent jsonHttpContent = new JsonHttpContent(new JacksonFactory(), jsonMap);
+          JsonHttpContent jsonHttpContent = new JsonHttpContent(new JacksonFactory(), map);
           request = requestFactory.buildPostRequest(genericUrl, jsonHttpContent);
 
           // Ensure the headers are set to JSON
