@@ -542,6 +542,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     // Server Error or 302 Not Modified or 504 Gateway Timeout or 429 Rate Limit
     // throw an exception.
     if (HttpURLConnection.HTTP_OK != response.getStatusCode()
+        && HttpURLConnection.HTTP_CREATED != response.getStatusCode()
         && HttpURLConnection.HTTP_BAD_REQUEST != response.getStatusCode()
         && HttpURLConnection.HTTP_UNAUTHORIZED != response.getStatusCode()
         && HttpURLConnection.HTTP_NOT_FOUND != response.getStatusCode()
