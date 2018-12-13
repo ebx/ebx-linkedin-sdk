@@ -34,6 +34,9 @@ import java.util.List;
 
 /**
  * A abstract wrapper for statistics models
+ * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/page-statistics">
+ *  Page Statistics Categories
+ * </a>
  * @author Alexandros
  */
 public abstract class Statistics {

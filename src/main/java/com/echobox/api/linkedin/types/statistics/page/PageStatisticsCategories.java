@@ -25,6 +25,9 @@ import lombok.Setter;
 
 /**
  * A Wrapper Class for all different Page Statistics Categories
+ * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/page-statistics">
+ *   Page Statistics Categories
+ * </a>
  * @author Alexandros
  */
 public abstract class PageStatisticsCategories {
@@ -32,7 +35,7 @@ public abstract class PageStatisticsCategories {
   @Getter
   @Setter
   @LinkedIn
-  private PageStatistics pageStatistics;
+  private PageStatistic pageStatistics;
   
   /**
    * A page statics by seniority model

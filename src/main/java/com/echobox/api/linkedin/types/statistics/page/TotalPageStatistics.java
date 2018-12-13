@@ -18,13 +18,16 @@
 package com.echobox.api.linkedin.types.statistics.page;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.statistics.page.PageStatistics.Views;
+import com.echobox.api.linkedin.types.statistics.page.PageStatistic.Views;
 
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  * Total Page Statistics Model
+ * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/page-statistics">
+ *   Totale Statistics
+ * </a>
  * @author Alexandros
  */
 public class TotalPageStatistics {

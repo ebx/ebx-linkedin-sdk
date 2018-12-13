@@ -23,10 +23,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Page Statistics Model 
+ * Page Statistic Model
+ * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/page-statistics">
+ *  Page Statistics Categories
+ * </a>
  * @author Alexandros
  */
-public class PageStatistics {
+public class PageStatistic {
   
   @Getter
   @Setter
