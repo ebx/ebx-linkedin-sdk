@@ -28,7 +28,6 @@ import static java.lang.String.format;
 import com.echobox.api.linkedin.jsonmapper.JsonMapper;
 import com.echobox.api.linkedin.jsonmapper.JsonMapper.JsonMappingCompleted;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.util.ReflectionUtils;
 import com.echobox.api.linkedin.util.URLUtils;
 import com.echobox.api.linkedin.version.Version;
 
