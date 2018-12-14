@@ -231,7 +231,7 @@ public class DefaultWebRequestor implements WebRequestor {
 
       HttpRequest request = null;
       if (binaryAttachments.length > 0) {
-        // TODO: binary attachments are not supported yet
+        throw new UnsupportedOperationException("Binary attachments are not supported yet.");
       } else {
         if (jsonBody != null) {
           // Convert the JSON into a map - annoyingly JsonHttpContent data object has to be a
