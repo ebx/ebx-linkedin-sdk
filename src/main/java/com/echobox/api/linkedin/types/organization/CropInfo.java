@@ -15,34 +15,38 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.organization;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
-
 /**
- * @author clementcaylux on 27/11/2018.
+ * The type Crop info.
+ * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-
+ * lookup-api#croppedimg"> Cropped Image Schema</a>
+ * @author clementcaylux 
  */
-public class Paging {
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  private int count;
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  private int start;
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  List<String> links;
+public class CropInfo {
   
+  @Getter
+  @Setter
+  @LinkedIn
+  private int height;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private int width;
+
+  @Getter
+  @Setter
+  @LinkedIn("x")
+  private int xAxis;
+
+  @Getter
+  @Setter
+  @LinkedIn("y")
+  private int yAxis;
 }

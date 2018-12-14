@@ -15,25 +15,24 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.engagement;
+package com.echobox.api.linkedin.types;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
-
 
 /**
- * The class containing all information regarding a share
- * @author clementcaylux on 27/11/2018.
+ * Deleted POJO for LinkedIn V2
+ * @author joanna
+ *
  */
-public class ShareStatistics {
-
-  @Getter 
-  @Setter
+public class Deleted {
+  
+  /**
+   * Deleted timestamp
+   */
+  @Getter
   @LinkedIn
-  private List<ShareStatisticsElement> elements;
+  private Long time;
 
 }

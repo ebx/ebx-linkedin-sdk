@@ -30,7 +30,6 @@ import static java.util.Collections.unmodifiableSet;
 import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
 import com.echobox.api.linkedin.logging.LinkedInLogger;
 import com.echobox.api.linkedin.types.urn.URN;
-import com.echobox.api.linkedin.types.urn.URNEntityType;
 import com.echobox.api.linkedin.util.DateUtils;
 import com.echobox.api.linkedin.util.ObjectUtil;
 import com.echobox.api.linkedin.util.ReflectionUtils;
@@ -263,6 +262,10 @@ public class DefaultJsonMapper implements JsonMapper {
         LOGGER.debug("Encountered 'false' from LinkedIn when trying to map to {} - mapping null instead.",
           type.getSimpleName());
         return null;
+      }
+      
+      if (type.equals(URN.class)) {
+        return (T) new URN(json);
       }
 
       JsonValue jsonValue = Json.parse(json);

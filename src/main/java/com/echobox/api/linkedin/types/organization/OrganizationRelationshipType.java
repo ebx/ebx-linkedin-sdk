@@ -15,25 +15,29 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.engagement;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
-
+package com.echobox.api.linkedin.types.organization;
 
 /**
- * The class containing all information regarding a share
- * @author clementcaylux on 27/11/2018.
+ * Type of relationship from child to parent organizations
+ * @author joanna
+ *
  */
-public class ShareStatistics {
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  private List<ShareStatisticsElement> elements;
+public enum OrganizationRelationshipType {
+  
+  /**
+   * This organization is a subsidiary of the parent.
+   */
+  SUBSIDIARY,
+  
+  /**
+   * This organization was acquired by the parent.
+   */
+  ACQUISITION,
+  
+  /**
+   * An associated school of the parent organization. 
+   * For example, a University's School of Law or a remote campus, or a company-owned university.
+   */
+  SCHOOL;
 
 }
