@@ -18,7 +18,6 @@
 package com.echobox.api.linkedin.types.statistics;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.Paging;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -30,11 +29,6 @@ import java.util.List;
  * @author clementcaylux on 03/12/2018.
  */
 public class OrganizationFollowerStatistics {
-  
-  @Getter
-  @Setter
-  @LinkedIn
-  private Paging paging;
   
   @Getter
   @Setter

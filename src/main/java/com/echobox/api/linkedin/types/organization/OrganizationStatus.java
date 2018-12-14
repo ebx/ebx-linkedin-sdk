@@ -15,25 +15,38 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.engagement;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
-
+package com.echobox.api.linkedin.types.organization;
 
 /**
- * The class containing all information regarding a share
- * @author clementcaylux on 27/11/2018.
+ * Status of the organization, such as operating or out of business
+ * @author joanna
+ *
  */
-public class ShareStatistics {
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  private List<ShareStatisticsElement> elements;
+public enum OrganizationStatus {
+  
+  /**
+   * Currently operating
+   */
+  OPERATING,
+  
+  /**
+   * Operating as a subsidiary
+   */
+  OPERATING_SUBSIDIARY,
+  
+  /**
+   * Undergoing reorganization
+   */
+  REORGANIZING,
+  
+  /**
+   * Out of business
+   */
+  OUT_OF_BUSINESS,
+  
+  /**
+   * Acquired by another organization
+   */
+  ACQUIRED;
 
 }

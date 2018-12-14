@@ -15,25 +15,34 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.engagement;
+package com.echobox.api.linkedin.types.organization;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
-
 /**
- * The class containing all information regarding a share
- * @author clementcaylux on 27/11/2018.
+ * The type Cropped image.
+ * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-
+ * lookup-api#croppedimg"> Cropped Image Schema</a>
+ * @author clementcaylux 
  */
-public class ShareStatistics {
-
-  @Getter 
+public class CroppedImage {
+  
+  @Getter
   @Setter
   @LinkedIn
-  private List<ShareStatisticsElement> elements;
+  private CropInfo cropInfo;
 
+  @Getter
+  @Setter
+  @LinkedIn
+  private URN cropped;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private URN original;
 }

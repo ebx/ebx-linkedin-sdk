@@ -15,25 +15,53 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.engagement;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
-
+package com.echobox.api.linkedin.types.organization;
 
 /**
- * The class containing all information regarding a share
- * @author clementcaylux on 27/11/2018.
+ * Type of organization
+ * @author joanna
+ *
  */
-public class ShareStatistics {
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  private List<ShareStatisticsElement> elements;
+public enum OrganizationType {
+  
+  /**
+   * A public company
+   */
+  PUBLIC_COMPANY,
+  
+  /**
+   * An educational institution
+   */
+  EDUCATIONAL,
+  
+  /**
+   * A self-employed business
+   */
+  SELF_EMPLOYED,
+  
+  /**
+   * A government agency
+   */
+  GOVERNMENT_AGENCY,
+  
+  /**
+   * A non-profit organization
+   */
+  NON_PROFIT,
+  
+  /**
+   * A self-owned business
+   */
+  SELF_OWNED,
+  
+  /**
+   * A privately held business
+   */
+  PRIVATELY_HELD,
+  
+  /**
+   * A partnership
+   */
+  PARTNERSHIP;
 
 }

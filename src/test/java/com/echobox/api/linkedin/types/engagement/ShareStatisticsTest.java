@@ -19,7 +19,6 @@ package com.echobox.api.linkedin.types.engagement;
 
 import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapper;
 import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapperTestBase;
-import com.echobox.api.linkedin.types.Paging;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -54,12 +53,6 @@ public class ShareStatisticsTest extends DefaultJsonMapperTestBase {
             + "      \"organizationalEntity\": \"urn:li:organization:2414183\"\n" + "    }\n"
             + "  ],\n" + "  \"paging\": {\n" + "    \"count\": 10,\n" + "    \"start\": 0,\n"
             + "    \"links\": []\n" + "  }\n" + "}", ShareStatistics.class);
-
-    Paging paging = shareStatistics.getPaging();
-    
-    Assert.assertEquals(10, paging.getCount());
-    Assert.assertEquals(0, paging.getStart());
-    Assert.assertEquals(0, paging.getLinks().size());
 
     List<ShareStatisticsElement> elements = shareStatistics.getElements();
     ShareStatisticsElement shareStatisticsElement = elements.get(0);

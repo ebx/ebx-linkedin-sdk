@@ -15,25 +15,32 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.engagement;
+package com.echobox.api.linkedin.types.organization;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.AddressV2;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
-
 /**
- * The class containing all information regarding a share
- * @author clementcaylux on 27/11/2018.
+ * The type Location info.
+ * @author clementcaylux 
  */
-public class ShareStatistics {
-
-  @Getter 
+public class LocationInfo {
+  
+  @Getter
   @Setter
   @LinkedIn
-  private List<ShareStatisticsElement> elements;
+  private String staffCountRange;
 
+  @Getter
+  @Setter
+  @LinkedIn
+  private String locationType;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private AddressV2 address;
 }

@@ -15,25 +15,33 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.engagement;
+package com.echobox.api.linkedin.types.organization;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
-
 /**
- * The class containing all information regarding a share
- * @author clementcaylux on 27/11/2018.
+ * The type Date.
+ * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-lookup-api
+ * #date"> Date Schema</a>
+ * @author clementcaylux
  */
-public class ShareStatistics {
+public class Date {
 
-  @Getter 
+  @Getter
   @Setter
   @LinkedIn
-  private List<ShareStatisticsElement> elements;
+  private Integer day;
 
+  @Getter
+  @Setter
+  @LinkedIn
+  private Integer month;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private Integer year;
 }

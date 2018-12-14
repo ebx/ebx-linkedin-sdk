@@ -15,25 +15,23 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.engagement;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
-
+package com.echobox.api.linkedin.types.organization;
 
 /**
- * The class containing all information regarding a share
- * @author clementcaylux on 27/11/2018.
+ * The status of a relationship between organizations
+ * @author joanna
+ *
  */
-public class ShareStatistics {
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  private List<ShareStatisticsElement> elements;
+public enum RelationshipStatus {
+  
+  /**
+   * The relationship is active.
+   */
+  ACTIVE,
+  
+  /**
+   * The relationship is inactive.
+   */
+  INACTIVE;
 
 }
