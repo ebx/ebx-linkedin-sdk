@@ -117,7 +117,7 @@ public interface WebRequestor {
    * @throws IOException
    *           If an error occurs while performing the {@code POST}.
    */
-  Response executePost(String url, String parameters) throws IOException;
+  Response executePost(String url, String jsonBody, String parameters) throws IOException;
 
   /**
    * Given a LinkedIn API endpoint URL and parameter string, execute a {@code POST} to the endpoint
@@ -134,7 +134,7 @@ public interface WebRequestor {
    * @throws IOException
    *           If an error occurs while performing the {@code POST}.
    */
-  Response executePost(String url, String parameters, BinaryAttachment... binaryAttachments)
+  Response executePost(String url, String parameters, String jsonBody, BinaryAttachment... binaryAttachments)
       throws IOException;
 
   /**
