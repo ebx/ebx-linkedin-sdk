@@ -20,6 +20,9 @@ package com.echobox.api.linkedin.client;
 import static java.lang.String.format;
 
 import com.echobox.api.linkedin.logging.LinkedInLogger;
+import com.echobox.api.linkedin.util.JsonUtils;
+import com.echobox.api.linkedin.util.URLUtils;
+import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
@@ -33,6 +36,7 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.json.JsonHttpContent;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -42,6 +46,7 @@ import org.slf4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -58,6 +63,12 @@ import java.util.Map;
 public class DefaultWebRequestor implements WebRequestor {
 
   private static final Logger LOGGER = LinkedInLogger.getLoggerInstance();
+
+  /**
+   * Arbitrary unique boundary marker for multipart {@code POST}s.
+   */
+  private static final String MULTIPART_BOUNDARY =
+      "**boundarystringwhichwill**neverbeencounteredinthewild**";
 
   /**
    * Default charset to use for encoding/decoding strings.
@@ -78,6 +89,10 @@ public class DefaultWebRequestor implements WebRequestor {
    * Default charset to use for encoding/decoding strings.
    */
   public static final String ENCODING_CHARSET = "UTF-8";
+  
+  private static final String CONTENT_TYPE = "application/json";
+  
+  private static final String FORMAT_HEADER = "x-li-format";
 
   /**
    * By default, how long should we wait for a response (in ms)?
@@ -91,6 +106,11 @@ public class DefaultWebRequestor implements WebRequestor {
   private DebugHeaderInfo debugHeaderInfo;
 
   private HttpRequestFactory requestFactory;
+
+  /**
+   * By default this is true, to prevent breaking existing usage
+   */
+  private boolean autocloseBinaryAttachmentStream = true;
 
   /**
    * HTTP methods available
@@ -184,14 +204,123 @@ public class DefaultWebRequestor implements WebRequestor {
   }
 
   @Override
-  public Response executePost(String url, String parameters) throws IOException {
-    return executePost(url, parameters, (BinaryAttachment[]) null);
+  public Response executePost(String url, String parameters, String jsonBody) throws IOException {
+    return executePost(url, parameters, jsonBody, new BinaryAttachment[0]);
   }
 
   @Override
-  public Response executePost(String url, String parameters, BinaryAttachment... binaryAttachments)
+  public Response executePost(String url, String parameters, String jsonBody,
+      BinaryAttachment... binaryAttachments)
       throws IOException {
-    throw new UnsupportedOperationException("POST has not been implemented yet");
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Executing a POST to " + url + " with parameters "
+          + (binaryAttachments.length > 0 ? "" : "(sent in request body): ")
+          + URLUtils.urlDecode(parameters)
+          + (binaryAttachments.length > 0 ? " and " + binaryAttachments.length
+              + " binary attachment[s]." : ""));
+    }
+
+    if (binaryAttachments == null) {
+      binaryAttachments = new BinaryAttachment[0];
+    }
+
+    HttpResponse httpResponse = null;
+    try {
+      GenericUrl genericUrl = new GenericUrl(url + (!StringUtils.isEmpty(parameters)
+          ? "?" + parameters : ""));
+
+      HttpRequest request = null;
+      if (binaryAttachments.length > 0) {
+        throw new UnsupportedOperationException("Binary attachments are not supported yet.");
+      } else {
+        if (jsonBody != null) {
+          // Convert the JSON into a map - annoyingly JsonHttpContent data object has to be a
+          // key/value object i.e. map
+          JsonObject asObject = Json.parse(jsonBody).asObject();
+          Map<String, Object> map = JsonUtils.toMap(asObject);
+
+          JsonHttpContent jsonHttpContent = new JsonHttpContent(new JacksonFactory(), map);
+          request = requestFactory.buildPostRequest(genericUrl, jsonHttpContent);
+
+          // Ensure the headers are set to JSON
+          request.setHeaders(new HttpHeaders()
+              .setContentType(CONTENT_TYPE).set(FORMAT_HEADER, "json"));
+
+          // Ensure the response headers are also set to JSON
+          request.setResponseHeaders(new HttpHeaders().set(FORMAT_HEADER, "json"));
+        } else {
+          // Plain old POST request
+          request = requestFactory.buildPostRequest(genericUrl, null);
+        }
+      }
+
+      request.setReadTimeout(DEFAULT_READ_TIMEOUT_IN_MS);
+
+      // Allow subclasses to customize the connection if they'd like to - set their own headers,
+      // timeouts, etc.
+      customizeConnection(request);
+
+      if (binaryAttachments.length > 0) {
+        request.setHeaders(new HttpHeaders().set("Connection", "Keep-Alive"));
+      }
+
+      return getResponse(request);
+    } catch (HttpResponseException ex) {
+      return handleException(ex);
+    } finally {
+      if (autocloseBinaryAttachmentStream && binaryAttachments.length > 0) {
+        for (BinaryAttachment binaryAttachment : binaryAttachments) {
+          closeQuietly(binaryAttachment.getData());
+        }
+      }
+
+      closeQuietly(httpResponse);
+    }
+  }
+
+  private Response getResponse(HttpRequest request) throws IOException {
+    HttpResponse httpResponse = request.execute();
+
+    fillHeaderAndDebugInfo(httpResponse.getHeaders());
+
+    Response response = fetchResponse(httpResponse);
+
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug(format("LinkedIn responded with %s", response));
+    }
+
+    return response;
+  }
+
+  private Response handleException(HttpResponseException ex) {
+    fillHeaderAndDebugInfo(ex.getHeaders());
+
+    Response response = fetchResponse(ex.getStatusCode(), ex.getContent());
+
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug(format("LinkedIn responded with an error %s", response));
+    }
+
+    return response;
+  }
+
+  /**
+   * Creates the form field name for the binary attachment filename by stripping off the 
+   * file extension - for example,
+   * the filename "test.png" would return "test".
+   * 
+   * @param binaryAttachment
+   *          The binary attachment for which to create the form field name.
+   * @return The form field name for the given binary attachment.
+   */
+  protected String createFormFieldName(BinaryAttachment binaryAttachment) {
+    if (binaryAttachment.getFieldName() != null) {
+      return binaryAttachment.getFieldName();
+    }
+
+    String name = binaryAttachment.getFilename();
+    int fileExtensionIndex = name.lastIndexOf('.');
+    return fileExtensionIndex > 0 ? name.substring(0, fileExtensionIndex) : name;
   }
 
   /**
@@ -202,6 +331,27 @@ public class DefaultWebRequestor implements WebRequestor {
    */
   protected void customizeConnection(HttpRequest connection) {
     // This implementation is a no-op
+  }
+
+  /**
+   * Attempts to cleanly close a resource, swallowing any exceptions that might occur since 
+   * there's no way to recover
+   * anyway.
+   * <p>
+   * It's OK to pass {@code null} in, this method will no-op in that case.
+   * 
+   * @param closeable
+   *          The resource to close.
+   */
+  protected void closeQuietly(Closeable closeable) {
+    if (closeable == null) {
+      return;
+    }
+    try {
+      closeable.close();
+    } catch (Exception t) {
+      LOGGER.warn(format("Unable to close %s: ", closeable), t);
+    }
   }
 
   /**
@@ -241,7 +391,7 @@ public class DefaultWebRequestor implements WebRequestor {
     int read;
     byte[] chunk = new byte[bufferSize];
     while ((read = source.read(chunk)) > 0) {
-      destination.write(chunk, 0, read);      
+      destination.write(chunk, 0, read);
     }
   }
 
@@ -278,27 +428,10 @@ public class DefaultWebRequestor implements WebRequestor {
       // Allow subclasses to customize the connection if they'd like to - set their own headers,
       // timeouts, etc.
       customizeConnection(request);
-      httpResponse = request.execute();
 
-      fillHeaderAndDebugInfo(httpResponse.getHeaders());
-
-      Response response = fetchResponse(httpResponse);
-
-      if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug(format("LinkedIn responded with %s", response));
-      }
-
-      return response;
+      return getResponse(request);
     } catch (HttpResponseException ex) {
-      fillHeaderAndDebugInfo(ex.getHeaders());
-
-      Response response = fetchResponse(ex.getStatusCode(), ex.getContent());
-
-      if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug(format("LinkedIn responded with an error %s", response));
-      }
-
-      return response;
+      return handleException(ex);
     } finally {
       closeQuietly(httpResponse);
     }

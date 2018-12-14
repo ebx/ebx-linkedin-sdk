@@ -46,6 +46,7 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -208,27 +209,37 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   }
 
   @Override
-  public <T> T publish(String connection, Class<T> objectType, Parameter... parameters) {
-    throw new UnsupportedOperationException("Publish is not yet implemented");
-  }
-
-  @Override
-  public <T> T publish(String connection, Class<T> objectType,
-      List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
-    throw new UnsupportedOperationException("Publish is not yet implemented");
-  }
-
-  @Override
-  public <T> T publish(String connection, Class<T> objectType, BinaryAttachment binaryAttachment,
+  public <T> T publish(String connection, Class<T> objectType, Object jsonBody,
       Parameter... parameters) {
-    throw new UnsupportedOperationException("Publish is not yet implemented");
+    return publish(connection, objectType, jsonBody, new ArrayList<>(), parameters);
+  }
+
+  @Override
+  public <T> T publish(String connection, Class<T> objectType, Object jsonBody,
+      List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
+    verifyParameterPresence("connection", connection);
+
+    return jsonMapper.toJavaObject(makeRequest(connection, true, false, jsonBody,
+        binaryAttachments, parameters), objectType);
+  }
+
+  @Override
+  public <T> T publish(String connection, Class<T> objectType, Object jsonBody,
+      BinaryAttachment binaryAttachment, Parameter... parameters) {
+    List<BinaryAttachment> attachments = null;
+    if (binaryAttachment != null) {
+      attachments = new ArrayList<>();
+      attachments.add(binaryAttachment);
+    }
+
+    return publish(connection, objectType, attachments, parameters);
   }
 
   @Override
   public boolean deleteObject(String object, Parameter... parameters) {
     verifyParameterPresence("object", object);
 
-    String responseString = makeRequest(object, false, true, null, parameters);
+    String responseString = makeRequest(object, false, true, null, null, parameters);
     try {
       JsonValue jObj = Json.parse(responseString);
       if (jObj.isObject()) {
@@ -304,7 +315,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    *           If an error occurs while making the LinkedIn API POST or processing the response.
    */
   protected String makeRequest(String endpoint, Parameter... parameters) {
-    return makeRequest(endpoint, false, false, null, parameters);
+    return makeRequest(endpoint, false, false, null, null, parameters);
   }
 
   /**
@@ -328,7 +339,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    *           If an error occurs while making the LinkedIn API POST or processing the response.
    */
   protected String makeRequest(String endpoint, final boolean executeAsPost,
-      final boolean executeAsDelete,
+      final boolean executeAsDelete, Object jsonBody,
       final List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
     verifyParameterLegality(parameters);
 
@@ -358,7 +369,8 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
           return webRequestor.executeDelete(fullEndpoint + finalParameterString);
         } else {
           return executeAsPost
-              ? webRequestor.executePost(fullEndpoint, parameterString,
+              ? webRequestor.executePost(fullEndpoint, parameterString, 
+                  jsonBody == null ? null : jsonMapper.toJson(jsonBody, true),
                   binaryAttachments == null ? null
                       : binaryAttachments.toArray(new BinaryAttachment[binaryAttachments.size()]))
               : webRequestor.executeGet(fullEndpoint + finalParameterString);
@@ -440,6 +452,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     // Server Error or 302 Not Modified or 504 Gateway Timeout or 429 Rate Limit
     // throw an exception.
     if (HttpURLConnection.HTTP_OK != response.getStatusCode()
+        && HttpURLConnection.HTTP_CREATED != response.getStatusCode()
         && HttpURLConnection.HTTP_BAD_REQUEST != response.getStatusCode()
         && HttpURLConnection.HTTP_UNAUTHORIZED != response.getStatusCode()
         && HttpURLConnection.HTTP_NOT_FOUND != response.getStatusCode()
