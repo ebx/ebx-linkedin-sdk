@@ -17,15 +17,14 @@
 
 package com.echobox.api.linkedin.connection;
 
-import com.echobox.api.linkedin.client.Connection;
 import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.types.organization.AccessControl;
+import com.echobox.api.linkedin.types.organization.Organization;
 import com.echobox.api.linkedin.types.urn.URN;
+import com.echobox.api.linkedin.types.urn.URNEntityType;
 import com.echobox.api.linkedin.version.Version;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -51,66 +50,142 @@ public class OrganizationConnection extends ConnectionBase {
    * E.g. https://api.linkedin.com/v2/organizationalEntityAcls?q=roleAssignee
    * @param role Limit results to specific roles, such as ADMINISTRATOR.
    * @param state Limit results to specific role states, such as APPROVED.
+   * @param projection Field projection
    * @return List of access controls for a given role and state for the member
    */
-  public List<AccessControl> fetchOrganizationAccessControl(String role, String state) {
-    List<AccessControl> accessControl = new ArrayList<>();
-
+  public List<AccessControl> fetchMemeberOrganizationAccessControl(String role, String state,
+      Parameter projection) {
     Parameter queryParam = Parameter.with("q", "roleAssignee");
-    Parameter roleParam = Parameter.with("role", "roleAssignee");
-    Parameter stateParam = Parameter.with("state", "roleAssignee");
+    Parameter roleParam = Parameter.with("role", role);
+    Parameter stateParam = Parameter.with("state", state);
 
-    Connection<AccessControl> connection =
-        linkedinClient.fetchConnection("/organizationalEntityAcls", AccessControl.class,
-            queryParam, roleParam, stateParam);
+    return getListFromQuery("/organizationalEntityAcls", AccessControl.class,
+        projection, queryParam, roleParam, stateParam);
+  }
 
-    Iterator<List<AccessControl>> iterator = connection.iterator();
-    while (iterator.hasNext()) {
-      accessControl.addAll(iterator.next());
+  /**
+   * Find an Organization's Access Control Information
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
+   * management/organizations/organization-access-control">Access Control</a>
+   * E.g. https://api.linkedin.com/v2/organizationalEntityAcls?q=organizationalTarget
+   * &organizationalTarget={organization URN}&role=ADMINISTRATOR&state=APPROVED
+   * @param organizationalTarget The organizational entity for which access control information
+   * is retrieved.
+   * @param role Limit results to specific roles
+   * @param state Limit results to specific role states
+   * @param projection Field projection
+   * @return List of access controls for an organization
+   */
+  public List<AccessControl> findOrganizationAccessControl(URN organizationalTarget, String role,
+      String state, Parameter projection) {
+    Parameter queryParam = Parameter.with("q", "organizationalTarget");
+    Parameter organizationalTargetParam =
+        Parameter.with("organizationalTarget", organizationalTarget.toString());
+    Parameter roleParam = Parameter.with("role", role);
+    Parameter stateParam = Parameter.with("state", state);
+
+    return getListFromQuery("/organizationalEntityAcls", AccessControl.class, projection,
+        queryParam, organizationalTargetParam, roleParam, stateParam);
+  }
+
+  /**
+   * Find an organization using an organization ID, parent organization ID from the URN
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
+   * management/organizations/organization-lookup-api#retrieve-organizations">
+   * Retrieve organization</a>
+   * @param organizationURN The organization URN
+   * @param fields the fields to project
+   * @return the requested organization by the given URN
+   */
+  public Organization retrieveOrganizationByURN(URN organizationURN, Parameter fields) {
+    if (!URNEntityType.ORGANIZATION.equals(organizationURN.getURNEntityType())) {
+      throw new IllegalArgumentException("The URN should be type organization");
     }
-
-    return accessControl;
+    return retrieveOrganization(Long.parseLong(organizationURN.getId()), fields);
   }
 
   /**
-   * https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api#retrieve-organizations
+   * Find an organization using an organization ID, parent organization ID
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
+   * management/organizations/organization-lookup-api#retrieve-organizations">
+   * Retrieve organization</a>
+   * @param organizationId The organization id
+   * @param fields the fields to project
+   * @return the requested organization
    */
-  public static void retrieveOrganizations(long organizationId) {
-
+  public Organization retrieveOrganization(long organizationId, Parameter fields) {
+    return linkedinClient.fetchObject("organizations/" + organizationId, Organization.class,
+        fields);
   }
 
   /**
-   * https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api#retrieve-organizations
-   * @param vanityName
+   * Lookup an organization by vanity name
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
+   * management/organizations/organization-lookup-api#retrieve-organizations">
+   * Retrieve organization</a>
+   * @param vanityName the vanity name for the organization
+   * @param fields the fields to request
+   * @return The organization with the vanity name
    */
-  public static void findOrganizationByVanityName(String vanityName) {
-
+  public Organization findOrganizationByVanityName(String vanityName, Parameter fields) {
+    Parameter queryParam = Parameter.with("q", "vanityName");
+    Parameter vanityNameParam = Parameter.with("vanityName", vanityName);
+    return linkedinClient.fetchObject("organizations", Organization.class,
+        fields, queryParam, vanityNameParam);
   }
 
-  public static void findOrganizationByEmailDomain(String emailDomain) {
-
+  /**
+   * Lookup an organization by email domain
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
+   * management/organizations/organization-lookup-api#retrieve-organizations">
+   * Retrieve organization</a>
+   * @param emailDomain the email domain for the organization
+   * @param fields the fields to request
+   * @return A list of organizations with the email domain
+   */
+  public List<Organization> findOrganizationByEmailDomain(String emailDomain, Parameter fields) {
+    Parameter queryParam = Parameter.with("q", "emailDomain");
+    Parameter emailDomainParam = Parameter.with("emailDomain", emailDomain);
+    return getListFromQuery("organizations", Organization.class, fields, queryParam,
+        emailDomainParam);
   }
 
-  public static void findOrganizationsAssociatedToMemberPosition() {
+  /**
+   * findOrganizationsAssociatedToMemberPosition
+   */
+  public void findOrganizationsAssociatedToMemberPosition() {
     throw new UnsupportedOperationException("Operation is not implemented yet.");
   }
 
   /**
-   * https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api#retrieve-organization-brands
-   * @param organizationBrandId
+   * https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management
+   * /organizations/organization-lookup-api#retrieve-organization-brands
+   * @param organizationBrandId organizationBrandId
    */
   public void retrieveOrganizationBrand(long organizationBrandId) {
 
   }
 
+  /**
+   * retrieveOrganizationBrandByVanityName
+   * @param vanityName vanityname
+   */
   public void retrieveOrganizationBrandByVanityName(String vanityName) {
 
   }
 
+  /**
+   * retrieveOrganizationBrandByParentOrganization
+   * @param organizationURN organizationURN
+   */
   public void retrieveOrganizationBrandByParentOrganization(URN organizationURN) {
 
   }
 
+  /**
+   * retrieveOrganizationMediaContent
+   * @param organizationId organizationId
+   */
   public void retrieveOrganizationMediaContent(long organizationId) {
 
   }
