@@ -263,6 +263,10 @@ public class DefaultJsonMapper implements JsonMapper {
           type.getSimpleName());
         return null;
       }
+      
+      if (type.equals(URN.class)) {
+        return (T) new URN(json);
+      }
 
       JsonValue jsonValue = Json.parse(json);
       T instance = ReflectionUtils.createInstance(type);

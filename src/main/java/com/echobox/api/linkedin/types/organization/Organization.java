@@ -17,8 +17,6 @@
 
 package com.echobox.api.linkedin.types.organization;
 
-import com.echobox.api.linkedin.jsonmapper.JsonMapper;
-import com.echobox.api.linkedin.jsonmapper.JsonMapper.JsonMappingCompleted;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.Deleted;
 import com.echobox.api.linkedin.types.LinkedInIdAndURNType;
@@ -31,8 +29,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 
 /**
  * The type Organization.
@@ -119,14 +115,9 @@ public class Organization extends LinkedInIdAndURNType {
   /**
    * The industries associated with the entity.
    */
-  @LinkedIn("industries")
-  private List<String> industriesRaw;
-  
-  /**
-   * The industries associated with the entity.
-   */
   @Getter
   @Setter
+  @LinkedIn("industries")
   private List<URN> industries;
   
   /**
@@ -285,12 +276,4 @@ public class Organization extends LinkedInIdAndURNType {
   @LinkedIn
   private String organizationType;
   
-  @JsonMappingCompleted
-  protected void jsonMappingCompleted(JsonMapper jsonMapper) {
-
-    if (industriesRaw != null) {
-      industries = industriesRaw.stream().map(URN::new).collect(Collectors.toList());
-    }
-
-  }
 }
