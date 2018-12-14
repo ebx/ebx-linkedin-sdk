@@ -61,9 +61,14 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   private static final Logger LOGGER = LinkedInLogger.getLoggerInstance();
 
   /**
-   * Reserved method override parameter name.
+   * HTTP parameter names.
    */
   protected static final String METHOD_PARAM_NAME = "method";
+  protected static final String GRANT_TYPE_PARAM_NAME = "grant_type";
+  protected static final String CODE_PARAM_NAME = "code";
+  protected static final String REDIRECT_URI_PARAM_NAME = "redirect_uri";
+  protected static final String CLIENT_ID_PARAM_NAME = "client_id";
+  protected static final String CLIENT_SECRET_PARAM_NAME = "client_secret";
 
   /**
    * Reserved "result format" parameter name.
@@ -84,6 +89,12 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    * API error response 'message' attribute name.
    */
   protected static final String ERROR_MESSAGE_ATTRIBUTE_NAME = "message";
+
+  /**
+   * Endpoint to fetch the access token query.
+   */
+  protected static final String ENDPOINT_ACCESS_TOKEN =
+      "https://www.linkedin.com/oauth/v2/accessToken";
 
   /**
    * Reserved "start" parameter name.
@@ -304,12 +315,12 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     try {
       this.webRequestor = new DefaultWebRequestor(appId, appSecret);
 
-      final String endpoint = "https://www.linkedin.com/oauth/v2/accessToken";
-      final String response =
-          makeRequestFull(endpoint, true, false, new JsonObject(), Collections.emptyList(),
-              Parameter.with("grant_type", "authorization_code"),
-              Parameter.with("code", verificationCode), Parameter.with("redirect_uri", redirectUri),
-              Parameter.with("client_id", appId), Parameter.with("client_secret", appSecret));
+      final String response = makeRequestFull(ENDPOINT_ACCESS_TOKEN, true, false, new JsonObject(),
+          Collections.emptyList(), Parameter.with(GRANT_TYPE_PARAM_NAME, "authorization_code"),
+          Parameter.with(CODE_PARAM_NAME, verificationCode),
+          Parameter.with(REDIRECT_URI_PARAM_NAME, redirectUri),
+          Parameter.with(CLIENT_ID_PARAM_NAME, appId),
+          Parameter.with(CLIENT_SECRET_PARAM_NAME, appSecret));
 
       return getAccessTokenFromResponse(response);
     } catch (Exception ex) {
