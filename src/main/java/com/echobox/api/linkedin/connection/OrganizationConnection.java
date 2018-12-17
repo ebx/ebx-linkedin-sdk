@@ -19,12 +19,17 @@ package com.echobox.api.linkedin.connection;
 
 import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
+import com.echobox.api.linkedin.types.TimeInterval;
 import com.echobox.api.linkedin.types.organization.AccessControl;
 import com.echobox.api.linkedin.types.organization.Organization;
+import com.echobox.api.linkedin.types.statistics.page.Statistics;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.urn.URNEntityType;
 import com.echobox.api.linkedin.version.Version;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -151,43 +156,154 @@ public class OrganizationConnection extends ConnectionBase {
   }
 
   /**
-   * findOrganizationsAssociatedToMemberPosition
+   * Look up a member's positions and related organization IDs.
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
+   * management/organizations/organization-lookup-api">
+   * Find Organizations Associated with a Member's Positions</a>
    */
   public void findOrganizationsAssociatedToMemberPosition() {
     throw new UnsupportedOperationException("Operation is not implemented yet.");
   }
 
   /**
-   * https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management
-   * /organizations/organization-lookup-api#retrieve-organization-brands
+   * Use organization brand id to find all all of its information
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
+   * management/organizations/organization-lookup-api#retrieve-organization-brands">
+   * Retrieve an organization brand</a>
    * @param organizationBrandId organizationBrandId
    */
   public void retrieveOrganizationBrand(long organizationBrandId) {
-
+    throw new UnsupportedOperationException("Operation is not implemented yet.");
   }
 
   /**
-   * retrieveOrganizationBrandByVanityName
-   * @param vanityName vanityname
+   * Use organization vanity name to find all all of its information
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
+   * management/organizations/organization-lookup-api#retrieve-organization-brands">
+   * Retrieve Organization Brand by Vanity Name</a>
+   * @param vanityName vanity name
    */
   public void retrieveOrganizationBrandByVanityName(String vanityName) {
-
+    throw new UnsupportedOperationException("Operation is not implemented yet.");
   }
 
   /**
-   * retrieveOrganizationBrandByParentOrganization
-   * @param organizationURN organizationURN
+   * Use organization parent URN to get a list of array of brands that belong to the specified
+   * parent
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
+   * management/organizations/organization-lookup-api#retrieve-organization-brands">
+   * Retrieve Organization Brand by Parent Organization</a>
+   * @param organizationURN parent organization URN
    */
   public void retrieveOrganizationBrandByParentOrganization(URN organizationURN) {
-
+    throw new UnsupportedOperationException("Operation is not implemented yet.");
   }
 
   /**
-   * retrieveOrganizationMediaContent
-   * @param organizationId organizationId
+   * Use organization parent URN to get a list of array of brands that belong to the specified
+   * parent
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
+   * management/organizations/organization-lookup-api#retrieve-media-content-using-organizations-
+   * and-organization-brands">
+   * Retrieve Organization's Media Content</a>
+   * @param organizationId organization id
    */
   public void retrieveOrganizationMediaContent(long organizationId) {
-
+    throw new UnsupportedOperationException("Operation is not implemented yet.");
+  }
+  
+  /**
+   * Search for organizations
+   * @param searchTerm the search term
+   * @return a list of organizations that match the organization
+   */
+  public List<Organization> searchForOrganizations(String searchTerm) {
+    throw new UnsupportedOperationException("Operation is not implemented yet.");
+  }
+  
+  /**
+   * Retreive the lifetime follower statistics. Providing the time interval will retrieve
+   * time-bounded follower statistics, otherwise the lifetime follower statistics will be returned
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
+   * community-management/organizations/follower-statistics">
+   * Organization Follower Statistics</a>
+   * @param organizationURN the organization URN to retrieve the follower statistics
+   * @param timeInterval the time interval  for time-bound follower statistics
+   * @return a list of organization's follower statistics
+   */
+  public List<Statistics> retrieveOrganizationFollowerStatistics(URN organizationURN,
+      TimeInterval timeInterval) {
+    List<Parameter> parameters = new ArrayList<>();
+    parameters.add(Parameter.with("q", "organizationalEntity"));
+    parameters.add(Parameter.with("organizationalEntity", organizationURN.toString()));
+    
+    addTimeIntervalToQueryParameters(timeInterval, parameters);
+    
+    return getListFromQuery("/organizationalEntityFollowerStatistics", Statistics.class,
+        parameters.toArray(new Parameter[parameters.size()]));
+  }
+  
+  /**
+   * Retreive the lifetime follower statistics. Providing the time interval will retrieve
+   * time-bounded follower statistics, otherwise the lifetime follower statistics will be returned
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
+   * community-management/organizations/page-statistics#retrieve-lifetime-organization-page-
+   * statistics">
+   * Organization Page Statistics - Lifetime</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
+   * community-management/organizations/page-statistics#retrieve-time-bound-organization-page-
+   * statistics">
+   * Organization Page Statistics - time-bound</a>
+   * @param organizationURN the organization URN to retrieve the page statistics
+   * @param timeInterval the time interval  for time-bound follower statistics
+   * @return a list of organization's follower statistics
+   */
+  public List<Statistics> retrieveOrganizationPageStatistics(URN organizationURN,
+      TimeInterval timeInterval) {
+    List<Parameter> parameters = new ArrayList<>();
+    parameters.add(Parameter.with("q", "organization"));
+    parameters.add(Parameter.with("organization", organizationURN.toString()));
+    
+    addTimeIntervalToQueryParameters(timeInterval, parameters);
+    
+    return getListFromQuery("/organizationalEntityFollowerStatistics", Statistics.class,
+        parameters.toArray(new Parameter[parameters.size()]));
+  }
+  
+  /**
+   * 
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
+   * community-management/organizations/page-statistics#retrieve-organization-brand-page-
+   * statistics">
+   * Organization Brand Page Statistics</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
+   * community-management/organizations/page-statistics#retrieve-organization-brand-time-bound-
+   * page-statistics">
+   * Organization Brand Page Statistics - time-bound</a>
+   * @param organizationBrand the organization brand URN
+   * @param timeInterval the time interval for time bounded statistics
+   * @return list of page statistics for the organization brand
+   */
+  public List<Statistics> retrieveOrganizationBrandPageStatistics(URN organizationBrand,
+      TimeInterval timeInterval) {
+    throw new UnsupportedOperationException("Operation is not implemented yet.");
+  }
+  
+  private void addTimeIntervalToQueryParameters(TimeInterval timeInterval,
+      List<Parameter> parameters) {
+    if (timeInterval != null) {
+      if (!StringUtils.isBlank(timeInterval.getTimeGranularityType())) {
+        parameters.add(Parameter.with("timeIntervals.timeRange",
+            timeInterval.getTimeGranularityType()));
+      }
+      if (timeInterval.getTimeRange() != null && timeInterval.getTimeRange().getStart() != null
+          && timeInterval.getTimeRange().getEnd() != null) {
+        parameters.add(Parameter.with("timeIntervals.timeRange.start",
+            timeInterval.getTimeRange().getStart()));
+        parameters.add(Parameter.with("timeIntervals.timeRange.end",
+            timeInterval.getTimeRange().getEnd()));
+      }
+    }
   }
 
 }
