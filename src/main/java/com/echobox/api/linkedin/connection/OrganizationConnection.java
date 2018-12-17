@@ -211,7 +211,7 @@ public class OrganizationConnection extends ConnectionBase {
   public void retrieveOrganizationMediaContent(long organizationId) {
     throw new UnsupportedOperationException("Operation is not implemented yet.");
   }
-  
+
   /**
    * Search for organizations
    * @param searchTerm the search term
@@ -220,7 +220,7 @@ public class OrganizationConnection extends ConnectionBase {
   public List<Organization> searchForOrganizations(String searchTerm) {
     throw new UnsupportedOperationException("Operation is not implemented yet.");
   }
-  
+
   /**
    * Retreive the lifetime follower statistics. Providing the time interval will retrieve
    * time-bounded follower statistics, otherwise the lifetime follower statistics will be returned
@@ -236,13 +236,13 @@ public class OrganizationConnection extends ConnectionBase {
     List<Parameter> parameters = new ArrayList<>();
     parameters.add(Parameter.with("q", "organizationalEntity"));
     parameters.add(Parameter.with("organizationalEntity", organizationURN.toString()));
-    
+
     addTimeIntervalToQueryParameters(timeInterval, parameters);
-    
+
     return getListFromQuery("/organizationalEntityFollowerStatistics", Statistics.class,
         parameters.toArray(new Parameter[parameters.size()]));
   }
-  
+
   /**
    * Retreive the lifetime follower statistics. Providing the time interval will retrieve
    * time-bounded follower statistics, otherwise the lifetime follower statistics will be returned
@@ -263,15 +263,15 @@ public class OrganizationConnection extends ConnectionBase {
     List<Parameter> parameters = new ArrayList<>();
     parameters.add(Parameter.with("q", "organization"));
     parameters.add(Parameter.with("organization", organizationURN.toString()));
-    
+
     addTimeIntervalToQueryParameters(timeInterval, parameters);
-    
+
     return getListFromQuery("/organizationalEntityFollowerStatistics", Statistics.class,
         parameters.toArray(new Parameter[parameters.size()]));
   }
-  
+
   /**
-   * 
+   * Retrieve organization brand page statistics
    * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
    * community-management/organizations/page-statistics#retrieve-organization-brand-page-
    * statistics">
@@ -288,7 +288,42 @@ public class OrganizationConnection extends ConnectionBase {
       TimeInterval timeInterval) {
     throw new UnsupportedOperationException("Operation is not implemented yet.");
   }
-  
+
+  /**
+   * Retrieve both lifetime and time-bound statistics on shares for an organization
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
+   * community-management/organizations/share-statistics">
+   * Organization Share Statistics</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
+   * community-management/organizations/share-statistics#retrieve-lifetime-share-statistics">
+   * Organization Share Statistics - Lifetime</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
+   * community-management/organizations/share-statistics#retrieve-time-bound-share-statistics">
+   * Organization Share Statistics - time-bound</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
+   * community-management/organizations/share-statistics#retrieve-statistics-for-specific-shares">
+   * Organization Share Statistics - specific shares</a>
+   * @param organizationURN the ogranization URN to retrieve the share statistics
+   * @param timeInterval the time interval for time-bounded statistics
+   * @param shareURNs specific share URNs
+   * @return List of organization share statistics
+   */
+  public List<Statistics> retrieveOrganizationShareStatistics(URN organizationURN,
+      TimeInterval timeInterval, List<URN> shareURNs) {
+    List<Parameter> parameters = new ArrayList<>();
+    parameters.add(Parameter.with("q", "organization"));
+    parameters.add(Parameter.with("organizationalEntity", organizationURN.toString()));
+
+    addTimeIntervalToQueryParameters(timeInterval, parameters);
+
+    if (shareURNs != null && !shareURNs.isEmpty()) {
+      parameters.add(Parameter.with("shares", shareURNs));      
+    }
+
+    return getListFromQuery("/organizationalEntityShareStatistics", Statistics.class,
+        parameters.toArray(new Parameter[parameters.size()]));
+  }
+
   private void addTimeIntervalToQueryParameters(TimeInterval timeInterval,
       List<Parameter> parameters) {
     if (timeInterval != null) {
