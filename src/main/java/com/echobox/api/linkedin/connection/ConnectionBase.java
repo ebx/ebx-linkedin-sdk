@@ -20,6 +20,8 @@ package com.echobox.api.linkedin.connection;
 import com.echobox.api.linkedin.client.Connection;
 import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
+import com.echobox.api.linkedin.types.urn.URN;
+import com.echobox.api.linkedin.types.urn.URNEntityType;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -51,6 +53,12 @@ public abstract class ConnectionBase {
     }
 
     return resultList;
+  }
+  
+  protected void validateURN(URNEntityType urnEntityType, URN urn) {
+    if (!urnEntityType.equals(urn.getURNEntityType())) {
+      throw new IllegalArgumentException("The URN should be type " + urnEntityType);
+    }
   }
 
 }

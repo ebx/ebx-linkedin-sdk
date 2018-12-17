@@ -27,8 +27,6 @@ import com.echobox.api.linkedin.exception.ResponseErrorJsonParsingException;
 import com.echobox.api.linkedin.jsonmapper.JsonMapper;
 import com.echobox.api.linkedin.util.URLUtils;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -130,37 +128,4 @@ abstract class BaseLinkedInClient {
     }
   }
 
-  /**
-   * Ensures that {@code parameter} isn't {@code null} or an empty string.
-   * 
-   * @param parameterName
-   *          The name of the parameter (to be used in exception message).
-   * @param parameter
-   *          The parameter to check.
-   * @throws IllegalArgumentException
-   *           If {@code parameter} is {@code null} or an empty string.
-   */
-  protected void verifyParameterPresence(String parameterName, String parameter) {
-    verifyParameterPresence(parameterName, (Object) parameter);
-    if (StringUtils.isBlank(parameter)) {
-      throw new IllegalArgumentException("The '" + parameterName
-          + "' parameter cannot be an empty string.");
-    }
-  }
-
-  /**
-   * Ensures that {@code parameter} isn't {@code null}.
-   * 
-   * @param parameterName
-   *          The name of the parameter (to be used in exception message).
-   * @param parameter
-   *          The parameter to check.
-   * @throws NullPointerException
-   *           If {@code parameter} is {@code null}.
-   */
-  protected void verifyParameterPresence(String parameterName, Object parameter) {
-    if (parameter == null) {
-      throw new NullPointerException("The '" + parameterName + "' parameter cannot be null.");
-    }
-  }
 }

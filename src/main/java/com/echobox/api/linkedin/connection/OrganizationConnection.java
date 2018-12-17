@@ -25,6 +25,7 @@ import com.echobox.api.linkedin.types.organization.Organization;
 import com.echobox.api.linkedin.types.statistics.page.Statistics;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.urn.URNEntityType;
+import com.echobox.api.linkedin.util.ValidationUtils;
 import com.echobox.api.linkedin.version.Version;
 
 import org.apache.commons.lang3.StringUtils;
@@ -39,6 +40,14 @@ import java.util.List;
  *
  */
 public class OrganizationConnection extends ConnectionBase {
+
+  private static final String ORGANIZATIONAL_ENTITY_ACLS = "/organizationalEntityAcls";
+  private static final String ORGANIZATIONS = "/organizations";
+  private static final String ORGANIZATIONAL_ENTITY_FOLOWER_STATS =
+      "/organizationalEntityFollowerStatistics";
+  private static final String ORGANIZATIONAL_PAGE_STATS = "/organizationPageStatistics";
+  private static final String ORGANIZATION_ENTITY_SHARE_STATS =
+      "/organizationalEntityShareStatistics";
 
   protected OrganizationConnection(LinkedInClient linkedinClient) {
     super(linkedinClient);
@@ -64,7 +73,7 @@ public class OrganizationConnection extends ConnectionBase {
     Parameter roleParam = Parameter.with("role", role);
     Parameter stateParam = Parameter.with("state", state);
 
-    return getListFromQuery("/organizationalEntityAcls", AccessControl.class,
+    return getListFromQuery(ORGANIZATIONAL_ENTITY_ACLS, AccessControl.class,
         projection, queryParam, roleParam, stateParam);
   }
 
@@ -83,14 +92,23 @@ public class OrganizationConnection extends ConnectionBase {
    */
   public List<AccessControl> findOrganizationAccessControl(URN organizationalTarget, String role,
       String state, Parameter projection) {
-    Parameter queryParam = Parameter.with("q", "organizationalTarget");
-    Parameter organizationalTargetParam =
-        Parameter.with("organizationalTarget", organizationalTarget.toString());
-    Parameter roleParam = Parameter.with("role", role);
-    Parameter stateParam = Parameter.with("state", state);
+    validateRequiredOrganizationURN("organizationalTarget", organizationalTarget);
 
-    return getListFromQuery("/organizationalEntityAcls", AccessControl.class, projection,
-        queryParam, organizationalTargetParam, roleParam, stateParam);
+    List<Parameter> params = new ArrayList<>();
+    params.add(Parameter.with("q", "organizationalTarget"));
+    params.add(Parameter.with("organizationalTarget", organizationalTarget.toString()));
+    if (!StringUtils.isBlank(role)) {
+      params.add(Parameter.with("role", role));
+    }
+    if (!StringUtils.isBlank(state)) {
+      params.add(Parameter.with("state", state));
+    }
+    if (projection != null) {
+      params.add(projection);
+    }
+
+    return getListFromQuery(ORGANIZATIONAL_ENTITY_ACLS, AccessControl.class,
+        params.toArray(new Parameter[params.size()]));
   }
 
   /**
@@ -103,9 +121,8 @@ public class OrganizationConnection extends ConnectionBase {
    * @return the requested organization by the given URN
    */
   public Organization retrieveOrganizationByURN(URN organizationURN, Parameter fields) {
-    if (!URNEntityType.ORGANIZATION.equals(organizationURN.getURNEntityType())) {
-      throw new IllegalArgumentException("The URN should be type organization");
-    }
+    validateRequiredOrganizationURN("organizationURN", organizationURN);
+
     return retrieveOrganization(Long.parseLong(organizationURN.getId()), fields);
   }
 
@@ -119,7 +136,7 @@ public class OrganizationConnection extends ConnectionBase {
    * @return the requested organization
    */
   public Organization retrieveOrganization(long organizationId, Parameter fields) {
-    return linkedinClient.fetchObject("organizations/" + organizationId, Organization.class,
+    return linkedinClient.fetchObject(ORGANIZATIONS + "/" + organizationId, Organization.class,
         fields);
   }
 
@@ -133,10 +150,12 @@ public class OrganizationConnection extends ConnectionBase {
    * @return The organization with the vanity name
    */
   public Organization findOrganizationByVanityName(String vanityName, Parameter fields) {
+    ValidationUtils.verifyParameterPresence("vanityName", vanityName);
+
     Parameter queryParam = Parameter.with("q", "vanityName");
     Parameter vanityNameParam = Parameter.with("vanityName", vanityName);
-    return linkedinClient.fetchObject("organizations", Organization.class,
-        fields, queryParam, vanityNameParam);
+    return linkedinClient.fetchObject(ORGANIZATIONS, Organization.class, fields, queryParam,
+        vanityNameParam);
   }
 
   /**
@@ -149,9 +168,11 @@ public class OrganizationConnection extends ConnectionBase {
    * @return A list of organizations with the email domain
    */
   public List<Organization> findOrganizationByEmailDomain(String emailDomain, Parameter fields) {
+    ValidationUtils.verifyParameterPresence("emailDomain", emailDomain);
+
     Parameter queryParam = Parameter.with("q", "emailDomain");
     Parameter emailDomainParam = Parameter.with("emailDomain", emailDomain);
-    return getListFromQuery("organizations", Organization.class, fields, queryParam,
+    return getListFromQuery(ORGANIZATIONS, Organization.class, fields, queryParam,
         emailDomainParam);
   }
 
@@ -233,13 +254,15 @@ public class OrganizationConnection extends ConnectionBase {
    */
   public List<Statistics> retrieveOrganizationFollowerStatistics(URN organizationURN,
       TimeInterval timeInterval) {
+    validateRequiredOrganizationURN("organizationURN", organizationURN);
+
     List<Parameter> parameters = new ArrayList<>();
     parameters.add(Parameter.with("q", "organizationalEntity"));
     parameters.add(Parameter.with("organizationalEntity", organizationURN.toString()));
 
     addTimeIntervalToQueryParameters(timeInterval, parameters);
 
-    return getListFromQuery("/organizationalEntityFollowerStatistics", Statistics.class,
+    return getListFromQuery(ORGANIZATIONAL_ENTITY_FOLOWER_STATS, Statistics.class,
         parameters.toArray(new Parameter[parameters.size()]));
   }
 
@@ -260,13 +283,15 @@ public class OrganizationConnection extends ConnectionBase {
    */
   public List<Statistics> retrieveOrganizationPageStatistics(URN organizationURN,
       TimeInterval timeInterval) {
+    validateRequiredOrganizationURN("organizationURN", organizationURN);
+
     List<Parameter> parameters = new ArrayList<>();
     parameters.add(Parameter.with("q", "organization"));
     parameters.add(Parameter.with("organization", organizationURN.toString()));
 
     addTimeIntervalToQueryParameters(timeInterval, parameters);
 
-    return getListFromQuery("/organizationalEntityFollowerStatistics", Statistics.class,
+    return getListFromQuery(ORGANIZATIONAL_PAGE_STATS, Statistics.class,
         parameters.toArray(new Parameter[parameters.size()]));
   }
 
@@ -310,6 +335,8 @@ public class OrganizationConnection extends ConnectionBase {
    */
   public List<Statistics> retrieveOrganizationShareStatistics(URN organizationURN,
       TimeInterval timeInterval, List<URN> shareURNs) {
+    validateRequiredOrganizationURN("organizationURN", organizationURN);
+
     List<Parameter> parameters = new ArrayList<>();
     parameters.add(Parameter.with("q", "organization"));
     parameters.add(Parameter.with("organizationalEntity", organizationURN.toString()));
@@ -317,11 +344,18 @@ public class OrganizationConnection extends ConnectionBase {
     addTimeIntervalToQueryParameters(timeInterval, parameters);
 
     if (shareURNs != null && !shareURNs.isEmpty()) {
-      parameters.add(Parameter.with("shares", shareURNs));      
+      parameters.add(Parameter.with("shares", shareURNs));
     }
 
-    return getListFromQuery("/organizationalEntityShareStatistics", Statistics.class,
+    return getListFromQuery(ORGANIZATION_ENTITY_SHARE_STATS, Statistics.class,
         parameters.toArray(new Parameter[parameters.size()]));
+  }
+
+  private void validateRequiredOrganizationURN(String paramName, URN organizationURN) {
+    ValidationUtils.verifyParameterPresence(paramName, organizationURN);
+    if (!URNEntityType.ORGANIZATION.equals(organizationURN.getURNEntityType())) {
+      throw new IllegalArgumentException("The URN should be type organization");
+    }
   }
 
   private void addTimeIntervalToQueryParameters(TimeInterval timeInterval,
