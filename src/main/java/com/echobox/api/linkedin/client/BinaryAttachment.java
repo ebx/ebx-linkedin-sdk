@@ -234,11 +234,25 @@ public class BinaryAttachment {
    * 
    * @return The attachment's data.
    */
-  public InputStream getData() {
+  public InputStream getDataInputStream() {
     if (data != null) {
       return new ByteArrayInputStream(data);
     } else if (dataStream != null) {
       return dataStream;
+    } else {
+      throw new IllegalStateException("Either the byte[] or the stream mustn't be null at this"
+          + "point.");
+    }
+  }
+  
+  /**
+   * The attachment's data.
+   * 
+   * @return The attachment's data.
+   */
+  public byte[] getData() {
+    if (data != null) {
+      return data;
     } else {
       throw new IllegalStateException("Either the byte[] or the stream mustn't be null at this"
           + "point.");
