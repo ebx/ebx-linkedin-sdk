@@ -26,7 +26,7 @@ import lombok.Setter;
  * The type Address type for the linkedin V2 api
  * @author clementcaylux 
  */
-public class AddressV2 {
+public class Address {
 
   @Getter
   @Setter

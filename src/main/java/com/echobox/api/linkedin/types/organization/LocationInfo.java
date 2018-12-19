@@ -18,7 +18,7 @@
 package com.echobox.api.linkedin.types.organization;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.AddressV2;
+import com.echobox.api.linkedin.types.Address;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -42,5 +42,5 @@ public class LocationInfo {
   @Getter
   @Setter
   @LinkedIn
-  private AddressV2 address;
+  private Address address;
 }
