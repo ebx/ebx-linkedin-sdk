@@ -90,12 +90,12 @@ public class OrganizationConnection extends ConnectionBase {
    */
   public List<AccessControl> fetchMemeberOrganizationAccessControl(String role, String state,
       Parameter projection) {
-    Parameter queryParam = Parameter.with(QUERY_KEY, ROLE_ASSIGNEE_VALUE);
-    Parameter roleParam = Parameter.with(ROLE_KEY, role);
-    Parameter stateParam = Parameter.with(STATE_KEY, state);
+    List<Parameter> parameters = new ArrayList<>();
+    parameters.add(Parameter.with(QUERY_KEY, ROLE_ASSIGNEE_VALUE));
+    addRoleStateParams(role, state, projection, parameters);
 
     return getListFromQuery(ORGANIZATIONAL_ENTITY_ACLS, AccessControl.class,
-        projection, queryParam, roleParam, stateParam);
+        parameters.toArray(new Parameter[parameters.size()]));
   }
 
   /**
@@ -115,21 +115,13 @@ public class OrganizationConnection extends ConnectionBase {
       String state, Parameter projection) {
     validateOrganizationURN("organizationalTarget", organizationalTarget);
 
-    List<Parameter> params = new ArrayList<>();
-    params.add(Parameter.with(QUERY_KEY, ORGANIZATION_TARGET_VALUE));
-    params.add(Parameter.with(ORGANIZATIONAL_TARGET_KEY, organizationalTarget.toString()));
-    if (!StringUtils.isBlank(role)) {
-      params.add(Parameter.with(ROLE_KEY, role));
-    }
-    if (!StringUtils.isBlank(state)) {
-      params.add(Parameter.with(STATE_KEY, state));
-    }
-    if (projection != null) {
-      params.add(projection);
-    }
+    List<Parameter> parameters = new ArrayList<>();
+    parameters.add(Parameter.with(QUERY_KEY, ORGANIZATION_TARGET_VALUE));
+    parameters.add(Parameter.with(ORGANIZATIONAL_TARGET_KEY, organizationalTarget.toString()));
+    addRoleStateParams(role, state, projection, parameters);
 
     return getListFromQuery(ORGANIZATIONAL_ENTITY_ACLS, AccessControl.class,
-        params.toArray(new Parameter[params.size()]));
+        parameters.toArray(new Parameter[parameters.size()]));
   }
 
   /**
@@ -275,13 +267,9 @@ public class OrganizationConnection extends ConnectionBase {
    */
   public List<Statistics> retrieveOrganizationFollowerStatistics(URN organizationURN,
       TimeInterval timeInterval) {
-    validateOrganizationURN("organizationURN", organizationURN);
-
     List<Parameter> parameters = new ArrayList<>();
-    parameters.add(Parameter.with(QUERY_KEY, ORGANIZATIONAL_ENTITY_VALUE));
-    parameters.add(Parameter.with(ORGANIZATIONAL_ENTITY_KEY, organizationURN.toString()));
 
-    addTimeIntervalToQueryParameters(timeInterval, parameters);
+    addParametersForStatistics(organizationURN, timeInterval, parameters);
 
     return getListFromQuery(ORGANIZATIONAL_ENTITY_FOLOWER_STATS, Statistics.class,
         parameters.toArray(new Parameter[parameters.size()]));
@@ -356,13 +344,9 @@ public class OrganizationConnection extends ConnectionBase {
    */
   public List<Statistics> retrieveOrganizationShareStatistics(URN organizationURN,
       TimeInterval timeInterval, List<URN> shareURNs) {
-    validateOrganizationURN("organizationURN", organizationURN);
-
     List<Parameter> parameters = new ArrayList<>();
-    parameters.add(Parameter.with(QUERY_KEY, ORGANIZATION_VALUE));
-    parameters.add(Parameter.with(ORGANIZATIONAL_ENTITY_KEY, organizationURN.toString()));
 
-    addTimeIntervalToQueryParameters(timeInterval, parameters);
+    addParametersForStatistics(organizationURN, timeInterval, parameters);
 
     if (shareURNs != null && !shareURNs.isEmpty()) {
       shareURNs.stream().forEach(this::validateShareURN);
@@ -375,33 +359,55 @@ public class OrganizationConnection extends ConnectionBase {
 
   private void validateOrganizationURN(String paramName, URN organizationURN) {
     ValidationUtils.verifyParameterPresence(paramName, organizationURN);
-    if (!URNEntityType.ORGANIZATION.equals(organizationURN.getURNEntityType())) {
-      throw new IllegalArgumentException("The URN should be type ORGANIZATION");
-    }
+    validateURN(URNEntityType.ORGANIZATION, organizationURN);
   }
   
   private void validateShareURN(URN shareURN) {
     ValidationUtils.verifyParameterPresence("share", shareURN);
-    if (!URNEntityType.SHARE.equals(shareURN.getURNEntityType())) {
-      throw new IllegalArgumentException("The URN should be type SHARE");
+    validateURN(URNEntityType.SHARE, shareURN);
+  }
+  
+  private void addRoleStateParams(String role, String state, Parameter projection,
+      List<Parameter> parameters) {
+    if (StringUtils.isNotBlank(role)) {
+      parameters.add(Parameter.with(ROLE_KEY, role));
+    }
+    if (StringUtils.isNotBlank(state)) {
+      parameters.add(Parameter.with(STATE_KEY, state));      
+    }
+    if (projection != null) {
+      parameters.add(projection);
     }
   }
 
   private void addTimeIntervalToQueryParameters(TimeInterval timeInterval,
       List<Parameter> parameters) {
     if (timeInterval != null) {
-      if (!StringUtils.isBlank(timeInterval.getTimeGranularityType())) {
+      if (StringUtils.isNotBlank(timeInterval.getTimeGranularityType())) {
         parameters.add(Parameter.with("timeIntervals.timeRange",
             timeInterval.getTimeGranularityType()));
       }
-      if (timeInterval.getTimeRange() != null && timeInterval.getTimeRange().getStart() != null
-          && timeInterval.getTimeRange().getEnd() != null) {
-        parameters.add(Parameter.with("timeIntervals.timeRange.start",
-            timeInterval.getTimeRange().getStart()));
-        parameters.add(Parameter.with("timeIntervals.timeRange.end",
-            timeInterval.getTimeRange().getEnd()));
+      if (timeInterval.getTimeRange() != null) {
+        if (timeInterval.getTimeRange().getStart() != null) {
+          parameters.add(Parameter.with("timeIntervals.timeRange.start",
+              timeInterval.getTimeRange().getStart()));
+        }
+        if (timeInterval.getTimeRange().getEnd() != null) {
+          parameters.add(Parameter.with("timeIntervals.timeRange.end",
+              timeInterval.getTimeRange().getEnd()));
+        }
       }
     }
+  }
+  
+  private void addParametersForStatistics(URN organizationURN, TimeInterval timeInterval,
+      List<Parameter> parameters) {
+    validateOrganizationURN("organizationURN", organizationURN);
+
+    parameters.add(Parameter.with(QUERY_KEY, ORGANIZATION_VALUE));
+    parameters.add(Parameter.with(ORGANIZATION_KEY, organizationURN.toString()));
+
+    addTimeIntervalToQueryParameters(timeInterval, parameters);
   }
 
 }

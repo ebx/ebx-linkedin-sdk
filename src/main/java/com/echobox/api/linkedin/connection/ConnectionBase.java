@@ -22,6 +22,7 @@ import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.urn.URNEntityType;
+import com.echobox.api.linkedin.util.ValidationUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,6 +38,7 @@ public abstract class ConnectionBase {
   protected LinkedInClient linkedinClient;
   
   protected ConnectionBase(LinkedInClient linkedinClient) {
+    ValidationUtils.verifyParameterPresence("linkedinClient", linkedinClient);
     this.linkedinClient = linkedinClient;
   }
   
