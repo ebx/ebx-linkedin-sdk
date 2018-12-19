@@ -22,44 +22,59 @@ import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import lombok.Getter;
 
 /**
- * Location model
+ * Address model
  * @author Joanna
  *
  */
-public class Location {
+public class Address {
   
   /**
-   * Description of company location.
+   * First line of street address of location.
+   */
+  @Getter
+  @LinkedIn("street1")
+  private String firstStreet;
+  
+  /**
+   * Second line of street address of location.
+   */
+  @Getter
+  @LinkedIn("street2")
+  private String secondStreet;
+  
+  /**
+   * City for location.
    */
   @Getter
   @LinkedIn
-  private String description;
+  private String city;
   
   /**
-   * Valid values are true or false. A value of true matches the Company headquarters location.
+   * State for location.
    */
   @Getter
   @LinkedIn
-  private boolean isHeadquarters;
+  private String state;
   
   /**
-   * Valid values are true or false. A value of true matches the active location.
+   * Postal code for location. Matches companies within a specific postal code.
+   * Must be combined with the country-code parameter. Not supported for all countries.
    */
   @Getter
   @LinkedIn
-  private boolean isActive;
+  private String postalCode;
   
   /**
-   * Address of location.
+   * Country code for location. Matches companies with a location in a specific country.
    */
   @Getter
   @LinkedIn
-  private Address address;
+  private String countryCode;
   
   /**
-   * Company contact information for the location.
+   * Region code for location.
    */
   @Getter
   @LinkedIn
-  private ContactInfo contactInfo;
+  private Integer regionCode;
 }

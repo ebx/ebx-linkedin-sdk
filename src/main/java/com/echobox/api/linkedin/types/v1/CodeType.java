@@ -15,47 +15,31 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.v1;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
-import lombok.Getter;
-import lombok.Setter;
+import org.apache.commons.lang3.text.WordUtils;
 
 /**
- * The type Address type for the linkedin V2 api
- * @author clementcaylux 
+ * Code type interface
+ * @author Joanna
+ *
+ * @param <T> type
  */
-public class AddressV2 {
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String postalCode;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String country;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String geographicArea;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String line1;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String line2;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String city;
+public interface CodeType<T> {
   
+  /**
+   * Get the code
+   * @return code
+   */
+  T getCode();
+  
+  /**
+   * Get the name
+   * @return name
+   */
+  default String getName() {
+    String name = toString();
+    return WordUtils.capitalize(name.replaceAll("_", " ").toLowerCase());
+  }
+
 }

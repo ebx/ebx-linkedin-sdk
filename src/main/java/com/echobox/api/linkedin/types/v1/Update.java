@@ -15,36 +15,26 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.v1;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 /**
- * Code and name model wrapper
+ * The update POJO
+ * @see <a href="https://developer.linkedin.com/docs/share-on-linkedin">Share on LinkedIn</a>
  * @author Joanna
  *
  */
-@NoArgsConstructor
-@RequiredArgsConstructor
-public class CodeAndNameType {
+public class Update {
   
   @Getter
-  @NonNull
   @LinkedIn
-  private String code;
+  private String updateKey;
   
   @Getter
-  @NonNull
   @LinkedIn
-  private String name;
-  
-  boolean hasNullFields() {
-    return code == null || name == null;
-  }
+  private String updateUrl;
 
 }

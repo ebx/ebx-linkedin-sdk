@@ -17,7 +17,7 @@
 
 package com.echobox.api.linkedin.jsonmapper;
 
-import com.echobox.api.linkedin.types.CodeAndNameType;
+import com.echobox.api.linkedin.types.v1.CodeAndNameType;
 
 import lombok.Getter;
 

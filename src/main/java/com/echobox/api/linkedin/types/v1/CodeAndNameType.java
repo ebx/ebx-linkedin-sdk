@@ -15,49 +15,36 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.v1;
+
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 /**
- * StockExchange
+ * Code and name model wrapper
  * @author Joanna
  *
  */
-public enum StockExchange implements CodeType<Integer> {
-  
-  ASE(1, "American Stock Exchange"),
-  NYS(2, "New York Stock Exchange"),
-  NMS(3, "NASDAQ"),
-  LSE(4, "London Stock Exchange"),
-  FRA(5, "Frankfurt Stock Exchange"),
-  GER(6, "XETRA Stock Exchange"),
-  PAR(7, "Euronext Paris");
+@NoArgsConstructor
+@RequiredArgsConstructor
+public class CodeAndNameType {
   
   @Getter
-  private final Integer code;
+  @NonNull
+  @LinkedIn
+  private String code;
   
   @Getter
+  @NonNull
+  @LinkedIn
   private String name;
   
-  StockExchange(int code, String name) {
-    this.code = code;
-    this.name = name;
-  }
-  
-  /**
-   * Convert the provided code into a status type
-   *
-   * @param code the code
-   * @return if successful the desired status type otherwise null
-   */
-  public static StockExchange fromCode(String code) {
-    for (StockExchange stockExchange : StockExchange.values()) {
-      if (stockExchange.getCode().equals(code)) {
-        return stockExchange;
-      }
-    }
-    return null;
+  boolean hasNullFields() {
+    return code == null || name == null;
   }
 
 }

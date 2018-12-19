@@ -15,47 +15,51 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.v1;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
- * The type Address type for the linkedin V2 api
- * @author clementcaylux 
+ * Location model
+ * @author Joanna
+ *
  */
-public class AddressV2 {
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String postalCode;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String country;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String geographicArea;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String line1;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String line2;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String city;
+public class Location {
   
+  /**
+   * Description of company location.
+   */
+  @Getter
+  @LinkedIn
+  private String description;
+  
+  /**
+   * Valid values are true or false. A value of true matches the Company headquarters location.
+   */
+  @Getter
+  @LinkedIn
+  private boolean isHeadquarters;
+  
+  /**
+   * Valid values are true or false. A value of true matches the active location.
+   */
+  @Getter
+  @LinkedIn
+  private boolean isActive;
+  
+  /**
+   * Address of location.
+   */
+  @Getter
+  @LinkedIn
+  private Address address;
+  
+  /**
+   * Company contact information for the location.
+   */
+  @Getter
+  @LinkedIn
+  private ContactInfo contactInfo;
 }

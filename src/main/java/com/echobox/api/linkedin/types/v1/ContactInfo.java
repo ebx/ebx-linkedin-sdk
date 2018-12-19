@@ -15,31 +15,37 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.v1;
 
-import org.apache.commons.lang3.text.WordUtils;
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
+import lombok.Getter;
 
 /**
- * Code type interface
+ * Contact info model
  * @author Joanna
  *
- * @param <T> type
  */
-public interface CodeType<T> {
+public class ContactInfo {
   
   /**
-   * Get the code
-   * @return code
+   * Company phone number for the location.
    */
-  T getCode();
-  
-  /**
-   * Get the name
-   * @return name
-   */
-  default String getName() {
-    String name = toString();
-    return WordUtils.capitalize(name.replaceAll("_", " ").toLowerCase());
-  }
+  @Getter
+  @LinkedIn("phone1")
+  private String phoneOne;
 
+  /**
+   * Second company phone number for the location.
+   */
+  @Getter
+  @LinkedIn("phone2")
+  private String phoneTwo;
+
+  /**
+   * Company fax number for the location.
+   */
+  @Getter
+  @LinkedIn
+  private String fax;
 }
