@@ -111,8 +111,8 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   /**
    * API endpoint URL.
    */
-  protected static final String LINKEDIN_MEDIA_API_ENDPOINT_URL = "https://api.linkedin.com/media/upload" + 
-      "";
+  protected static final String LINKEDIN_MEDIA_API_ENDPOINT_URL =
+      "https://api.linkedin.com/media/upload";
 
   /**
    * Version of API endpoint.
