@@ -15,39 +15,37 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.organization;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
 
 /**
- * Time range model
- * @author Alexandros 
+ * Access Control POJO
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
+ * management/organizations/organization-access-control#find-access-control-information">
+ * Access Control Schema</a>
+ * @author joanna
+ *
  */
-public class TimeRange {
+public class AccessControl {
   
   @Getter
   @LinkedIn
-  private Long start;
+  private String state;
   
   @Getter
   @LinkedIn
-  private Long end;
+  private String role;
   
-  private TimeRange() {}
+  @Getter
+  @LinkedIn
+  private URN roleAssignee;
   
-  /**
-   * Initialise time range
-   * @param start start of the time range
-   * @param end end of the time range
-   */
-  public TimeRange(Long start, Long end) {
-    if (start == null && end == null) {
-      throw new IllegalArgumentException("Start and end cannot both be null");
-    }
-    this.start = start;
-    this.end = end;
-  }
+  @Getter
+  @LinkedIn
+  private URN organizationalTarget;
   
 }
