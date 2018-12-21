@@ -20,61 +20,42 @@ package com.echobox.api.linkedin.types;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
- * Address model
- * @author Joanna
- *
+ * The type Address type for the linkedin V2 api
+ * @author clementcaylux 
  */
 public class Address {
-  
-  /**
-   * First line of street address of location.
-   */
+
   @Getter
-  @LinkedIn("street1")
-  private String firstStreet;
-  
-  /**
-   * Second line of street address of location.
-   */
+  @Setter
+  @LinkedIn
+  private String postalCode;
+
   @Getter
-  @LinkedIn("street2")
-  private String secondStreet;
-  
-  /**
-   * City for location.
-   */
+  @Setter
+  @LinkedIn
+  private String country;
+
   @Getter
+  @Setter
+  @LinkedIn
+  private String geographicArea;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private String line1;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private String line2;
+
+  @Getter
+  @Setter
   @LinkedIn
   private String city;
   
-  /**
-   * State for location.
-   */
-  @Getter
-  @LinkedIn
-  private String state;
-  
-  /**
-   * Postal code for location. Matches companies within a specific postal code.
-   * Must be combined with the country-code parameter. Not supported for all countries.
-   */
-  @Getter
-  @LinkedIn
-  private String postalCode;
-  
-  /**
-   * Country code for location. Matches companies with a location in a specific country.
-   */
-  @Getter
-  @LinkedIn
-  private String countryCode;
-  
-  /**
-   * Region code for location.
-   */
-  @Getter
-  @LinkedIn
-  private Integer regionCode;
 }
