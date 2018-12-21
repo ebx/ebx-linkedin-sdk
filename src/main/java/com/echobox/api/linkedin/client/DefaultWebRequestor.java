@@ -28,14 +28,17 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential.Builder;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.MultipartContent;
 import com.google.api.client.http.json.JsonHttpContent;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
@@ -230,8 +233,27 @@ public class DefaultWebRequestor implements WebRequestor {
           ? "?" + parameters : ""));
 
       HttpRequest request = null;
+      
+      // If we have binary attachments, the body is just the attachments and the
+      // other parameters are passed in via the URL.
+      // Otherwise the body is the URL parameter string.
       if (binaryAttachments.length > 0) {
-        throw new UnsupportedOperationException("Binary attachments are not supported yet.");
+        // Set the media type
+        MultipartContent content = new MultipartContent()
+            .setMediaType(new HttpMediaType("multipart/form-data")
+                .setParameter("boundary", MULTIPART_BOUNDARY));
+        
+        for (BinaryAttachment binaryAttachment : binaryAttachments) {
+          MultipartContent.Part part = new MultipartContent.Part(
+              new ByteArrayContent(binaryAttachment.getContentType(), binaryAttachment.getData()));
+          part.setHeaders(new HttpHeaders().set(
+              "Content-Disposition",
+              String.format("form-data; name=\"%s\"; filename=\"%s\"",
+                  createFormFieldName(binaryAttachment), binaryAttachment.getFilename())));
+          content.addPart(part);
+        }
+        
+        request = requestFactory.buildPostRequest(genericUrl, content);
       } else {
         if (jsonBody != null) {
           // Convert the JSON into a map - annoyingly JsonHttpContent data object has to be a
@@ -270,7 +292,7 @@ public class DefaultWebRequestor implements WebRequestor {
     } finally {
       if (autocloseBinaryAttachmentStream && binaryAttachments.length > 0) {
         for (BinaryAttachment binaryAttachment : binaryAttachments) {
-          closeQuietly(binaryAttachment.getData());
+          closeQuietly(binaryAttachment.getDataInputStream());
         }
       }
 

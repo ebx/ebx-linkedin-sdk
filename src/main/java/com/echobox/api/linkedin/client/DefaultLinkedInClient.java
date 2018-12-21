@@ -108,6 +108,12 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    * API endpoint URL.
    */
   protected static final String LINKEDIN_API_ENDPOINT_URL = "https://api.linkedin.com";
+  
+  /**
+   * API endpoint URL.
+   */
+  protected static final String LINKEDIN_MEDIA_API_ENDPOINT_URL =
+      "https://api.linkedin.com/media/upload";
 
   /**
    * Version of API endpoint.
@@ -218,7 +224,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   @Override
   public <T> T publish(String connection, Class<T> objectType, Object jsonBody,
       List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
-    ValidationUtils.verifyParameterPresence("connection", connection);
 
     return jsonMapper.toJavaObject(makeRequest(connection, true, false, jsonBody,
         binaryAttachments, parameters), objectType);
@@ -288,6 +293,10 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     while (apiCall.startsWith("/")) {
       apiCall = apiCall.substring(1);
     }
+    
+    if (hasAttachment) {
+      return getLinkedInMediaEndpointUrl();
+    }
 
     String baseUrl = getLinkedInEndpointUrl();
 
@@ -301,6 +310,10 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    */
   protected String getLinkedInEndpointUrl() {
     return LINKEDIN_API_ENDPOINT_URL + '/' + apiVersion.getUrlElement();
+  }
+  
+  protected String getLinkedInMediaEndpointUrl() {
+    return LINKEDIN_MEDIA_API_ENDPOINT_URL;
   }
 
   /**
