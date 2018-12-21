@@ -19,6 +19,8 @@ package com.echobox.api.linkedin.types;
 
 import static org.junit.Assert.assertEquals;
 
+import com.echobox.api.linkedin.types.v1.CompanyType;
+
 import org.junit.Test;
 
 /**

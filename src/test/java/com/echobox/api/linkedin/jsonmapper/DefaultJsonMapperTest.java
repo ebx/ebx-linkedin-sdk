@@ -24,7 +24,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.echobox.api.linkedin.types.Annotation;
-import com.echobox.api.linkedin.types.Company;
 import com.echobox.api.linkedin.types.ContentEntity;
 import com.echobox.api.linkedin.types.DistributionTarget;
 import com.echobox.api.linkedin.types.Share;
@@ -48,6 +47,7 @@ import com.echobox.api.linkedin.types.urn.location.CountryURN;
 import com.echobox.api.linkedin.types.urn.location.PlaceURN;
 import com.echobox.api.linkedin.types.urn.location.RegionURN;
 import com.echobox.api.linkedin.types.urn.location.StateURN;
+import com.echobox.api.linkedin.types.v1.Company;
 
 import org.junit.Assert;
 import org.junit.Test;
