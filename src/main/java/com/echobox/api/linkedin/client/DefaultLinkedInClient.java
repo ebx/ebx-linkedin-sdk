@@ -34,6 +34,7 @@ import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapper;
 import com.echobox.api.linkedin.jsonmapper.JsonMapper;
 import com.echobox.api.linkedin.logging.LinkedInLogger;
 import com.echobox.api.linkedin.util.URLUtils;
+import com.echobox.api.linkedin.util.ValidationUtils;
 import com.echobox.api.linkedin.version.Version;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
@@ -171,8 +172,8 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
       Version apiVersion) {
     super();
 
-    verifyParameterPresence("jsonMapper", jsonMapper);
-    verifyParameterPresence("webRequestor", webRequestor);
+    ValidationUtils.verifyParameterPresence("jsonMapper", jsonMapper);
+    ValidationUtils.verifyParameterPresence("webRequestor", webRequestor);
 
     this.webRequestor = webRequestor;
     this.jsonMapper = jsonMapper;
@@ -186,16 +187,16 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
   @Override
   public <T> T fetchObject(String object, Class<T> objectType, Parameter... parameters) {
-    verifyParameterPresence("object", object);
-    verifyParameterPresence("objectType", objectType);
+    ValidationUtils.verifyParameterPresence("object", object);
+    ValidationUtils.verifyParameterPresence("objectType", objectType);
     return jsonMapper.toJavaObject(makeRequest(object, parameters), objectType);
   }
 
   @Override
   public <T> Connection<T> fetchConnection(String connection, Class<T> connectionType,
       Parameter... parameters) {
-    verifyParameterPresence("connection", connection);
-    verifyParameterPresence("connectionType", connectionType);
+    ValidationUtils.verifyParameterPresence("connection", connection);
+    ValidationUtils.verifyParameterPresence("connectionType", connectionType);
     final String fullEndpoint = createEndpointForApiCall(connection, false);
     return new Connection<T>(fullEndpoint, this, makeRequest(connection, parameters),
         connectionType);
@@ -223,9 +224,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   @Override
   public <T> T publish(String connection, Class<T> objectType, Object jsonBody,
       List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
-    if (binaryAttachments == null || binaryAttachments.isEmpty()) {
-      verifyParameterPresence("connection", connection);      
-    }
 
     return jsonMapper.toJavaObject(makeRequest(connection, true, false, jsonBody,
         binaryAttachments, parameters), objectType);
@@ -245,7 +243,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
   @Override
   public boolean deleteObject(String object, Parameter... parameters) {
-    verifyParameterPresence("object", object);
+    ValidationUtils.verifyParameterPresence("object", object);
 
     String responseString = makeRequest(object, false, true, null, null, parameters);
     try {
