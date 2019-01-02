@@ -313,10 +313,10 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   @Override
   public AccessToken obtainUserAccessToken(String appId, String appSecret, String redirectUri,
       String verificationCode) {
-    verifyParameterPresence("appId", appId);
-    verifyParameterPresence("appSecret", appSecret);
-    verifyParameterPresence("redirectUri", redirectUri);
-    verifyParameterPresence("verificationCode", verificationCode);
+    ValidationUtils.verifyParameterPresence("appId", appId);
+    ValidationUtils.verifyParameterPresence("appSecret", appSecret);
+    ValidationUtils.verifyParameterPresence("redirectUri", redirectUri);
+    ValidationUtils.verifyParameterPresence("verificationCode", verificationCode);
 
     try {
       this.webRequestor = new DefaultWebRequestor(appId, appSecret);
