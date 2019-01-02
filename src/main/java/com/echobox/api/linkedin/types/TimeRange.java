@@ -20,7 +20,6 @@ package com.echobox.api.linkedin.types;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Time range model
@@ -29,12 +28,26 @@ import lombok.Setter;
 public class TimeRange {
   
   @Getter
-  @Setter
   @LinkedIn
   private Long start;
   
   @Getter
-  @Setter
   @LinkedIn
   private Long end;
+  
+  private TimeRange() {}
+  
+  /**
+   * Initialise time range
+   * @param start start of the time range
+   * @param end end of the time range
+   */
+  public TimeRange(Long start, Long end) {
+    if (start == null && end == null) {
+      throw new IllegalArgumentException("Start and end cannot both be null");
+    }
+    this.start = start;
+    this.end = end;
+  }
+  
 }

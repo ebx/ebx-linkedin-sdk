@@ -15,32 +15,66 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.organization;
+package com.echobox.api.linkedin.types.v1;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.Address;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
- * The type Location info.
- * @author clementcaylux 
+ * Address model
+ * @author Joanna
+ *
  */
-public class LocationInfo {
+public class Address {
   
+  /**
+   * First line of street address of location.
+   */
   @Getter
-  @Setter
-  @LinkedIn
-  private String staffCountRange;
-
+  @LinkedIn("street1")
+  private String firstStreet;
+  
+  /**
+   * Second line of street address of location.
+   */
   @Getter
-  @Setter
-  @LinkedIn
-  private String locationType;
-
+  @LinkedIn("street2")
+  private String secondStreet;
+  
+  /**
+   * City for location.
+   */
   @Getter
-  @Setter
   @LinkedIn
-  private Address address;
+  private String city;
+  
+  /**
+   * State for location.
+   */
+  @Getter
+  @LinkedIn
+  private String state;
+  
+  /**
+   * Postal code for location. Matches companies within a specific postal code.
+   * Must be combined with the country-code parameter. Not supported for all countries.
+   */
+  @Getter
+  @LinkedIn
+  private String postalCode;
+  
+  /**
+   * Country code for location. Matches companies with a location in a specific country.
+   */
+  @Getter
+  @LinkedIn
+  private String countryCode;
+  
+  /**
+   * Region code for location.
+   */
+  @Getter
+  @LinkedIn
+  private Integer regionCode;
 }

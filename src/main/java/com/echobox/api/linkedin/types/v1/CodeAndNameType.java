@@ -15,51 +15,36 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.v1;
 
-import com.echobox.api.linkedin.logging.LinkedInLogger;
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-import org.slf4j.Logger;
-
 /**
- * Company type
+ * Code and name model wrapper
  * @author Joanna
  *
  */
+@NoArgsConstructor
 @RequiredArgsConstructor
-public enum CompanyType implements CodeType<String> {
-  
-  PUBLIC_COMPANY("C"),
-  EDUCATIONAL("D"),
-  SELF_EMPLOYED("E"),
-  GOVERNMENT_AGENCY("G"),
-  NON_PROFIT("N"),
-  SELF_OWNED("O"),
-  PRIVATELY_HELD("P"),
-  PARTNERSHIP("S");
-  
-  private static Logger LOGGER = LinkedInLogger.getLoggerInstance();
+public class CodeAndNameType {
   
   @Getter
-  private final String code;
+  @NonNull
+  @LinkedIn
+  private String code;
   
-  /**
-   * Convert the provided code into a company type
-   *
-   * @param code the code
-   * @return if successful the desired company type otherwise null
-   */
-  public static CompanyType fromCode(String code) {
-    for (CompanyType companyType : CompanyType.values()) {
-      if (companyType.getCode().equals(code)) {
-        return companyType;
-      }
-    }
-    LOGGER.warn("Could not get company type from code " + code);
-    return null;
+  @Getter
+  @NonNull
+  @LinkedIn
+  private String name;
+  
+  boolean hasNullFields() {
+    return code == null || name == null;
   }
 
 }

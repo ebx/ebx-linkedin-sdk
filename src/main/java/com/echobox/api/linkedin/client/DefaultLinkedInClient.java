@@ -35,6 +35,7 @@ import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapper;
 import com.echobox.api.linkedin.jsonmapper.JsonMapper;
 import com.echobox.api.linkedin.logging.LinkedInLogger;
 import com.echobox.api.linkedin.util.URLUtils;
+import com.echobox.api.linkedin.util.ValidationUtils;
 import com.echobox.api.linkedin.version.Version;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
@@ -122,6 +123,12 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   protected static final String LINKEDIN_API_ENDPOINT_URL = "https://api.linkedin.com";
 
   /**
+   * API endpoint URL.
+   */
+  protected static final String LINKEDIN_MEDIA_API_ENDPOINT_URL =
+      "https://api.linkedin.com/media/upload";
+
+  /**
    * Version of API endpoint.
    */
   protected Version apiVersion = Version.DEFAULT_VERSION;
@@ -187,7 +194,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   public DefaultLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper,
       Version apiVersion) {
     this(webRequestor, jsonMapper, apiVersion, new DefaultLinkedInExceptionMapper());
-    verifyParameterPresence("webRequestor", webRequestor);
+    ValidationUtils.verifyParameterPresence("webRequestor", webRequestor);
   }
 
   /**
@@ -206,9 +213,9 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    */
   public DefaultLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper, Version apiVersion,
       LinkedInExceptionMapper linkedinExceptionMapper) {
-    verifyParameterPresence("jsonMapper", jsonMapper);
-    verifyParameterPresence("apiVersion", apiVersion);
-    verifyParameterPresence("linkedinExceptionMapper", linkedinExceptionMapper);
+    ValidationUtils.verifyParameterPresence("jsonMapper", jsonMapper);
+    ValidationUtils.verifyParameterPresence("apiVersion", apiVersion);
+    ValidationUtils.verifyParameterPresence("linkedinExceptionMapper", linkedinExceptionMapper);
 
     this.webRequestor = webRequestor;
     this.jsonMapper = jsonMapper;
@@ -223,16 +230,16 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
   @Override
   public <T> T fetchObject(String object, Class<T> objectType, Parameter... parameters) {
-    verifyParameterPresence("object", object);
-    verifyParameterPresence("objectType", objectType);
+    ValidationUtils.verifyParameterPresence("object", object);
+    ValidationUtils.verifyParameterPresence("objectType", objectType);
     return jsonMapper.toJavaObject(makeRequest(object, parameters), objectType);
   }
 
   @Override
   public <T> Connection<T> fetchConnection(String connection, Class<T> connectionType,
       Parameter... parameters) {
-    verifyParameterPresence("connection", connection);
-    verifyParameterPresence("connectionType", connectionType);
+    ValidationUtils.verifyParameterPresence("connection", connection);
+    ValidationUtils.verifyParameterPresence("connectionType", connectionType);
     final String fullEndpoint = createEndpointForApiCall(connection, false);
     return new Connection<T>(fullEndpoint, this, makeRequest(connection, parameters),
         connectionType);
@@ -260,7 +267,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   @Override
   public <T> T publish(String connection, Class<T> objectType, Object jsonBody,
       List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
-    verifyParameterPresence("connection", connection);
 
     return jsonMapper.toJavaObject(makeRequest(connection, true, false, jsonBody,
         binaryAttachments, parameters), objectType);
@@ -280,7 +286,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
   @Override
   public boolean deleteObject(String object, Parameter... parameters) {
-    verifyParameterPresence("object", object);
+    ValidationUtils.verifyParameterPresence("object", object);
 
     String responseString = makeRequest(object, false, true, null, null, parameters);
     try {
@@ -359,6 +365,10 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
       apiCall = apiCall.substring(1);
     }
 
+    if (hasAttachment) {
+      return getLinkedInMediaEndpointUrl();
+    }
+
     String baseUrl = getLinkedInEndpointUrl();
 
     return String.format("%s/%s", baseUrl, apiCall);
@@ -371,6 +381,10 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    */
   protected String getLinkedInEndpointUrl() {
     return LINKEDIN_API_ENDPOINT_URL + '/' + apiVersion.getUrlElement();
+  }
+
+  protected String getLinkedInMediaEndpointUrl() {
+    return LINKEDIN_MEDIA_API_ENDPOINT_URL;
   }
 
   /**

@@ -15,37 +15,49 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+package com.echobox.api.linkedin.types.v1;
 
 import lombok.Getter;
 
 /**
- * Contact info model
+ * StockExchange
  * @author Joanna
  *
  */
-public class ContactInfo {
+public enum StockExchange implements CodeType<Integer> {
+  
+  ASE(1, "American Stock Exchange"),
+  NYS(2, "New York Stock Exchange"),
+  NMS(3, "NASDAQ"),
+  LSE(4, "London Stock Exchange"),
+  FRA(5, "Frankfurt Stock Exchange"),
+  GER(6, "XETRA Stock Exchange"),
+  PAR(7, "Euronext Paris");
+  
+  @Getter
+  private final Integer code;
+  
+  @Getter
+  private String name;
+  
+  StockExchange(int code, String name) {
+    this.code = code;
+    this.name = name;
+  }
   
   /**
-   * Company phone number for the location.
+   * Convert the provided code into a status type
+   *
+   * @param code the code
+   * @return if successful the desired status type otherwise null
    */
-  @Getter
-  @LinkedIn("phone1")
-  private String phoneOne;
+  public static StockExchange fromCode(String code) {
+    for (StockExchange stockExchange : StockExchange.values()) {
+      if (stockExchange.getCode().equals(code)) {
+        return stockExchange;
+      }
+    }
+    return null;
+  }
 
-  /**
-   * Second company phone number for the location.
-   */
-  @Getter
-  @LinkedIn("phone2")
-  private String phoneTwo;
-
-  /**
-   * Company fax number for the location.
-   */
-  @Getter
-  @LinkedIn
-  private String fax;
 }

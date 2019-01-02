@@ -15,31 +15,37 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.organization;
 
-import org.apache.commons.lang3.text.WordUtils;
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.URN;
+
+import lombok.Getter;
 
 /**
- * Code type interface
- * @author Joanna
+ * Access Control POJO
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
+ * management/organizations/organization-access-control#find-access-control-information">
+ * Access Control Schema</a>
+ * @author joanna
  *
- * @param <T> type
  */
-public interface CodeType<T> {
+public class AccessControl {
   
-  /**
-   * Get the code
-   * @return code
-   */
-  T getCode();
+  @Getter
+  @LinkedIn
+  private String state;
   
-  /**
-   * Get the name
-   * @return name
-   */
-  default String getName() {
-    String name = toString();
-    return WordUtils.capitalize(name.replaceAll("_", " ").toLowerCase());
-  }
-
+  @Getter
+  @LinkedIn
+  private String role;
+  
+  @Getter
+  @LinkedIn
+  private URN roleAssignee;
+  
+  @Getter
+  @LinkedIn
+  private URN organizationalTarget;
+  
 }

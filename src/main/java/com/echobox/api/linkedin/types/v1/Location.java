@@ -15,49 +15,51 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.v1;
+
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
 
 /**
- * StockExchange
+ * Location model
  * @author Joanna
  *
  */
-public enum StockExchange implements CodeType<Integer> {
-  
-  ASE(1, "American Stock Exchange"),
-  NYS(2, "New York Stock Exchange"),
-  NMS(3, "NASDAQ"),
-  LSE(4, "London Stock Exchange"),
-  FRA(5, "Frankfurt Stock Exchange"),
-  GER(6, "XETRA Stock Exchange"),
-  PAR(7, "Euronext Paris");
-  
-  @Getter
-  private final Integer code;
-  
-  @Getter
-  private String name;
-  
-  StockExchange(int code, String name) {
-    this.code = code;
-    this.name = name;
-  }
+public class Location {
   
   /**
-   * Convert the provided code into a status type
-   *
-   * @param code the code
-   * @return if successful the desired status type otherwise null
+   * Description of company location.
    */
-  public static StockExchange fromCode(String code) {
-    for (StockExchange stockExchange : StockExchange.values()) {
-      if (stockExchange.getCode().equals(code)) {
-        return stockExchange;
-      }
-    }
-    return null;
-  }
-
+  @Getter
+  @LinkedIn
+  private String description;
+  
+  /**
+   * Valid values are true or false. A value of true matches the Company headquarters location.
+   */
+  @Getter
+  @LinkedIn
+  private boolean isHeadquarters;
+  
+  /**
+   * Valid values are true or false. A value of true matches the active location.
+   */
+  @Getter
+  @LinkedIn
+  private boolean isActive;
+  
+  /**
+   * Address of location.
+   */
+  @Getter
+  @LinkedIn
+  private Address address;
+  
+  /**
+   * Company contact information for the location.
+   */
+  @Getter
+  @LinkedIn
+  private ContactInfo contactInfo;
 }

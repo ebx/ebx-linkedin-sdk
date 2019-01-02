@@ -15,51 +15,26 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.v1;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
 
 /**
- * Location model
+ * The update POJO
+ * @see <a href="https://developer.linkedin.com/docs/share-on-linkedin">Share on LinkedIn</a>
  * @author Joanna
  *
  */
-public class Location {
+public class Update {
   
-  /**
-   * Description of company location.
-   */
   @Getter
   @LinkedIn
-  private String description;
+  private String updateKey;
   
-  /**
-   * Valid values are true or false. A value of true matches the Company headquarters location.
-   */
   @Getter
   @LinkedIn
-  private boolean isHeadquarters;
-  
-  /**
-   * Valid values are true or false. A value of true matches the active location.
-   */
-  @Getter
-  @LinkedIn
-  private boolean isActive;
-  
-  /**
-   * Address of location.
-   */
-  @Getter
-  @LinkedIn
-  private Address address;
-  
-  /**
-   * Company contact information for the location.
-   */
-  @Getter
-  @LinkedIn
-  private ContactInfo contactInfo;
+  private String updateUrl;
+
 }

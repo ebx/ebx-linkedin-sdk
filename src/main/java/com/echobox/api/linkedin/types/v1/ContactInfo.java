@@ -15,47 +15,37 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.v1;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
- * The type Address type for the linkedin V2 api
- * @author clementcaylux 
+ * Contact info model
+ * @author Joanna
+ *
  */
-public class AddressV2 {
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String postalCode;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String country;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String geographicArea;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String line1;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String line2;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String city;
+public class ContactInfo {
   
+  /**
+   * Company phone number for the location.
+   */
+  @Getter
+  @LinkedIn("phone1")
+  private String phoneOne;
+
+  /**
+   * Second company phone number for the location.
+   */
+  @Getter
+  @LinkedIn("phone2")
+  private String phoneTwo;
+
+  /**
+   * Company fax number for the location.
+   */
+  @Getter
+  @LinkedIn
+  private String fax;
 }

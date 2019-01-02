@@ -15,32 +15,31 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.organization;
+package com.echobox.api.linkedin.types.v1;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.Address;
-
-import lombok.Getter;
-import lombok.Setter;
+import org.apache.commons.lang3.text.WordUtils;
 
 /**
- * The type Location info.
- * @author clementcaylux 
+ * Code type interface
+ * @author Joanna
+ *
+ * @param <T> type
  */
-public class LocationInfo {
+public interface CodeType<T> {
   
-  @Getter
-  @Setter
-  @LinkedIn
-  private String staffCountRange;
+  /**
+   * Get the code
+   * @return code
+   */
+  T getCode();
+  
+  /**
+   * Get the name
+   * @return name
+   */
+  default String getName() {
+    String name = toString();
+    return WordUtils.capitalize(name.replaceAll("_", " ").toLowerCase());
+  }
 
-  @Getter
-  @Setter
-  @LinkedIn
-  private String locationType;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private Address address;
 }

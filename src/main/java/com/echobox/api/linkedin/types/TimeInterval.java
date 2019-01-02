@@ -20,31 +20,23 @@ package com.echobox.api.linkedin.types;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 /**
- * Code and name model wrapper
+ * Time intervals POJO
  * @author Joanna
  *
  */
-@NoArgsConstructor
-@RequiredArgsConstructor
-public class CodeAndNameType {
+public class TimeInterval {
   
   @Getter
-  @NonNull
+  @Setter
   @LinkedIn
-  private String code;
+  private String timeGranularityType;
   
   @Getter
-  @NonNull
+  @Setter
   @LinkedIn
-  private String name;
-  
-  boolean hasNullFields() {
-    return code == null || name == null;
-  }
+  private TimeRange timeRange;
 
 }

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.v1;
 
 import com.echobox.api.linkedin.logging.LinkedInLogger;
 
@@ -25,36 +25,26 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 
 /**
- * EmployeeCountRange
+ * Company type
  * @author Joanna
  *
  */
 @RequiredArgsConstructor
-public enum EmployeeCountRange implements CodeType<String> {
+public enum CompanyType implements CodeType<String> {
   
-  XXXS("A", "1", null, 1),
-  XXS("B", "2-10", 2, 10),
-  XS("C", "11-50", 11, 50),
-  S("D", "51-200", 51, 200),
-  M("E", "201-500", 201, 500),
-  L("F", "501-1000", 501, 1000),
-  XL("G", "1001-5000", 1001, 5000),
-  XXL("H", "5001-10,000", 5001, 10000),
-  XXXL("I", "10,000+", 10001, null);
+  PUBLIC_COMPANY("C"),
+  EDUCATIONAL("D"),
+  SELF_EMPLOYED("E"),
+  GOVERNMENT_AGENCY("G"),
+  NON_PROFIT("N"),
+  SELF_OWNED("O"),
+  PRIVATELY_HELD("P"),
+  PARTNERSHIP("S");
   
   private static Logger LOGGER = LinkedInLogger.getLoggerInstance();
   
   @Getter
   private final String code;
-  
-  @Getter
-  private final String name;
-  
-  @Getter
-  public final Integer min;
-  
-  @Getter
-  public final Integer max;
   
   /**
    * Convert the provided code into a company type
@@ -62,13 +52,13 @@ public enum EmployeeCountRange implements CodeType<String> {
    * @param code the code
    * @return if successful the desired company type otherwise null
    */
-  public static EmployeeCountRange fromCode(String code) {
-    for (EmployeeCountRange employeeCountRange : EmployeeCountRange.values()) {
-      if (employeeCountRange.getCode().equals(code)) {
-        return employeeCountRange;
+  public static CompanyType fromCode(String code) {
+    for (CompanyType companyType : CompanyType.values()) {
+      if (companyType.getCode().equals(code)) {
+        return companyType;
       }
     }
-    LOGGER.warn("Could not get employee count range from code " + code);
+    LOGGER.warn("Could not get company type from code " + code);
     return null;
   }
 

@@ -15,9 +15,10 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.v1;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.LinkedInIdAndNameType;
 
 import lombok.Getter;
 import lombok.Setter;
