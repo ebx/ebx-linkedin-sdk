@@ -22,18 +22,24 @@ import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
-
 /**
- * The class containing all information regarding a share
+ * Encapsulate share statistic elements
  * @author clementcaylux on 27/11/2018.
  */
-public class ShareStatistics {
-
-  @Getter 
+public class ShareStatistic {
+  
+  @Getter
   @Setter
   @LinkedIn
-  private List<ShareStatisticsElement> elements;
-
+  private TotalShareStatistics totalShareStatistics;
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private String share;
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private String organizationalEntity;
 }

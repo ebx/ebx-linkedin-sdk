@@ -379,7 +379,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   private void addTimeIntervalToQueryParameters(TimeInterval timeInterval,
       List<Parameter> parameters) {
     if (timeInterval != null) {
-      if (StringUtils.isNotBlank(timeInterval.getTimeGranularityType())) {
+      if (timeInterval.getTimeGranularityType() != null) {
         parameters.add(Parameter.with("timeIntervals.timeRange",
             timeInterval.getTimeGranularityType()));
       }

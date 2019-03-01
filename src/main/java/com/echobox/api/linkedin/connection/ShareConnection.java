@@ -21,14 +21,14 @@ import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.types.Share;
 import com.echobox.api.linkedin.types.ShareText;
+import com.echobox.api.linkedin.types.TimeInterval;
+import com.echobox.api.linkedin.types.engagement.ShareStatistic;
 import com.echobox.api.linkedin.types.request.ShareRequestBody;
 import com.echobox.api.linkedin.types.request.UpdateShareRequestBody;
 import com.echobox.api.linkedin.types.urn.URN;
 
-import org.apache.commons.lang3.StringUtils;
-
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * SHare connection class that should contain all share operations
@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 public class ShareConnection extends ConnectionBaseV2 {
   
   private static final String SHARES = "/shares";
+  private static final String SHARE_STATISTICS = "/organizationalEntityShareStatistics";
   
   /**
    * Initialise the share connection
@@ -70,14 +71,14 @@ public class ShareConnection extends ConnectionBaseV2 {
    * @return the share corresponding to the share id
    */
   public List<Share> getShares(List<URN> ownerURNs, int sharesPerOwner) {
-    List<String> owners = ownerURNs.stream().map(URN :: toString).collect(Collectors.toList());
+    List<Parameter> params = new ArrayList<>();
   
-    Parameter queryParam = Parameter.with("q", "owners");
-    Parameter ownersParam = Parameter.with("owners", StringUtils.join(owners, ","));
-    Parameter sharesPerOwnerParam = Parameter.with("sharesPerOwner", sharesPerOwner);
-    Parameter countParam = Parameter.with("count", 20);
+    params.add(Parameter.with("q", "owners"));
+    addParametersFromURNs(params, "shares", ownerURNs);
+    params.add(Parameter.with("sharesPerOwner", sharesPerOwner));
+    params.add(Parameter.with("count", 20));
     
-    return getListFromQuery(SHARES, Share.class, queryParam, ownersParam, sharesPerOwnerParam, countParam);
+    return getListFromQuery(SHARES, Share.class, params.toArray(new Parameter[params.size()]));
   }
   
   /**
@@ -113,12 +114,38 @@ public class ShareConnection extends ConnectionBaseV2 {
     linkedinClient.deleteObject(SHARES + "/" + shareId);
   }
   
-  public void retrieveShareStatistics() {
-  
-  }
-  
-  public void retrieveShareStatisticsForShareId() {
-  
+  public List<ShareStatistic> retrieveShareStatistics(URN organizationURN,
+      TimeInterval timeInterval, List<URN> shareURNs) {
+    List<Parameter> params = new ArrayList<>();
+    params.add(Parameter.with("q", "organizationalEntity"));
+    params.add(Parameter.with("organizationalEntity", organizationURN));
+    
+    if (timeInterval != null) {
+      // Time restriction on retrieving share statistics
+      params.add(Parameter.with("timeIntervals.timeGranularityType",
+          timeInterval.getTimeGranularityType()));
+      if (timeInterval.getTimeRange() != null) {
+        if (timeInterval.getTimeRange().getStart() != null
+            && timeInterval.getTimeRange().getStart() != null
+            && timeInterval.getTimeRange().getEnd() != null) {
+          params.add(Parameter.with("timeIntervals.timeRange.start",
+              timeInterval.getTimeRange().getStart()));
+          params.add(Parameter.with("timeIntervals.timeRange.end",
+              timeInterval.getTimeRange().getEnd()));
+        } else {
+          throw new IllegalStateException("timeIntervals.timeRange cannot be null when "
+              + "timeInterval is provided");
+        }
+      } else {
+        throw new IllegalStateException("timeIntervals.timeGranularityType cannot be null when "
+            + "timeInterval is provided");
+      }
+    }
+    
+    addParametersFromURNs(params, "shares", shareURNs);
+    
+    return getListFromQuery(SHARE_STATISTICS, ShareStatistic.class,
+        params.toArray(new Parameter[params.size()]));
   }
   
 }
