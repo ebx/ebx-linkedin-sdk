@@ -286,7 +286,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
       attachments.add(binaryAttachment);
     }
 
-    return publish(connection, objectType, attachments, parameters);
+    return publish(connection, objectType, jsonBody, attachments, parameters);
   }
 
   @Override

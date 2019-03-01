@@ -17,8 +17,11 @@
 
 package com.echobox.api.linkedin.connection;
 
+import com.echobox.api.linkedin.client.BinaryAttachment;
 import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
+import com.echobox.api.linkedin.types.ContentEntity;
+import com.echobox.api.linkedin.types.RichMediaLocation;
 import com.echobox.api.linkedin.types.Share;
 import com.echobox.api.linkedin.types.ShareText;
 import com.echobox.api.linkedin.types.TimeInterval;
@@ -27,7 +30,11 @@ import com.echobox.api.linkedin.types.request.ShareRequestBody;
 import com.echobox.api.linkedin.types.request.UpdateShareRequestBody;
 import com.echobox.api.linkedin.types.urn.URN;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -92,6 +99,34 @@ public class ShareConnection extends ConnectionBaseV2 {
    */
   public Share postShare(ShareRequestBody shareBody) {
     return linkedinClient.publish(SHARES, Share.class, shareBody);
+  }
+  
+  /**
+   * Upload files to reference in a share
+   * If the request body already includes content entity, this will be overwritten with the uploaded
+   * entity
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
+   * management/shares/rich-media-shares">Rich Media Share</a>
+   * @param shareRequestBody the sahre body
+   * @param filename the file name to upload
+   * @param file the file to upload
+   * @return a share that includes the rich media
+   * @throws IOException IOException
+   */
+  public Share postRichMediaShare(ShareRequestBody shareRequestBody, String filename, File file)
+      throws IOException {
+    // Upload the rich media first
+    byte[] array = Files.readAllBytes(file.toPath());
+    RichMediaLocation fileupload = linkedinClient.publish("", RichMediaLocation.class, null,
+        BinaryAttachment.with(filename, array));
+    
+    // Post referencing the rich media by replacing the entities in the shareRequestBody
+    ContentEntity contentEntity = new ContentEntity();
+    contentEntity.setEntity(fileupload.getLocation());
+    // Replace the content entities if they are already set
+    shareRequestBody.getContent().setContentEntities(Arrays.asList(contentEntity));
+    
+    return postShare(shareRequestBody);
   }
   
   /**

@@ -21,42 +21,18 @@ import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
 
 /**
- * Content entity POJO
- * @see <a href="https://developer.linkedin.com/docs/guide/v2/shares/share-api#share-content">
- * Content Entity</a>
+ * Rich media location type
  * @author joanna
- *
  */
-public class ContentEntity {
+public class RichMediaLocation {
   
   /**
-   * URN of the content being shared
-   * Typical URN format is urn:li:richMediaSummary:{id}
+   * Location of the rich media
    */
   @Getter
-  @Setter
   @LinkedIn
-  private URN entity;
-  
-  /**
-   * URL of the content being shared
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private String entityLocation;
-  
-  /**
-   * URL to a thumbnail image to display for the content
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private List<Thumbnail> thumbnails;
+  private URN location;
 
 }
