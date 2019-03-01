@@ -101,7 +101,7 @@ public class ShareConnection extends ConnectionBaseV2 {
    * @return the share that was updated
    */
   public Share updateShare(URN shareURN, ShareText shareText) {
-    return linkedinClient.publish(SHARES + "/"+ shareURN.toString(), Share.class,
+    return linkedinClient.publish(SHARES + "/" + shareURN.toString(), Share.class,
         new UpdateShareRequestBody(shareText,
         linkedinClient.getJsonMapper()));
   }
@@ -114,6 +114,17 @@ public class ShareConnection extends ConnectionBaseV2 {
     linkedinClient.deleteObject(SHARES + "/" + shareId);
   }
   
+  /**
+   * retrieve both lifetime and time-bound organic statistics on shares for an organization,
+   * including specific organization share URNs. This endpoint returns organic statistics only.
+   * Sponsored activity is not counted in this endpoint.
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
+   * management/organizations/share-statistics">Organization Share Statistics</a>
+   * @param organizationURN the organizational entity URN for which the statistics represents
+   * @param timeInterval Time restriction for the query. When omitted, lifetime stats are returned
+   * @param shareURNs References to one or more shares for which statistics are returned
+   * @return aggregated stats for an organization's shares
+   */
   public List<ShareStatistic> retrieveShareStatistics(URN organizationURN,
       TimeInterval timeInterval, List<URN> shareURNs) {
     List<Parameter> params = new ArrayList<>();

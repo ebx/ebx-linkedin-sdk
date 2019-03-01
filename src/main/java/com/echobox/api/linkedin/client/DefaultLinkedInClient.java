@@ -244,8 +244,8 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     String parameterString = toParameterString(parameters);
     final String finalParameterString =
         StringUtils.isBlank(parameterString) ? "" : ("?" + parameterString);
-    return new Connection<T>(fullEndpoint + finalParameterString, this, makeRequest(connection, parameters),
-        connectionType);
+    return new Connection<T>(fullEndpoint + finalParameterString, this,
+        makeRequest(connection, parameters), connectionType);
   }
 
   @Override
@@ -253,9 +253,9 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     String connectionJson = makeRequestAndProcessResponse(new Requestor() {
       @Override
       public Response makeRequest() throws IOException {
-        String pageURL = apiVersion.isSpecifyFormat() ?
-            URLUtils.replaceOrAddQueryParameter(connectionPageUrl, "format", "json") :
-            connectionPageUrl;
+        String pageURL = apiVersion.isSpecifyFormat()
+            ? URLUtils.replaceOrAddQueryParameter(connectionPageUrl, "format", "json")
+            : connectionPageUrl;
         return webRequestor.executeGet(pageURL);
       }
     });

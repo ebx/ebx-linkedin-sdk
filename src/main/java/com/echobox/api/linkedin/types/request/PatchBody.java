@@ -24,6 +24,7 @@ import lombok.Data;
 
 /**
  * Patch body
+ * @author joanna
  */
 @Data
 public class PatchBody {

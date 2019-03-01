@@ -23,8 +23,6 @@ import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapperTestBase;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.List;
-
 /**
  * @author clementcaylux on 27/11/2018.
  */

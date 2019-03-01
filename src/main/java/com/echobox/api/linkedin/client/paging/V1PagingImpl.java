@@ -30,6 +30,11 @@ public class V1PagingImpl extends PagingStrategy {
   private static final String DATA_KEY = "values";
   
   @Override
+  public String getDataKey() {
+    return DATA_KEY;
+  }
+  
+  @Override
   protected void discoverPages(JsonObject jsonObject, String fullEndpoint) {
     if (jsonObject.get(DATA_KEY) != null) {
       JsonArray values = jsonObject.get(DATA_KEY).asArray();
@@ -59,9 +64,4 @@ public class V1PagingImpl extends PagingStrategy {
     }
   }
   
-  
-  @Override
-  public String getDataKey() {
-    return DATA_KEY;
-  }
 }

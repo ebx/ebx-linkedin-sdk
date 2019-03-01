@@ -32,6 +32,11 @@ import java.util.Map;
 public class V2PagingImpl extends PagingStrategy {
   
   private static final String DATA_KEY = "elements";
+  
+  @Override
+  public String getDataKey() {
+    return DATA_KEY;
+  }
 
   @Override
   protected void discoverPages(JsonObject jsonObject, String fullEndpoint) {
@@ -73,11 +78,6 @@ public class V2PagingImpl extends PagingStrategy {
       previousPageUrl = null;
       nextPageUrl = null;
     }
-  }
-  
-  @Override
-  public String getDataKey() {
-    return DATA_KEY;
   }
 
 }

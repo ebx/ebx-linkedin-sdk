@@ -60,6 +60,10 @@ public abstract class PagingStrategy {
     }
   }
   
+  /**
+   * Get the data key to get the entries
+   * @return the data key
+   */
   public abstract String getDataKey();
   
   protected abstract void discoverPages(JsonObject jsonObject, String fullEndpoint);

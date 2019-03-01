@@ -29,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Share request body class
+ * @author joanna
  */
 @Data
 @RequiredArgsConstructor

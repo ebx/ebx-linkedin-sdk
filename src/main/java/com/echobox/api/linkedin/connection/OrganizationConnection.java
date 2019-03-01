@@ -26,7 +26,6 @@ import com.echobox.api.linkedin.types.statistics.page.Statistics;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.urn.URNEntityType;
 import com.echobox.api.linkedin.util.ValidationUtils;
-import com.echobox.api.linkedin.version.Version;
 
 import org.apache.commons.lang3.StringUtils;
 
