@@ -60,6 +60,8 @@ public abstract class PagingStrategy {
     }
   }
   
+  public abstract String getDataKey();
+  
   protected abstract void discoverPages(JsonObject jsonObject, String fullEndpoint);
 
   protected void setNextPageURL(String fullEndpoint, int start, int count) {

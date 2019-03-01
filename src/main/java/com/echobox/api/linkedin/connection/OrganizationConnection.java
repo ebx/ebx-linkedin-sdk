@@ -39,7 +39,7 @@ import java.util.List;
  * @author joanna
  *
  */
-public class OrganizationConnection extends ConnectionBase {
+public class OrganizationConnection extends ConnectionBaseV2 {
 
   private static final String ORGANIZATIONAL_ENTITY_ACLS = "/organizationalEntityAcls";
   private static final String ORGANIZATIONS = "/organizations";
@@ -72,10 +72,6 @@ public class OrganizationConnection extends ConnectionBase {
    */
   public OrganizationConnection(LinkedInClient linkedinClient) {
     super(linkedinClient);
-    if (!Version.V2.equals(linkedinClient.getVersion())) {
-      throw new IllegalStateException(
-          "The LinkedIn clinet should be set to V2 to access the endpoints");
-    }
   }
 
   /**

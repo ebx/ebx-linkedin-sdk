@@ -241,7 +241,10 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     ValidationUtils.verifyParameterPresence("connection", connection);
     ValidationUtils.verifyParameterPresence("connectionType", connectionType);
     final String fullEndpoint = createEndpointForApiCall(connection, false);
-    return new Connection<T>(fullEndpoint, this, makeRequest(connection, parameters),
+    String parameterString = toParameterString(parameters);
+    final String finalParameterString =
+        StringUtils.isBlank(parameterString) ? "" : ("?" + parameterString);
+    return new Connection<T>(fullEndpoint + finalParameterString, this, makeRequest(connection, parameters),
         connectionType);
   }
 
@@ -250,7 +253,9 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     String connectionJson = makeRequestAndProcessResponse(new Requestor() {
       @Override
       public Response makeRequest() throws IOException {
-        String pageURL = URLUtils.replaceOrAddQueryParameter(connectionPageUrl, "format", "json");
+        String pageURL = apiVersion.isSpecifyFormat() ?
+            URLUtils.replaceOrAddQueryParameter(connectionPageUrl, "format", "json") :
+            connectionPageUrl;
         return webRequestor.executeGet(pageURL);
       }
     });

@@ -165,17 +165,18 @@ public class Connection<T> implements Iterable<List<T>> {
       throw new LinkedInJsonMappingException("The connection JSON you provided was invalid: "
           + json, e);
     }
-
+    
+    Version version = linkedinClient.getVersion();
+    PagingStrategy pagingStrategy = version.getPagingStrategy();
+  
     // Pull out data
-    JsonArray jsonData = jsonObject.get("values").asArray();
+    JsonArray jsonData = jsonObject.get(pagingStrategy.getDataKey()).asArray();
     for (int i = 0; i < jsonData.size(); i++) {
       dataList.add(connectionType.equals(JsonObject.class) ? (T) jsonData.get(i)
           : linkedinClient.getJsonMapper().toJavaObject(jsonData.get(i).toString(),
               connectionType));
     }
 
-    Version version = linkedinClient.getVersion();
-    PagingStrategy pagingStrategy = version.getPagingStrategy();
     pagingStrategy.populatePages(jsonObject, fullEndpoint);
     this.nextPageUrl = pagingStrategy.getNextPageUrl();
     this.previousPageUrl = pagingStrategy.getPreviousPageUrl();
