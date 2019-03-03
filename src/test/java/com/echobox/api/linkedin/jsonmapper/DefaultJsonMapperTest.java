@@ -179,7 +179,7 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     assertEquals("Test Share with Content", content.getTitle());
     assertNull(content.getShareMediaCategory());
     ContentEntity contentEntity = content.getContentEntities().get(0);
-    assertEquals("urn:li:article:0", contentEntity.getEntity());
+    assertEquals(new URN("urn:li:article:0"), contentEntity.getEntity());
     assertEquals("https://www.example.com/content.html", contentEntity.getEntityLocation());
     assertEquals(1, contentEntity.getThumbnails().size());
     Thumbnail thumbnail = contentEntity.getThumbnails().get(0);
@@ -195,11 +195,11 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     DistributionTarget distributionTarget = share.getDistribution().getDistributionTarget();
     assertNotNull(distributionTarget);
     assertEquals(2, distributionTarget.getIndustries().size());
-    assertEquals("urn:li:industry:12", distributionTarget.getIndustries().get(0));
-    assertEquals("urn:li:industry:37", distributionTarget.getIndustries().get(1));
+    assertEquals(new URN("urn:li:industry:12"), distributionTarget.getIndustries().get(0));
+    assertEquals(new URN("urn:li:industry:37"), distributionTarget.getIndustries().get(1));
     assertEquals(2, distributionTarget.getSeniorities().size());
-    assertEquals("urn:li:seniority:4", distributionTarget.getSeniorities().get(0));
-    assertEquals("urn:li:seniority:8", distributionTarget.getSeniorities().get(1));
+    assertEquals(new URN("urn:li:seniority:4"), distributionTarget.getSeniorities().get(0));
+    assertEquals(new URN("urn:li:seniority:8"), distributionTarget.getSeniorities().get(1));
 
     assertEquals("Test Share!", share.getText().getText());
   }
@@ -233,11 +233,11 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
 
     DistributionTarget distributionTarget = shareDistribution.getDistributionTarget();
     assertEquals(2, distributionTarget.getIndustries().size());
-    assertEquals("urn:li:industry:12", distributionTarget.getIndustries().get(0));
-    assertEquals("urn:li:industry:37", distributionTarget.getIndustries().get(1));
+    assertEquals(new URN("urn:li:industry:12"), distributionTarget.getIndustries().get(0));
+    assertEquals(new URN("urn:li:industry:37"), distributionTarget.getIndustries().get(1));
     assertEquals(2, distributionTarget.getSeniorities().size());
-    assertEquals("urn:li:seniority:4", distributionTarget.getSeniorities().get(0));
-    assertEquals("urn:li:seniority:8", distributionTarget.getSeniorities().get(1));
+    assertEquals(new URN("urn:li:seniority:4"), distributionTarget.getSeniorities().get(0));
+    assertEquals(new URN("urn:li:seniority:8"), distributionTarget.getSeniorities().get(1));
   }
 
   /**
@@ -254,7 +254,7 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     assertEquals(1, shareContent.getContentEntities().size());
     ContentEntity contentEntity = shareContent.getContentEntities().get(0);
     assertEquals("https://www.example.com/content.html", contentEntity.getEntityLocation());
-    assertEquals("urn:li:article:0", contentEntity.getEntity());
+    assertEquals(new URN("urn:li:article:0"), contentEntity.getEntity());
     assertEquals(1, contentEntity.getThumbnails().size());
     Thumbnail thumbnails = contentEntity.getThumbnails().get(0);
     assertNotNull(thumbnails.getImageSpecificContent());
@@ -679,14 +679,14 @@ public class DefaultJsonMapperTest extends DefaultJsonMapperTestBase {
     assertEquals("Dunder Mifflin's Dundie Award goes to Dwight Schrute!", 
         commentMessage.getText());
     assertEquals(2, commentMessage.getAttributes().size());
-    CommentAction.MessageAttribute companyAttribute = commentMessage.getAttributes().get(0);
+    CommentAction.Attribute companyAttribute = commentMessage.getAttributes().get(0);
     assertEquals(new Integer(17), companyAttribute.getLength());
     assertEquals(new Integer(0), companyAttribute.getStart());
     assertNull(companyAttribute.getMemberVaue().getMember());
     assertEquals("2414183", companyAttribute
         .getCompanyValue().getCompany().getCompany().getId());
   
-    CommentAction.MessageAttribute memberAttribute = commentMessage.getAttributes().get(1);
+    CommentAction.Attribute memberAttribute = commentMessage.getAttributes().get(1);
   
     assertNull(memberAttribute.getCompanyValue().getCompany());
     assertEquals("uOeeiwWoxO", memberAttribute

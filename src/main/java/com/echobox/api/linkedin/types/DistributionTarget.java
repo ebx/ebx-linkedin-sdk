@@ -19,6 +19,7 @@ package com.echobox.api.linkedin.types;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.objectype.Locale;
+import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -50,7 +51,7 @@ public class DistributionTarget {
   @Getter
   @Setter
   @LinkedIn
-  private List<String> industries;
+  private List<URN> industries;
   
   /**
    * Restrict share to specific industries.
@@ -68,7 +69,7 @@ public class DistributionTarget {
   @Getter
   @Setter
   @LinkedIn
-  private List<String> jobFunctions;
+  private List<URN> jobFunctions;
   
   /**
    * Restrict share to specific locations.
@@ -77,7 +78,7 @@ public class DistributionTarget {
   @Getter
   @Setter
   @LinkedIn
-  private List<String> locations;
+  private List<URN> locations;
   
   /**
    * Restrict share to specific locations.
@@ -86,7 +87,7 @@ public class DistributionTarget {
   @Getter
   @Setter
   @LinkedIn
-  private List<String> seniorities;
+  private List<URN> seniorities;
   
   /**
    * Restrict share to members working at organizations of specific sizes.

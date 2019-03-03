@@ -15,34 +15,39 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.engagement;
+package com.echobox.api.linkedin.types.ucg;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.social.actions.CommentAction;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
-
 /**
- * @author clementcaylux on 27/11/2018.
+ * Commentary
+ * @author joanna
  */
-class Paging {
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  private int count;
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  private int start;
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  List<String> links;
+public class Commentary {
   
+  /**
+   * User generated attributes in the text.
+   */
+  @Getter
+  @LinkedIn
+  private List<CommentAction.Attribute> attributes;
+  
+  /**
+   * The locale that may have be inferred for this text.
+   */
+  @Getter
+  @LinkedIn
+  private String inferredLocale;
+  
+  /**
+   * The text content that may be attributed.
+   */
+  @Getter
+  @LinkedIn
+  private String text;
 }
