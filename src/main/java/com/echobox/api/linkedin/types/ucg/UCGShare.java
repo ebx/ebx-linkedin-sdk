@@ -135,26 +135,41 @@ public class UCGShare extends LinkedInURNIdType {
   /**
    * Represents type-specific content of this object.
    */
+  @Getter
+  @Setter
+  @LinkedIn
   private ShareContent specificContent;
   
   /**
    * Intended audience or best fit audiences for this content as decided by the owner.
    */
+  @Getter
+  @Setter
+  @LinkedIn
   private TargetAudience targetAudience;
   
   /**
    * The service provider that created this UGC
    */
+  @Getter
+  @Setter
+  @LinkedIn
   private String ugcOrigin;
   
   /**
    * Version tag of the entity.
    */
+  @Getter
+  @Setter
+  @LinkedIn
   private String versionTag;
   
   /**
    * Visibility restrictions on content.
    */
+  @Getter
+  @Setter
+  @LinkedIn
   private String visibility;
 
 }

@@ -46,50 +46,68 @@ public class TargetAudience {
    * @author joanna
    */
   public class TargetAudienceEntity {
+    
     /**
      * Standardized degrees to be targeted.
      */
+    @Getter
+    @LinkedIn
     private List<URN> degrees;
   
     /**
      * Standardized fields of study to be targeted.
      */
+    @Getter
+    @LinkedIn
     private List<URN> fieldsOfStudy;
   
     /**
      * Industries to be targeted.
      */
+    @Getter
+    @LinkedIn
     private List<URN> industries;
     
     /**
      * Interface locales to be targeted.
      */
+    @Getter
+    @LinkedIn
     private List<Locale> interfaceLocales;
   
     /**
      * Top level groupings of supertitles to be targeted.
      */
+    @Getter
+    @LinkedIn
     private List<URN> jobFunctions;
   
     /**
      * Location to be targeted.
      */
+    @Getter
     @LinkedIn("locations")
     private List<URN> locations;
   
     /**
      * Standardized schools to be targeted.
      */
+    @Getter
+    @LinkedIn
     private List<URN> schools;
     
     /**
      * Seniorities to be targeted
      */
+    @Getter
+    @LinkedIn
     private List<URN> seniorities;
   
     /**
      * Organization sizes to be targeted.
      */
+    @Getter
+    @LinkedIn
     private String staffCountRanges;
   }
 

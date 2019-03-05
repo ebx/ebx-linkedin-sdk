@@ -17,6 +17,8 @@
 
 package com.echobox.api.linkedin.types.ucg;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
 import lombok.Getter;
 
 import java.util.List;
@@ -34,11 +36,14 @@ public class Distribution {
    * Whether UGC post is distributed to follow-feed or not.
    */
   @Getter
+  @LinkedIn
   private boolean distributedViaFollowFeed;
   
   /**
    * External distribution channels that this content is distributed to.
    */
+  @Getter
+  @LinkedIn
   private List<String> externalDistributionChannels;
 
 }

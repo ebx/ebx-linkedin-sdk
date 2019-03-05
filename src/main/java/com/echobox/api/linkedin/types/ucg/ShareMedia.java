@@ -119,8 +119,8 @@ public class ShareMedia {
     /**
      * Union of possible MediaOverlay model
      */
-    @LinkedIn
     @Getter
+    @LinkedIn
     private Object overlay;
   }
   
