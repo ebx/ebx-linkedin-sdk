@@ -8,49 +8,61 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+@RequiredArgsConstructor
 public class RegisterUploadRequestBody {
   
-  /**
-   * Owner of the video
-   */
+  @NonNull
   @Setter
   @Getter
   @LinkedIn
-  private URN owner;
+  private RegisterUploadRequest registerUploadRequest;
   
-  /**
-   * Supported upload mechanism
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private supportedUploadMechanism supportedUploadMechanism;
+  @RequiredArgsConstructor
+  public static class RegisterUploadRequest {
+    /**
+     * Owner of the video
+     */
+    @NonNull
+    @Setter
+    @Getter
+    @LinkedIn
+    private URN owner;
   
-  /**
-   * Size in bytes
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private Long fileSize;
+    /**
+     * Supported upload mechanism
+     */
+    @Getter
+    @Setter
+    @LinkedIn
+    private supportedUploadMechanism supportedUploadMechanism;
   
-  /**
-   * The value is an URN that identifies the use case for which the upload is requested
-   */
-  @Getter
-  @LinkedIn
-  private List<URN> recipes = new ArrayList<>();
+    /**
+     * Size in bytes
+     */
+    @Getter
+    @Setter
+    @LinkedIn
+    private Long fileSize;
   
-  @Getter
-  @Setter
-  @LinkedIn
-  private List<ServiceRelationships> serviceRelationships;
+    /**
+     * The value is an URN that identifies the use case for which the upload is requested
+     */
+    @Getter
+    @LinkedIn
+    private List<URN> recipes = new ArrayList<>();
   
-  public void setReciepies(List<Recipe> recipes) {
-    this.recipes = recipes.stream().map(Recipe::getRecipeURN).collect(Collectors.toList());
+    @Getter
+    @Setter
+    @LinkedIn
+    private List<ServiceRelationships> serviceRelationships;
+  
+    public void setReciepies(List<RecipeURN> recipes) {
+      this.recipes = recipes.stream().map(RecipeURN ::getRecipeURN).collect(Collectors.toList());
+    }
   }
   
   public static class ServiceRelationships {
@@ -58,7 +70,7 @@ public class RegisterUploadRequestBody {
     @Setter
     @Getter
     @LinkedIn
-    private URN identifier;
+    private String identifier;
     
     @Getter
     @LinkedIn
@@ -87,7 +99,7 @@ public class RegisterUploadRequestBody {
     MULTIPART_UPLOAD;
   }
   
-  public enum Recipe {
+  public enum RecipeURN {
     FEED_SHARE_VIDEO(new URN("urn:li:digitalmediaRecipe:feedshare-video")),
     LEARNING_IMAGE(new URN("urn:li:digitalmediaRecipe:feedshare-video")),
     ADS_VIDEO(new URN("urn:li:digitalmediaRecipe:feedshare-video"));
@@ -95,7 +107,7 @@ public class RegisterUploadRequestBody {
     @Getter
     private URN recipeURN;
     
-    Recipe(URN recipeURN) {
+    RecipeURN(URN recipeURN) {
       this.recipeURN = recipeURN;
     }
   }

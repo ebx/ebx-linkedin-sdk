@@ -217,6 +217,8 @@ public class DefaultWebRequestor implements WebRequestor {
       Map<String, String> headers,
       BinaryAttachment... binaryAttachments)
       throws IOException {
+    System.out.println(jsonBody);
+    
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug("Executing a POST to " + url + " with parameters "
           + (binaryAttachments.length > 0 ? "" : "(sent in request body): ")

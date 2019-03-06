@@ -12,7 +12,7 @@ public class CheckStatusUpload {
   
   private String mediaTypeFamily;
   
-  private List<RegisterUploadRequestBody.Recipe> recipies;
+  private List<RegisterUploadRequestBody.RecipeURN> recipies;
   
   private List<RegisterUploadRequestBody.ServiceRelationships> serviceRelationships;
   
