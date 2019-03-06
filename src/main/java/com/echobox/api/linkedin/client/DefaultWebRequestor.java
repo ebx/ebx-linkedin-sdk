@@ -56,6 +56,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Default implementation of a service that sends HTTP requests to the LinkedIn API endpoint.
@@ -208,11 +209,12 @@ public class DefaultWebRequestor implements WebRequestor {
 
   @Override
   public Response executePost(String url, String parameters, String jsonBody) throws IOException {
-    return executePost(url, parameters, jsonBody, new BinaryAttachment[0]);
+    return executePost(url, parameters, jsonBody, null, new BinaryAttachment[0]);
   }
 
   @Override
   public Response executePost(String url, String parameters, String jsonBody,
+      Map<String, String> headers,
       BinaryAttachment... binaryAttachments)
       throws IOException {
     if (LOGGER.isDebugEnabled()) {
@@ -232,7 +234,7 @@ public class DefaultWebRequestor implements WebRequestor {
       GenericUrl genericUrl = new GenericUrl(url + (!StringUtils.isEmpty(parameters)
           ? "?" + parameters : ""));
 
-      HttpRequest request = null;
+      HttpRequest request;
       
       // If we have binary attachments, the body is just the attachments and the
       // other parameters are passed in via the URL.
@@ -285,6 +287,11 @@ public class DefaultWebRequestor implements WebRequestor {
       if (binaryAttachments.length > 0) {
         request.setHeaders(new HttpHeaders().set("Connection", "Keep-Alive"));
       }
+      
+      if (headers != null) {
+        // Add any additional headers
+        request.getHeaders().putAll(headers);
+      }
 
       return getResponse(request);
     } catch (HttpResponseException ex) {
@@ -317,7 +324,7 @@ public class DefaultWebRequestor implements WebRequestor {
   private Response handleException(HttpResponseException ex) {
     fillHeaderAndDebugInfo(ex.getHeaders());
 
-    Response response = fetchResponse(ex.getStatusCode(), ex.getContent());
+    Response response = fetchResponse(ex.getStatusCode(), ex.getHeaders(), ex.getContent());
 
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug(format("LinkedIn responded with an error %s", response));
@@ -471,12 +478,16 @@ public class DefaultWebRequestor implements WebRequestor {
   }
 
   protected Response fetchResponse(HttpResponse httpUrlConnection) throws IOException {
-    return fetchResponse(httpUrlConnection.getStatusCode(), fromInputStream(httpUrlConnection
+    return fetchResponse(httpUrlConnection.getStatusCode(), httpUrlConnection.getHeaders(),
+        fromInputStream(httpUrlConnection
         .getContent()));
   }
 
-  protected Response fetchResponse(int statusCode, String body) {
-    return new Response(statusCode, body);
+  protected Response fetchResponse(int statusCode, HttpHeaders headers, String body) {
+    Map<String, String> headerMap = headers.entrySet().stream()
+        .collect(Collectors.toMap(Map.Entry :: getKey, entry -> entry.getValue().toString(),
+            (a, b) -> b));
+    return new Response(statusCode, headerMap, body);
   }
 
   /**

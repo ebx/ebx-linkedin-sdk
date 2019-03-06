@@ -64,8 +64,6 @@ public interface LinkedInClient {
    * @param parameters
    *          URL parameters to include in the API call (optional).
    * @return An instance of type {@code objectType} which contains the requested object's data.
-   * @throws LinkedInException
-   *           If an error occurs while performing the API call.
    */
   <T> T fetchObject(String object, Class<T> objectType, Parameter... parameters);
 
@@ -83,8 +81,6 @@ public interface LinkedInClient {
    *          URL parameters to include in the API call (optional).
    * @return An instance of type {@code connectionType} which contains the requested Connection's
    *          data.
-   * @throws LinkedInException
-   *           If an error occurs while performing the API call.
    */
   <T> Connection<T> fetchConnection(String connection, Class<T> connectionType,
       Parameter... parameters);
@@ -102,8 +98,6 @@ public interface LinkedInClient {
    *          Connection type token.
    * @return An instance of type {@code connectionType} which contains the requested Connection's
    *          data.
-   * @throws LinkedInException
-   *           If an error occurs while performing the API call.
    */
   <T> Connection<T> fetchConnectionPage(String connectionPageUrl, Class<T> connectionType);
 
@@ -123,8 +117,6 @@ public interface LinkedInClient {
    *          URL parameters to include in the API call.
    * @return An instance of type {@code objectType} which contains the LinkedIn response to your
    *          publish request.
-   * @throws LinkedInException
-   *           If an error occurs while performing the API call.
    */
   <T> T publish(String connection, Class<T> objectType, Object jsonBody, Parameter... parameters);
 
@@ -147,8 +139,6 @@ public interface LinkedInClient {
    *          URL parameters to include in the API call.
    * @return An instance of type {@code objectType} which contains the LinkedIn response to your
    *          publish request.
-   * @throws LinkedInException
-   *           If an error occurs while performing the API call.
    */
   <T> T publish(String connection, Class<T> objectType, Object jsonBody,
       List<BinaryAttachment> binaryAttachments, Parameter... parameters);
@@ -172,11 +162,12 @@ public interface LinkedInClient {
    *          URL parameters to include in the API call.
    * @return An instance of type {@code objectType} which contains the LinkedIn response to your
    *          publish request.
-   * @throws LinkedInException
-   *           If an error occurs while performing the API call.
    */
   <T> T publish(String connection, Class<T> objectType, Object jsonBody, BinaryAttachment binaryAttachment,
       Parameter... parameters);
+  
+  Map<String, String> publishForHeader(String url, BinaryAttachment binaryAttachment,
+      Map<String, String> headers, Parameter... parameters);
 
   /**
    * Performs a LinkedIn API delete operation on the given {@code object}.
@@ -187,8 +178,6 @@ public interface LinkedInClient {
    *          URL parameters to include in the API call.
    * @return {@code true} if LinkedIn indicated that the object was successfully deleted,
    *          {@code false} otherwise.
-   * @throws LinkedInException
-   *           If an error occurred while attempting to delete the object.
    */
   boolean deleteObject(String object, Parameter... parameters);
 
@@ -207,8 +196,6 @@ public interface LinkedInClient {
    *          The verification code in the Graph API callback to the redirect URI.
    * @return The access token for the user identified by {@code appId}, {@code appSecret},
    *          {@code redirectUri} and {@code verificationCode}.
-   * @throws LinkedInException
-   *           If an error occurs while attempting to obtain an access token.
    */
   AccessToken obtainUserAccessToken(String appId, String appSecret, String redirectUri,
       String verificationCode);
@@ -224,8 +211,6 @@ public interface LinkedInClient {
    * @param appSecret
    *          The secret for the app for which you'd like to obtain an access token.
    * @return The access token for the application identified by {@code appId} and {@code appSecret}.
-   * @throws LinkedInException
-   *           If an error occurs while attempting to obtain an access token.
    */
   AccessToken obtainAppAccessToken(String appId, String appSecret);
 

@@ -51,6 +51,7 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Default implementation of a LinkedIn API client.
@@ -250,7 +251,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
   @Override
   public <T> Connection<T> fetchConnectionPage(String connectionPageUrl, Class<T> connectionType) {
-    String connectionJson = makeRequestAndProcessResponse(new Requestor() {
+    String connectionJson = makeRequestAndProcessResponseJSON(new Requestor() {
       @Override
       public Response makeRequest() throws IOException {
         String pageURL = apiVersion.isSpecifyFormat()
@@ -262,7 +263,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
     return new Connection<T>(connectionPageUrl, this, connectionJson, connectionType);
   }
-
+  
   @Override
   public <T> T publish(String connection, Class<T> objectType, Object jsonBody,
       Parameter... parameters) {
@@ -287,6 +288,20 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     }
 
     return publish(connection, objectType, jsonBody, attachments, parameters);
+  }
+  
+  @Override
+  public Map<String, String> publishForHeader(String url, BinaryAttachment binaryAttachment,
+      Map<String, String> headers, Parameter... parameters) {
+    List<BinaryAttachment> attachments = null;
+    if (binaryAttachment != null) {
+      attachments = new ArrayList<>();
+      attachments.add(binaryAttachment);
+    }
+    Response response =
+        makeRequestFullBody(url, true, false, null, headers, attachments, parameters);
+    
+    return response.getHeaders();
   }
 
   @Override
@@ -327,7 +342,8 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
       this.webRequestor = new DefaultWebRequestor(appId, appSecret);
 
       final String response = makeRequestFull(ENDPOINT_ACCESS_TOKEN, true, false, new JsonObject(),
-          Collections.emptyList(), Parameter.with(GRANT_TYPE_PARAM_NAME, "authorization_code"),
+          null, Collections.emptyList(), Parameter.with(GRANT_TYPE_PARAM_NAME,
+          "authorization_code"),
           Parameter.with(CODE_PARAM_NAME, verificationCode),
           Parameter.with(REDIRECT_URI_PARAM_NAME, redirectUri),
           Parameter.with(CLIENT_ID_PARAM_NAME, appId),
@@ -441,7 +457,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
         binaryAttachments != null && !binaryAttachments.isEmpty());
 
     return makeRequestFull(fullEndpoint, executeAsPost, executeAsDelete, jsonBody,
-        binaryAttachments, parameters);
+        null, binaryAttachments, parameters);
   }
 
   /**
@@ -449,7 +465,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    * receive from a full endpoint, will call this endpoint directly without further processing 
    * the URL.
    *
-   * @param endpoint
+   * @param fullEndpoint
    *          LinkedIn Graph API endpoint.
    * @param executeAsPost
    *          {@code true} to execute the web request as a {@code POST}, {@code false} to execute 
@@ -466,7 +482,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    *           If an error occurs while making the LinkedIn API POST or processing the response.
    */
   protected String makeRequestFull(String fullEndpoint, final boolean executeAsPost,
-      final boolean executeAsDelete, Object jsonBody,
+      final boolean executeAsDelete, Object jsonBody, Map<String, String> headers,
       final List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
     verifyParameterLegality(parameters);
 
@@ -479,6 +495,41 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     final String finalParameterString =
         StringUtils.isBlank(parameterString) ? "" : ("?" + parameterString);
 
+    return makeRequestAndProcessResponseJSON(new Requestor() {
+      /**
+       * @see com.echobox.api.linkedin.client.DefaultLinkedInClient.Requestor#makeRequest()
+       */
+      @Override
+      public Response makeRequest() throws IOException {
+        if (executeAsDelete && !isHttpDeleteFallback()) {
+          return webRequestor.executeDelete(fullEndpoint + finalParameterString);
+        } else {
+          return executeAsPost
+              ? webRequestor.executePost(fullEndpoint, parameterString,
+                  jsonBody == null ? null : jsonMapper.toJson(jsonBody, true),
+                  headers,
+                  binaryAttachments == null ? null
+                      : binaryAttachments.toArray(new BinaryAttachment[binaryAttachments.size()]))
+              : webRequestor.executeGet(fullEndpoint + finalParameterString);
+        }
+      }
+    });
+  }
+  
+  protected Response makeRequestFullBody(String fullEndpoint, final boolean executeAsPost,
+      final boolean executeAsDelete, Object jsonBody, Map<String, String> headers,
+      final List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
+    verifyParameterLegality(parameters);
+    
+    if (executeAsDelete && isHttpDeleteFallback()) {
+      parameters = parametersWithAdditionalParameter(Parameter.with(METHOD_PARAM_NAME, "delete"),
+          parameters);
+    }
+    
+    String parameterString = toParameterString(parameters);
+    final String finalParameterString =
+        StringUtils.isBlank(parameterString) ? "" : ("?" + parameterString);
+    
     return makeRequestAndProcessResponse(new Requestor() {
       /**
        * @see com.echobox.api.linkedin.client.DefaultLinkedInClient.Requestor#makeRequest()
@@ -489,10 +540,11 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
           return webRequestor.executeDelete(fullEndpoint + finalParameterString);
         } else {
           return executeAsPost
-              ? webRequestor.executePost(fullEndpoint, parameterString, 
-                  jsonBody == null ? null : jsonMapper.toJson(jsonBody, true),
-                  binaryAttachments == null ? null
-                      : binaryAttachments.toArray(new BinaryAttachment[binaryAttachments.size()]))
+              ? webRequestor.executePost(fullEndpoint, parameterString,
+              jsonBody == null ? null : jsonMapper.toJson(jsonBody, true),
+              headers,
+              binaryAttachments == null ? null
+                  : binaryAttachments.toArray(new BinaryAttachment[binaryAttachments.size()]))
               : webRequestor.executeGet(fullEndpoint + finalParameterString);
         }
       }
@@ -557,16 +609,21 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     return httpDeleteFallback;
   }
 
-  protected String makeRequestAndProcessResponse(Requestor requestor) {
+  protected String makeRequestAndProcessResponseJSON(Requestor requestor) {
+    Response response = makeRequestAndProcessResponse(requestor);
+    return response.getBody();
+  }
+  
+  protected Response makeRequestAndProcessResponse(Requestor requestor) {
     Response response;
-
+    
     // Perform a GET or POST to the API endpoint
     try {
       response = requestor.makeRequest();
     } catch (Exception t) {
       throw new LinkedInNetworkException("LinkedIn request failed", t);
     }
-
+    
     // If we get any HTTP response code other than a 200 OK or 400 Bad Request
     // or 401 Not Authorized or 403 Forbidden or 404 Not Found or 500 Internal
     // Server Error or 302 Not Modified or 504 Gateway Timeout or 429 Rate Limit
@@ -583,20 +640,20 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
         && 429 != response.getStatusCode()) {
       throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
     }
-
+    
     String json = response.getBody();
-
+    
     // If the response contained an error code, throw an exception.
     throwLinkedInResponseStatusExceptionIfNecessary(json, response.getStatusCode());
-
+    
     // If there was no response error information and this was a 500 or 401
     // error, something weird happened on LinkedIn's end. Bail.
     if (HttpURLConnection.HTTP_INTERNAL_ERROR == response.getStatusCode()
         || HttpURLConnection.HTTP_UNAUTHORIZED == response.getStatusCode()) {
       throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
     }
-
-    return json;
+    
+    return response;
   }
 
   /**
@@ -620,10 +677,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    *          The JSON returned by LinkedIn in response to an API call.
    * @param httpStatusCode
    *          The HTTP status code returned by the server, e.g. 500.
-   * @throws LinkedInGraphException
-   *           If the JSON contains a Graph API error response.
-   * @throws LinkedInResponseStatusException
-   *           If the JSON contains an Legacy API error response.
    * @throws LinkedInJsonMappingException
    *           If an error occurs while processing the JSON.
    */
