@@ -68,7 +68,7 @@ public class URN {
       throw new IllegalArgumentException("the urn " + urnString + " is malformed");
     }
     
-    this.entityType = split[2].toUpperCase();
+    this.entityType = split[2];
     this.id = split[3];
   }
 
@@ -83,7 +83,7 @@ public class URN {
 
   @Override
   public String toString() {
-    return "urn:li:" + entityType.toLowerCase() + ":" + id;
+    return "urn:li:" + entityType + ":" + id;
   }
   
   @Override

@@ -66,20 +66,20 @@ public class RegisterUploadRequestBody {
   }
   
   public static class ServiceRelationships {
-  
-    @Setter
+    
     @Getter
     @LinkedIn
     private String identifier;
-    
+  
     @Getter
     @LinkedIn
-    private String relationshipType;
-    
-    public void setRelationshipType(RelationshipType relationshipType) {
-      this.relationshipType = relationshipType.name();
+    private RelationshipType relationshipType;
+  
+    public ServiceRelationships(String identifier, RelationshipType relationshipType) {
+      this.identifier = identifier;
+      this.relationshipType = relationshipType;
     }
-    
+  
   }
   
   /**
