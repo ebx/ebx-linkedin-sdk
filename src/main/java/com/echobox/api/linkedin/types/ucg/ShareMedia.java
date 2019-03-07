@@ -102,7 +102,7 @@ public class ShareMedia {
   /**
    * Url that overrides the landing page.
    */
-  public class LandingPage {
+  public static class LandingPage {
     /**
      * content entity will be rendered as a CTA with landingPageTitle as the CTA text and
      * landingPageUrl as the click through url.
@@ -125,7 +125,7 @@ public class ShareMedia {
    * An overlay associated with a media(video, image etc).
    * @author joanna
    */
-  public class MediaOverlay {
+  public static class MediaOverlay {
     
     /**
      * Union of possible MediaOverlay model
@@ -160,7 +160,7 @@ public class ShareMedia {
   /**
    * The thumbnail saved from the ingestion of this article.
    */
-  public class Thumbnail {
+  public static class Thumbnail {
   
     /**
      * The alternate text of this thumbnail.

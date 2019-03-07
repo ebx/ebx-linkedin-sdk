@@ -45,7 +45,7 @@ public class TargetAudience {
    * TargetAudienceEntity
    * @author joanna
    */
-  public class TargetAudienceEntity {
+  public static class TargetAudienceEntity {
     
     /**
      * Standardized degrees to be targeted.

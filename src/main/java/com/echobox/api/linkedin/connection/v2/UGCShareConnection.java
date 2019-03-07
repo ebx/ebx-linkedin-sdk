@@ -87,7 +87,8 @@ public class UGCShareConnection extends ConnectionBaseV2 {
    */
   public Connection<UGCShare> retrieveUGCPostsByAuthors(URN authorURN) {
     List<Parameter> parameters = new ArrayList<>();
-    addParametersFromURNs(parameters, "authors", Arrays.asList(authorURN), true);
+    parameters.add(Parameter.with("q", "authors"));
+    addParametersFromURNs(parameters, "authors", Arrays.asList(authorURN), false);
     return linkedinClient.fetchConnection(UGC_POST, UGCShare.class,
         parameters.toArray(new Parameter[parameters.size()]));
   }

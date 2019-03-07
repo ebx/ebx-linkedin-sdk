@@ -23,39 +23,60 @@ import com.echobox.api.linkedin.types.ShareDistribution;
 import com.echobox.api.linkedin.types.ShareText;
 import com.echobox.api.linkedin.types.urn.URN;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 /**
  * Share request body class
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
+ * community-management/shares/share-api#post-shares">Post Shares</a>
  * @author joanna
  */
-@Data
 @RequiredArgsConstructor
 public class ShareRequestBody {
   
   private ShareRequestBody() {}
   
+  @Getter
+  @Setter
   @LinkedIn
   @NonNull
   private URN owner;
   
+  @Getter
+  @Setter
+  @LinkedIn
+  private URN agent;
+  
+  @Getter
+  @Setter
   @LinkedIn
   private String subject;
   
+  @Getter
+  @Setter
   @LinkedIn
   private ShareText text;
   
+  @Getter
+  @Setter
   @LinkedIn
   private ShareContent content;
   
+  @Getter
+  @Setter
   @LinkedIn
   private ShareDistribution distribution;
   
+  @Getter
+  @Setter
   @LinkedIn
   private URN resharedShare;
   
+  @Getter
+  @Setter
   @LinkedIn
   private URN originalShare;
 
