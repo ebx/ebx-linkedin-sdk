@@ -60,7 +60,7 @@ public class RegisterUploadRequestBody {
     @LinkedIn
     private List<ServiceRelationships> serviceRelationships;
   
-    public void setReciepies(List<RecipeURN> recipes) {
+    public void setReciepes(List<RecipeURN> recipes) {
       this.recipes = recipes.stream().map(RecipeURN ::getRecipeURN).collect(Collectors.toList());
     }
   }
@@ -74,6 +74,8 @@ public class RegisterUploadRequestBody {
     @Getter
     @LinkedIn
     private RelationshipType relationshipType;
+    
+    private ServiceRelationships() {}
   
     public ServiceRelationships(String identifier, RelationshipType relationshipType) {
       this.identifier = identifier;
@@ -101,8 +103,8 @@ public class RegisterUploadRequestBody {
   
   public enum RecipeURN {
     FEED_SHARE_VIDEO(new URN("urn:li:digitalmediaRecipe:feedshare-video")),
-    LEARNING_IMAGE(new URN("urn:li:digitalmediaRecipe:feedshare-video")),
-    ADS_VIDEO(new URN("urn:li:digitalmediaRecipe:feedshare-video"));
+    LEARNING_IMAGE(new URN("urn:li:digitalmediaRecipe:learning-image")),
+    ADS_VIDEO(new URN("urn:li:digitalmediaRecipe:ads-video"));
     
     @Getter
     private URN recipeURN;

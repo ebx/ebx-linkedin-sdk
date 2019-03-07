@@ -20,7 +20,7 @@ package com.echobox.api.linkedin.connection.v2;
 import com.echobox.api.linkedin.client.Connection;
 import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
-import com.echobox.api.linkedin.types.ucg.UCGShare;
+import com.echobox.api.linkedin.types.ucg.UGCShare;
 import com.echobox.api.linkedin.types.ucg.ViewContext;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.util.URLUtils;
@@ -58,8 +58,8 @@ public class UGCShareConnection extends ConnectionBaseV2 {
    * @param shareBody the share body
    * @return the created UCG share
    */
-  public UCGShare createUCGPost(UCGShare shareBody) {
-    return linkedinClient.publish(UGC_POST, UCGShare.class, shareBody);
+  public UGCShare createUCGPost(UGCShare shareBody) {
+    return linkedinClient.publish(UGC_POST, UGCShare.class, shareBody);
   }
   
   /**
@@ -71,10 +71,10 @@ public class UGCShareConnection extends ConnectionBaseV2 {
    * @param viewContext the context in which the user generated content is being viewed
    * @return the UGC post from the share URN
    */
-  public UCGShare retrieveUCGPost(URN shareURN, ViewContext viewContext) {
+  public UGCShare retrieveUCGPost(URN shareURN, ViewContext viewContext) {
     Parameter viewContextParam = Parameter.with("viewContext", viewContext);
     return linkedinClient.fetchObject(UGC_POST + "/" + URLUtils.urlDecode(shareURN.toString()),
-        UCGShare.class, viewContextParam);
+        UGCShare.class, viewContextParam);
   }
   
   /**
@@ -85,10 +85,10 @@ public class UGCShareConnection extends ConnectionBaseV2 {
    * @param authorURN the author URN - can be either an organization or person URN
    * @return the connection of UCG share which is paged
    */
-  public Connection<UCGShare> retrieveUGCPostsByAuthors(URN authorURN) {
+  public Connection<UGCShare> retrieveUGCPostsByAuthors(URN authorURN) {
     List<Parameter> parameters = new ArrayList<>();
     addParametersFromURNs(parameters, "authors", Arrays.asList(authorURN), true);
-    return linkedinClient.fetchConnection(UGC_POST, UCGShare.class,
+    return linkedinClient.fetchConnection(UGC_POST, UGCShare.class,
         parameters.toArray(new Parameter[parameters.size()]));
   }
   
@@ -100,7 +100,7 @@ public class UGCShareConnection extends ConnectionBaseV2 {
    * @param groupURNs the list of group URNs
    * @return the connection of UGC share which is paged
    */
-  public Connection<UCGShare> retrieveUGCPostsByContainerEntities(List<URN> groupURNs) {
+  public Connection<UGCShare> retrieveUGCPostsByContainerEntities(List<URN> groupURNs) {
     throw new UnsupportedOperationException("retrieveUGCPostsByContainerEntities is not yet "
         + "implemented");
   }
@@ -113,7 +113,7 @@ public class UGCShareConnection extends ConnectionBaseV2 {
    * @param permalinkSuffixes the list of permalink suffixes
    * @return the connection of the UGC share which is paged
    */
-  public Connection<UCGShare> retrieveUGCPostsByPermalinkSuffixes(List<URL> permalinkSuffixes) {
+  public Connection<UGCShare> retrieveUGCPostsByPermalinkSuffixes(List<URL> permalinkSuffixes) {
     throw new UnsupportedOperationException("retrieveUGCPostsByPermalinkSuffixes is not yet "
         + "implemented");
   }

@@ -8,21 +8,27 @@ import java.util.Map;
 import lombok.Getter;
 
 public class RegisterUpload {
-
-  @Getter
-  @LinkedIn
-  private URN asset;
-  
-  /**
-   * TODO: this is a nested URN...
-   */
-  @Getter
-  @LinkedIn
-  private String mediaArtifact;
   
   @Getter
   @LinkedIn
-  private UploadMechanism uploadMechanism;
+  private RegisterUploadValue value;
+  
+  public static class RegisterUploadValue {
+    @Getter
+    @LinkedIn
+    private URN asset;
+  
+    /**
+     * TODO: this is a nested URN...
+     */
+    @Getter
+    @LinkedIn
+    private String mediaArtifact;
+  
+    @Getter
+    @LinkedIn
+    private UploadMechanism uploadMechanism;
+  }
   
   public static class UploadMechanism {
     @Getter
@@ -34,7 +40,10 @@ public class RegisterUpload {
     @Getter
     @LinkedIn
     private Map<String, String> headers;
-    private String uploadURL;
+  
+    @Getter
+    @LinkedIn
+    private String uploadUrl;
   }
 
 }

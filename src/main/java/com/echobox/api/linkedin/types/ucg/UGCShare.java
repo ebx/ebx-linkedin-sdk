@@ -23,6 +23,8 @@ import com.echobox.api.linkedin.types.objectype.AuditStamp;
 import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -31,13 +33,15 @@ import lombok.Setter;
  * /community-management/shares/ugc-post-api#schema">UCG Share</a>
  * @author joanna
  */
-public class UCGShare extends LinkedInURNIdType {
+@RequiredArgsConstructor
+public class UGCShare extends LinkedInURNIdType {
   
   /**
    * Urn of the author of this content.
    */
   @Getter
   @Setter
+  @NonNull
   @LinkedIn
   private URN author;
   
@@ -170,6 +174,19 @@ public class UCGShare extends LinkedInURNIdType {
   @Getter
   @Setter
   @LinkedIn
-  private String visibility;
+  private Visibility visibility;
+  
+  private UGCShare() {}
+  
+  @RequiredArgsConstructor
+  public static class Visibility {
+    @Getter
+    @Setter
+    @NonNull
+    @LinkedIn("com.linkedin.ugc.MemberNetworkVisibility")
+    private String visibility;
+    
+    private Visibility() {}
+  }
 
 }

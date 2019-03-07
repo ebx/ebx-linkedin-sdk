@@ -66,6 +66,8 @@ public abstract class JsonUtils {
         value = toList(jsonValue.asArray());
       } else if (jsonValue.isObject()) {
         value = toMap(jsonValue.asObject());
+      } else if (jsonValue.isString()) {
+        value = jsonValue.asString();
       }
       list.add(value);
     });

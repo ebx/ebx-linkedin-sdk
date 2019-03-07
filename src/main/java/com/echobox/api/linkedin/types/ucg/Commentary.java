@@ -21,6 +21,7 @@ import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.social.actions.CommentAction;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class Commentary {
    * User generated attributes in the text.
    */
   @Getter
+  @Setter
   @LinkedIn
   private List<CommentAction.Attribute> attributes;
   
@@ -41,6 +43,7 @@ public class Commentary {
    * The locale that may have be inferred for this text.
    */
   @Getter
+  @Setter
   @LinkedIn
   private String inferredLocale;
   
@@ -48,6 +51,7 @@ public class Commentary {
    * The text content that may be attributed.
    */
   @Getter
+  @Setter
   @LinkedIn
   private String text;
 }

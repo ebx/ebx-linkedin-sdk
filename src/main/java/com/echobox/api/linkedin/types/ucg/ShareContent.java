@@ -21,6 +21,7 @@ import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -33,53 +34,66 @@ import java.util.List;
  */
 public class ShareContent {
   
-  /**
-   * The media shared in this share. Can be videos, images, or articles.
-   */
   @Getter
-  @LinkedIn
-  private List<ShareMedia> media;
+  @Setter
+  @LinkedIn("com.linkedin.ugc.ShareContent")
+  private ShareContentBody shareContent;
   
-  /**
-   * The main landing page URL of the share.
-   */
-  @Getter
-  @LinkedIn
-  private String primaryLandingPageUrl;
-  
-  /**
-   * Categorization info associated with the share.
-   */
-  @Getter
-  @LinkedIn
-  private ShareCategorization shareCategorization;
-  
-  /**
-   * The message content of this share.
-   */
-  @Getter
-  @LinkedIn
-  private Commentary shareCommentary;
-  
-  /**
-   * The type of media contained within the media field of this object.
-   */
-  @Getter
-  @LinkedIn
-  private String shareMediaCategory;
-  
-  /**
-   * Categorization info associated with the share.
-   * @author joanna
-   */
-  public class ShareCategorization {
-  
+  public static class ShareContentBody {
     /**
-     * Skill categorizations for a share
+     * The media shared in this share. Can be videos, images, or articles.
      */
     @Getter
+    @Setter
     @LinkedIn
-    private List<URN> skills;
+    private List<ShareMedia> media;
+  
+    /**
+     * The main landing page URL of the share.
+     */
+    @Getter
+    @Setter
+    @LinkedIn
+    private String primaryLandingPageUrl;
+  
+    /**
+     * Categorization info associated with the share.
+     */
+    @Getter
+    @Setter
+    @LinkedIn
+    private ShareCategorization shareCategorization;
+  
+    /**
+     * The message content of this share.
+     */
+    @Getter
+    @Setter
+    @LinkedIn
+    private Commentary shareCommentary;
+  
+    /**
+     * The type of media contained within the media field of this object.
+     */
+    @Getter
+    @Setter
+    @LinkedIn
+    private String shareMediaCategory;
+  
+    /**
+     * Categorization info associated with the share.
+     * @author joanna
+     */
+    public class ShareCategorization {
+    
+      /**
+       * Skill categorizations for a share
+       */
+      @Getter
+      @Setter
+      @LinkedIn
+      private List<URN> skills;
+    }
   }
   
 }

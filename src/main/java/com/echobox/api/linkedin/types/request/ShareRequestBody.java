@@ -53,6 +53,7 @@ public class ShareRequestBody {
   @LinkedIn
   private ShareDistribution distribution;
   
+  @LinkedIn
   private URN resharedShare;
   
   @LinkedIn

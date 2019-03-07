@@ -20,6 +20,7 @@ package com.echobox.api.linkedin.types;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Distribution Target POJO
@@ -29,6 +30,7 @@ import lombok.Getter;
 public class ShareDistribution {
   
   @Getter
+  @Setter
   @LinkedIn("linkedInDistributionTarget")
   private DistributionTarget distributionTarget;
 

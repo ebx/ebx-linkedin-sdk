@@ -42,6 +42,7 @@ import com.google.api.client.http.MultipartContent;
 import com.google.api.client.http.json.JsonHttpContent;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
+import com.google.api.client.json.JsonString;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
 import org.apache.commons.lang3.StringUtils;
@@ -55,6 +56,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -237,7 +239,8 @@ public class DefaultWebRequestor implements WebRequestor {
           ? "?" + parameters : ""));
 
       HttpRequest request;
-      
+      HttpHeaders httpHeaders = new HttpHeaders();
+  
       // If we have binary attachments, the body is just the attachments and the
       // other parameters are passed in via the URL.
       // Otherwise the body is the URL parameter string.
@@ -264,13 +267,12 @@ public class DefaultWebRequestor implements WebRequestor {
           // key/value object i.e. map
           JsonObject asObject = Json.parse(jsonBody).asObject();
           Map<String, Object> map = JsonUtils.toMap(asObject);
-
+  
           JsonHttpContent jsonHttpContent = new JsonHttpContent(new JacksonFactory(), map);
           request = requestFactory.buildPostRequest(genericUrl, jsonHttpContent);
 
           // Ensure the headers are set to JSON
-          request.setHeaders(new HttpHeaders()
-              .setContentType(CONTENT_TYPE).set(FORMAT_HEADER, "json"));
+          httpHeaders.setContentType(CONTENT_TYPE).set(FORMAT_HEADER, "json");
 
           // Ensure the response headers are also set to JSON
           request.setResponseHeaders(new HttpHeaders().set(FORMAT_HEADER, "json"));
@@ -292,8 +294,16 @@ public class DefaultWebRequestor implements WebRequestor {
       
       if (headers != null) {
         // Add any additional headers
-        request.getHeaders().putAll(headers);
+        for (String headerKey : headers.keySet()) {
+          if (headerKey.equalsIgnoreCase("content-type")) {
+            httpHeaders.setContentType(headers.get(headerKey));
+          } else {
+            httpHeaders.put(headerKey, headers.get(headerKey));
+          }
+        }
       }
+      
+      request.setHeaders(httpHeaders);
 
       return getResponse(request);
     } catch (HttpResponseException ex) {

@@ -21,6 +21,7 @@ import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -38,6 +39,7 @@ public class ShareMedia {
    * The description of this media.
    */
   @Getter
+  @Setter
   @LinkedIn
   private Commentary description;
   
@@ -45,6 +47,7 @@ public class ShareMedia {
    * Url that overrides the landing page.
    */
   @Getter
+  @Setter
   @LinkedIn
   private LandingPage landingPage;
   
@@ -52,6 +55,7 @@ public class ShareMedia {
    * The URN of the media shared
    */
   @Getter
+  @Setter
   @LinkedIn
   private URN media;
   
@@ -59,6 +63,7 @@ public class ShareMedia {
    * An overlay associated with a media
    */
   @Getter
+  @Setter
   @LinkedIn
   private MediaOverlay mediaOverlay;
   
@@ -66,6 +71,7 @@ public class ShareMedia {
    * URL whose content is summarized; content may not have a corresponding url for some entities.
    */
   @Getter
+  @Setter
   @LinkedIn
   private String originalUrl;
   
@@ -73,6 +79,7 @@ public class ShareMedia {
    * The status of the availability of this media
    */
   @Getter
+  @Setter
   @LinkedIn
   private String status;
   
@@ -80,6 +87,7 @@ public class ShareMedia {
    * The thumbnails saved from the ingestion of this article.
    */
   @Getter
+  @Setter
   @LinkedIn
   private List<Thumbnail> thumbnails;
   
@@ -87,6 +95,7 @@ public class ShareMedia {
    * The title of this media.
    */
   @Getter
+  @Setter
   @LinkedIn
   private Commentary title;
   
@@ -99,6 +108,7 @@ public class ShareMedia {
      * landingPageUrl as the click through url.
      */
     @Getter
+    @Setter
     @LinkedIn
     private String landingPageTitle;
   
@@ -106,6 +116,7 @@ public class ShareMedia {
      * The click through url
      */
     @Getter
+    @Setter
     @LinkedIn
     private String landingPageUrl;
   }
@@ -120,6 +131,7 @@ public class ShareMedia {
      * Union of possible MediaOverlay model
      */
     @Getter
+    @Setter
     @LinkedIn
     private Object overlay;
   }
@@ -154,6 +166,7 @@ public class ShareMedia {
      * The alternate text of this thumbnail.
      */
     @Getter
+    @Setter
     @LinkedIn
     private String altText;
   
@@ -161,6 +174,7 @@ public class ShareMedia {
      * Height of the media in pixels.
      */
     @Getter
+    @Setter
     @LinkedIn
     private Integer height;
   
@@ -168,6 +182,7 @@ public class ShareMedia {
      * Size of the media in bytes.
      */
     @Getter
+    @Setter
     @LinkedIn
     private Integer size;
   
@@ -175,6 +190,7 @@ public class ShareMedia {
      * The url of this media.
      */
     @Getter
+    @Setter
     @LinkedIn
     private String url;
   
@@ -182,6 +198,7 @@ public class ShareMedia {
      * Width of the media in pixels.
      */
     @Getter
+    @Setter
     @LinkedIn
     private Integer width;
   }
