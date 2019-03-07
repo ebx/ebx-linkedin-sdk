@@ -40,6 +40,15 @@ public class ShareConnection extends ConnectionBaseV2 {
   
   private static final String SHARES = "/shares";
   private static final String SHARE_STATISTICS = "/organizationalEntityShareStatistics";
+  private static final String QUERY_KEY = "q";
+  private static final String OWNERS = "owners";
+  private static final String SHARES_PARAM = "shares";
+  private static final String SHARES_PER_OWNER = "sharesPerOwner";
+  private static final String COUNT = "count";
+  private static final String ORGANIZATIONAL_ENTITY = "organizationalEntity";
+  private static final String TIME_INTERVALS_GRANULARITY = "timeIntervals.timeGranularityType";
+  private static final String TIME_INTERVALS_START = "timeIntervals.timeRange.start";
+  private static final String TIME_INTERVALS_END = "timeIntervals.timeRange.end";
   
   /**
    * Initialise the share connection
@@ -73,10 +82,10 @@ public class ShareConnection extends ConnectionBaseV2 {
   public List<Share> getShares(List<URN> ownerURNs, int sharesPerOwner) {
     List<Parameter> params = new ArrayList<>();
   
-    params.add(Parameter.with("q", "owners"));
-    addParametersFromURNs(params, "shares", ownerURNs);
-    params.add(Parameter.with("sharesPerOwner", sharesPerOwner));
-    params.add(Parameter.with("count", 20));
+    params.add(Parameter.with(QUERY_KEY, OWNERS));
+    addParametersFromURNs(params, SHARES_PARAM, ownerURNs);
+    params.add(Parameter.with(SHARES_PER_OWNER, sharesPerOwner));
+    params.add(Parameter.with(COUNT, 20));
     
     return getListFromQuery(SHARES, Share.class, params.toArray(new Parameter[params.size()]));
   }
@@ -128,21 +137,19 @@ public class ShareConnection extends ConnectionBaseV2 {
   public List<ShareStatistic> retrieveShareStatistics(URN organizationURN,
       TimeInterval timeInterval, List<URN> shareURNs) {
     List<Parameter> params = new ArrayList<>();
-    params.add(Parameter.with("q", "organizationalEntity"));
-    params.add(Parameter.with("organizationalEntity", organizationURN));
+    params.add(Parameter.with(QUERY_KEY, ORGANIZATIONAL_ENTITY));
+    params.add(Parameter.with(ORGANIZATIONAL_ENTITY, organizationURN));
     
     if (timeInterval != null) {
       // Time restriction on retrieving share statistics
-      params.add(Parameter.with("timeIntervals.timeGranularityType",
+      params.add(Parameter.with(TIME_INTERVALS_GRANULARITY,
           timeInterval.getTimeGranularityType()));
       if (timeInterval.getTimeRange() != null) {
         if (timeInterval.getTimeRange().getStart() != null
             && timeInterval.getTimeRange().getStart() != null
             && timeInterval.getTimeRange().getEnd() != null) {
-          params.add(Parameter.with("timeIntervals.timeRange.start",
-              timeInterval.getTimeRange().getStart()));
-          params.add(Parameter.with("timeIntervals.timeRange.end",
-              timeInterval.getTimeRange().getEnd()));
+          params.add(Parameter.with(TIME_INTERVALS_START, timeInterval.getTimeRange().getStart()));
+          params.add(Parameter.with(TIME_INTERVALS_END, timeInterval.getTimeRange().getEnd()));
         } else {
           throw new IllegalStateException("timeIntervals.timeRange cannot be null when "
               + "timeInterval is provided");
@@ -153,7 +160,7 @@ public class ShareConnection extends ConnectionBaseV2 {
       }
     }
     
-    addParametersFromURNs(params, "shares", shareURNs);
+    addParametersFromURNs(params, SHARES_PARAM, shareURNs);
     
     return getListFromQuery(SHARE_STATISTICS, ShareStatistic.class,
         params.toArray(new Parameter[params.size()]));

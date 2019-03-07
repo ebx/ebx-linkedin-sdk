@@ -45,6 +45,8 @@ import java.util.Map;
 public class AssetsConnection extends ConnectionBaseV2 {
   
   private static final String ASSETS = "/assets";
+  private static final String ACTION_KEY = "action";
+  private static final String COMPLETE_MULTIPART_UPLOAD = "completeMultiPartUpload";
   
   /**
    * Initialise the assets connection
@@ -115,7 +117,7 @@ public class AssetsConnection extends ConnectionBaseV2 {
    */
   public void completeMultiPartUpload(CompleteMultiPartUploadBody completeMultiPartUploadBody) {
     linkedinClient.publish(ASSETS, String.class, completeMultiPartUploadBody, Parameter.with(
-        "action", "completeMultiPartUpload"));
+        ACTION_KEY, COMPLETE_MULTIPART_UPLOAD));
   }
   
   /**
