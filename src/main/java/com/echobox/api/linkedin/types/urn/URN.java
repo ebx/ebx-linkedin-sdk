@@ -49,7 +49,7 @@ public class URN {
       throw new IllegalArgumentException("No argument provided can be null"); 
     }
     
-    this.entityType = entityType.toUpperCase();
+    this.entityType = entityType;
     this.id = id;
   }
 

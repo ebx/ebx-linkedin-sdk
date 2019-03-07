@@ -43,16 +43,7 @@ public abstract class JsonUtils {
     Map<String, Object> map = new HashMap<>();
     jsonObject.names().stream().forEach(key -> {
       JsonValue jsonValue = jsonObject.get(key);
-      Object value = jsonObject.get(key);
-
-      if (jsonValue.isArray()) {
-        value = toList(jsonValue.asArray());
-      } else if (jsonValue.isObject()) {
-        value = toMap(jsonValue.asObject());
-      } else if (jsonValue.isString()) {
-        value = jsonValue.asString();
-      }
-      map.put(key, value);
+      map.put(key, getValue(jsonValue));
     });
 
     return map;
@@ -61,17 +52,21 @@ public abstract class JsonUtils {
   private static List<Object> toList(JsonArray array) throws ParseException {
     List<Object> list = new ArrayList<>();
     array.forEach(jsonValue -> {
-      Object value = jsonValue;
-      if (jsonValue.isArray()) {
-        value = toList(jsonValue.asArray());
-      } else if (jsonValue.isObject()) {
-        value = toMap(jsonValue.asObject());
-      } else if (jsonValue.isString()) {
-        value = jsonValue.asString();
-      }
-      list.add(value);
+      list.add(getValue(jsonValue));
     });
     return list;
+  }
+  
+  private static Object getValue(JsonValue jsonValue) {
+    Object value = jsonValue;
+    if (jsonValue.isArray()) {
+      value = toList(jsonValue.asArray());
+    } else if (jsonValue.isObject()) {
+      value = toMap(jsonValue.asObject());
+    } else if (jsonValue.isString()) {
+      value = jsonValue.asString();
+    }
+    return value;
   }
 
 }

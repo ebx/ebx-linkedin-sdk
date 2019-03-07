@@ -230,10 +230,8 @@ public class DefaultWebRequestor implements WebRequestor {
       binaryAttachments = new BinaryAttachment[0];
     }
 
-    HttpResponse httpResponse = null;
     try {
-      GenericUrl genericUrl = new GenericUrl(url + (!StringUtils.isEmpty(parameters)
-          ? "?" + parameters : ""));
+      GenericUrl genericUrl = getGenericURL(url, parameters);
 
       HttpRequest request;
       HttpHeaders httpHeaders = new HttpHeaders();
@@ -256,6 +254,8 @@ public class DefaultWebRequestor implements WebRequestor {
   
           part.setHeaders(set);
           content.addPart(part);
+  
+          httpHeaders.set("Connection", "Keep-Alive");
         }
         
         request = requestFactory.buildPostRequest(genericUrl, content);
@@ -263,11 +263,7 @@ public class DefaultWebRequestor implements WebRequestor {
         if (jsonBody != null) {
           // Convert the JSON into a map - annoyingly JsonHttpContent data object has to be a
           // key/value object i.e. map
-          JsonObject asObject = Json.parse(jsonBody).asObject();
-          Map<String, Object> map = JsonUtils.toMap(asObject);
-  
-          JsonHttpContent jsonHttpContent = new JsonHttpContent(new JacksonFactory(), map);
-          request = requestFactory.buildPostRequest(genericUrl, jsonHttpContent);
+          request = requestFactory.buildPostRequest(genericUrl, getJsonHttpContent(jsonBody));
 
           // Ensure the headers are set to JSON
           httpHeaders.setContentType(CONTENT_TYPE).set(FORMAT_HEADER, "json");
@@ -285,22 +281,8 @@ public class DefaultWebRequestor implements WebRequestor {
       // Allow subclasses to customize the connection if they'd like to - set their own headers,
       // timeouts, etc.
       customizeConnection(request);
-
-      if (binaryAttachments.length > 0) {
-        request.setHeaders(new HttpHeaders().set("Connection", "Keep-Alive"));
-      }
-      
-      if (headers != null) {
-        // Add any additional headers
-        for (String headerKey : headers.keySet()) {
-          // Content type should have been added by now
-          if (!headerKey.equalsIgnoreCase("content-type")) {
-            httpHeaders.put(headerKey, headers.get(headerKey));
-          }
-        }
-      }
-      
-      request.setHeaders(httpHeaders);
+  
+      addHeadersToRequest(request, httpHeaders, headers);
 
       return getResponse(request);
     } catch (HttpResponseException ex) {
@@ -311,28 +293,24 @@ public class DefaultWebRequestor implements WebRequestor {
           closeQuietly(binaryAttachment.getDataInputStream());
         }
       }
-
-      closeQuietly(httpResponse);
     }
   }
   
   @Override
   public Response executePut(String url, String parameters, String jsonBody,
-      Map<String, String> headers, BinaryAttachment binaryAttachments)
+      Map<String, String> headers, BinaryAttachment binaryAttachment)
       throws IOException {
   
     if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Executing a POST to " + url + " with parameters "
-          + (binaryAttachments != null ? "" : "(sent in request body): ")
+      LOGGER.debug("Executing a PUT to " + url + " with parameters "
+          + (binaryAttachment != null ? "" : "(sent in request body): ")
           + URLUtils.urlDecode(parameters)
-          + (binaryAttachments != null ? " and " + binaryAttachments
-          + " binary attachment[s]." : ""));
+          + (binaryAttachment != null ? " and " + binaryAttachment
+          + " binary attachment." : ""));
     }
   
-    HttpResponse httpResponse = null;
     try {
-      GenericUrl genericUrl = new GenericUrl(url + (!StringUtils.isEmpty(parameters)
-          ? "?" + parameters : ""));
+      GenericUrl genericUrl = getGenericURL(url, parameters);
     
       HttpRequest request;
       HttpHeaders httpHeaders = new HttpHeaders();
@@ -340,7 +318,7 @@ public class DefaultWebRequestor implements WebRequestor {
       // If we have binary attachments, the body is just the attachments and the
       // other parameters are passed in via the URL.
       // Otherwise the body is the URL parameter string.
-      if (binaryAttachments != null) {
+      if (binaryAttachment != null) {
         // Set the content type
         // If it's not provided assume it's application/octet-stream
         String contentType =
@@ -348,17 +326,15 @@ public class DefaultWebRequestor implements WebRequestor {
                 .filter(key -> key.equalsIgnoreCase("content-type"))
                 .findFirst().orElse("application/octet-stream");
         ByteArrayContent fileContent =
-            new ByteArrayContent(contentType, binaryAttachments.getData());
+            new ByteArrayContent(contentType, binaryAttachment.getData());
         request = requestFactory.buildPutRequest(genericUrl, fileContent);
+        httpHeaders.set("Connection", "Keep-Alive");
       } else {
         if (jsonBody != null) {
           // Convert the JSON into a map - annoyingly JsonHttpContent data object has to be a
           // key/value object i.e. map
-          JsonObject asObject = Json.parse(jsonBody).asObject();
-          Map<String, Object> map = JsonUtils.toMap(asObject);
-        
-          JsonHttpContent jsonHttpContent = new JsonHttpContent(new JacksonFactory(), map);
-          request = requestFactory.buildPostRequest(genericUrl, jsonHttpContent);
+          
+          request = requestFactory.buildPutRequest(genericUrl, getJsonHttpContent(jsonBody));
         
           // Ensure the headers are set to JSON
           httpHeaders.setContentType(CONTENT_TYPE).set(FORMAT_HEADER, "json");
@@ -376,30 +352,16 @@ public class DefaultWebRequestor implements WebRequestor {
       // Allow subclasses to customize the connection if they'd like to - set their own headers,
       // timeouts, etc.
       customizeConnection(request);
-    
-      if (binaryAttachments != null) {
-        request.setHeaders(new HttpHeaders().set("Connection", "Keep-Alive"));
-      }
-    
-      if (headers != null) {
-        // Add any additional headers
-        for (String headerKey : headers.keySet()) {
-          if (!headerKey.equalsIgnoreCase("content-type")) {
-            httpHeaders.put(headerKey, headers.get(headerKey));
-          }
-        }
-      }
-    
-      request.setHeaders(httpHeaders);
+  
+      addHeadersToRequest(request, httpHeaders, headers);
     
       return getResponse(request);
     } catch (HttpResponseException ex) {
       return handleException(ex);
     } finally {
-      if (autocloseBinaryAttachmentStream && binaryAttachments != null) {
-        closeQuietly(binaryAttachments.getDataInputStream());
+      if (autocloseBinaryAttachmentStream && binaryAttachment != null) {
+        closeQuietly(binaryAttachment.getDataInputStream());
       }
-      closeQuietly(httpResponse);
     }
   }
   
@@ -621,6 +583,32 @@ public class DefaultWebRequestor implements WebRequestor {
         }
       }
     }
+  }
+  
+  private GenericUrl getGenericURL(String url, String parameters) {
+    return new GenericUrl(url + (!StringUtils.isEmpty(parameters)
+        ? "?" + parameters : ""));
+  }
+  
+  private JsonHttpContent getJsonHttpContent(String jsonBody) {
+    JsonObject asObject = Json.parse(jsonBody).asObject();
+    Map<String, Object> map = JsonUtils.toMap(asObject);
+  
+    return new JsonHttpContent(new JacksonFactory(), map);
+  }
+  
+  private void addHeadersToRequest(HttpRequest request, HttpHeaders httpHeaders,
+      Map<String, String> headers) {
+    if (headers != null) {
+      // Add any additional headers
+      for (String headerKey : headers.keySet()) {
+        if (!headerKey.equalsIgnoreCase("content-type")) {
+          httpHeaders.put(headerKey, headers.get(headerKey));
+        }
+      }
+    }
+  
+    request.setHeaders(httpHeaders);
   }
 
 }

@@ -289,20 +289,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
     return publish(connection, objectType, jsonBody, attachments, parameters);
   }
-  
-  @Override
-  public Map<String, String> publishForHeader(String url, BinaryAttachment binaryAttachment,
-      Map<String, String> headers, Parameter... parameters) {
-    List<BinaryAttachment> attachments = null;
-    if (binaryAttachment != null) {
-      attachments = new ArrayList<>();
-      attachments.add(binaryAttachment);
-    }
-    Response response =
-        makeRequestFullBody(url, true, false, null, headers, attachments, parameters);
-    
-    return response.getHeaders();
-  }
 
   @Override
   public boolean deleteObject(String object, Parameter... parameters) {
@@ -510,41 +496,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
                   headers,
                   binaryAttachments == null ? null
                       : binaryAttachments.toArray(new BinaryAttachment[binaryAttachments.size()]))
-              : webRequestor.executeGet(fullEndpoint + finalParameterString);
-        }
-      }
-    });
-  }
-  
-  protected Response makeRequestFullBody(String fullEndpoint, final boolean executeAsPost,
-      final boolean executeAsDelete, Object jsonBody, Map<String, String> headers,
-      final List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
-    verifyParameterLegality(parameters);
-    
-    if (executeAsDelete && isHttpDeleteFallback()) {
-      parameters = parametersWithAdditionalParameter(Parameter.with(METHOD_PARAM_NAME, "delete"),
-          parameters);
-    }
-    
-    String parameterString = toParameterString(parameters);
-    final String finalParameterString =
-        StringUtils.isBlank(parameterString) ? "" : ("?" + parameterString);
-    
-    return makeRequestAndProcessResponse(new Requestor() {
-      /**
-       * @see com.echobox.api.linkedin.client.DefaultLinkedInClient.Requestor#makeRequest()
-       */
-      @Override
-      public Response makeRequest() throws IOException {
-        if (executeAsDelete && !isHttpDeleteFallback()) {
-          return webRequestor.executeDelete(fullEndpoint + finalParameterString);
-        } else {
-          return executeAsPost
-              ? webRequestor.executePost(fullEndpoint, parameterString,
-              jsonBody == null ? null : jsonMapper.toJson(jsonBody, true),
-              headers,
-              binaryAttachments == null ? null
-                  : binaryAttachments.toArray(new BinaryAttachment[binaryAttachments.size()]))
               : webRequestor.executeGet(fullEndpoint + finalParameterString);
         }
       }

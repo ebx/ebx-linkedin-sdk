@@ -165,9 +165,6 @@ public interface LinkedInClient {
    */
   <T> T publish(String connection, Class<T> objectType, Object jsonBody, BinaryAttachment binaryAttachment,
       Parameter... parameters);
-  
-  Map<String, String> publishForHeader(String url, BinaryAttachment binaryAttachment,
-      Map<String, String> headers, Parameter... parameters);
 
   /**
    * Performs a LinkedIn API delete operation on the given {@code object}.
