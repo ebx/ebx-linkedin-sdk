@@ -42,7 +42,6 @@ import com.google.api.client.http.MultipartContent;
 import com.google.api.client.http.json.JsonHttpContent;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
-import com.google.api.client.json.JsonString;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
 import org.apache.commons.lang3.StringUtils;
@@ -56,9 +55,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -220,7 +217,6 @@ public class DefaultWebRequestor implements WebRequestor {
       Map<String, String> headers,
       BinaryAttachment... binaryAttachments)
       throws IOException {
-    System.out.println(jsonBody);
     
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug("Executing a POST to " + url + " with parameters "
@@ -297,9 +293,8 @@ public class DefaultWebRequestor implements WebRequestor {
       if (headers != null) {
         // Add any additional headers
         for (String headerKey : headers.keySet()) {
-          if (headerKey.equalsIgnoreCase("content-type")) {
-//            httpHeaders.setContentType(headers.get(headerKey));
-          } else {
+          // Content type should have been added by now
+          if (!headerKey.equalsIgnoreCase("content-type")) {
             httpHeaders.put(headerKey, headers.get(headerKey));
           }
         }
@@ -325,7 +320,6 @@ public class DefaultWebRequestor implements WebRequestor {
   public Response executePut(String url, String parameters, String jsonBody,
       Map<String, String> headers, BinaryAttachment binaryAttachments)
       throws IOException {
-    System.out.println(jsonBody);
   
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug("Executing a POST to " + url + " with parameters "
@@ -347,12 +341,14 @@ public class DefaultWebRequestor implements WebRequestor {
       // other parameters are passed in via the URL.
       // Otherwise the body is the URL parameter string.
       if (binaryAttachments != null) {
-        // Set the media type
+        // Set the content type
+        // If it's not provided assume it's application/octet-stream
         String contentType =
             headers.keySet().stream()
                 .filter(key -> key.equalsIgnoreCase("content-type"))
                 .findFirst().orElse("application/octet-stream");
-        ByteArrayContent fileContent = new ByteArrayContent(contentType, binaryAttachments.getData());
+        ByteArrayContent fileContent =
+            new ByteArrayContent(contentType, binaryAttachments.getData());
         request = requestFactory.buildPutRequest(genericUrl, fileContent);
       } else {
         if (jsonBody != null) {
@@ -401,9 +397,8 @@ public class DefaultWebRequestor implements WebRequestor {
       return handleException(ex);
     } finally {
       if (autocloseBinaryAttachmentStream && binaryAttachments != null) {
-          closeQuietly(binaryAttachments.getDataInputStream());
+        closeQuietly(binaryAttachments.getDataInputStream());
       }
-    
       closeQuietly(httpResponse);
     }
   }
@@ -586,8 +581,8 @@ public class DefaultWebRequestor implements WebRequestor {
 
   protected Response fetchResponse(int statusCode, HttpHeaders headers, String body) {
     Map<String, String> headerMap = headers.entrySet().stream()
-        .collect(Collectors.toMap(Map.Entry :: getKey, entry -> entry.getValue().toString(),
-            (a, b) -> b));
+        .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().toString(),
+            (key, value) -> value));
     return new Response(statusCode, headerMap, body);
   }
 

@@ -39,6 +39,10 @@ public class ShareContent {
   @LinkedIn("com.linkedin.ugc.ShareContent")
   private ShareContentBody shareContent;
   
+  /**
+   * ShareContentBody object
+   * @author Joanna
+   */
   public static class ShareContentBody {
     /**
      * The media shared in this share. Can be videos, images, or articles.
@@ -84,7 +88,7 @@ public class ShareContent {
      * Categorization info associated with the share.
      * @author joanna
      */
-    public class ShareCategorization {
+    public static class ShareCategorization {
     
       /**
        * Skill categorizations for a share

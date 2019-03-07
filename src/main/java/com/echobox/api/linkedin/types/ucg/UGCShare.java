@@ -178,6 +178,10 @@ public class UGCShare extends LinkedInURNIdType {
   
   private UGCShare() {}
   
+  /**
+   * Visibility object
+   * @author Joanna
+   */
   @RequiredArgsConstructor
   public static class Visibility {
     @Getter
