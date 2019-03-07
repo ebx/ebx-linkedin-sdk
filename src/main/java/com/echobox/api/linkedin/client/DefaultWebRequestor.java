@@ -322,9 +322,9 @@ public class DefaultWebRequestor implements WebRequestor {
         // Set the content type
         // If it's not provided assume it's application/octet-stream
         String contentType =
-            headers.keySet().stream()
-                .filter(key -> key.equalsIgnoreCase("content-type"))
-                .findFirst().orElse("application/octet-stream");
+            headers.entrySet().stream()
+                .filter(entry -> entry.getKey().equalsIgnoreCase("content-type"))
+                .map(Map.Entry::getValue).findFirst().orElse("application/octet-stream");
         ByteArrayContent fileContent =
             new ByteArrayContent(contentType, binaryAttachment.getData());
         request = requestFactory.buildPutRequest(genericUrl, fileContent);
