@@ -65,7 +65,7 @@ public class AssetsConnection extends ConnectionBaseV2 {
    */
   public RegisterUpload registerUpload(RegisterUploadRequestBody registerUploadRequestBody) {
     return linkedinClient.publish(ASSETS, RegisterUpload.class, registerUploadRequestBody,
-        Parameter.with("action", "registerUpload"));
+        Parameter.with(ACTION_KEY, "registerUpload"));
   }
   
   /**

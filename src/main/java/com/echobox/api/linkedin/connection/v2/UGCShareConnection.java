@@ -39,6 +39,8 @@ import java.util.List;
 public class UGCShareConnection extends ConnectionBaseV2 {
   
   private static final String UGC_POST = "/ugcPosts";
+  private static final String VIEW_CONTEXT = "viewContext";
+  private static final String AUTHORS = "authors";
   
   /**
    * Initialise a UGC share connection
@@ -72,7 +74,7 @@ public class UGCShareConnection extends ConnectionBaseV2 {
    * @return the UGC post from the share URN
    */
   public UGCShare retrieveUCGPost(URN shareURN, ViewContext viewContext) {
-    Parameter viewContextParam = Parameter.with("viewContext", viewContext);
+    Parameter viewContextParam = Parameter.with(VIEW_CONTEXT, viewContext);
     return linkedinClient.fetchObject(UGC_POST + "/" + URLUtils.urlDecode(shareURN.toString()),
         UGCShare.class, viewContextParam);
   }
@@ -87,8 +89,8 @@ public class UGCShareConnection extends ConnectionBaseV2 {
    */
   public Connection<UGCShare> retrieveUGCPostsByAuthors(URN authorURN) {
     List<Parameter> parameters = new ArrayList<>();
-    parameters.add(Parameter.with("q", "authors"));
-    addParametersFromURNs(parameters, "authors", Arrays.asList(authorURN));
+    parameters.add(Parameter.with(QUERY_KEY, AUTHORS));
+    addParametersFromURNs(parameters, AUTHORS, Arrays.asList(authorURN));
     return linkedinClient.fetchConnection(UGC_POST, UGCShare.class,
         parameters.toArray(new Parameter[parameters.size()]));
   }

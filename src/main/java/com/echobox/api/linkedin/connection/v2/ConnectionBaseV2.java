@@ -27,6 +27,8 @@ import com.echobox.api.linkedin.version.Version;
  */
 public class ConnectionBaseV2 extends ConnectionBase {
   
+  protected static final String QUERY_KEY = "q";
+  
   protected ConnectionBaseV2(LinkedInClient linkedinClient) {
     super(linkedinClient);
     if (!Version.V2.equals(linkedinClient.getVersion())) {

@@ -48,7 +48,6 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   private static final String ORGANIZATION_ENTITY_SHARE_STATS =
       "/organizationalEntityShareStatistics";
   
-  private static final String QUERY_KEY = "q";
   private static final String ROLE_KEY = "role";
   private static final String STATE_KEY = "state";
   private static final String ORGANIZATIONAL_TARGET_KEY = "organizationalTarget";
