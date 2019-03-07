@@ -64,13 +64,10 @@ public abstract class ConnectionBase {
     }
   }
   
-  protected void addParametersFromURNs(List<Parameter> params, String key,
-      List<URN> urns, boolean encodeURN) {
+  protected void addParametersFromURNs(List<Parameter> params, String key, List<URN> urns) {
     if (urns != null && !urns.isEmpty()) {
       for (int i = 0; i < urns.size(); i++) {
-        String urn = encodeURN ? URLUtils.urlEncode(urns.get(i).toString())
-            : urns.get(i).toString();
-        params.add(Parameter.with(key + "[" + i + "]", urn));
+        params.add(Parameter.with(key + "[" + i + "]", urns.get(i).toString()));
       }
     }
   }

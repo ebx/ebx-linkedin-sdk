@@ -74,7 +74,7 @@ public class ShareConnection extends ConnectionBaseV2 {
     List<Parameter> params = new ArrayList<>();
   
     params.add(Parameter.with("q", "owners"));
-    addParametersFromURNs(params, "shares", ownerURNs, false);
+    addParametersFromURNs(params, "shares", ownerURNs);
     params.add(Parameter.with("sharesPerOwner", sharesPerOwner));
     params.add(Parameter.with("count", 20));
     
@@ -153,7 +153,7 @@ public class ShareConnection extends ConnectionBaseV2 {
       }
     }
     
-    addParametersFromURNs(params, "shares", shareURNs, false);
+    addParametersFromURNs(params, "shares", shareURNs);
     
     return getListFromQuery(SHARE_STATISTICS, ShareStatistic.class,
         params.toArray(new Parameter[params.size()]));
