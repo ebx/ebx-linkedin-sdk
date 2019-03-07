@@ -28,7 +28,7 @@ public class CompleteMultiPartUploadBody {
     @Getter
     @Setter
     @LinkedIn
-    private String metaData;
+    private String metadata;
   
     @Getter
     @Setter
@@ -51,6 +51,8 @@ public class CompleteMultiPartUploadBody {
   
   @RequiredArgsConstructor
   public static class Headers {
+    
+    private Headers() {}
     
     @Getter
     @Setter

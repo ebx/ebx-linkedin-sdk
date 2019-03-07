@@ -145,6 +145,10 @@ public interface WebRequestor {
   Response executePost(String url, String parameters, String jsonBody,
       Map<String, String> headers, BinaryAttachment... binaryAttachments)
       throws IOException;
+  
+  Response executePut(String url, String parameters, String jsonBody,
+      Map<String, String> headers, BinaryAttachment binaryAttachments)
+      throws IOException;
 
   /**
    * Given a LinkedIn API endpoint URL and parameter string, execute a {@code DELETE} to the

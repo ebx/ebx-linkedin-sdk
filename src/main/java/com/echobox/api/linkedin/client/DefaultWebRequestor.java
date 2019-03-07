@@ -58,6 +58,7 @@ import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -253,10 +254,11 @@ public class DefaultWebRequestor implements WebRequestor {
         for (BinaryAttachment binaryAttachment : binaryAttachments) {
           MultipartContent.Part part = new MultipartContent.Part(
               new ByteArrayContent(binaryAttachment.getContentType(), binaryAttachment.getData()));
-          part.setHeaders(new HttpHeaders().set(
-              "Content-Disposition",
-              String.format("form-data; name=\"%s\"; filename=\"%s\"",
-                  createFormFieldName(binaryAttachment), binaryAttachment.getFilename())));
+          HttpHeaders set = new HttpHeaders().set("Content-Disposition",
+              format("form-data; name=\"%s\"; filename=\"%s\"",
+                  createFormFieldName(binaryAttachment), binaryAttachment.getFilename()));
+  
+          part.setHeaders(set);
           content.addPart(part);
         }
         
@@ -296,7 +298,7 @@ public class DefaultWebRequestor implements WebRequestor {
         // Add any additional headers
         for (String headerKey : headers.keySet()) {
           if (headerKey.equalsIgnoreCase("content-type")) {
-            httpHeaders.setContentType(headers.get(headerKey));
+//            httpHeaders.setContentType(headers.get(headerKey));
           } else {
             httpHeaders.put(headerKey, headers.get(headerKey));
           }
@@ -318,7 +320,94 @@ public class DefaultWebRequestor implements WebRequestor {
       closeQuietly(httpResponse);
     }
   }
-
+  
+  @Override
+  public Response executePut(String url, String parameters, String jsonBody,
+      Map<String, String> headers, BinaryAttachment binaryAttachments)
+      throws IOException {
+    System.out.println(jsonBody);
+  
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Executing a POST to " + url + " with parameters "
+          + (binaryAttachments != null ? "" : "(sent in request body): ")
+          + URLUtils.urlDecode(parameters)
+          + (binaryAttachments != null ? " and " + binaryAttachments
+          + " binary attachment[s]." : ""));
+    }
+  
+    HttpResponse httpResponse = null;
+    try {
+      GenericUrl genericUrl = new GenericUrl(url + (!StringUtils.isEmpty(parameters)
+          ? "?" + parameters : ""));
+    
+      HttpRequest request;
+      HttpHeaders httpHeaders = new HttpHeaders();
+    
+      // If we have binary attachments, the body is just the attachments and the
+      // other parameters are passed in via the URL.
+      // Otherwise the body is the URL parameter string.
+      if (binaryAttachments != null) {
+        // Set the media type
+        String contentType =
+            headers.keySet().stream()
+                .filter(key -> key.equalsIgnoreCase("content-type"))
+                .findFirst().orElse("application/octet-stream");
+        ByteArrayContent fileContent = new ByteArrayContent(contentType, binaryAttachments.getData());
+        request = requestFactory.buildPutRequest(genericUrl, fileContent);
+      } else {
+        if (jsonBody != null) {
+          // Convert the JSON into a map - annoyingly JsonHttpContent data object has to be a
+          // key/value object i.e. map
+          JsonObject asObject = Json.parse(jsonBody).asObject();
+          Map<String, Object> map = JsonUtils.toMap(asObject);
+        
+          JsonHttpContent jsonHttpContent = new JsonHttpContent(new JacksonFactory(), map);
+          request = requestFactory.buildPostRequest(genericUrl, jsonHttpContent);
+        
+          // Ensure the headers are set to JSON
+          httpHeaders.setContentType(CONTENT_TYPE).set(FORMAT_HEADER, "json");
+        
+          // Ensure the response headers are also set to JSON
+          request.setResponseHeaders(new HttpHeaders().set(FORMAT_HEADER, "json"));
+        } else {
+          // Plain old POST request
+          request = requestFactory.buildPutRequest(genericUrl, null);
+        }
+      }
+    
+      request.setReadTimeout(DEFAULT_READ_TIMEOUT_IN_MS);
+    
+      // Allow subclasses to customize the connection if they'd like to - set their own headers,
+      // timeouts, etc.
+      customizeConnection(request);
+    
+      if (binaryAttachments != null) {
+        request.setHeaders(new HttpHeaders().set("Connection", "Keep-Alive"));
+      }
+    
+      if (headers != null) {
+        // Add any additional headers
+        for (String headerKey : headers.keySet()) {
+          if (!headerKey.equalsIgnoreCase("content-type")) {
+            httpHeaders.put(headerKey, headers.get(headerKey));
+          }
+        }
+      }
+    
+      request.setHeaders(httpHeaders);
+    
+      return getResponse(request);
+    } catch (HttpResponseException ex) {
+      return handleException(ex);
+    } finally {
+      if (autocloseBinaryAttachmentStream && binaryAttachments != null) {
+          closeQuietly(binaryAttachments.getDataInputStream());
+      }
+    
+      closeQuietly(httpResponse);
+    }
+  }
+  
   private Response getResponse(HttpRequest request) throws IOException {
     HttpResponse httpResponse = request.execute();
 
