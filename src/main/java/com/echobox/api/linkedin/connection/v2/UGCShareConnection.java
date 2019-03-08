@@ -41,6 +41,7 @@ public class UGCShareConnection extends ConnectionBaseV2 {
   private static final String UGC_POST = "/ugcPosts";
   private static final String VIEW_CONTEXT = "viewContext";
   private static final String AUTHORS = "authors";
+  private static final String IDS = "ids";
   
   /**
    * Initialise a UGC share connection
@@ -77,6 +78,17 @@ public class UGCShareConnection extends ConnectionBaseV2 {
     Parameter viewContextParam = Parameter.with(VIEW_CONTEXT, viewContext);
     return linkedinClient.fetchObject(UGC_POST + "/" + URLUtils.urlDecode(shareURN.toString()),
         UGCShare.class, viewContextParam);
+  }
+  
+  /**
+   * Multiple UGC Posts can be retrieved in a single API call by passing in multiple UGC Post Urns
+   * into the ids parameter.
+   * @param shareURNs share URNs to query
+   * @return List of UGC shares
+   */
+  public List<UGCShare> batchRetrieveUGCPosts(List<URN> shareURNs) {
+    throw new UnsupportedOperationException("batchRetrieveUGCPosts is not yet "
+        + "implemented");
   }
   
   /**

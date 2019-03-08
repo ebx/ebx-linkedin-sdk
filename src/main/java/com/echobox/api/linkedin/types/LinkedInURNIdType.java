@@ -33,7 +33,7 @@ public class LinkedInURNIdType {
    * Unique id for this object. Can contain more urn types in the future.
    */
   @Getter
-  @LinkedIn("URN")
-  private URN urn;
+  @LinkedIn("id")
+  private URN id;
   
 }

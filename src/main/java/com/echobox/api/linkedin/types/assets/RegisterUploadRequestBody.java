@@ -44,6 +44,8 @@ public class RegisterUploadRequestBody {
   @LinkedIn
   private RegisterUploadRequest registerUploadRequest;
   
+  private RegisterUploadRequestBody() {}
+  
   /**
    * RegisterUploadRequest object
    * @author Joanna
@@ -86,6 +88,8 @@ public class RegisterUploadRequestBody {
     @Setter
     @LinkedIn
     private List<ServiceRelationships> serviceRelationships;
+    
+    private RegisterUploadRequest() {}
   
     /**
      * Set recipes

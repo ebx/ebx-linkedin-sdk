@@ -1,0 +1,45 @@
+{
+  "author": "urn:li:person:123ABC",
+  "contentCertificationRecord": "{\"originCountryCode\":\"us\",\"modifiedAt\":1500590592795,\"spamRestriction\":{\"classifications\":[],\"contentQualityClassifications\":[],\"systemName\":\"MACHINE_SYNC\",\"lowQuality\":false,\"contentClassificationTrackingId\":\"B6A8B437D1D5E59D123455F6DCE5B\",\"contentRelevanceClassifications\":[],\"spam\":false}}",
+  "created": {
+    "actor": "urn:li:person:123ABC",
+    "time": 1500590543962
+  },
+  "firstPublishedAt": 1500590592702,
+  "id": "urn:li:ugcPost:123456",
+  "lastModified": {
+    "actor": "urn:li:person:123ABC",
+    "time": 1500590592806
+  },
+  "lifecycleState": "PUBLISHED",
+  "specificContent": {
+    "com.linkedin.ugc.ShareContent": {
+      "media": [
+        {
+          "media": "urn:li:digitalmediaAsset:123ABDEFHAG",
+          "status": "READY",
+          "thumbnails": []
+        }
+      ],
+      "shareCommentary": {
+        "attributes": [
+          {
+            "length": 35,
+            "start": 66,
+            "value": {
+              "com.linkedin.common.CompanyAttributedEntity": {
+                "company": "urn:li:organization:12345"
+              }
+            }
+          }
+        ],
+        "text": "Testing a UGC Post!"
+      },
+      "shareMediaCategory": "VIDEO"
+    }
+  },
+  "versionTag": "2",
+  "visibility": {
+    "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+  }
+}

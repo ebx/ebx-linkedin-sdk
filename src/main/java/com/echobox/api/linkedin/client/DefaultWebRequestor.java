@@ -261,8 +261,6 @@ public class DefaultWebRequestor implements WebRequestor {
         request = requestFactory.buildPostRequest(genericUrl, content);
       } else {
         if (jsonBody != null) {
-          // Convert the JSON into a map - annoyingly JsonHttpContent data object has to be a
-          // key/value object i.e. map
           request = requestFactory.buildPostRequest(genericUrl, getJsonHttpContent(jsonBody));
 
           // Ensure the headers are set to JSON
@@ -331,9 +329,6 @@ public class DefaultWebRequestor implements WebRequestor {
         httpHeaders.set("Connection", "Keep-Alive");
       } else {
         if (jsonBody != null) {
-          // Convert the JSON into a map - annoyingly JsonHttpContent data object has to be a
-          // key/value object i.e. map
-          
           request = requestFactory.buildPutRequest(genericUrl, getJsonHttpContent(jsonBody));
         
           // Ensure the headers are set to JSON
@@ -590,6 +585,12 @@ public class DefaultWebRequestor implements WebRequestor {
         ? "?" + parameters : ""));
   }
   
+  /**
+   * Convert the JSON into a map - annoyingly JsonHttpContent data object has to be a
+   * key/value object i.e. map
+   * @param jsonBody JSON body
+   * @return JsonHttpContent
+   */
   private JsonHttpContent getJsonHttpContent(String jsonBody) {
     JsonObject asObject = Json.parse(jsonBody).asObject();
     Map<String, Object> map = JsonUtils.toMap(asObject);

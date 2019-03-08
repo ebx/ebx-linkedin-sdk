@@ -1,0 +1,40 @@
+{
+  "author": "urn:li:organization:5590506",
+  "lifecycleState": "PUBLISHED",
+  "specificContent": {
+    "com.linkedin.ugc.ShareContent": {
+      "media": [
+        {
+          "description": {
+            "attributes": [],
+            "text": "Sample Description"
+          },
+          "media": "urn:li:digitalmediaAsset:C5500AQG7r2u00ByWjw",
+          "status": "READY",
+          "thumbnails": [],
+          "title": {
+            "attributes": [],
+            "text": "Sample Video Create"
+          }
+        }
+      ],
+      "shareCommentary": {
+        "attributes": [],
+        "text": "Some share text"
+      },
+      "shareMediaCategory": "VIDEO"
+    }
+  },
+  "targetAudience": {
+    "targetedEntities": [
+      {
+        "locations": [
+          "urn:li:country:us"
+        ]
+      }
+    ]
+  },
+  "visibility": {
+    "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+  }
+}

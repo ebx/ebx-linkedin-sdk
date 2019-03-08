@@ -43,6 +43,8 @@ public class CompleteMultiPartUploadBody {
   @LinkedIn
   private CompleteMultiPartUpload completeMultipartUploadRequest;
   
+  private CompleteMultiPartUploadBody() {}
+  
   /**
    * CompleteMultiPartUpload object
    * @author Joanna
@@ -89,13 +91,13 @@ public class CompleteMultiPartUploadBody {
   @RequiredArgsConstructor
   public static class Headers {
     
-    private Headers() {}
-    
     @Getter
     @Setter
     @NonNull
     @LinkedIn("ETag")
     private String eTag;
+  
+    private Headers() {}
   }
   
 }

@@ -22,7 +22,6 @@ import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.urn.URNEntityType;
-import com.echobox.api.linkedin.util.URLUtils;
 import com.echobox.api.linkedin.util.ValidationUtils;
 
 import java.util.ArrayList;

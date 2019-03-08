@@ -46,6 +46,7 @@ public class AssetsConnection extends ConnectionBaseV2 {
   
   private static final String ASSETS = "/assets";
   private static final String ACTION_KEY = "action";
+  private static final String REGISTER_UPLOAD = "registerUpload";
   private static final String COMPLETE_MULTIPART_UPLOAD = "completeMultiPartUpload";
   
   /**
@@ -65,7 +66,7 @@ public class AssetsConnection extends ConnectionBaseV2 {
    */
   public RegisterUpload registerUpload(RegisterUploadRequestBody registerUploadRequestBody) {
     return linkedinClient.publish(ASSETS, RegisterUpload.class, registerUploadRequestBody,
-        Parameter.with(ACTION_KEY, "registerUpload"));
+        Parameter.with(ACTION_KEY, REGISTER_UPLOAD));
   }
   
   /**
