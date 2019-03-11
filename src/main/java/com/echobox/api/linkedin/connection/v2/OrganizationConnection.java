@@ -88,7 +88,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @param count the number of entries to be returned per paged request
    * @return List of access controls for a given role and state for the member
    */
-  public List<AccessControl> fetchMemeberOrganizationAccessControl(String role, String state,
+  public List<AccessControl> fetchMemberOrganizationAccessControl(String role, String state,
       Parameter projection, Integer count) {
     List<Parameter> parameters = new ArrayList<>();
     parameters.add(Parameter.with(QUERY_KEY, ROLE_ASSIGNEE_VALUE));
@@ -96,7 +96,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
     addStartAndCountParams(parameters, null, count);
 
     return getListFromQuery(ORGANIZATIONAL_ENTITY_ACLS, AccessControl.class,
-        parameters.toArray(new Parameter[parameters.size()]));
+        parameters.toArray(new Parameter[0]));
   }
 
   /**
@@ -124,22 +124,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
     addStartAndCountParams(parameters, null, count);
 
     return getListFromQuery(ORGANIZATIONAL_ENTITY_ACLS, AccessControl.class,
-        parameters.toArray(new Parameter[parameters.size()]));
-  }
-
-  /**
-   * Find an organization using an organization ID, parent organization ID from the URN
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
-   * management/organizations/organization-lookup-api#retrieve-organizations">
-   * Retrieve organization</a>
-   * @param organizationURN The organization URN
-   * @param fields the fields to project
-   * @return the requested organization by the given URN
-   */
-  public Organization retrieveOrganizationByURN(URN organizationURN, Parameter fields) {
-    validateOrganizationURN("organizationURN", organizationURN);
-
-    return retrieveOrganization(Long.parseLong(organizationURN.getId()), fields);
+        parameters.toArray(new Parameter[0]));
   }
 
   /**
@@ -147,17 +132,18 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
    * management/organizations/organization-lookup-api#retrieve-organizations">
    * Retrieve organization</a>
-   * @param organizationId The organization id
+   * @param organizationURN The organization URN
    * @param fields the fields to project
    * @return the requested organization
    */
-  public Organization retrieveOrganization(long organizationId, Parameter fields) {
+  public Organization retrieveOrganization(URN organizationURN, Parameter fields) {
+    validateOrganizationURN("organizationURN", organizationURN);
     List<Parameter> parameters = new ArrayList<>();
     if (fields != null) {
       parameters.add(fields);
     }
-    return linkedinClient.fetchObject(ORGANIZATIONS + "/" + organizationId, Organization.class,
-        parameters.toArray(new Parameter[parameters.size()]));
+    return linkedinClient.fetchObject(ORGANIZATIONS + "/" + organizationURN.getId(),
+        Organization.class, parameters.toArray(new Parameter[0]));
   }
 
   /**
@@ -182,7 +168,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
     parameters.add(Parameter.with(VANITY_NAME_KEY, vanityName));
     addStartAndCountParams(parameters, null, count);
     return getListFromQuery(ORGANIZATIONS, Organization.class,
-        parameters.toArray(new Parameter[parameters.size()]));
+        parameters.toArray(new Parameter[0]));
   }
 
   /**
@@ -207,7 +193,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
     parameters.add(Parameter.with(EMAIL_DOMAIN_KEY, emailDomain));
     addStartAndCountParams(parameters, null, count);
     return getListFromQuery(ORGANIZATIONS, Organization.class,
-        parameters.toArray(new Parameter[parameters.size()]));
+        parameters.toArray(new Parameter[0]));
   }
   
   /**
@@ -303,6 +289,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    */
   public List<OrganizationFollowerStatistics> retrieveOrganizationFollowerStatistics(
       URN organizationURN, Integer count) {
+    validateOrganizationURN("organizationURN", organizationURN);
     List<Parameter> parameters = new ArrayList<>();
 
     addParametersForStatistics(organizationURN, null, parameters);
@@ -310,7 +297,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
 
     return getListFromQuery(ORGANIZATIONAL_ENTITY_FOLOWER_STATS,
         OrganizationFollowerStatistics.class,
-        parameters.toArray(new Parameter[parameters.size()]));
+        parameters.toArray(new Parameter[0]));
   }
   
   /**
@@ -340,11 +327,11 @@ public class OrganizationConnection extends ConnectionBaseV2 {
     addStartAndCountParams(parameters, null, count);
     
     return getListFromQuery(ORGANIZATIONAL_ENTITY_FOLOWER_STATS, FollowerStatistic.class,
-        parameters.toArray(new Parameter[parameters.size()]));
+        parameters.toArray(new Parameter[0]));
   }
 
   /**
-   * Retreive the lifetime follower statistics. Providing the time interval will retrieve
+   * Retrieve the lifetime follower statistics. Providing the time interval will retrieve
    * time-bounded follower statistics, otherwise the lifetime follower statistics will be returned
    * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
    * community-management/organizations/page-statistics#retrieve-lifetime-organization-page-
@@ -371,7 +358,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
     addStartAndCountParams(parameters, null, count);
 
     return getListFromQuery(ORGANIZATIONAL_PAGE_STATS, Statistics.OrganizationStatistics.class,
-        parameters.toArray(new Parameter[parameters.size()]));
+        parameters.toArray(new Parameter[0]));
   }
 
   /**
@@ -407,12 +394,14 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    */
   public List<ShareStatistic> retrieveShareStatistics(URN organizationURN,
       TimeInterval timeInterval, List<URN> shareURNs, Integer count) {
+    validateOrganizationURN("organizationURN", organizationURN);
+    
     List<Parameter> params = new ArrayList<>();
     params.add(Parameter.with(QUERY_KEY, ORGANIZATIONAL_ENTITY_KEY));
     params.add(Parameter.with(ORGANIZATIONAL_ENTITY_KEY, organizationURN));
     
     if (shareURNs != null && !shareURNs.isEmpty()) {
-      shareURNs.stream().forEach(this::validateShareURN);
+      shareURNs.forEach(this::validateShareURN);
       addParametersFromURNs(params, SHARES_PARAM, shareURNs);
     }
   
@@ -420,17 +409,12 @@ public class OrganizationConnection extends ConnectionBaseV2 {
     addStartAndCountParams(params, null, count);
     
     return getListFromQuery(SHARE_STATISTICS, ShareStatistic.class,
-        params.toArray(new Parameter[params.size()]));
+        params.toArray(new Parameter[0]));
   }
 
   private void validateOrganizationURN(String paramName, URN organizationURN) {
     ValidationUtils.verifyParameterPresence(paramName, organizationURN);
     validateURN(URNEntityType.ORGANIZATION, organizationURN);
-  }
-  
-  private void validateShareURN(URN shareURN) {
-    ValidationUtils.verifyParameterPresence("share", shareURN);
-    validateURN(URNEntityType.SHARE, shareURN);
   }
   
   private void addRoleStateParams(String role, String state, Parameter projection,

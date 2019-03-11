@@ -21,6 +21,9 @@ import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.connection.ConnectionBase;
 import com.echobox.api.linkedin.types.TimeInterval;
+import com.echobox.api.linkedin.types.urn.URN;
+import com.echobox.api.linkedin.types.urn.URNEntityType;
+import com.echobox.api.linkedin.util.ValidationUtils;
 import com.echobox.api.linkedin.version.Version;
 
 import java.util.List;
@@ -65,5 +68,10 @@ public class ConnectionBaseV2 extends ConnectionBase {
             + "timeInterval is provided");
       }
     }
+  }
+  
+  protected void validateShareURN(URN shareURN) {
+    ValidationUtils.verifyParameterPresence("share", shareURN);
+    validateURN(URNEntityType.SHARE, shareURN);
   }
 }
