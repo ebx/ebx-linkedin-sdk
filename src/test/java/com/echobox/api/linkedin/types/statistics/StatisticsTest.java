@@ -19,6 +19,7 @@ package com.echobox.api.linkedin.types.statistics;
 
 import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapper;
 import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapperTestBase;
+import com.echobox.api.linkedin.types.urn.URN;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -46,34 +47,32 @@ public class StatisticsTest extends DefaultJsonMapperTestBase {
     OrganizationFollowerStatistics organizationFollowerStatistics =
         defaultJsonMapper.toJavaObject(json, OrganizationFollowerStatistics.class);
 
-    OrganizationFollowerStatisticsElement firstElement =
-        organizationFollowerStatistics.getElements().get(0);
-
     List<CountByStaffCountRange> followerCountsByStaffCountRange =
-        firstElement.getFollowerCountsByStaffCountRange();
-    List<CountByIndustry> followerCountsByIndustry = firstElement.getFollowerCountsByIndustry();
-    List<CountByFunction> followerCountsByFunction = firstElement.getFollowerCountsByFunction();
-    List<CountBySeniority> followerCountsBySeniority = firstElement.getFollowerCountsBySeniority();
+        organizationFollowerStatistics.getFollowerCountsByStaffCountRange();
+    List<CountByFunction> followerCountsByFunction =
+        organizationFollowerStatistics.getFollowerCountsByFunction();
+    List<CountBySeniority> followerCountsBySeniority =
+        organizationFollowerStatistics.getFollowerCountsBySeniority();
     List<CountByAssociationType> followerCountsByAssociationType =
-        firstElement.getFollowerCountsByAssociationType();
+        organizationFollowerStatistics.getFollowerCountsByAssociationType();
     
     Assert.assertEquals(6,
         (long) followerCountsByStaffCountRange.get(0).getFollowerCounts()
             .getOrganicFollowerCount());
     Assert.assertEquals("SIZE_2_TO_10", 
         followerCountsByStaffCountRange.get(1).getStaffCountRange());
-    Assert.assertEquals(18,
-        (long) followerCountsByIndustry.get(0).getFollowerCounts().getPaidFollowerCount());
-    Assert.assertEquals("FUNDRAISING", followerCountsByIndustry.get(1).getIndustry());
     Assert.assertEquals(1662,
         (long) followerCountsByFunction.get(0).getFollowerCounts().getOrganicFollowerCount());
-    Assert.assertEquals("urn:li:function:12", followerCountsByFunction.get(2).getFunction());
+    Assert.assertEquals(new URN("urn:li:function:12"),
+        followerCountsByFunction.get(2).getFunction());
     Assert.assertEquals(1228,
         (long) followerCountsByAssociationType.get(0).getFollowerCounts()
             .getOrganicFollowerCount());
     Assert.assertEquals(1,
         (long) followerCountsBySeniority.get(0).getFollowerCounts().getOrganicFollowerCount());
-    Assert.assertEquals("urn:li:seniority:3", followerCountsBySeniority.get(1).getSeniority());
-    Assert.assertEquals("urn:li:organization:1234", firstElement.getOrganizationalEntity());
+    Assert.assertEquals(new URN("urn:li:seniority:3"),
+        followerCountsBySeniority.get(1).getSeniority());
+    Assert.assertEquals(new URN("urn:li:organization:1234"),
+        organizationFollowerStatistics.getOrganizationalEntity());
   }
 }

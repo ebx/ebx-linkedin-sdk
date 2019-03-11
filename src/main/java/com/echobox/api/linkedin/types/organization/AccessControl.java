@@ -56,6 +56,10 @@ public class AccessControl {
   @LinkedIn("organizationalTarget~")
   private OrganizationalTarget organizationalTarget;
   
+  /**
+   * Role Assignee
+   * @author Joanna
+   */
   public static class RoleAssignee {
     @Getter
     @LinkedIn
@@ -66,6 +70,10 @@ public class AccessControl {
     private String localizedFirstName;
   }
   
+  /**
+   * Organization target
+   * @author Joanna
+   */
   private static class OrganizationalTarget {
     @Getter
     @LinkedIn
