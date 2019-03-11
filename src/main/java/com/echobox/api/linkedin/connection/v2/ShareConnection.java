@@ -45,9 +45,6 @@ public class ShareConnection extends ConnectionBaseV2 {
   private static final String SHARES_PER_OWNER = "sharesPerOwner";
   private static final String COUNT = "count";
   private static final String ORGANIZATIONAL_ENTITY = "organizationalEntity";
-  private static final String TIME_INTERVALS_GRANULARITY = "timeIntervals.timeGranularityType";
-  private static final String TIME_INTERVALS_START = "timeIntervals.timeRange.start";
-  private static final String TIME_INTERVALS_END = "timeIntervals.timeRange.end";
   
   /**
    * Initialise the share connection
@@ -139,26 +136,7 @@ public class ShareConnection extends ConnectionBaseV2 {
     params.add(Parameter.with(QUERY_KEY, ORGANIZATIONAL_ENTITY));
     params.add(Parameter.with(ORGANIZATIONAL_ENTITY, organizationURN));
     
-    if (timeInterval != null) {
-      // Time restriction on retrieving share statistics
-      params.add(Parameter.with(TIME_INTERVALS_GRANULARITY,
-          timeInterval.getTimeGranularityType()));
-      if (timeInterval.getTimeRange() != null) {
-        if (timeInterval.getTimeRange().getStart() != null
-            && timeInterval.getTimeRange().getStart() != null
-            && timeInterval.getTimeRange().getEnd() != null) {
-          params.add(Parameter.with(TIME_INTERVALS_START, timeInterval.getTimeRange().getStart()));
-          params.add(Parameter.with(TIME_INTERVALS_END, timeInterval.getTimeRange().getEnd()));
-        } else {
-          throw new IllegalStateException("timeIntervals.timeRange cannot be null when "
-              + "timeInterval is provided");
-        }
-      } else {
-        throw new IllegalStateException("timeIntervals.timeGranularityType cannot be null when "
-            + "timeInterval is provided");
-      }
-    }
-    
+    addTimeIntervalToParams(params, timeInterval);
     addParametersFromURNs(params, SHARES_PARAM, shareURNs);
     
     return getListFromQuery(SHARE_STATISTICS, ShareStatistic.class,

@@ -49,7 +49,6 @@ public class StatisticsTest extends DefaultJsonMapperTestBase {
     OrganizationFollowerStatisticsElement firstElement =
         organizationFollowerStatistics.getElements().get(0);
 
-    FollowerCount totalFollowerCounts = firstElement.getTotalFollowerCounts();
     List<CountByStaffCountRange> followerCountsByStaffCountRange =
         firstElement.getFollowerCountsByStaffCountRange();
     List<CountByIndustry> followerCountsByIndustry = firstElement.getFollowerCountsByIndustry();
@@ -57,9 +56,7 @@ public class StatisticsTest extends DefaultJsonMapperTestBase {
     List<CountBySeniority> followerCountsBySeniority = firstElement.getFollowerCountsBySeniority();
     List<CountByAssociationType> followerCountsByAssociationType =
         firstElement.getFollowerCountsByAssociationType();
-
-    Assert.assertEquals(33916, (long) totalFollowerCounts.getOrganicFollowerCount());
-    Assert.assertEquals(268, (long) totalFollowerCounts.getPaidFollowerCount());
+    
     Assert.assertEquals(6,
         (long) followerCountsByStaffCountRange.get(0).getFollowerCounts()
             .getOrganicFollowerCount());

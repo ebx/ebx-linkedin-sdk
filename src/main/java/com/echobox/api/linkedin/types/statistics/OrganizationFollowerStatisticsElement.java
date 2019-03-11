@@ -29,11 +29,6 @@ import java.util.List;
  * @author clementcaylux on 03/12/2018.
  */
 public class OrganizationFollowerStatisticsElement {
-  
-  @Getter
-  @Setter
-  @LinkedIn
-  private FollowerCount totalFollowerCounts;
 
   @Getter
   @Setter
@@ -59,6 +54,16 @@ public class OrganizationFollowerStatisticsElement {
   @Setter
   @LinkedIn
   private List<CountBySeniority> followerCountsBySeniority;
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private List<CountByCountry> followerCountsByCountry;
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private List<CountByRegion> followerCountsByRegion;
 
   @Getter
   @Setter

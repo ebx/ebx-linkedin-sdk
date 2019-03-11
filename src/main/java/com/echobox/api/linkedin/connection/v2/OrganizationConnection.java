@@ -21,7 +21,10 @@ import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.types.TimeInterval;
 import com.echobox.api.linkedin.types.organization.AccessControl;
+import com.echobox.api.linkedin.types.organization.NetworkSize;
 import com.echobox.api.linkedin.types.organization.Organization;
+import com.echobox.api.linkedin.types.statistics.OrganizationFollowerStatisticsElement;
+import com.echobox.api.linkedin.types.statistics.page.FollowerStatistic;
 import com.echobox.api.linkedin.types.statistics.page.Statistics;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.urn.URNEntityType;
@@ -47,6 +50,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   private static final String ORGANIZATIONAL_PAGE_STATS = "/organizationPageStatistics";
   private static final String ORGANIZATION_ENTITY_SHARE_STATS =
       "/organizationalEntityShareStatistics";
+  private static final String NETWORK_SIZES = "/networkSizes";
   
   private static final String ROLE_KEY = "role";
   private static final String STATE_KEY = "state";
@@ -63,6 +67,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   private static final String EMAIL_DOMAIN_VALUE = "emailDomain";
   private static final String ORGANIZATIONAL_ENTITY_VALUE = "organizationalEntity";
   private static final String ORGANIZATION_VALUE = "organization";
+  private static final String COMPANY_FOLLOWED_BY_MEMEBER = "CompanyFollowedByMember";
 
   /**
    * Initialise an organization connection
@@ -83,10 +88,11 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @return List of access controls for a given role and state for the member
    */
   public List<AccessControl> fetchMemeberOrganizationAccessControl(String role, String state,
-      Parameter projection) {
+      Parameter projection, Integer count) {
     List<Parameter> parameters = new ArrayList<>();
     parameters.add(Parameter.with(QUERY_KEY, ROLE_ASSIGNEE_VALUE));
     addRoleStateParams(role, state, projection, parameters);
+    addStartAndCountParams(parameters, null, count);
 
     return getListFromQuery(ORGANIZATIONAL_ENTITY_ACLS, AccessControl.class,
         parameters.toArray(new Parameter[parameters.size()]));
@@ -106,13 +112,14 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @return List of access controls for an organization
    */
   public List<AccessControl> findOrganizationAccessControl(URN organizationalTarget, String role,
-      String state, Parameter projection) {
+      String state, Parameter projection, Integer count) {
     validateOrganizationURN("organizationalTarget", organizationalTarget);
 
     List<Parameter> parameters = new ArrayList<>();
     parameters.add(Parameter.with(QUERY_KEY, ORGANIZATION_TARGET_VALUE));
     parameters.add(Parameter.with(ORGANIZATIONAL_TARGET_KEY, organizationalTarget.toString()));
     addRoleStateParams(role, state, projection, parameters);
+    addStartAndCountParams(parameters, null, count);
 
     return getListFromQuery(ORGANIZATIONAL_ENTITY_ACLS, AccessControl.class,
         parameters.toArray(new Parameter[parameters.size()]));
@@ -143,8 +150,12 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @return the requested organization
    */
   public Organization retrieveOrganization(long organizationId, Parameter fields) {
+    List<Parameter> parameters = new ArrayList<>();
+    if (fields != null) {
+      parameters.add(fields);
+    }
     return linkedinClient.fetchObject(ORGANIZATIONS + "/" + organizationId, Organization.class,
-        fields);
+        parameters.toArray(new Parameter[parameters.size()]));
   }
 
   /**
@@ -156,13 +167,19 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @param fields the fields to request
    * @return The organization with the vanity name
    */
-  public Organization findOrganizationByVanityName(String vanityName, Parameter fields) {
+  public List<Organization> findOrganizationByVanityName(String vanityName, Parameter fields,
+      Integer count) {
     ValidationUtils.verifyParameterPresence("vanityName", vanityName);
-
-    Parameter queryParam = Parameter.with(QUERY_KEY, VANITY_NAME_VALUE);
-    Parameter vanityNameParam = Parameter.with(VANITY_NAME_KEY, vanityName);
-    return linkedinClient.fetchObject(ORGANIZATIONS, Organization.class, fields, queryParam,
-        vanityNameParam);
+  
+    List<Parameter> parameters = new ArrayList<>();
+    if (fields != null) {
+      parameters.add(fields);
+    }
+    parameters.add(Parameter.with(QUERY_KEY, VANITY_NAME_VALUE));
+    parameters.add(Parameter.with(VANITY_NAME_KEY, vanityName));
+    addStartAndCountParams(parameters, null, count);
+    return getListFromQuery(ORGANIZATIONS, Organization.class,
+        parameters.toArray(new Parameter[parameters.size()]));
   }
 
   /**
@@ -174,13 +191,25 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @param fields the fields to request
    * @return A list of organizations with the email domain
    */
-  public List<Organization> findOrganizationByEmailDomain(String emailDomain, Parameter fields) {
+  public List<Organization> findOrganizationByEmailDomain(String emailDomain, Parameter fields,
+      Integer count) {
     ValidationUtils.verifyParameterPresence("emailDomain", emailDomain);
-
-    Parameter queryParam = Parameter.with(QUERY_KEY, EMAIL_DOMAIN_VALUE);
-    Parameter emailDomainParam = Parameter.with(EMAIL_DOMAIN_KEY, emailDomain);
-    return getListFromQuery(ORGANIZATIONS, Organization.class, fields, queryParam,
-        emailDomainParam);
+  
+    List<Parameter> parameters = new ArrayList<>();
+    if (fields != null) {
+      parameters.add(fields);
+    }
+    parameters.add(Parameter.with(QUERY_KEY, EMAIL_DOMAIN_VALUE));
+    parameters.add(Parameter.with(EMAIL_DOMAIN_KEY, emailDomain));
+    addStartAndCountParams(parameters, null, count);
+    return getListFromQuery(ORGANIZATIONS, Organization.class,
+        parameters.toArray(new Parameter[parameters.size()]));
+  }
+  
+  public Long retrieveOrganizationFollowerCount(URN organizationURN) {
+    NetworkSize networkSize = linkedinClient.fetchObject(NETWORK_SIZES + "/" + organizationURN,
+        NetworkSize.class, Parameter.with(EDGE_TYPE, COMPANY_FOLLOWED_BY_MEMEBER));
+    return networkSize.getFirstDegreeSize();
   }
 
   /**
@@ -259,13 +288,25 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @param timeInterval the time interval  for time-bound follower statistics
    * @return a list of organization's follower statistics
    */
-  public List<Statistics> retrieveOrganizationFollowerStatistics(URN organizationURN,
-      TimeInterval timeInterval) {
+  public List<OrganizationFollowerStatisticsElement> retrieveOrganizationFollowerStatistics(URN organizationURN,
+      Integer count) {
     List<Parameter> parameters = new ArrayList<>();
 
-    addParametersForStatistics(organizationURN, timeInterval, parameters);
+    addParametersForStatistics(organizationURN, null, parameters);
+    addStartAndCountParams(parameters, null, count);
 
-    return getListFromQuery(ORGANIZATIONAL_ENTITY_FOLOWER_STATS, Statistics.class,
+    return getListFromQuery(ORGANIZATIONAL_ENTITY_FOLOWER_STATS, OrganizationFollowerStatisticsElement.class,
+        parameters.toArray(new Parameter[parameters.size()]));
+  }
+  
+  public List<FollowerStatistic> retrieveOrganizationFollowerStatistics(URN organizationURN,
+      TimeInterval timeInterval, Integer count) {
+    List<Parameter> parameters = new ArrayList<>();
+    
+    addParametersForStatistics(organizationURN, timeInterval, parameters);
+    addStartAndCountParams(parameters, null, count);
+    
+    return getListFromQuery(ORGANIZATIONAL_ENTITY_FOLOWER_STATS, FollowerStatistic.class,
         parameters.toArray(new Parameter[parameters.size()]));
   }
 
@@ -284,7 +325,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @param timeInterval the time interval  for time-bound follower statistics
    * @return a list of organization's follower statistics
    */
-  public List<Statistics> retrieveOrganizationPageStatistics(URN organizationURN,
+  public List<Statistics.OrganizationStatistics> retrieveOrganizationPageStatistics(URN organizationURN,
       TimeInterval timeInterval) {
     validateOrganizationURN("organizationURN", organizationURN);
 
@@ -292,9 +333,9 @@ public class OrganizationConnection extends ConnectionBaseV2 {
     parameters.add(Parameter.with(QUERY_KEY, ORGANIZATION_VALUE));
     parameters.add(Parameter.with(ORGANIZATION_KEY, organizationURN.toString()));
 
-    addTimeIntervalToQueryParameters(timeInterval, parameters);
+    addTimeIntervalToParams(parameters, timeInterval);
 
-    return getListFromQuery(ORGANIZATIONAL_PAGE_STATS, Statistics.class,
+    return getListFromQuery(ORGANIZATIONAL_PAGE_STATS, Statistics.OrganizationStatistics.class,
         parameters.toArray(new Parameter[parameters.size()]));
   }
 
@@ -312,7 +353,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @param timeInterval the time interval for time bounded statistics
    * @return list of page statistics for the organization brand
    */
-  public List<Statistics> retrieveOrganizationBrandPageStatistics(URN organizationBrand,
+  public List<Statistics.BrandStatistics> retrieveOrganizationBrandPageStatistics(URN organizationBrand,
       TimeInterval timeInterval) {
     throw new UnsupportedOperationException("Operation is not implemented yet.");
   }
@@ -373,35 +414,15 @@ public class OrganizationConnection extends ConnectionBaseV2 {
       parameters.add(projection);
     }
   }
-
-  private void addTimeIntervalToQueryParameters(TimeInterval timeInterval,
-      List<Parameter> parameters) {
-    if (timeInterval != null) {
-      if (timeInterval.getTimeGranularityType() != null) {
-        parameters.add(Parameter.with("timeIntervals.timeRange",
-            timeInterval.getTimeGranularityType()));
-      }
-      if (timeInterval.getTimeRange() != null) {
-        if (timeInterval.getTimeRange().getStart() != null) {
-          parameters.add(Parameter.with("timeIntervals.timeRange.start",
-              timeInterval.getTimeRange().getStart()));
-        }
-        if (timeInterval.getTimeRange().getEnd() != null) {
-          parameters.add(Parameter.with("timeIntervals.timeRange.end",
-              timeInterval.getTimeRange().getEnd()));
-        }
-      }
-    }
-  }
   
   private void addParametersForStatistics(URN organizationURN, TimeInterval timeInterval,
       List<Parameter> parameters) {
     validateOrganizationURN("organizationURN", organizationURN);
 
-    parameters.add(Parameter.with(QUERY_KEY, ORGANIZATION_VALUE));
-    parameters.add(Parameter.with(ORGANIZATION_KEY, organizationURN.toString()));
+    parameters.add(Parameter.with(QUERY_KEY, ORGANIZATIONAL_ENTITY_VALUE));
+    parameters.add(Parameter.with(ORGANIZATIONAL_ENTITY_KEY, organizationURN.toString()));
 
-    addTimeIntervalToQueryParameters(timeInterval, parameters);
+    addTimeIntervalToParams(parameters, timeInterval);
   }
 
 }

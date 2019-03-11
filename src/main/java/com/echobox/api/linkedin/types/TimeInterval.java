@@ -20,7 +20,9 @@ package com.echobox.api.linkedin.types;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.engagement.TimeGranularityType;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 /**
@@ -28,15 +30,18 @@ import lombok.Setter;
  * @author Joanna
  *
  */
+@AllArgsConstructor
 public class TimeInterval {
   
   @Getter
   @Setter
+  @NonNull
   @LinkedIn
   private TimeGranularityType timeGranularityType;
   
   @Getter
   @Setter
+  @NonNull
   @LinkedIn
   private TimeRange timeRange;
 

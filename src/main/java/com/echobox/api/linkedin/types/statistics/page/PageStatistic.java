@@ -54,12 +54,22 @@ public class PageStatistic {
     @Getter
     @Setter
     @LinkedIn
+    private PageViews insightsPageViews;
+  
+    @Getter
+    @Setter
+    @LinkedIn
     private PageViews mobileLifeAtPageViews;
   
     @Getter
     @Setter
     @LinkedIn
     private PageViews allDesktopPageViews;
+  
+    @Getter
+    @Setter
+    @LinkedIn
+    private PageViews mobileAboutPageViews;
   
     @Getter
     @Setter
@@ -79,7 +89,37 @@ public class PageStatistic {
     @Getter
     @Setter
     @LinkedIn
+    private PageViews peoplePageViews;
+  
+    @Getter
+    @Setter
+    @LinkedIn
+    private PageViews desktopPeoplePageViews;
+  
+    @Getter
+    @Setter
+    @LinkedIn
+    private PageViews aboutPageViews;
+  
+    @Getter
+    @Setter
+    @LinkedIn
+    private PageViews desktopAboutPageViews;
+  
+    @Getter
+    @Setter
+    @LinkedIn
+    private PageViews mobilePeoplePageViews;
+  
+    @Getter
+    @Setter
+    @LinkedIn
     private PageViews overviewPageViews;
+  
+    @Getter
+    @Setter
+    @LinkedIn
+    private PageViews desktopInsightsPageViews;
   
     @Getter
     @Setter
@@ -115,6 +155,11 @@ public class PageStatistic {
     @Setter
     @LinkedIn
     private PageViews allPageViews;
+  
+    @Getter
+    @Setter
+    @LinkedIn
+    private PageViews mobileInsightsPageViews;
   }
   
   /**
