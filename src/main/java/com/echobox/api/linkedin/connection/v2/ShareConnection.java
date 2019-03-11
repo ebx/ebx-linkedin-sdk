@@ -37,9 +37,7 @@ import java.util.List;
 public class ShareConnection extends ConnectionBaseV2 {
   
   private static final String SHARES = "/shares";
-  private static final String SHARE_STATISTICS = "/organizationalEntityShareStatistics";
   private static final String OWNERS = "owners";
-  private static final String SHARES_PARAM = "shares";
   private static final String SHARES_PER_OWNER = "sharesPerOwner";
   private static final String COUNT = "count";
   

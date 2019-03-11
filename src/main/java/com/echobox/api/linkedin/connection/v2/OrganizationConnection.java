@@ -67,7 +67,6 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   private static final String ORGANIZATIONAL_ENTITY_VALUE = "organizationalEntity";
   private static final String ORGANIZATION_VALUE = "organization";
   private static final String COMPANY_FOLLOWED_BY_MEMEBER = "CompanyFollowedByMember";
-  private static final String SHARES_PARAM = "shares";
 
   /**
    * Initialise an organization connection

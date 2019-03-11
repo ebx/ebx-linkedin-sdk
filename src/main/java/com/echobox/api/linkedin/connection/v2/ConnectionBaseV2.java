@@ -36,6 +36,7 @@ public class ConnectionBaseV2 extends ConnectionBase {
   
   protected static final String QUERY_KEY = "q";
   protected static final String EDGE_TYPE = "edgeType";
+  protected static final String SHARES_PARAM = "shares";
   private static final String TIME_INTERVALS_GRANULARITY = "timeIntervals.timeGranularityType";
   private static final String TIME_INTERVALS_START = "timeIntervals.timeRange.start";
   private static final String TIME_INTERVALS_END = "timeIntervals.timeRange.end";

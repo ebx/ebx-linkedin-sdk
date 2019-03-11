@@ -61,7 +61,7 @@ public class V2PagingImpl extends PagingStrategy {
             int requestedCount = Integer.parseInt(extractParametersFromUrl.get("count").get(0));
             // There seems to be an issue with LinkedIn potentially returning more elements than
             // the count
-            if (elements.size() < requestedCount || total > requestedCount) {
+            if (elements.size() < requestedCount) {
               nextPageUrl = null;
               setPreviousPageURL(fullEndpoint, start, count);
               return;
