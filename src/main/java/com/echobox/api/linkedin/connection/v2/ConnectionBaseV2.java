@@ -45,29 +45,27 @@ public class ConnectionBaseV2 extends ConnectionBase {
     super(linkedinClient);
     if (!Version.V2.equals(linkedinClient.getVersion())) {
       throw new IllegalStateException(
-          "The LinkedIn clinet should be set to V2 to access the endpoints");
+          "The LinkedIn client should be set to V2 to access the endpoints");
     }
   }
   
   protected void addTimeIntervalToParams(List<Parameter> params, TimeInterval timeInterval) {
-    if (timeInterval != null) {
+    if (timeInterval != null && timeInterval.getTimeGranularityType() != null) {
       // Time restriction on retrieving share statistics
-      params.add(Parameter.with(TIME_INTERVALS_GRANULARITY,
-          timeInterval.getTimeGranularityType()));
+      params.add(Parameter.with(TIME_INTERVALS_GRANULARITY, timeInterval.getTimeGranularityType()));
       if (timeInterval.getTimeRange() != null) {
         if (timeInterval.getTimeRange().getStart() != null
-            && timeInterval.getTimeRange().getStart() != null
             && timeInterval.getTimeRange().getEnd() != null) {
           params.add(Parameter.with(TIME_INTERVALS_START, timeInterval.getTimeRange().getStart()));
           params.add(Parameter.with(TIME_INTERVALS_END, timeInterval.getTimeRange().getEnd()));
-        } else {
-          throw new IllegalStateException("timeIntervals.timeRange cannot be null when "
-              + "timeInterval is provided");
         }
       } else {
-        throw new IllegalStateException("timeIntervals.timeGranularityType cannot be null when "
-            + "timeInterval is provided");
+        throw new IllegalStateException(
+            "timeIntervals.timeRange cannot be null when " + "timeInterval is provided");
       }
+    } else {
+      throw new IllegalStateException(
+          "timeIntervals.timeGranularityType cannot be null when " + "timeInterval is provided");
     }
   }
   
