@@ -41,7 +41,7 @@ public abstract class JsonUtils {
    */
   public static Map<String, Object> toMap(JsonObject jsonObject) {
     Map<String, Object> map = new HashMap<>();
-    jsonObject.names().stream().forEach(key -> {
+    jsonObject.names().forEach(key -> {
       JsonValue jsonValue = jsonObject.get(key);
       map.put(key, getValue(jsonValue));
     });
