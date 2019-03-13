@@ -98,10 +98,11 @@ public class UGCShareConnection extends ConnectionBaseV2 {
    * @param authorURN the author URN - can be either an organization or person URN
    * @return the connection of UCG share which is paged
    */
-  public Connection<UGCShare> retrieveUGCPostsByAuthors(URN authorURN) {
+  public Connection<UGCShare> retrieveUGCPostsByAuthors(URN authorURN, Integer count) {
     List<Parameter> parameters = new ArrayList<>();
     parameters.add(Parameter.with(QUERY_KEY, AUTHORS));
     addParametersFromURNs(parameters, AUTHORS, Arrays.asList(authorURN));
+    addStartAndCountParams(parameters, null, count);
     return linkedinClient.fetchConnection(UGC_POST, UGCShare.class,
         parameters.toArray(new Parameter[parameters.size()]));
   }
