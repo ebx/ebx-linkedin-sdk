@@ -41,7 +41,6 @@ public class UGCShareConnection extends ConnectionBaseV2 {
   private static final String UGC_POST = "/ugcPosts";
   private static final String VIEW_CONTEXT = "viewContext";
   private static final String AUTHORS = "authors";
-  private static final String IDS = "ids";
   
   /**
    * Initialise a UGC share connection

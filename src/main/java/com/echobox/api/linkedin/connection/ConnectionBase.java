@@ -70,5 +70,20 @@ public abstract class ConnectionBase {
       }
     }
   }
+  
+  protected void addStartAndCountParams(List<Parameter> params, Integer start, Integer count) {
+    if (start != null && start < 0) {
+      throw new IllegalArgumentException("start parameter must be a positive integer");
+    }
+    if (count != null && count < 0) {
+      throw new IllegalArgumentException("count parameter must be a positive integer");
+    }
+    if (start != null) {
+      params.add(Parameter.with("start", start));
+    }
+    if (count != null) {
+      params.add(Parameter.with("count", count));
+    }
+  }
 
 }

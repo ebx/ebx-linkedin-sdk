@@ -46,6 +46,9 @@ public class TimeRange {
     if (start == null && end == null) {
       throw new IllegalArgumentException("Start and end cannot both be null");
     }
+    if (start > end) {
+      throw new IllegalStateException("Start should be before the end");
+    }
     this.start = start;
     this.end = end;
   }

@@ -49,6 +49,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -242,11 +243,20 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     ValidationUtils.verifyParameterPresence("connection", connection);
     ValidationUtils.verifyParameterPresence("connectionType", connectionType);
     final String fullEndpoint = createEndpointForApiCall(connection, false);
-    String parameterString = toParameterString(parameters);
+    
+    List<Parameter> parametersToAdd = new ArrayList<>(Arrays.asList(parameters));
+    if (parametersToAdd.stream().noneMatch(parameter -> parameter.name.equals("start"))) {
+      parametersToAdd.add(Parameter.with("start", 0));
+    }
+    if (parametersToAdd.stream().noneMatch(parameter -> parameter.name.equals("count"))) {
+      parametersToAdd.add(Parameter.with("count", 10));
+    }
+    Parameter[] queryParams = parametersToAdd.toArray(new Parameter[parametersToAdd.size()]);
+    String parameterString = toParameterString(queryParams);
     final String finalParameterString =
         StringUtils.isBlank(parameterString) ? "" : ("?" + parameterString);
     return new Connection<T>(fullEndpoint + finalParameterString, this,
-        makeRequest(connection, parameters), connectionType);
+        makeRequest(connection, queryParams), connectionType);
   }
 
   @Override

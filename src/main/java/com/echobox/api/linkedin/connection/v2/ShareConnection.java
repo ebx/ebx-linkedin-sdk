@@ -76,17 +76,19 @@ public class ShareConnection extends ConnectionBaseV2 {
    * management/shares/share-api#retrieve-shares">Retrieve Shares</a>
    * @param ownerURNs the URNs of the owner
    * @param sharesPerOwner the number of shares per owner
+   * @param count the number of entries to be returned per paged request
    * @return the share corresponding to the share id
    */
-  public List<Share> getShares(List<URN> ownerURNs, int sharesPerOwner) {
+  public List<Share> getShares(List<URN> ownerURNs, int sharesPerOwner, Integer count) {
     List<Parameter> params = new ArrayList<>();
   
     params.add(Parameter.with(QUERY_KEY, OWNERS));
     addParametersFromURNs(params, SHARES_PARAM, ownerURNs);
     params.add(Parameter.with(SHARES_PER_OWNER, sharesPerOwner));
     params.add(Parameter.with(COUNT, 20));
+    addStartAndCountParams(params, null, count);
     
-    return getListFromQuery(SHARES, Share.class, params.toArray(new Parameter[params.size()]));
+    return getListFromQuery(SHARES, Share.class, params.toArray(new Parameter[0]));
   }
   
   /**
@@ -131,13 +133,15 @@ public class ShareConnection extends ConnectionBaseV2 {
    * @param organizationURN the organizational entity URN for which the statistics represents
    * @param timeInterval Time restriction for the query. When omitted, lifetime stats are returned
    * @param shareURNs References to one or more shares for which statistics are returned
+   * @param count the number of entries to be returned per paged request
    * @return aggregated stats for an organization's shares
    */
   public List<ShareStatistic> retrieveShareStatistics(URN organizationURN,
-      TimeInterval timeInterval, List<URN> shareURNs) {
+      TimeInterval timeInterval, List<URN> shareURNs, Integer count) {
     List<Parameter> params = new ArrayList<>();
     params.add(Parameter.with(QUERY_KEY, ORGANIZATIONAL_ENTITY));
     params.add(Parameter.with(ORGANIZATIONAL_ENTITY, organizationURN));
+    addStartAndCountParams(params, null, count);
     
     if (timeInterval != null) {
       // Time restriction on retrieving share statistics
@@ -161,7 +165,7 @@ public class ShareConnection extends ConnectionBaseV2 {
     addParametersFromURNs(params, SHARES_PARAM, shareURNs);
     
     return getListFromQuery(SHARE_STATISTICS, ShareStatistic.class,
-        params.toArray(new Parameter[params.size()]));
+        params.toArray(new Parameter[0]));
   }
   
 }
