@@ -18,7 +18,6 @@
 package com.echobox.api.linkedin.connection.v2;
 
 import com.echobox.api.linkedin.client.BinaryAttachment;
-import com.echobox.api.linkedin.client.DefaultWebRequestor;
 import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.WebRequestor;
@@ -32,7 +31,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.security.GeneralSecurityException;
 import java.util.Map;
 
 /**
@@ -73,37 +71,39 @@ public class AssetsConnection extends ConnectionBaseV2 {
    * Upload the asset file
    * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
    * community-management/shares/vector-asset-api#upload-the-asset">Upload the Asset</a>
+   * @param webRequestor the web requestor - Note that it must not have any existing authorization
+   * tokens
    * @param uploadURL the uploadUrl from the register upload response
    * @param headers the headers from the register upload response
    * @param filename the file name of the file to be uploaded
    * @param file the file to upload
    * @return the map of headers from the request
    * @throws IOException IOException
-   * @throws GeneralSecurityException GeneralSecurityException
    */
-  public Map<String, String> uploadAsset(URL uploadURL, Map<String, String> headers,
-      String filename, File file) throws IOException, GeneralSecurityException {
+  public static Map<String, String> uploadAsset(WebRequestor webRequestor, URL uploadURL,
+      Map<String, String> headers, String filename, File file) throws IOException {
     InputStream videoInputStream = new FileInputStream(file);
     byte[] bytes = new byte[(int) file.length()];
     videoInputStream.read(bytes);
-    return uploadAsset(uploadURL, headers, filename, bytes);
+    return uploadAsset(webRequestor, uploadURL, headers, filename, bytes);
   }
   
   /**
    * Upload the asset bytes, this should be used to upload each asset chunk
    * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
    * community-management/shares/vector-asset-api#upload-the-asset">Upload the Asset</a>
+   * @param webRequestor the web requestor - Note that it must not have any existing authorization
+   * tokens
    * @param uploadURL the uploadUrl from the register upload response
    * @param headers the headers from the register upload response
    * @param filename the file name of the file to be uploaded
    * @param bytes the bytes to upload
    * @return the map of headers from the request
    * @throws IOException IOException
-   * @throws GeneralSecurityException GeneralSecurityException
    */
-  public Map<String, String> uploadAsset(URL uploadURL, Map<String, String> headers,
-      String filename, byte[] bytes) throws IOException, GeneralSecurityException {
-    WebRequestor.Response response = new DefaultWebRequestor(null)
+  public static Map<String, String> uploadAsset(WebRequestor webRequestor, URL uploadURL,
+      Map<String, String> headers, String filename, byte[] bytes) throws IOException {
+    WebRequestor.Response response = webRequestor
         .executePut(uploadURL.toString(), null, null, headers,
             BinaryAttachment.with(filename, bytes));
     return response.getHeaders();

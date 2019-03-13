@@ -145,7 +145,6 @@ public class ShareConnection extends ConnectionBaseV2 {
           timeInterval.getTimeGranularityType()));
       if (timeInterval.getTimeRange() != null) {
         if (timeInterval.getTimeRange().getStart() != null
-            && timeInterval.getTimeRange().getStart() != null
             && timeInterval.getTimeRange().getEnd() != null) {
           params.add(Parameter.with(TIME_INTERVALS_START, timeInterval.getTimeRange().getStart()));
           params.add(Parameter.with(TIME_INTERVALS_END, timeInterval.getTimeRange().getEnd()));

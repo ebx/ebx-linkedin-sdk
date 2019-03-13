@@ -33,6 +33,8 @@ import java.nio.file.Files;
  */
 public class RichMediaConnection extends ConnectionBaseV2 {
   
+  private static final String MEDIA_UPLOAD = "/media/upload";
+  
   /**
    * Initialise RichMediaConnection
    * @param linkedInClient the LinkedIn client
@@ -50,8 +52,8 @@ public class RichMediaConnection extends ConnectionBaseV2 {
    */
   public RichMediaLocation uploadRichMedia(String filename, File file) throws IOException {
     byte[] bytes = Files.readAllBytes(file.toPath());
-    return linkedinClient.publish("", RichMediaLocation.class, null,
-        BinaryAttachment.with(filename, array));
+    return linkedinClient.publish(MEDIA_UPLOAD, RichMediaLocation.class, null,
+        BinaryAttachment.with(filename, bytes));
   }
   
 }
