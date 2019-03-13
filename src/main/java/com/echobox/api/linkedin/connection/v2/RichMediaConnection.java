@@ -49,7 +49,7 @@ public class RichMediaConnection extends ConnectionBaseV2 {
    * @throws IOException IOException
    */
   public RichMediaLocation uploadRichMedia(String filename, File file) throws IOException {
-    byte[] array = Files.readAllBytes(file.toPath());
+    byte[] bytes = Files.readAllBytes(file.toPath());
     return linkedinClient.publish("", RichMediaLocation.class, null,
         BinaryAttachment.with(filename, array));
   }
