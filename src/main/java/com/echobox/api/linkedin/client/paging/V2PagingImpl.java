@@ -50,7 +50,6 @@ public class V2PagingImpl extends PagingStrategy {
         if (jsonPaging.get("count") != null && jsonPaging.get("start") != null) {
           int count = jsonPaging.getInt("count", 0);
           int start = jsonPaging.getInt("start", 0);
-          int total = jsonPaging.getInt("total", 0);
           // You will know that you have reached the end of the dataset when your response
           // contains less elements in the entities block of the response than your count
           // parameter requested.
@@ -59,15 +58,13 @@ public class V2PagingImpl extends PagingStrategy {
           if (extractParametersFromUrl.containsKey("count")) {
             // Check if the count is less than the elements returned - if so we're at the last page
             int requestedCount = Integer.parseInt(extractParametersFromUrl.get("count").get(0));
-            // There seems to be an issue with LinkedIn potentially returning more elements than
-            // the count
             if (elements.size() < requestedCount) {
               nextPageUrl = null;
               setPreviousPageURL(fullEndpoint, start, count);
               return;
             }
           }
-  
+
           // Paging is available
           setNextPageURL(fullEndpoint, start, count);
           setPreviousPageURL(fullEndpoint, start, count);
