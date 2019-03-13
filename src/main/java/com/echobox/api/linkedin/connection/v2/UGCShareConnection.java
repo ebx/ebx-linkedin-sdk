@@ -96,6 +96,7 @@ public class UGCShareConnection extends ConnectionBaseV2 {
    * community-management/shares/ugc-post-api#retrieve-ugc-posts-by-authors">Retrieve UGC Posts
    * by authors</a>
    * @param authorURN the author URN - can be either an organization or person URN
+   * @param count the number of entries to be returned per paged request
    * @return the connection of UCG share which is paged
    */
   public Connection<UGCShare> retrieveUGCPostsByAuthors(URN authorURN, Integer count) {
