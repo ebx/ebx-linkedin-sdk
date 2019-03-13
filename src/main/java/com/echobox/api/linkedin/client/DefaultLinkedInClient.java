@@ -252,8 +252,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
       parametersToAdd.add(Parameter.with("count", 10));
     }
     Parameter[] queryParams = parametersToAdd.toArray(new Parameter[parametersToAdd.size()]);
-    String parameterString =
-        toParameterString(queryParams);
+    String parameterString = toParameterString(queryParams);
     final String finalParameterString =
         StringUtils.isBlank(parameterString) ? "" : ("?" + parameterString);
     return new Connection<T>(fullEndpoint + finalParameterString, this,

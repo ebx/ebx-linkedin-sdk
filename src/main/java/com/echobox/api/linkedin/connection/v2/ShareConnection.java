@@ -68,17 +68,19 @@ public class ShareConnection extends ConnectionBaseV2 {
    * management/shares/share-api#retrieve-shares">Retrieve Shares</a>
    * @param ownerURNs the URNs of the owner
    * @param sharesPerOwner the number of shares per owner
+   * @param count the number of entries to be returned per paged request
    * @return the share corresponding to the share id
    */
-  public List<Share> getShares(List<URN> ownerURNs, int sharesPerOwner) {
+  public List<Share> getShares(List<URN> ownerURNs, int sharesPerOwner, Integer count) {
     List<Parameter> params = new ArrayList<>();
   
     params.add(Parameter.with(QUERY_KEY, OWNERS));
     addParametersFromURNs(params, SHARES_PARAM, ownerURNs);
     params.add(Parameter.with(SHARES_PER_OWNER, sharesPerOwner));
     params.add(Parameter.with(COUNT, 20));
+    addStartAndCountParams(params, null, count);
     
-    return getListFromQuery(SHARES, Share.class, params.toArray(new Parameter[params.size()]));
+    return getListFromQuery(SHARES, Share.class, params.toArray(new Parameter[0]));
   }
   
   /**
