@@ -15,34 +15,57 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.engagement.TimeGranularityType;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+package com.echobox.api.linkedin.types.ucg;
 
 /**
- * Time intervals POJO
- * @author Joanna
- *
+ * Origin
+ * @author joanna
  */
-@AllArgsConstructor
-public class TimeInterval {
+public enum Origin {
   
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeGranularityType timeGranularityType;
+  /**
+   * Partner using external API
+   */
+  API,
   
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeRange timeRange;
+  /**
+   * Elevate app
+   */
+  ELEVATE,
+  
+  /**
+   * Firefox browser extension
+   */
+  FIREFOX,
+  
+  /**
+   * Mobile flagship app
+   */
+  FLAGSHIP,
+  
+  /**
+   * InShare on 3rd party sites
+   */
+  IN_SHARE,
+  
+  /**
+   * Desktop site
+   */
+  DESKTOP,
+  
+  /**
+   * Sales Navigator
+   */
+  LSS,
+  
+  /**
+   * Pulse app
+   */
+  PULSE,
+  
+  /**
+   * InShare on Slideshare
+   */
+  SLIDESHARE;
 
 }

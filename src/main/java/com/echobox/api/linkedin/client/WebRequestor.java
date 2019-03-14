@@ -28,6 +28,7 @@ import static java.lang.String.format;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Specifies how a class that sends {@code HTTP} requests to the LinkedIn API endpoint must operate.
@@ -50,6 +51,8 @@ public interface WebRequestor {
      * HTTP response body as text.
      */
     private String body;
+    
+    private Map<String, String> headers;
 
     /**
      * Creates a response with the given HTTP status code and response body as text.
@@ -59,8 +62,9 @@ public interface WebRequestor {
      * @param body
      *          The response body as text.
      */
-    public Response(Integer statusCode, String body) {
+    public Response(Integer statusCode, Map<String, String> headers, String body) {
       this.statusCode = statusCode;
+      this.headers = headers;
       this.body = StringUtils.trimToEmpty(body);
     }
 
@@ -80,6 +84,10 @@ public interface WebRequestor {
      */
     public String getBody() {
       return body;
+    }
+    
+    public Map<String, String> getHeaders() {
+      return headers;
     }
 
     /**
@@ -134,7 +142,12 @@ public interface WebRequestor {
    * @throws IOException
    *           If an error occurs while performing the {@code POST}.
    */
-  Response executePost(String url, String parameters, String jsonBody, BinaryAttachment... binaryAttachments)
+  Response executePost(String url, String parameters, String jsonBody,
+      Map<String, String> headers, BinaryAttachment... binaryAttachments)
+      throws IOException;
+  
+  Response executePut(String url, String parameters, String jsonBody,
+      Map<String, String> headers, BinaryAttachment binaryAttachments)
       throws IOException;
 
   /**

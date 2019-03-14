@@ -15,25 +15,25 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.engagement;
+package com.echobox.api.linkedin.types;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
-
 
 /**
- * The class containing all information regarding a share
- * @author clementcaylux on 27/11/2018.
+ * LinkedIn URN id type
+ *
+ * @author joanna
  */
-public class ShareStatistics {
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  private List<ShareStatisticsElement> elements;
-
+public class LinkedInURNIdType {
+  
+  /**
+   * Unique id for this object. Can contain more urn types in the future.
+   */
+  @Getter
+  @LinkedIn("id")
+  private URN id;
+  
 }

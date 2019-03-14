@@ -15,34 +15,32 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.engagement.TimeGranularityType;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+package com.echobox.api.linkedin.types.ucg;
 
 /**
- * Time intervals POJO
- * @author Joanna
- *
+ * Visibility enum
+ * @author joanna
  */
-@AllArgsConstructor
-public class TimeInterval {
+public enum Visibility {
   
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeGranularityType timeGranularityType;
+  /**
+   * Represents 1st degree network of owner.
+   */
+  CONNECTIONS,
   
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeRange timeRange;
-
+  /**
+   * Anyone can view this.
+   */
+  PUBLIC,
+  
+  /**
+   * Viewable by logged in members only.
+   */
+  LOGGED_IN,
+  
+  /**
+   * Represents a dark post, which is only distributed as part of a sponsored campaign.\
+   */
+  DARK;
+  
 }

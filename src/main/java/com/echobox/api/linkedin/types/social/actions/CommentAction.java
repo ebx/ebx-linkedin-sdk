@@ -90,7 +90,7 @@ public class CommentAction extends ContainsURN {
     @Getter
     @Setter
     @LinkedIn
-    private List<MessageAttribute> attributes;
+    private List<Attribute> attributes;
     
     @Getter
     @Setter
@@ -99,9 +99,9 @@ public class CommentAction extends ContainsURN {
   }
   
   /**
-   * Message attribute model
+   * Attribute model
    */
-  public static class MessageAttribute {
+  public static class Attribute {
     
     @Getter
     @Setter
@@ -116,14 +116,19 @@ public class CommentAction extends ContainsURN {
     @Getter
     @Setter
     @LinkedIn("value")
-    private CompanyAttributedEntity companyValue;
-  
+    private CommentAction.CompanyAttributedEntity companyValue;
+    
     @Getter
     @Setter
     @LinkedIn("value")
-    private MemberAttributedEntity memberVaue;
+    private CommentAction.MemberAttributedEntity memberVaue;
+    
+    @Getter
+    @Setter
+    @LinkedIn("value")
+    private CommentAction.SchoolAttributedEntity schoolValue;
+    
   }
-  
   
   /**
    * Company Attributed Entity
@@ -167,5 +172,17 @@ public class CommentAction extends ContainsURN {
     @Getter
     @LinkedIn
     private URN member;
+  }
+  
+  /**
+   * Company Attributed Entity
+   */
+  public static class SchoolAttributedEntity  {
+    
+    @Getter
+    @Setter
+    @LinkedIn("com.linkedin.common.SchoolAttributedEntity")
+    private CompanyURN school;
+    // TODO: organizationUrn??
   }
 }

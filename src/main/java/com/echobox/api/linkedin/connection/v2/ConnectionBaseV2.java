@@ -15,34 +15,25 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.connection.v2;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.engagement.TimeGranularityType;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import com.echobox.api.linkedin.client.LinkedInClient;
+import com.echobox.api.linkedin.connection.ConnectionBase;
+import com.echobox.api.linkedin.version.Version;
 
 /**
- * Time intervals POJO
- * @author Joanna
- *
+ * Connection base for all V2 connections
+ * @author joanna
  */
-@AllArgsConstructor
-public class TimeInterval {
+public class ConnectionBaseV2 extends ConnectionBase {
   
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeGranularityType timeGranularityType;
+  protected static final String QUERY_KEY = "q";
   
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeRange timeRange;
-
+  protected ConnectionBaseV2(LinkedInClient linkedinClient) {
+    super(linkedinClient);
+    if (!Version.V2.equals(linkedinClient.getVersion())) {
+      throw new IllegalStateException(
+          "The LinkedIn clinet should be set to V2 to access the endpoints");
+    }
+  }
 }

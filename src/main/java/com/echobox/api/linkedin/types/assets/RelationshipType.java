@@ -15,31 +15,16 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.engagement;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
-import lombok.Getter;
-import lombok.Setter;
+package com.echobox.api.linkedin.types.assets;
 
 /**
- * Encapsulate share statistic elements
- * @author clementcaylux on 27/11/2018.
+ * Relationship type
+ * @author Joanna
  */
-class ShareStatisticsElement {
+public enum RelationshipType {
   
-  @Getter
-  @Setter
-  @LinkedIn
-  private TotalShareStatistics totalShareStatistics;
+  GENERIC,
+  CREATOR,
+  OWNER;
   
-  @Getter
-  @Setter
-  @LinkedIn
-  private String share;
-  
-  @Getter
-  @Setter
-  @LinkedIn
-  private String organizationalEntity;
 }

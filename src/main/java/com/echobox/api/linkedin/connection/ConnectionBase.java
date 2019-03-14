@@ -62,5 +62,28 @@ public abstract class ConnectionBase {
       throw new IllegalArgumentException("The URN should be type " + urnEntityType);
     }
   }
+  
+  protected void addParametersFromURNs(List<Parameter> params, String key, List<URN> urns) {
+    if (urns != null && !urns.isEmpty()) {
+      for (int i = 0; i < urns.size(); i++) {
+        params.add(Parameter.with(key + "[" + i + "]", urns.get(i).toString()));
+      }
+    }
+  }
+  
+  protected void addStartAndCountParams(List<Parameter> params, Integer start, Integer count) {
+    if (start != null && start < 0) {
+      throw new IllegalArgumentException("start parameter must be a positive integer");
+    }
+    if (count != null && count < 0) {
+      throw new IllegalArgumentException("count parameter must be a positive integer");
+    }
+    if (start != null) {
+      params.add(Parameter.with("start", start));
+    }
+    if (count != null) {
+      params.add(Parameter.with("count", count));
+    }
+  }
 
 }

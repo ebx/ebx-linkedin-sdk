@@ -15,34 +15,43 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.ucg;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.engagement.TimeGranularityType;
+import com.echobox.api.linkedin.types.social.actions.CommentAction;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 
-/**
- * Time intervals POJO
- * @author Joanna
- *
- */
-@AllArgsConstructor
-public class TimeInterval {
-  
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeGranularityType timeGranularityType;
-  
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeRange timeRange;
+import java.util.List;
 
+/**
+ * Commentary
+ * @author joanna
+ */
+public class Commentary {
+  
+  /**
+   * User generated attributes in the text.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private List<CommentAction.Attribute> attributes;
+  
+  /**
+   * The locale that may have be inferred for this text.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private String inferredLocale;
+  
+  /**
+   * The text content that may be attributed.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private String text;
 }

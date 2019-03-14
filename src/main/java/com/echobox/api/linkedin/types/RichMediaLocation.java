@@ -18,31 +18,21 @@
 package com.echobox.api.linkedin.types;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.engagement.TimeGranularityType;
+import com.echobox.api.linkedin.types.urn.URN;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
 
 /**
- * Time intervals POJO
- * @author Joanna
- *
+ * Rich media location type
+ * @author joanna
  */
-@AllArgsConstructor
-public class TimeInterval {
+public class RichMediaLocation {
   
+  /**
+   * Location of the rich media
+   */
   @Getter
-  @Setter
-  @NonNull
   @LinkedIn
-  private TimeGranularityType timeGranularityType;
-  
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeRange timeRange;
+  private URN location;
 
 }

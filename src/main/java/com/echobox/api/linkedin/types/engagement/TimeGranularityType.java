@@ -17,32 +17,20 @@
 
 package com.echobox.api.linkedin.types.engagement;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
-
-
 /**
- * @author clementcaylux on 27/11/2018.
+ * Time granularity type
+ * @author joanna
  */
-class Paging {
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  private int count;
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  private int start;
-
-  @Getter 
-  @Setter
-  @LinkedIn
-  List<String> links;
+public enum TimeGranularityType {
   
+  /**
+   * Time granularity DAY
+   */
+  DAY,
+  
+  /**
+   * Time granularity MONTH
+   */
+  MONTH;
+
 }

@@ -26,11 +26,18 @@ import com.eclipsesource.json.JsonObject;
  *
  */
 public class V1PagingImpl extends PagingStrategy {
-
+  
+  private static final String DATA_KEY = "values";
+  
+  @Override
+  public String getDataKey() {
+    return DATA_KEY;
+  }
+  
   @Override
   protected void discoverPages(JsonObject jsonObject, String fullEndpoint) {
-    if (jsonObject.get("values") != null) {
-      JsonArray values = jsonObject.get("values").asArray();
+    if (jsonObject.get(DATA_KEY) != null) {
+      JsonArray values = jsonObject.get(DATA_KEY).asArray();
       if (jsonObject.get("_count") != null && jsonObject.get("_start") != null
           && jsonObject.get("_total") != null) {
         // Paging is available
@@ -56,5 +63,5 @@ public class V1PagingImpl extends PagingStrategy {
       nextPageUrl = null;
     }
   }
-
+  
 }

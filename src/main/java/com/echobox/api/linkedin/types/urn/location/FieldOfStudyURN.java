@@ -15,34 +15,24 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.urn.location;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.engagement.TimeGranularityType;
+import com.echobox.api.linkedin.types.urn.URN;
+import com.echobox.api.linkedin.types.urn.function.FunctionURN;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import java.util.List;
 
 /**
- * Time intervals POJO
- * @author Joanna
- *
+ * Field of study URN
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/shared/references/v2/standardized-data
+ * /fields-of-study?context=linkedin/marketing/context">Field of Study URN</a>
+ * @author joanna
  */
-@AllArgsConstructor
-public class TimeInterval {
+public class FieldOfStudyURN extends FunctionURN {
   
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeGranularityType timeGranularityType;
-  
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeRange timeRange;
+  /**
+   * The general standardized field of study categories.
+   */
+  private List<URN> rollupIds;
 
 }

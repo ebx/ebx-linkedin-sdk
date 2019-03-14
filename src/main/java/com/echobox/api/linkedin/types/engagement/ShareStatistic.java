@@ -15,34 +15,31 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.engagement;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.engagement.TimeGranularityType;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 
 /**
- * Time intervals POJO
- * @author Joanna
- *
+ * Encapsulate share statistic elements
+ * @author clementcaylux on 27/11/2018.
  */
-@AllArgsConstructor
-public class TimeInterval {
+public class ShareStatistic {
   
   @Getter
   @Setter
-  @NonNull
   @LinkedIn
-  private TimeGranularityType timeGranularityType;
+  private TotalShareStatistics totalShareStatistics;
   
   @Getter
   @Setter
-  @NonNull
   @LinkedIn
-  private TimeRange timeRange;
-
+  private String share;
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private String organizationalEntity;
 }

@@ -15,34 +15,29 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.engagement.TimeGranularityType;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+package com.echobox.api.linkedin.types.ucg;
 
 /**
- * Time intervals POJO
- * @author Joanna
- *
+ * External distribution channel type
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations
+ * /community-management/shares/ugc-post-api#distribution">External Distribution Channel Type</a>
+ * @author joanna
  */
-@AllArgsConstructor
-public class TimeInterval {
+public enum ExternalDistributionChannelType {
   
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeGranularityType timeGranularityType;
+  /**
+   * Distribute content to Twitter
+   */
+  TWITTER,
   
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeRange timeRange;
+  /**
+   * Distribute content to Tencent
+   */
+  TENCENT,
+  
+  /**
+   * Distribute content to Weibo
+   */
+  WEIBO;
 
 }

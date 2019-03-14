@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.connection;
+package com.echobox.api.linkedin.connection.v2;
 
 import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
@@ -26,7 +26,6 @@ import com.echobox.api.linkedin.types.statistics.page.Statistics;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.urn.URNEntityType;
 import com.echobox.api.linkedin.util.ValidationUtils;
-import com.echobox.api.linkedin.version.Version;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -39,7 +38,7 @@ import java.util.List;
  * @author joanna
  *
  */
-public class OrganizationConnection extends ConnectionBase {
+public class OrganizationConnection extends ConnectionBaseV2 {
 
   private static final String ORGANIZATIONAL_ENTITY_ACLS = "/organizationalEntityAcls";
   private static final String ORGANIZATIONS = "/organizations";
@@ -49,7 +48,6 @@ public class OrganizationConnection extends ConnectionBase {
   private static final String ORGANIZATION_ENTITY_SHARE_STATS =
       "/organizationalEntityShareStatistics";
   
-  private static final String QUERY_KEY = "q";
   private static final String ROLE_KEY = "role";
   private static final String STATE_KEY = "state";
   private static final String ORGANIZATIONAL_TARGET_KEY = "organizationalTarget";
@@ -72,10 +70,6 @@ public class OrganizationConnection extends ConnectionBase {
    */
   public OrganizationConnection(LinkedInClient linkedinClient) {
     super(linkedinClient);
-    if (!Version.V2.equals(linkedinClient.getVersion())) {
-      throw new IllegalStateException(
-          "The LinkedIn clinet should be set to V2 to access the endpoints");
-    }
   }
 
   /**
@@ -383,7 +377,7 @@ public class OrganizationConnection extends ConnectionBase {
   private void addTimeIntervalToQueryParameters(TimeInterval timeInterval,
       List<Parameter> parameters) {
     if (timeInterval != null) {
-      if (StringUtils.isNotBlank(timeInterval.getTimeGranularityType())) {
+      if (timeInterval.getTimeGranularityType() != null) {
         parameters.add(Parameter.with("timeIntervals.timeRange",
             timeInterval.getTimeGranularityType()));
       }

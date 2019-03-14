@@ -15,34 +15,35 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.ucg;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.engagement.TimeGranularityType;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+
+import java.util.List;
 
 /**
- * Time intervals POJO
- * @author Joanna
- *
+ * Distribution
+ * @see
+ * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management
+ * /shares/ugc-post-api#distribution">Distribution</a>
+ * @author joanna
  */
-@AllArgsConstructor
-public class TimeInterval {
+public class Distribution {
   
+  /**
+   * Whether UGC post is distributed to follow-feed or not.
+   */
   @Getter
-  @Setter
-  @NonNull
   @LinkedIn
-  private TimeGranularityType timeGranularityType;
+  private boolean distributedViaFollowFeed;
   
+  /**
+   * External distribution channels that this content is distributed to.
+   */
   @Getter
-  @Setter
-  @NonNull
   @LinkedIn
-  private TimeRange timeRange;
+  private List<String> externalDistributionChannels;
 
 }

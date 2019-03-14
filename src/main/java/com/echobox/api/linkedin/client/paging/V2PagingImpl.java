@@ -30,11 +30,18 @@ import java.util.Map;
  *
  */
 public class V2PagingImpl extends PagingStrategy {
+  
+  private static final String DATA_KEY = "elements";
+  
+  @Override
+  public String getDataKey() {
+    return DATA_KEY;
+  }
 
   @Override
   protected void discoverPages(JsonObject jsonObject, String fullEndpoint) {
-    if (jsonObject.get("elements") != null) {
-      JsonArray elements = jsonObject.get("elements").asArray();
+    if (jsonObject.get(DATA_KEY) != null) {
+      JsonArray elements = jsonObject.get(DATA_KEY).asArray();
 
       // Pull out paging info, if present
       if (jsonObject.get("paging") != null) {

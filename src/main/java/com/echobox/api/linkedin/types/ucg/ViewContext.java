@@ -15,34 +15,22 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.engagement.TimeGranularityType;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+package com.echobox.api.linkedin.types.ucg;
 
 /**
- * Time intervals POJO
- * @author Joanna
- *
+ * The context in which the user generated content is being viewed.
+ * @author joanna
  */
-@AllArgsConstructor
-public class TimeInterval {
+public enum ViewContext {
   
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeGranularityType timeGranularityType;
+  /**
+   * View the content as the author
+   */
+  AUTHOR,
   
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeRange timeRange;
-
+  /**
+   * View the content as a reader
+   */
+  READER;
+  
 }

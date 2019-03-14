@@ -15,34 +15,31 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.request;
 
+import com.echobox.api.linkedin.jsonmapper.JsonMapper;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.engagement.TimeGranularityType;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import com.echobox.api.linkedin.types.ShareText;
+import com.eclipsesource.json.Json;
 
 /**
- * Time intervals POJO
- * @author Joanna
- *
+ * Update share request body
+ * @author joanna
  */
-@AllArgsConstructor
-public class TimeInterval {
+public class UpdateShareRequestBody {
   
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeGranularityType timeGranularityType;
+  @LinkedIn("patch")
+  private PatchBody patch;
   
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeRange timeRange;
+  /**
+   * Initialise update share request body
+   * @param shareText the share text to update
+   * @param jsonMapper the json mapper to serialise the share text
+   */
+  public UpdateShareRequestBody(ShareText shareText, JsonMapper jsonMapper) {
+    PatchBody patch = new PatchBody();
+    patch.setSet(Json.object().set("text", Json.parse(jsonMapper.toJson(shareText)).asObject()));
+    this.patch = patch;
+  }
 
 }

@@ -15,34 +15,69 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.request;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.engagement.TimeGranularityType;
+import com.echobox.api.linkedin.types.ShareContent;
+import com.echobox.api.linkedin.types.ShareDistribution;
+import com.echobox.api.linkedin.types.ShareText;
+import com.echobox.api.linkedin.types.urn.URN;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 /**
- * Time intervals POJO
- * @author Joanna
- *
+ * Share request body class
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
+ * community-management/shares/share-api#post-shares">Post Shares</a>
+ * @author joanna
  */
-@AllArgsConstructor
-public class TimeInterval {
+@RequiredArgsConstructor
+public class ShareRequestBody {
+  
+  private ShareRequestBody() {}
   
   @Getter
   @Setter
-  @NonNull
   @LinkedIn
-  private TimeGranularityType timeGranularityType;
+  @NonNull
+  private URN owner;
   
   @Getter
   @Setter
-  @NonNull
   @LinkedIn
-  private TimeRange timeRange;
+  private URN agent;
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private String subject;
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private ShareText text;
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private ShareContent content;
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private ShareDistribution distribution;
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private URN resharedShare;
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private URN originalShare;
 
 }

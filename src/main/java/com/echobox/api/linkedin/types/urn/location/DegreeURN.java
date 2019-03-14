@@ -15,34 +15,29 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.urn.location;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.engagement.TimeGranularityType;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import com.echobox.api.linkedin.types.objectype.MultiLocaleString;
+import com.echobox.api.linkedin.types.urn.URN;
+import com.echobox.api.linkedin.types.urn.function.FunctionURN;
 
 /**
- * Time intervals POJO
- * @author Joanna
- *
+ * Degree URN
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/shared/references/v2/standardized-data
+ * /degrees?context=linkedin/marketing/context">Degree URN</a>
+ * @author joanna
  */
-@AllArgsConstructor
-public class TimeInterval {
+public class DegreeURN extends FunctionURN {
   
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeGranularityType timeGranularityType;
+  /**
+   * All aliases to this standardized degree name. Represented as an array of MultiLocaleString.
+   */
+  private MultiLocaleString alias;
   
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeRange timeRange;
+  /**
+   * The general standardized degree category for the standardized degree.
+   * Represented as a degree URN
+   */
+  private URN rollup;
 
 }

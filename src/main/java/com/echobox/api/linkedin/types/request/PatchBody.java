@@ -15,34 +15,21 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.request;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.engagement.TimeGranularityType;
+import com.eclipsesource.json.JsonObject;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.Data;
 
 /**
- * Time intervals POJO
- * @author Joanna
- *
+ * Patch body
+ * @author joanna
  */
-@AllArgsConstructor
-public class TimeInterval {
-  
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeGranularityType timeGranularityType;
-  
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private TimeRange timeRange;
+@Data
+public class PatchBody {
+
+  @LinkedIn("$set")
+  private JsonObject set;
 
 }

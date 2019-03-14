@@ -15,34 +15,35 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.ucg;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.engagement.TimeGranularityType;
+import com.echobox.api.linkedin.types.urn.URN;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
 
 /**
- * Time intervals POJO
- * @author Joanna
- *
+ * Response context
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations
+ * /community-management/shares/ugc-post-api#responsecontext">Response Context</a>
+ * @author joanna
  */
-@AllArgsConstructor
-public class TimeInterval {
+public class ResponseContext {
   
-  @Getter
-  @Setter
-  @NonNull
+  /**
+   * The content that a piece of content is a response to. Currently, the only supported Urn is
+   * ugcPost Urn.
+   */
   @LinkedIn
-  private TimeGranularityType timeGranularityType;
+  @Getter
+  private URN parent;
   
-  @Getter
-  @Setter
-  @NonNull
+  /**
+   * The greatest ancestor content that a piece of content is a response to. Currently, the only
+   * supported Urn is ugcPost Urn.
+   */
   @LinkedIn
-  private TimeRange timeRange;
+  @Getter
+  private URN root;
 
 }
