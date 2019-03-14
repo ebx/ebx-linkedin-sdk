@@ -22,6 +22,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * Comments Summary
  * @author Alexandros
  */
 public class CommentsSummary {

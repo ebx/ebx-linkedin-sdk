@@ -493,6 +493,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
     return makeRequestAndProcessResponseJSON(new Requestor() {
       /**
+       * Make the request
        * @see com.echobox.api.linkedin.client.DefaultLinkedInClient.Requestor#makeRequest()
        */
       @Override

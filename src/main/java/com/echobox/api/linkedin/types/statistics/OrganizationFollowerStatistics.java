@@ -26,6 +26,7 @@ import java.util.List;
 
 
 /**
+ * Organization follower statistics
  * @author clementcaylux on 03/12/2018.
  */
 public class OrganizationFollowerStatistics {

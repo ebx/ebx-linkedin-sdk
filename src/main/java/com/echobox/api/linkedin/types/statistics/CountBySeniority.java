@@ -23,6 +23,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * Count by seniority
  * @author clementcaylux on 03/12/2018.
  */
 public class CountBySeniority {

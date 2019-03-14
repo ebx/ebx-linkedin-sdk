@@ -23,6 +23,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * Follower count
  * @author clementcaylux on 03/12/2018.
  */
 public class FollowerCount {

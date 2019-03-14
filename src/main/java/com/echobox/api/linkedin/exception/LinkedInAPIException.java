@@ -58,7 +58,7 @@ public class LinkedInAPIException extends LinkedInErrorMessageException {
   public LinkedInAPIException(String errorMessage, Integer errorCode, Integer httpStatusCode,
       JsonObject rawError) {
     super(String.format("Received LinkedIn error response: %s (code %s)", errorMessage,
-      errorCode));
+        errorCode));
     this.errorMessage = errorMessage;
     this.errorCode = errorCode;
     this.httpStatusCode = httpStatusCode;
