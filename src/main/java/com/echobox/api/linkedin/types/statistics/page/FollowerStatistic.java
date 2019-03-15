@@ -15,60 +15,30 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.statistics;
+package com.echobox.api.linkedin.types.statistics.page;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.TimeRange;
 import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
-
 
 /**
- * Organization follower statistics
- * @author clementcaylux on 03/12/2018.
+ * Follower statistic
+ * @author Joanna
  */
-public class OrganizationFollowerStatistics {
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private List<CountByStaffCountRange> followerCountsByStaffCountRange;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private List<CountByIndustry> followerCountsByIndustry;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private List<CountByFunction> followerCountsByFunction;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private List<CountByAssociationType> followerCountsByAssociationType;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private List<CountBySeniority> followerCountsBySeniority;
+public class FollowerStatistic {
   
   @Getter
-  @Setter
   @LinkedIn
-  private List<CountByCountry> followerCountsByCountry;
+  private TimeRange timeRange;
   
   @Getter
-  @Setter
   @LinkedIn
-  private List<CountByRegion> followerCountsByRegion;
-
+  private FollowerGain followerGains;
+  
   @Getter
-  @Setter
   @LinkedIn
   private URN organizationalEntity;
+  
 }

@@ -78,7 +78,7 @@ public class URN {
    * @return the urn entity type
    */
   public URNEntityType getURNEntityType() {
-    return URNEntityType.valueOf(entityType);
+    return URNEntityType.valueOf(entityType.toUpperCase());
   }
 
   @Override

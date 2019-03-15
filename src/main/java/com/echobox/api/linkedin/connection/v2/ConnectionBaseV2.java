@@ -18,8 +18,15 @@
 package com.echobox.api.linkedin.connection.v2;
 
 import com.echobox.api.linkedin.client.LinkedInClient;
+import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.connection.ConnectionBase;
+import com.echobox.api.linkedin.types.TimeInterval;
+import com.echobox.api.linkedin.types.urn.URN;
+import com.echobox.api.linkedin.types.urn.URNEntityType;
+import com.echobox.api.linkedin.util.ValidationUtils;
 import com.echobox.api.linkedin.version.Version;
+
+import java.util.List;
 
 /**
  * Connection base for all V2 connections
@@ -28,12 +35,42 @@ import com.echobox.api.linkedin.version.Version;
 public class ConnectionBaseV2 extends ConnectionBase {
   
   protected static final String QUERY_KEY = "q";
+  protected static final String EDGE_TYPE = "edgeType";
+  protected static final String SHARES_PARAM = "shares";
+  private static final String TIME_INTERVALS_GRANULARITY = "timeIntervals.timeGranularityType";
+  private static final String TIME_INTERVALS_START = "timeIntervals.timeRange.start";
+  private static final String TIME_INTERVALS_END = "timeIntervals.timeRange.end";
   
   protected ConnectionBaseV2(LinkedInClient linkedinClient) {
     super(linkedinClient);
     if (!Version.V2.equals(linkedinClient.getVersion())) {
       throw new IllegalStateException(
-          "The LinkedIn clinet should be set to V2 to access the endpoints");
+          "The LinkedIn client should be set to V2 to access the endpoints");
     }
+  }
+  
+  protected void addTimeIntervalToParams(List<Parameter> params, TimeInterval timeInterval) {
+    if (timeInterval != null && timeInterval.getTimeGranularityType() != null) {
+      // Time restriction on retrieving share statistics
+      params.add(Parameter.with(TIME_INTERVALS_GRANULARITY, timeInterval.getTimeGranularityType()));
+      if (timeInterval.getTimeRange() != null) {
+        if (timeInterval.getTimeRange().getStart() != null
+            && timeInterval.getTimeRange().getEnd() != null) {
+          params.add(Parameter.with(TIME_INTERVALS_START, timeInterval.getTimeRange().getStart()));
+          params.add(Parameter.with(TIME_INTERVALS_END, timeInterval.getTimeRange().getEnd()));
+        }
+      } else {
+        throw new IllegalStateException(
+            "timeIntervals.timeRange cannot be null when " + "timeInterval is provided");
+      }
+    } else {
+      throw new IllegalStateException(
+          "timeIntervals.timeGranularityType cannot be null when " + "timeInterval is provided");
+    }
+  }
+  
+  protected void validateShareURN(URN shareURN) {
+    ValidationUtils.verifyParameterPresence("share", shareURN);
+    validateURN(URNEntityType.SHARE, shareURN);
   }
 }

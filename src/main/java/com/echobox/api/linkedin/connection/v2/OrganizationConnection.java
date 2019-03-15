@@ -20,8 +20,12 @@ package com.echobox.api.linkedin.connection.v2;
 import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.types.TimeInterval;
+import com.echobox.api.linkedin.types.engagement.ShareStatistic;
 import com.echobox.api.linkedin.types.organization.AccessControl;
+import com.echobox.api.linkedin.types.organization.NetworkSize;
 import com.echobox.api.linkedin.types.organization.Organization;
+import com.echobox.api.linkedin.types.statistics.OrganizationFollowerStatistics;
+import com.echobox.api.linkedin.types.statistics.page.FollowerStatistic;
 import com.echobox.api.linkedin.types.statistics.page.Statistics;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.urn.URNEntityType;
@@ -45,8 +49,8 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   private static final String ORGANIZATIONAL_ENTITY_FOLOWER_STATS =
       "/organizationalEntityFollowerStatistics";
   private static final String ORGANIZATIONAL_PAGE_STATS = "/organizationPageStatistics";
-  private static final String ORGANIZATION_ENTITY_SHARE_STATS =
-      "/organizationalEntityShareStatistics";
+  private static final String NETWORK_SIZES = "/networkSizes";
+  private static final String SHARE_STATISTICS = "/organizationalEntityShareStatistics";
   
   private static final String ROLE_KEY = "role";
   private static final String STATE_KEY = "state";
@@ -55,7 +59,6 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   private static final String EMAIL_DOMAIN_KEY = "emailDomain";
   private static final String ORGANIZATIONAL_ENTITY_KEY = "organizationalEntity";
   private static final String ORGANIZATION_KEY = "organization";
-  private static final String SHARES_KEY = "shares";
   
   private static final String ROLE_ASSIGNEE_VALUE = "roleAssignee";
   private static final String ORGANIZATION_TARGET_VALUE = "organizationalTarget";
@@ -63,6 +66,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   private static final String EMAIL_DOMAIN_VALUE = "emailDomain";
   private static final String ORGANIZATIONAL_ENTITY_VALUE = "organizationalEntity";
   private static final String ORGANIZATION_VALUE = "organization";
+  private static final String COMPANY_FOLLOWED_BY_MEMEBER = "CompanyFollowedByMember";
 
   /**
    * Initialise an organization connection
@@ -80,16 +84,18 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @param role Limit results to specific roles, such as ADMINISTRATOR.
    * @param state Limit results to specific role states, such as APPROVED.
    * @param projection Field projection
+   * @param count the number of entries to be returned per paged request
    * @return List of access controls for a given role and state for the member
    */
-  public List<AccessControl> fetchMemeberOrganizationAccessControl(String role, String state,
-      Parameter projection) {
+  public List<AccessControl> fetchMemberOrganizationAccessControl(String role, String state,
+      Parameter projection, Integer count) {
     List<Parameter> parameters = new ArrayList<>();
     parameters.add(Parameter.with(QUERY_KEY, ROLE_ASSIGNEE_VALUE));
     addRoleStateParams(role, state, projection, parameters);
+    addStartAndCountParams(parameters, null, count);
 
     return getListFromQuery(ORGANIZATIONAL_ENTITY_ACLS, AccessControl.class,
-        parameters.toArray(new Parameter[parameters.size()]));
+        parameters.toArray(new Parameter[0]));
   }
 
   /**
@@ -103,34 +109,21 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @param role Limit results to specific roles
    * @param state Limit results to specific role states
    * @param projection Field projection
+   * @param count the number of entries to be returned per paged request
    * @return List of access controls for an organization
    */
   public List<AccessControl> findOrganizationAccessControl(URN organizationalTarget, String role,
-      String state, Parameter projection) {
+      String state, Parameter projection, Integer count) {
     validateOrganizationURN("organizationalTarget", organizationalTarget);
 
     List<Parameter> parameters = new ArrayList<>();
     parameters.add(Parameter.with(QUERY_KEY, ORGANIZATION_TARGET_VALUE));
     parameters.add(Parameter.with(ORGANIZATIONAL_TARGET_KEY, organizationalTarget.toString()));
     addRoleStateParams(role, state, projection, parameters);
+    addStartAndCountParams(parameters, null, count);
 
     return getListFromQuery(ORGANIZATIONAL_ENTITY_ACLS, AccessControl.class,
-        parameters.toArray(new Parameter[parameters.size()]));
-  }
-
-  /**
-   * Find an organization using an organization ID, parent organization ID from the URN
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
-   * management/organizations/organization-lookup-api#retrieve-organizations">
-   * Retrieve organization</a>
-   * @param organizationURN The organization URN
-   * @param fields the fields to project
-   * @return the requested organization by the given URN
-   */
-  public Organization retrieveOrganizationByURN(URN organizationURN, Parameter fields) {
-    validateOrganizationURN("organizationURN", organizationURN);
-
-    return retrieveOrganization(Long.parseLong(organizationURN.getId()), fields);
+        parameters.toArray(new Parameter[0]));
   }
 
   /**
@@ -138,13 +131,18 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
    * management/organizations/organization-lookup-api#retrieve-organizations">
    * Retrieve organization</a>
-   * @param organizationId The organization id
+   * @param organizationURN The organization URN
    * @param fields the fields to project
    * @return the requested organization
    */
-  public Organization retrieveOrganization(long organizationId, Parameter fields) {
-    return linkedinClient.fetchObject(ORGANIZATIONS + "/" + organizationId, Organization.class,
-        fields);
+  public Organization retrieveOrganization(URN organizationURN, Parameter fields) {
+    validateOrganizationURN("organizationURN", organizationURN);
+    List<Parameter> parameters = new ArrayList<>();
+    if (fields != null) {
+      parameters.add(fields);
+    }
+    return linkedinClient.fetchObject(ORGANIZATIONS + "/" + organizationURN.getId(),
+        Organization.class, parameters.toArray(new Parameter[0]));
   }
 
   /**
@@ -154,15 +152,22 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * Retrieve organization</a>
    * @param vanityName the vanity name for the organization
    * @param fields the fields to request
+   * @param count the number of entries to be returned per paged request
    * @return The organization with the vanity name
    */
-  public Organization findOrganizationByVanityName(String vanityName, Parameter fields) {
+  public List<Organization> findOrganizationByVanityName(String vanityName, Parameter fields,
+      Integer count) {
     ValidationUtils.verifyParameterPresence("vanityName", vanityName);
-
-    Parameter queryParam = Parameter.with(QUERY_KEY, VANITY_NAME_VALUE);
-    Parameter vanityNameParam = Parameter.with(VANITY_NAME_KEY, vanityName);
-    return linkedinClient.fetchObject(ORGANIZATIONS, Organization.class, fields, queryParam,
-        vanityNameParam);
+  
+    List<Parameter> parameters = new ArrayList<>();
+    if (fields != null) {
+      parameters.add(fields);
+    }
+    parameters.add(Parameter.with(QUERY_KEY, VANITY_NAME_VALUE));
+    parameters.add(Parameter.with(VANITY_NAME_KEY, vanityName));
+    addStartAndCountParams(parameters, null, count);
+    return getListFromQuery(ORGANIZATIONS, Organization.class,
+        parameters.toArray(new Parameter[0]));
   }
 
   /**
@@ -172,15 +177,37 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * Retrieve organization</a>
    * @param emailDomain the email domain for the organization
    * @param fields the fields to request
+   * @param count the number of entries to be returned per paged request
    * @return A list of organizations with the email domain
    */
-  public List<Organization> findOrganizationByEmailDomain(String emailDomain, Parameter fields) {
+  public List<Organization> findOrganizationByEmailDomain(String emailDomain, Parameter fields,
+      Integer count) {
     ValidationUtils.verifyParameterPresence("emailDomain", emailDomain);
-
-    Parameter queryParam = Parameter.with(QUERY_KEY, EMAIL_DOMAIN_VALUE);
-    Parameter emailDomainParam = Parameter.with(EMAIL_DOMAIN_KEY, emailDomain);
-    return getListFromQuery(ORGANIZATIONS, Organization.class, fields, queryParam,
-        emailDomainParam);
+  
+    List<Parameter> parameters = new ArrayList<>();
+    if (fields != null) {
+      parameters.add(fields);
+    }
+    parameters.add(Parameter.with(QUERY_KEY, EMAIL_DOMAIN_VALUE));
+    parameters.add(Parameter.with(EMAIL_DOMAIN_KEY, emailDomain));
+    addStartAndCountParams(parameters, null, count);
+    return getListFromQuery(ORGANIZATIONS, Organization.class,
+        parameters.toArray(new Parameter[0]));
+  }
+  
+  /**
+   * Retrieve the number of first-degree connections (followers) for any organization.
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
+   * community-management/organizations/organization-lookup-api#retrieve-organization-
+   * follower-count">Retrieve Organization Follower Count</a>
+   * @param organizationURN the organization URN
+   * @return the number of followers for the organization
+   */
+  public Long retrieveOrganizationFollowerCount(URN organizationURN) {
+    validateOrganizationURN("organizationURN", organizationURN);
+    NetworkSize networkSize = linkedinClient.fetchObject(NETWORK_SIZES + "/" + organizationURN,
+        NetworkSize.class, Parameter.with(EDGE_TYPE, COMPANY_FOLLOWED_BY_MEMEBER));
+    return networkSize.getFirstDegreeSize();
   }
 
   /**
@@ -250,27 +277,60 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   }
 
   /**
-   * Retreive the lifetime follower statistics. Providing the time interval will retrieve
+   * Retrieve the lifetime follower statistics. Providing the time interval will retrieve
    * time-bounded follower statistics, otherwise the lifetime follower statistics will be returned
    * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
    * community-management/organizations/follower-statistics">
    * Organization Follower Statistics</a>
    * @param organizationURN the organization URN to retrieve the follower statistics
-   * @param timeInterval the time interval  for time-bound follower statistics
+   * @param count the number of entries to be returned per paged request
    * @return a list of organization's follower statistics
    */
-  public List<Statistics> retrieveOrganizationFollowerStatistics(URN organizationURN,
-      TimeInterval timeInterval) {
+  public List<OrganizationFollowerStatistics> retrieveOrganizationFollowerStatistics(
+      URN organizationURN, Integer count) {
+    validateOrganizationURN("organizationURN", organizationURN);
     List<Parameter> parameters = new ArrayList<>();
 
-    addParametersForStatistics(organizationURN, timeInterval, parameters);
+    addParametersForStatistics(organizationURN, null, parameters);
+    addStartAndCountParams(parameters, null, count);
 
-    return getListFromQuery(ORGANIZATIONAL_ENTITY_FOLOWER_STATS, Statistics.class,
-        parameters.toArray(new Parameter[parameters.size()]));
+    return getListFromQuery(ORGANIZATIONAL_ENTITY_FOLOWER_STATS,
+        OrganizationFollowerStatistics.class,
+        parameters.toArray(new Parameter[0]));
+  }
+  
+  /**
+   * Retrieve both lifetime and time-bound statistics on followers for an organization.
+   * Lifetime follower statistics: To retrieve lifetime follower statistics, omit the
+   * timeIntervals query parameter. The API returns follower counts segmented by various facets
+   * such as region and industry.
+   *
+   * Time-bound follower statistics: To retrieve time-bound follower statistics, include the
+   * timeIntervals query parameter. The API returns the aggregate follower count for both paid
+   * and organic followers during the days or months of the selected date range, based on the
+   * specified timeIntervals.timeGranularityType.
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
+   * community-management/organizations/follower-statistics">Organization Follower Statistics</a>
+   * @param organizationURN the organization RUN
+   * @param timeInterval the time interval for time bound follower statistics
+   * @param count the number of entries to be returned per paged request
+   * @return a list of organization follower statistics
+   */
+  public List<FollowerStatistic> retrieveOrganizationFollowerStatistics(URN organizationURN,
+      TimeInterval timeInterval, Integer count) {
+    validateOrganizationURN("organizationURN", organizationURN);
+    
+    List<Parameter> parameters = new ArrayList<>();
+    
+    addParametersForStatistics(organizationURN, timeInterval, parameters);
+    addStartAndCountParams(parameters, null, count);
+    
+    return getListFromQuery(ORGANIZATIONAL_ENTITY_FOLOWER_STATS, FollowerStatistic.class,
+        parameters.toArray(new Parameter[0]));
   }
 
   /**
-   * Retreive the lifetime follower statistics. Providing the time interval will retrieve
+   * Retrieve the lifetime follower statistics. Providing the time interval will retrieve
    * time-bounded follower statistics, otherwise the lifetime follower statistics will be returned
    * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
    * community-management/organizations/page-statistics#retrieve-lifetime-organization-page-
@@ -282,20 +342,22 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * Organization Page Statistics - time-bound</a>
    * @param organizationURN the organization URN to retrieve the page statistics
    * @param timeInterval the time interval  for time-bound follower statistics
+   * @param count the number of entries to be returned per paged request
    * @return a list of organization's follower statistics
    */
-  public List<Statistics> retrieveOrganizationPageStatistics(URN organizationURN,
-      TimeInterval timeInterval) {
+  public List<Statistics.OrganizationStatistics> retrieveOrganizationPageStatistics(
+      URN organizationURN, TimeInterval timeInterval, Integer count) {
     validateOrganizationURN("organizationURN", organizationURN);
 
     List<Parameter> parameters = new ArrayList<>();
     parameters.add(Parameter.with(QUERY_KEY, ORGANIZATION_VALUE));
     parameters.add(Parameter.with(ORGANIZATION_KEY, organizationURN.toString()));
 
-    addTimeIntervalToQueryParameters(timeInterval, parameters);
+    addTimeIntervalToParams(parameters, timeInterval);
+    addStartAndCountParams(parameters, null, count);
 
-    return getListFromQuery(ORGANIZATIONAL_PAGE_STATS, Statistics.class,
-        parameters.toArray(new Parameter[parameters.size()]));
+    return getListFromQuery(ORGANIZATIONAL_PAGE_STATS, Statistics.OrganizationStatistics.class,
+        parameters.toArray(new Parameter[0]));
   }
 
   /**
@@ -312,53 +374,46 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @param timeInterval the time interval for time bounded statistics
    * @return list of page statistics for the organization brand
    */
-  public List<Statistics> retrieveOrganizationBrandPageStatistics(URN organizationBrand,
-      TimeInterval timeInterval) {
+  public List<Statistics.BrandStatistics> retrieveOrganizationBrandPageStatistics(
+      URN organizationBrand, TimeInterval timeInterval) {
     throw new UnsupportedOperationException("Operation is not implemented yet.");
   }
-
+  
   /**
-   * Retrieve both lifetime and time-bound statistics on shares for an organization
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/organizations/share-statistics">
-   * Organization Share Statistics</a>
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/organizations/share-statistics#retrieve-lifetime-share-statistics">
-   * Organization Share Statistics - Lifetime</a>
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/organizations/share-statistics#retrieve-time-bound-share-statistics">
-   * Organization Share Statistics - time-bound</a>
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/organizations/share-statistics#retrieve-statistics-for-specific-shares">
-   * Organization Share Statistics - specific shares</a>
-   * @param organizationURN the ogranization URN to retrieve the share statistics
-   * @param timeInterval the time interval for time-bounded statistics
-   * @param shareURNs specific share URNs
-   * @return List of organization share statistics
+   * retrieve both lifetime and time-bound organic statistics on shares for an organization,
+   * including specific organization share URNs. This endpoint returns organic statistics only.
+   * Sponsored activity is not counted in this endpoint.
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
+   * management/organizations/share-statistics">Organization Share Statistics</a>
+   * @param organizationURN the organizational entity URN for which the statistics represents
+   * @param timeInterval Time restriction for the query. When omitted, lifetime stats are returned
+   * @param shareURNs References to one or more shares for which statistics are returned
+   * @param count the number of entries to be returned per paged request
+   * @return aggregated stats for an organization's shares
    */
-  public List<Statistics> retrieveOrganizationShareStatistics(URN organizationURN,
-      TimeInterval timeInterval, List<URN> shareURNs) {
-    List<Parameter> parameters = new ArrayList<>();
-
-    addParametersForStatistics(organizationURN, timeInterval, parameters);
-
+  public List<ShareStatistic> retrieveShareStatistics(URN organizationURN,
+      TimeInterval timeInterval, List<URN> shareURNs, Integer count) {
+    validateOrganizationURN("organizationURN", organizationURN);
+    
+    List<Parameter> params = new ArrayList<>();
+    params.add(Parameter.with(QUERY_KEY, ORGANIZATIONAL_ENTITY_KEY));
+    params.add(Parameter.with(ORGANIZATIONAL_ENTITY_KEY, organizationURN));
+    
     if (shareURNs != null && !shareURNs.isEmpty()) {
-      shareURNs.stream().forEach(this::validateShareURN);
-      parameters.add(Parameter.with(SHARES_KEY, shareURNs));
+      shareURNs.forEach(this::validateShareURN);
+      addParametersFromURNs(params, SHARES_PARAM, shareURNs);
     }
-
-    return getListFromQuery(ORGANIZATION_ENTITY_SHARE_STATS, Statistics.class,
-        parameters.toArray(new Parameter[parameters.size()]));
+  
+    addTimeIntervalToParams(params, timeInterval);
+    addStartAndCountParams(params, null, count);
+    
+    return getListFromQuery(SHARE_STATISTICS, ShareStatistic.class,
+        params.toArray(new Parameter[0]));
   }
 
   private void validateOrganizationURN(String paramName, URN organizationURN) {
     ValidationUtils.verifyParameterPresence(paramName, organizationURN);
     validateURN(URNEntityType.ORGANIZATION, organizationURN);
-  }
-  
-  private void validateShareURN(URN shareURN) {
-    ValidationUtils.verifyParameterPresence("share", shareURN);
-    validateURN(URNEntityType.SHARE, shareURN);
   }
   
   private void addRoleStateParams(String role, String state, Parameter projection,
@@ -373,35 +428,15 @@ public class OrganizationConnection extends ConnectionBaseV2 {
       parameters.add(projection);
     }
   }
-
-  private void addTimeIntervalToQueryParameters(TimeInterval timeInterval,
-      List<Parameter> parameters) {
-    if (timeInterval != null) {
-      if (timeInterval.getTimeGranularityType() != null) {
-        parameters.add(Parameter.with("timeIntervals.timeRange",
-            timeInterval.getTimeGranularityType()));
-      }
-      if (timeInterval.getTimeRange() != null) {
-        if (timeInterval.getTimeRange().getStart() != null) {
-          parameters.add(Parameter.with("timeIntervals.timeRange.start",
-              timeInterval.getTimeRange().getStart()));
-        }
-        if (timeInterval.getTimeRange().getEnd() != null) {
-          parameters.add(Parameter.with("timeIntervals.timeRange.end",
-              timeInterval.getTimeRange().getEnd()));
-        }
-      }
-    }
-  }
   
   private void addParametersForStatistics(URN organizationURN, TimeInterval timeInterval,
       List<Parameter> parameters) {
     validateOrganizationURN("organizationURN", organizationURN);
 
-    parameters.add(Parameter.with(QUERY_KEY, ORGANIZATION_VALUE));
-    parameters.add(Parameter.with(ORGANIZATION_KEY, organizationURN.toString()));
+    parameters.add(Parameter.with(QUERY_KEY, ORGANIZATIONAL_ENTITY_VALUE));
+    parameters.add(Parameter.with(ORGANIZATIONAL_ENTITY_KEY, organizationURN.toString()));
 
-    addTimeIntervalToQueryParameters(timeInterval, parameters);
+    addTimeIntervalToParams(parameters, timeInterval);
   }
 
 }

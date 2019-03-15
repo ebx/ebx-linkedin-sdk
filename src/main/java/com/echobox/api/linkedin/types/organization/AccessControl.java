@@ -41,11 +41,43 @@ public class AccessControl {
   private String role;
   
   @Getter
-  @LinkedIn
-  private URN roleAssignee;
+  @LinkedIn("roleAssignee")
+  private URN roleAssigneeURN;
   
   @Getter
-  @LinkedIn
-  private URN organizationalTarget;
+  @LinkedIn("roleAssignee~")
+  private RoleAssignee roleAssignee;
+  
+  @Getter
+  @LinkedIn("organizationalTarget")
+  private URN organizationalTargetURN;
+  
+  @Getter
+  @LinkedIn("organizationalTarget~")
+  private OrganizationalTarget organizationalTarget;
+  
+  /**
+   * Role Assignee
+   * @author Joanna
+   */
+  public static class RoleAssignee {
+    @Getter
+    @LinkedIn
+    private String localizedLastName;
+    
+    @Getter
+    @LinkedIn
+    private String localizedFirstName;
+  }
+  
+  /**
+   * Organization target
+   * @author Joanna
+   */
+  private static class OrganizationalTarget {
+    @Getter
+    @LinkedIn
+    private String localizedName;
+  }
   
 }
