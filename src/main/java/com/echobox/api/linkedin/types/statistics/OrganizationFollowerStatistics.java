@@ -18,6 +18,7 @@
 package com.echobox.api.linkedin.types.statistics;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,10 +30,44 @@ import java.util.List;
  * @author clementcaylux on 03/12/2018.
  */
 public class OrganizationFollowerStatistics {
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private List<CountByStaffCountRange> followerCountsByStaffCountRange;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private List<CountByIndustry> followerCountsByIndustry;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private List<CountByFunction> followerCountsByFunction;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private List<CountByAssociationType> followerCountsByAssociationType;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private List<CountBySeniority> followerCountsBySeniority;
   
   @Getter
   @Setter
   @LinkedIn
-  private List<OrganizationFollowerStatisticsElement> elements;
+  private List<CountByCountry> followerCountsByCountry;
   
+  @Getter
+  @Setter
+  @LinkedIn
+  private List<CountByRegion> followerCountsByRegion;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private URN organizationalEntity;
 }

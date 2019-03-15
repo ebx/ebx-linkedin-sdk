@@ -15,53 +15,20 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.statistics;
+package com.echobox.api.linkedin.types.organization;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
-
 
 /**
- * @author clementcaylux on 03/12/2018.
+ * Network Size
+ * @author Joanna
  */
-public class OrganizationFollowerStatisticsElement {
+public class NetworkSize {
   
   @Getter
-  @Setter
   @LinkedIn
-  private FollowerCount totalFollowerCounts;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private List<CountByStaffCountRange> followerCountsByStaffCountRange;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private List<CountByIndustry> followerCountsByIndustry;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private List<CountByFunction> followerCountsByFunction;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private List<CountByAssociationType> followerCountsByAssociationType;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private List<CountBySeniority> followerCountsBySeniority;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private String organizationalEntity;
+  private Long firstDegreeSize;
+  
 }

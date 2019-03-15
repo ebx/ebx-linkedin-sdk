@@ -24,9 +24,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @author clementcaylux on 03/12/2018.
+ * Count by region
+ * @author Joanna
  */
-public class CountByFunction {
+public class CountByRegion {
   
   @Getter
   @Setter
@@ -36,5 +37,6 @@ public class CountByFunction {
   @Getter
   @Setter
   @LinkedIn
-  private URN function;
+  private URN region;
+  
 }

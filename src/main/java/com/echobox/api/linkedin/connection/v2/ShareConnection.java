@@ -21,8 +21,6 @@ import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.types.Share;
 import com.echobox.api.linkedin.types.ShareText;
-import com.echobox.api.linkedin.types.TimeInterval;
-import com.echobox.api.linkedin.types.engagement.ShareStatistic;
 import com.echobox.api.linkedin.types.request.ShareRequestBody;
 import com.echobox.api.linkedin.types.request.UpdateShareRequestBody;
 import com.echobox.api.linkedin.types.urn.URN;
@@ -39,15 +37,9 @@ import java.util.List;
 public class ShareConnection extends ConnectionBaseV2 {
   
   private static final String SHARES = "/shares";
-  private static final String SHARE_STATISTICS = "/organizationalEntityShareStatistics";
   private static final String OWNERS = "owners";
-  private static final String SHARES_PARAM = "shares";
   private static final String SHARES_PER_OWNER = "sharesPerOwner";
   private static final String COUNT = "count";
-  private static final String ORGANIZATIONAL_ENTITY = "organizationalEntity";
-  private static final String TIME_INTERVALS_GRANULARITY = "timeIntervals.timeGranularityType";
-  private static final String TIME_INTERVALS_START = "timeIntervals.timeRange.start";
-  private static final String TIME_INTERVALS_END = "timeIntervals.timeRange.end";
   
   /**
    * Initialise the share connection
@@ -122,50 +114,6 @@ public class ShareConnection extends ConnectionBaseV2 {
    */
   public void deleteShare(long shareId) {
     linkedinClient.deleteObject(SHARES + "/" + shareId);
-  }
-  
-  /**
-   * retrieve both lifetime and time-bound organic statistics on shares for an organization,
-   * including specific organization share URNs. This endpoint returns organic statistics only.
-   * Sponsored activity is not counted in this endpoint.
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
-   * management/organizations/share-statistics">Organization Share Statistics</a>
-   * @param organizationURN the organizational entity URN for which the statistics represents
-   * @param timeInterval Time restriction for the query. When omitted, lifetime stats are returned
-   * @param shareURNs References to one or more shares for which statistics are returned
-   * @param count the number of entries to be returned per paged request
-   * @return aggregated stats for an organization's shares
-   */
-  public List<ShareStatistic> retrieveShareStatistics(URN organizationURN,
-      TimeInterval timeInterval, List<URN> shareURNs, Integer count) {
-    List<Parameter> params = new ArrayList<>();
-    params.add(Parameter.with(QUERY_KEY, ORGANIZATIONAL_ENTITY));
-    params.add(Parameter.with(ORGANIZATIONAL_ENTITY, organizationURN));
-    addStartAndCountParams(params, null, count);
-    
-    if (timeInterval != null) {
-      // Time restriction on retrieving share statistics
-      params.add(Parameter.with(TIME_INTERVALS_GRANULARITY,
-          timeInterval.getTimeGranularityType()));
-      if (timeInterval.getTimeRange() != null) {
-        if (timeInterval.getTimeRange().getStart() != null
-            && timeInterval.getTimeRange().getEnd() != null) {
-          params.add(Parameter.with(TIME_INTERVALS_START, timeInterval.getTimeRange().getStart()));
-          params.add(Parameter.with(TIME_INTERVALS_END, timeInterval.getTimeRange().getEnd()));
-        } else {
-          throw new IllegalStateException("timeIntervals.timeRange cannot be null when "
-              + "timeInterval is provided");
-        }
-      } else {
-        throw new IllegalStateException("timeIntervals.timeGranularityType cannot be null when "
-            + "timeInterval is provided");
-      }
-    }
-    
-    addParametersFromURNs(params, SHARES_PARAM, shareURNs);
-    
-    return getListFromQuery(SHARE_STATISTICS, ShareStatistic.class,
-        params.toArray(new Parameter[0]));
   }
   
 }
