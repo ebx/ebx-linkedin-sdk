@@ -27,6 +27,7 @@ import lombok.Setter;
 import java.util.List;
 
 /**
+ * Comment Action
  * @author Alexandros
  */
 public class CommentAction extends ContainsURN {

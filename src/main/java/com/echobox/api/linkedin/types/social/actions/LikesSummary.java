@@ -24,6 +24,7 @@ import lombok.Setter;
 import java.util.List;
 
 /**
+ * Likes Summary
  * @author Alexandros
  */
 public class LikesSummary {

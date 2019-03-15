@@ -27,6 +27,7 @@ import org.junit.Test;
 import java.util.List;
 
 /**
+ * Statistics test
  * @author clementcaylux on 03/12/2018.
  */
 public class StatisticsTest extends DefaultJsonMapperTestBase {

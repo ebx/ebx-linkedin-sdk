@@ -24,6 +24,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
+ * Share statistics test
  * @author clementcaylux on 27/11/2018.
  */
 public class ShareStatisticsTest extends DefaultJsonMapperTestBase {
