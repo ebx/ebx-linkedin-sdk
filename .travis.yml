@@ -1,10 +1,9 @@
 language: java
 sudo: false # faster builds
 
-script: mvn clean package
-
 ## export GPG details
 before_install:
+  - echo $GPG_EXECUTABLE
   - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
   - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
 
