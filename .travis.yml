@@ -1,11 +1,15 @@
 language: java
-sudo: false
+sudo: false # faster builds
+
 script: mvn clean package
+
 after_failure:
-- cat target/surefire-reports/*.txt
+  - cat target/surefire-reports/*.txt
+  
 before_deploy:
   - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
   - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
+  
 deploy:
   provider: releases
   api_key:
