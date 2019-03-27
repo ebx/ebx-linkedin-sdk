@@ -1,30 +1,40 @@
 language: java
 sudo: false # faster builds
 
-## export GPG details
+## Export GPG details for Maven Central signing and extract the version
 before_install:
   - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
   - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
+  - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
+  - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
 
+## If this is not master we dynamically set the version to a snapshot
 install:
-  mvn --settings .maven.xml install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
+  - |
+    if [ "$TRAVIS_BRANCH" != "master" ]; then 
+      mvn versions:set -DnewVersion=$project_version-SNAPSHOT
+    fi
 
-## Build and release to maven central
+## For DEV and MASTER deploy to maven central (DEV will always be a snapshot)
+## All other builds are simply verified
 script:
-  mvn clean deploy --settings .maven.xml -DskipTests=true -B -U -Prelease
+  - | 
+  if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_BRANCH" == "dev" ]; then
+    mvn clean deploy --settings .maven.xml -B -U -Prelease
+  else
+    mvn clean verify
+  fi
   
 after_failure:
   - cat target/surefire-reports/*.txt
-  
-before_deploy:
-  - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
-  - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
-  
+
+## Create the release in Github
 deploy:
   provider: releases
   api_key:
     secure: LtqM1MYEAj2LBgznSSJUQaM0Tl0Gny37LGgLUNF4yGGoz+ghjwXux7+W8BlR9Fid/CzaoW+Nr4074NfD5N0kz52iHJCHxrcvVuUPYdcNdfne7Rc+MdsXxb8QwUrmYLh5ay1Xtquy9MW1zya7Z1Y3oibvT5wpi/yKhxH5o8pdTZlqSkVgwBMFC8+Z38Dmz09nHYGPpFB7cAW5DtRIqf9qjsd/h7wwItwRWbUQuxuZ4SV/tvqjb4Hppbf3RU9163Q1WteUTx21IX/6IcWZL6KCLJruUMeB22mHfbASHVTL3xg6Ot9P+cpk72rf2VvsvbcaTrUsee8Cyy6s1BBirP4vOKPk81N/mKYLGGbgtr6lYIEia22N01ZF+7lG0JoS+/ynr2HZ2Sa0y5Haxgv5qGD94fJuZ4etEQ5GXaBLkrJr2TtlWjPxP2yg8NYB6JnBA/OE6AnDMQ1lsrZcUjav6oABjNuRqJfa+9zH3T9+nTSeixLmjjGf62+33UR9PZxncuEg8wGa2N9iPavBVEnyJ6yayALu4DskAjG/o7tsBi18u0PeXdjmcsF7hkL7h7XECx9cvdsSAqhdfEZyIosGrBpQqhxfyBzOLSqauxkVWisG6W9222s4EXmZMxja6QteVHQswx5ueXlUd8cGZ70d7s6Bw0gYibX3Ds1RGkQVeSblies=
   file: target/ebx-linkedin-sdk-$project_version.jar
+  overwrite: true
   skip_cleanup: true
   on:
     repo: ebx/ebx-linkedin-sdk

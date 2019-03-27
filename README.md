@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/ebx/ebx-linkedin-sdk.svg?branch=master)](https://travis-ci.org/ebx/ebx-linkedin-sdk)
+[![Build Status](https://travis-ci.org/ebx/ebx-linkedin-sdk.svg?branch=master)](https://travis-ci.org/ebx/ebx-linkedin-sdk)[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://raw.githubusercontent.com/ebx/ebx-linkedin-sdk/master/LICENSE)
 
 # ebx-linkedin-sdk - Initial release under development!
 
@@ -14,7 +14,17 @@ ebx-linkedin-sdk itself is open source software released under the terms of the 
 
 ## Installation
 
-ebx-linkedin-sdk is a single JAR - just drop it into your app and you're ready to go.
+Recommended installation is via maven (or similar). Currently we are only releasing a v1.0.0-SNAPSHOT dependency:
+
+```
+<dependency>
+  <groupId>com.echobox</groupId>
+  <artifactId>ebx-linkedin-sdk</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+</dependency>
+```
+
+alternatively just drop the JAR into your app and you're ready to go.
 
 ## Building it Yourself
 
