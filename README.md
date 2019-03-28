@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/ebx/ebx-linkedin-sdk.svg?branch=master)](https://travis-ci.org/ebx/ebx-linkedin-sdk)[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://raw.githubusercontent.com/ebx/ebx-linkedin-sdk/master/LICENSE)
+[![Build Status](https://travis-ci.org/ebx/ebx-linkedin-sdk.svg?branch=master)](https://travis-ci.org/ebx/ebx-linkedin-sdk) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://raw.githubusercontent.com/ebx/ebx-linkedin-sdk/master/LICENSE)
 
 # ebx-linkedin-sdk - Initial release under development!
 
