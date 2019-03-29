@@ -1,12 +1,12 @@
-[![Build Status](https://travis-ci.org/ebx/ebx-linkedin-sdk.svg?branch=master)](https://travis-ci.org/ebx/ebx-linkedin-sdk)
+[![Build Status](https://travis-ci.org/ebx/ebx-linkedin-sdk.svg?branch=master)](https://travis-ci.org/ebx/ebx-linkedin-sdk) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://raw.githubusercontent.com/ebx/ebx-linkedin-sdk/master/LICENSE)
 
-# ebx-linkedin-sdk - Initial release under development!
+# ebx-linkedin-sdk
 
 ## What it is
 
-ebx-linkedin-sdk is a pure Java LinkedIn API client.
+ebx-linkedin-sdk is a pure Java LinkedIn API client. It implements the v2 API as described [here](https://docs.microsoft.com/en-us/linkedin/).
 
-It was created and maintained by [Echobox](http://echobox.com).
+It is created and maintained by [Echobox](http://echobox.com).
 
 ## Licensing
 
@@ -14,7 +14,17 @@ ebx-linkedin-sdk itself is open source software released under the terms of the 
 
 ## Installation
 
-ebx-linkedin-sdk is a single JAR - just drop it into your app and you're ready to go.
+Recommended installation is via maven (or similar). Currently we are only releasing a v1.0.0-SNAPSHOT dependency:
+
+```
+<dependency>
+  <groupId>com.echobox</groupId>
+  <artifactId>ebx-linkedin-sdk</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+</dependency>
+```
+
+alternatively just drop the JAR into your app and you're ready to go.
 
 ## Building it Yourself
 
@@ -68,3 +78,11 @@ Retrieve an organization from LinkedIn ([See documentation](https://docs.microso
 ## Contributing
 
 If you would like to get involved please follow the instructions [here](https://github.com/ebx/ebx-linkedin-sdk/tree/master/CONTRIBUTING.md)
+
+## Releases
+
+We use [semantic versioning](https://semver.org/).
+
+Each merge into the MASTER branch will automatically get released to maven central, and github releases, using the current library version. As such, following every merge to master, the version number of the dev branch should be incremented and will represent 'Work In Progress' towards the next release.
+
+All merges into DEV will automatically get released as a maven central snapshot, which can be easily included in any downstream dependencies that always desire the latest changes.
