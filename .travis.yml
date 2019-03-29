@@ -21,8 +21,9 @@ before_install:
       printf "${GREEN_COLOUR}Building base branch $SOURCE_BRANCH_NAME which is at version $project_version.${NO_COLOUR}\n"
     else
       #Get the PR title
-      printf "Getting the title for PR num. $TRAVIS_PULL_REQUEST"
-      export PR_TITLE=$(curl -s https://api.github.com/repos/$REPO/pulls/$TRAVIS_PULL_REQUEST | grep -Po '(?<="title":[[:space:]]")[^"]*(?=",)')
+      echo "Getting the title for PR num. $TRAVIS_PULL_REQUEST"
+      export PR_URL=https://api.github.com/repos/$REPO/pulls/$TRAVIS_PULL_REQUEST
+      export PR_TITLE=$(curl -s $PR_URL | grep -Po '(?<="title":[[:space:]]")[^"]*(?=",)')
     
       printf "${GREEN_COLOUR}Building PR $PR_TITLE from branch $SOURCE_BRANCH_NAME (into $TRAVIS_BRANCH)${NO_COLOUR}\n"
       
