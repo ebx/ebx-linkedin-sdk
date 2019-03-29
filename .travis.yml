@@ -23,9 +23,9 @@ before_install:
       #Get the PR title
       export PR_URL=https://api.github.com/repos/$REPO/pulls/$TRAVIS_PULL_REQUEST
       echo "Getting PR data from $PR_URL"
-      curl -s $PR_URL > prInfo.json
-      cat prInfo.json
-      export PR_TITLE=$(cat prInfo.json | grep -Po '(?<="title":[[:space:]]")[^"]*(?=",)')
+      curl -o pr.json $PR_URL
+      cat pr.json
+      export PR_TITLE=$(cat pr.json | grep -Po '(?<="title":[[:space:]]")[^"]*(?=",)')
     
       printf "${GREEN_COLOUR}Building PR $PR_TITLE from branch $SOURCE_BRANCH_NAME (into $TRAVIS_BRANCH)${NO_COLOUR}\n"
       
