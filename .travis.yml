@@ -16,7 +16,28 @@ before_install:
   - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
   - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
   - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
-  - bash buildscripts/validate.pr
+  - echo $project_version
+  - |
+    if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+      printf "${GREEN_COLOUR}Building base branch $SOURCE_BRANCH_NAME which is at version $project_version.${NO_COLOUR}"
+    else
+      #Get the PR title
+      export PR_TITLE=$(curl -s https://api.github.com/repos/$REPO/pulls/$TRAVIS_PULL_REQUEST | grep -Po '(?<="title":[[:space:]]")[^"]*(?=",)')
+    
+      printf "${GREEN_COLOUR}Building PR $PR_TITLE from branch $SOURCE_BRANCH_NAME (into $TRAVIS_BRANCH)${NO_COLOUR}"
+      
+      #Ensure the PR name matches our expected format
+      if ! [[ $PR_TITLE =~ ^[A-Z]{2,4}-[0-9]+[[:space:]].+$ ]]; then
+        printf "${RED_COLOUR}PR title '$PR_TITLE' does not match the expected format 'GH-[xxxx] [description]'${NO_COLOUR}"
+        travis_terminate 1;
+      fi
+      
+      #Ensure PR cannot be into master, unless it's coming from dev
+      if [ "$TRAVIS_BRANCH" == "$RELEASE_BRANCH" ] && [ "$SOURCE_BRANCH_NAME" != "$DEV_BRANCH" ]; then
+        printf "${RED_COLOUR}Build failed as PR target is master. Please ensure you use $DEV_BRANCH as the target.${NO_COLOUR}"
+        travis_terminate 1;
+      fi
+    fi
 
 ## If this is not master we dynamically set the version to a snapshot
 install:
