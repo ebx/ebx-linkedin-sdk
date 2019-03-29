@@ -15,16 +15,24 @@ We like new issues and are very keen to hear your problems, ideas and proposals.
 
 ## How to create a pull request
 
-Pull requests (PR) are a very important way to contribute code to the library. We have guidelines for sending us a PR, because changes to the source code are even more fundamental than sending a new issue. This is an overview of our prerequisites. Your PR should fulfill our mandatory prerequisites, but the optionals are big plus and make it much easier to merge a PR in the code. The optional items are written in italic.
+Pull requests (PR) are a very important way to contribute code to the library. We have guidelines for sending us a PR, because changes to the source code are even more fundamental than sending a new issue. This is an overview of our prerequisites.
 
 **PR checklist:**
-* The code must be formatted with our code formatter (have a look at the [CodeStyle folder](https://github.com/ebx/ebx-linkedin-sdk/tree/master/CodeStyle)
-* The code should conform to our general design standards (if you feel it's necessary to go against the grain, please ask us first!)
-* Existing unit tests have to run without error (we use [Travis CI](https://travis-ci.org/ebx/ebx-linkedin-sdk))
-* The pull request should be mergeable
-* Explain why you made the change and why it's beneficial
-* Junit tests required for any functional change
-* The pull request should be based on the `master` branch
-* *Group and squash your commits, fewer are better*
+* Please ensure you have an associated [github issue](https://github.com/ebx/ebx-linkedin-sdk/issues) to hand, this needs to be included in the PR. If a suitable issue doesn't already exist feel free to create one, as described above.
+* The code must be formatted with our code formatter (have a look at the [CodeStyle folder](https://github.com/ebx/ebx-linkedin-sdk/tree/master/CodeStyle)). If you perform a local *mvn verify* before creating the PR your changes will already be getting validated for style.
+* The code layout should conform to our general design standards (if you feel it's necessary to go against the grain, please ask us first!).
+* You must complete the PR template and ensure your PR title uses the format:
 
-If your issue or your PR doesn't meet a condition, don't be afraid. We are not dogmatic with these rules and you can and should send us your contribution anyway. Be prepared to answer upcoming questions :smirk:
+        GH-[Issue#] [Summary of change or issue title]
+
+  for example:
+  
+        GH-123 Fixed NPE exception when resvoling an organisation
+        
+  If you don't follow this format your PR will not build.
+* The pull request should be mergeable, i.e. no conflicts.
+* Junit tests required for any functional change must be included.
+* The pull request should be targetted at the `dev` branch. If you raise it against `master` the PR will fail to build.
+* Please try to keep PR commits in a logical order incase we need to review each commit seperately, but generally speaking the fewer commits the better.
+* Your PR will have to build succesfully against our CI (we use [Travis CI](https://travis-ci.org/ebx/ebx-linkedin-sdk)).
+* **Important Note**: If your PR contains breaking changes you must include a MAJOR version bump in the PR.
