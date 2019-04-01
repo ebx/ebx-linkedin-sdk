@@ -102,7 +102,7 @@
         <module name="LineLength">
             <property name="max" value="100"/>
             <property name="ignorePattern"
-                      value="(^(?:package|import.*$)|.*editor-fold defaultstate.*)"/>
+                      value="(^(?:package|import.*$)|.*editor-fold defaultstate.*|&lt;a\s+(?:[^&gt;]*?\s+)?href=([&quot;'])(.*?))"/>
         </module>
         <module name="MethodLength">
             <property name="max" value="150"/>

@@ -29,8 +29,7 @@ import lombok.Setter;
 
 /**
  * UCG Share
- * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations
- * /community-management/shares/ugc-post-api#schema">UCG Share</a>
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#schema">UCG Share</a>
  * @author joanna
  */
 @RequiredArgsConstructor

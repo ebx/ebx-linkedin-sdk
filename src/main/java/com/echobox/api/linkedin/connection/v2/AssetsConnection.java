@@ -36,8 +36,8 @@ import java.util.Map;
 /**
  * Assets connection
  * Find the process to upload an asset to Linked in at:
- * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
- * community-management/shares/vector-asset-api">Assets API</a>
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api">
+ * Assets API</a>
  * @author Joanna
  */
 public class AssetsConnection extends ConnectionBaseV2 {
@@ -57,8 +57,8 @@ public class AssetsConnection extends ConnectionBaseV2 {
   
   /**
    * Register an upload to declare the upcoming upload
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/shares/vector-asset-api#register-an-upload">Register an Upload</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#register-an-upload">
+   * Register an Upload</a>
    * @param registerUploadRequestBody the register upload request body
    * @return the register upload response
    */
@@ -69,8 +69,8 @@ public class AssetsConnection extends ConnectionBaseV2 {
   
   /**
    * Upload the asset file
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/shares/vector-asset-api#upload-the-asset">Upload the Asset</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#upload-the-asset">
+   * Upload the Asset</a>
    * @param webRequestor the web requestor - Note that it must not have any existing authorization
    * tokens
    * @param uploadURL the uploadUrl from the register upload response
@@ -90,8 +90,8 @@ public class AssetsConnection extends ConnectionBaseV2 {
   
   /**
    * Upload the asset bytes, this should be used to upload each asset chunk
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/shares/vector-asset-api#upload-the-asset">Upload the Asset</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#upload-the-asset">
+   * Upload the Asset</a>
    * @param webRequestor the web requestor - Note that it must not have any existing authorization
    * tokens
    * @param uploadURL the uploadUrl from the register upload response
@@ -111,9 +111,8 @@ public class AssetsConnection extends ConnectionBaseV2 {
   
   /**
    * Complete the multipart upload
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/shares/vector-asset-api#complete-multi-part-upload">Complete Multi-Part
-   * Upload</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#complete-multi-part-upload">
+   * Complete Multi-Part Upload</a>
    * @param completeMultiPartUploadBody the complete multipart upload body
    */
   public void completeMultiPartUpload(CompleteMultiPartUploadBody completeMultiPartUploadBody) {
@@ -123,9 +122,8 @@ public class AssetsConnection extends ConnectionBaseV2 {
   
   /**
    * Retrieve the asset information using the asset ID
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/shares/vector-asset-api#check-status-of-upload">Check Status of
-   * Upload</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#check-status-of-upload">
+   * Check Status of Upload</a>
    * @param digitalMediaAsset the asset id
    * @return the check status upload response
    */

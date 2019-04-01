@@ -28,8 +28,7 @@ import java.util.List;
 /**
  * Target Audience
  * @see
- * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/
- * shares/ugc-post-api#targetaudience">Target Audience</a>
+ * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#targetaudience">Target Audience</a>
  * @author joanna
  */
 public class TargetAudience {

@@ -24,8 +24,7 @@ import lombok.Setter;
 
 /**
  * The type School attributes.
- * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-lookup-
- * api#schoolattr">School Attribute Schema</a>
+ * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-lookup-api#schoolattr">School Attribute Schema</a>
  * @author clementcaylux 
  */
 public class SchoolAttribute {

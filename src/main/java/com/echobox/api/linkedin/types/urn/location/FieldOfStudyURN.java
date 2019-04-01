@@ -24,8 +24,8 @@ import java.util.List;
 
 /**
  * Field of study URN
- * @see <a href="https://docs.microsoft.com/en-us/linkedin/shared/references/v2/standardized-data
- * /fields-of-study?context=linkedin/marketing/context">Field of Study URN</a>
+ * @see
+ * <a href="https://docs.microsoft.com/en-us/linkedin/shared/references/v2/standardized-data/fields-of-study?context=linkedin/marketing/context">Field of Study URN</a>
  * @author joanna
  */
 public class FieldOfStudyURN extends FunctionURN {

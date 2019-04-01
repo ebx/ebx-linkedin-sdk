@@ -216,7 +216,7 @@ public final class DateUtils {
    * default value: {@link SimpleDateFormatStrategy}
    * 
    * @param dateFormatStrategy
-   *          the used {@see DateFormatStrategy}
+   *          the used @see com.echobox.api.linkedin.util.DateFormatStrategy
    * 
    */
   public static void setDateFormatStrategy(DateFormatStrategy dateFormatStrategy) {

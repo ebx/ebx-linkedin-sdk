@@ -55,8 +55,9 @@ abstract class BaseLinkedInClient {
   protected final Set<String> illegalParamNames = new HashSet<>();
 
   /**
-  * If the error object is not in the correct ofrmat, throw a ResponseErrorJsonParsingException
+  * If the error object is not in the correct format, throw a ResponseErrorJsonParsingException
   * @param json error JSON
+   * @throws ResponseErrorJsonParsingException ResponseErrorJsonParsingException
   */
   protected void skipResponseStatusExceptionParsing(String json)
       throws ResponseErrorJsonParsingException {

@@ -31,7 +31,7 @@ import java.util.TimeZone;
  * a simple DateFormat strategy.
  * 
  * every call returns a new SimpleDateFormat object, this will be rather slow and especially in a high-performance or
- * low resource environment you should use {@link CachedDateFormatStrategy}
+ * low resource environment
  * 
  */
 public class SimpleDateFormatStrategy implements DateFormatStrategy {

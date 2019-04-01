@@ -40,6 +40,7 @@ public class ObjectUtil {
    *          The parameter to check.
    * @param errorText
    *          The exception message.
+   * @return the non-empty string
    * @throws IllegalArgumentException
    *           If {@code obj} is {@code null} or an empty string.
    */

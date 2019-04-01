@@ -19,8 +19,7 @@ package com.echobox.api.linkedin.types.organization;
 
 /**
  * The type of institution
- * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-lookup-api
- * #schoolattr">School Attributes Schema</a>
+ * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-lookup-api#schoolattr">School Attributes Schema</a>
  * @author joanna
  *
  */
