@@ -27,8 +27,7 @@ import java.nio.file.Files;
 
 /**
  * Rich media connection
- * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
- * community-management/shares/rich-media-shares">Rich Media Shares</a>
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/rich-media-shares">Rich Media Shares</a>
  * @author joanna
  */
 public class RichMediaConnection extends ConnectionBaseV2 {

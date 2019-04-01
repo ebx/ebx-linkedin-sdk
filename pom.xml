@@ -2,6 +2,10 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <name>ebx-linkedin-sdk</name>
+  <description>ebx-linkedin-sdk is a pure Java LinkedIn API client. It implements the v2 LinkedIn API.</description>
+  <url>https://github.com/ebx/ebx-linkedin-sdk</url>
+
   <groupId>com.echobox</groupId>
   <artifactId>ebx-linkedin-sdk</artifactId>
   <version>1.0.0</version>
@@ -12,7 +16,6 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <maven.javadoc.skip>true</maven.javadoc.skip>
   </properties>
 
   <licenses>

@@ -196,9 +196,9 @@ public class DefaultJsonMapper implements JsonMapper {
       }
     }
   }
-
+  
   /**
-   * @see com.restechobox.api.linkedin.jsonmapper.JsonMapper#toJavaObject(java.lang.String, java.lang.Class)
+   * @see com.echobox.api.linkedin.jsonmapper.JsonMapper#toJavaObject(java.lang.String, java.lang.Class)
    */
   @Override
   @SuppressWarnings("unchecked")

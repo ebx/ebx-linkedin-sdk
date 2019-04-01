@@ -13,8 +13,8 @@ env:
 ## Export GPG details for Maven Central signing and extract the version
 before_install:
   - export SOURCE_BRANCH_NAME=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi) 
-  - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
-  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
+  - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import || echo "Failed to import GPG_SECRET_KEYS (probably because this branch is a PR)."
+  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust || echo "Failed to import GPG_OWNERTRUST (probably because this branch is a PR)."
   - export MVN_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout|grep -v '\[')
   - |
     #Ensure the project verison is valid

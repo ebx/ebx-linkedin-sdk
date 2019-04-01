@@ -26,8 +26,7 @@ import java.util.List;
 /**
  * Distribution
  * @see
- * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management
- * /shares/ugc-post-api#distribution">Distribution</a>
+ * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#distribution">Distribution</a>
  * @author joanna
  */
 public class Distribution {
