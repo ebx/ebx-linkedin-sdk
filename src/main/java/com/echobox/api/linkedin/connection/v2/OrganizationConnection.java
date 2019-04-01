@@ -38,6 +38,9 @@ import java.util.List;
 
 /**
  * Organization connection class that should contain all organization operations
+ * @see
+ * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-access-control">
+ * Organization Access Contol</a>
  * 
  * @author joanna
  *
@@ -78,9 +81,9 @@ public class OrganizationConnection extends ConnectionBaseV2 {
 
   /**
    * Find a Member's Organization Access Control Information
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
-   * management/organizations/organization-access-control">Access Control</a>
    * E.g. https://api.linkedin.com/v2/organizationalEntityAcls?q=roleAssignee
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-access-control">
+   * Access Control</a>
    * @param role Limit results to specific roles, such as ADMINISTRATOR.
    * @param state Limit results to specific role states, such as APPROVED.
    * @param projection Field projection
@@ -100,10 +103,8 @@ public class OrganizationConnection extends ConnectionBaseV2 {
 
   /**
    * Find an Organization's Access Control Information
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
-   * management/organizations/organization-access-control">Access Control</a>
-   * E.g. https://api.linkedin.com/v2/organizationalEntityAcls?q=organizationalTarget
-   * &organizationalTarget={organization URN}&role=ADMINISTRATOR&state=APPROVED
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-access-control">
+   * Access Control</a>
    * @param organizationalTarget The organizational entity for which access control information
    * is retrieved.
    * @param role Limit results to specific roles
@@ -128,9 +129,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
 
   /**
    * Find an organization using an organization ID, parent organization ID
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
-   * management/organizations/organization-lookup-api#retrieve-organizations">
-   * Retrieve organization</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api#retrieve-organizations">Retrieve organization</a>
    * @param organizationURN The organization URN
    * @param fields the fields to project
    * @return the requested organization
@@ -147,8 +146,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
 
   /**
    * Lookup an organization by vanity name
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
-   * management/organizations/organization-lookup-api#retrieve-organizations">
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api#retrieve-organizations">
    * Retrieve organization</a>
    * @param vanityName the vanity name for the organization
    * @param fields the fields to request
@@ -172,8 +170,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
 
   /**
    * Lookup an organization by email domain
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
-   * management/organizations/organization-lookup-api#retrieve-organizations">
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api#retrieve-organizations">
    * Retrieve organization</a>
    * @param emailDomain the email domain for the organization
    * @param fields the fields to request
@@ -197,9 +194,8 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   
   /**
    * Retrieve the number of first-degree connections (followers) for any organization.
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/organizations/organization-lookup-api#retrieve-organization-
-   * follower-count">Retrieve Organization Follower Count</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api#retrieve-organization-follower-count">
+   * Retrieve Organization Follower Count</a>
    * @param organizationURN the organization URN
    * @return the number of followers for the organization
    */
@@ -212,8 +208,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
 
   /**
    * Look up a member's positions and related organization IDs.
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
-   * management/organizations/organization-lookup-api">
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api">
    * Find Organizations Associated with a Member's Positions</a>
    */
   public void findOrganizationsAssociatedToMemberPosition() {
@@ -222,8 +217,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
 
   /**
    * Use organization brand id to find all all of its information
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
-   * management/organizations/organization-lookup-api#retrieve-organization-brands">
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api#retrieve-organization-brands">
    * Retrieve an organization brand</a>
    * @param organizationBrandId organizationBrandId
    */
@@ -233,8 +227,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
 
   /**
    * Use organization vanity name to find all all of its information
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
-   * management/organizations/organization-lookup-api#retrieve-organization-brands">
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api#retrieve-organization-brands">
    * Retrieve Organization Brand by Vanity Name</a>
    * @param vanityName vanity name
    */
@@ -245,8 +238,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   /**
    * Use organization parent URN to get a list of array of brands that belong to the specified
    * parent
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
-   * management/organizations/organization-lookup-api#retrieve-organization-brands">
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api#retrieve-organization-brands">
    * Retrieve Organization Brand by Parent Organization</a>
    * @param organizationURN parent organization URN
    */
@@ -257,9 +249,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   /**
    * Use organization parent URN to get a list of array of brands that belong to the specified
    * parent
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
-   * management/organizations/organization-lookup-api#retrieve-media-content-using-organizations-
-   * and-organization-brands">
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api#retrieve-media-content-using-organizations-and-organization-brands">
    * Retrieve Organization's Media Content</a>
    * @param organizationId organization id
    */
@@ -279,8 +269,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   /**
    * Retrieve the lifetime follower statistics. Providing the time interval will retrieve
    * time-bounded follower statistics, otherwise the lifetime follower statistics will be returned
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/organizations/follower-statistics">
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/follower-statistics">
    * Organization Follower Statistics</a>
    * @param organizationURN the organization URN to retrieve the follower statistics
    * @param count the number of entries to be returned per paged request
@@ -309,8 +298,8 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * timeIntervals query parameter. The API returns the aggregate follower count for both paid
    * and organic followers during the days or months of the selected date range, based on the
    * specified timeIntervals.timeGranularityType.
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/organizations/follower-statistics">Organization Follower Statistics</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/follower-statistics">
+   * Organization Follower Statistics</a>
    * @param organizationURN the organization RUN
    * @param timeInterval the time interval for time bound follower statistics
    * @param count the number of entries to be returned per paged request
@@ -332,13 +321,9 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   /**
    * Retrieve the lifetime follower statistics. Providing the time interval will retrieve
    * time-bounded follower statistics, otherwise the lifetime follower statistics will be returned
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/organizations/page-statistics#retrieve-lifetime-organization-page-
-   * statistics">
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/page-statistics#retrieve-lifetime-organization-page-statistics">
    * Organization Page Statistics - Lifetime</a>
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/organizations/page-statistics#retrieve-time-bound-organization-page-
-   * statistics">
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/page-statistics#retrieve-time-bound-organization-page-statistics">
    * Organization Page Statistics - time-bound</a>
    * @param organizationURN the organization URN to retrieve the page statistics
    * @param timeInterval the time interval  for time-bound follower statistics
@@ -362,13 +347,9 @@ public class OrganizationConnection extends ConnectionBaseV2 {
 
   /**
    * Retrieve organization brand page statistics
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/organizations/page-statistics#retrieve-organization-brand-page-
-   * statistics">
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/page-statistics#retrieve-organization-brand-page-statistics">
    * Organization Brand Page Statistics</a>
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/organizations/page-statistics#retrieve-organization-brand-time-bound-
-   * page-statistics">
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/page-statistics#retrieve-organization-brand-time-bound-page-statistics">
    * Organization Brand Page Statistics - time-bound</a>
    * @param organizationBrand the organization brand URN
    * @param timeInterval the time interval for time bounded statistics
@@ -383,8 +364,8 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * retrieve both lifetime and time-bound organic statistics on shares for an organization,
    * including specific organization share URNs. This endpoint returns organic statistics only.
    * Sponsored activity is not counted in this endpoint.
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
-   * management/organizations/share-statistics">Organization Share Statistics</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/share-statistics">
+   * Organization Share Statistics</a>
    * @param organizationURN the organizational entity URN for which the statistics represents
    * @param timeInterval Time restriction for the query. When omitted, lifetime stats are returned
    * @param shareURNs References to one or more shares for which statistics are returned

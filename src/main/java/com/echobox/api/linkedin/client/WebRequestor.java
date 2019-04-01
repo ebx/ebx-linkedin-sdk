@@ -59,6 +59,8 @@ public interface WebRequestor {
      * 
      * @param statusCode
      *          The HTTP status code of the response.
+     * @param headers
+     *          The headers from the response
      * @param body
      *          The response body as text.
      */
@@ -119,6 +121,8 @@ public interface WebRequestor {
    * 
    * @param url
    *          The URL to {@code POST} to.
+   * @param jsonBody
+   *          The POST JSON body
    * @param parameters
    *          The parameters to be {@code POST}ed.
    * @return HTTP response data.
@@ -135,6 +139,10 @@ public interface WebRequestor {
    *          The URL to {@code POST} to.
    * @param parameters
    *          The parameters to be {@code POST}ed.
+   * @param jsonBody
+   *          The POST JSON body
+   * @param headers
+   *          The headers for the post request
    * @param binaryAttachments
    *          Optional binary attachments to be included in the {@code POST} body (e.g. photos and
    *          videos).

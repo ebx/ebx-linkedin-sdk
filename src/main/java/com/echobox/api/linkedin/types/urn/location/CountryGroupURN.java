@@ -24,8 +24,7 @@ import lombok.Getter;
 
 /**
  * Country Group URN
- * @see <a href="https://developer.linkedin.com/docs/ref/v2/standardized-data/locations/country-
- * groups">Country Group URN</a>
+ * @see <a href="https://developer.linkedin.com/docs/ref/v2/standardized-data/locations/country-groups">Country Group URN</a>
  * @author joanna
  *
  */

@@ -32,8 +32,7 @@ import java.util.List;
 
 /**
  * UGC Share connection
- * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations
- * /community-management/shares/ugc-post-api">UGC Shares</a>
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api">UGC Shares</a>
  * @author joanna
  */
 public class UGCShareConnection extends ConnectionBaseV2 {
@@ -55,8 +54,7 @@ public class UGCShareConnection extends ConnectionBaseV2 {
    * To upload an image share, use the RichMediaConnection to get the location as the media field
    * To upload a video share, use the AssetsConnection to get the digital media asset location as
    * the media field
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/shares/ugc-post-api#create-ugc-posts">Create UGC Post</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#create-ugc-posts">Create UGC Post</a>
    * @param shareBody the share body
    * @return the created UCG share
    */
@@ -67,8 +65,7 @@ public class UGCShareConnection extends ConnectionBaseV2 {
   /**
    * To retrieve a UGC Post, provide the context in which the user generated content is being
    * viewed.
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/shares/ugc-post-api#retrieve-ugc-posts">Retrieve UGC Post</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#retrieve-ugc-posts">Retrieve UGC Post</a>
    * @param shareURN share URN - can be either a UGC share URN or share URN from the share API
    * @param viewContext the context in which the user generated content is being viewed
    * @return the UGC post from the share URN
@@ -92,9 +89,7 @@ public class UGCShareConnection extends ConnectionBaseV2 {
   
   /**
    * Retrieve all UGC posts for a member or an organization.
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/shares/ugc-post-api#retrieve-ugc-posts-by-authors">Retrieve UGC Posts
-   * by authors</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#retrieve-ugc-posts-by-authors">Retrieve UGC Postsby authors</a>
    * @param authorURN the author URN - can be either an organization or person URN
    * @param count the number of entries to be returned per paged request
    * @return the connection of UCG share which is paged
@@ -110,9 +105,7 @@ public class UGCShareConnection extends ConnectionBaseV2 {
   
   /**
    * Retrieve all UGC posts of a group using containerEntities
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/shares/ugc-post-api#retrieve-ugc-posts-by-containerentities">
-   * Retrieve UGC Posts by containerEntities</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#retrieve-ugc-posts-by-containerentities">Retrieve UGC Posts by containerEntities</a>
    * @param groupURNs the list of group URNs
    * @return the connection of UGC share which is paged
    */
@@ -123,9 +116,7 @@ public class UGCShareConnection extends ConnectionBaseV2 {
   
   /**
    * Retrieve a UGC post based on the permaLinkSuffixes.
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/shares/ugc-post-api#retrieve-ugc-posts-by-permalinksuffixes">
-   * Retrieve UGC Posts by permalinkSuffixes</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#retrieve-ugc-posts-by-permalinksuffixes">Retrieve UGC Posts by permalinkSuffixes</a>
    * @param permalinkSuffixes the list of permalink suffixes
    * @return the connection of the UGC share which is paged
    */
@@ -136,9 +127,7 @@ public class UGCShareConnection extends ConnectionBaseV2 {
   
   /**
    * Delete UGC Posts
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
-   * community-management/shares/ugc-post-api#ugc-post-api#delete-ugc-posts">
-   * Delete UGC Posts</a>
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#delete-ugc-posts">Delete UGC Posts</a>
    * @param shareURN the share URN of the share to delete - can be either a UGC share or share URN
    */
   public void deleteUGCPost(URN shareURN) {

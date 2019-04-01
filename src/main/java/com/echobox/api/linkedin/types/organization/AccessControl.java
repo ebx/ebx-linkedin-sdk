@@ -24,8 +24,7 @@ import lombok.Getter;
 
 /**
  * Access Control POJO
- * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
- * management/organizations/organization-access-control#find-access-control-information">
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-access-control#find-access-control-information">
  * Access Control Schema</a>
  * @author joanna
  *

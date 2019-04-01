@@ -29,8 +29,7 @@ import java.util.List;
 
 /**
  * Complete multi-part upload body
- * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
- * community-management/shares/vector-asset-api#complete-multi-part-upload">Complete Multi-Part
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#complete-multi-part-upload">Complete Multi-Part
  * Upload</a>
  * @author Joanna
  */

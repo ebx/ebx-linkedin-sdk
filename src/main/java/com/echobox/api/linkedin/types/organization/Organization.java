@@ -32,8 +32,7 @@ import java.util.List;
 
 /**
  * The type Organization.
- * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-lookup-api
- * #schema">Organization Schema</a>
+ * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-lookup-api#schema">Organization Schema</a>
  * @author clementcaylux 
  */
 public class Organization extends LinkedInIdAndURNType {

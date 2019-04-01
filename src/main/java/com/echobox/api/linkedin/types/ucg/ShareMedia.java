@@ -25,12 +25,10 @@ import lombok.Setter;
 
 import java.util.List;
 
-
 /**
  * Share media class
  * @see
- * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations
- * /community-management/shares/ugc-post-api#sharemedia">Share Media</a>
+ * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#sharemedia">Share Media</a>
  * @author joanna
  */
 public class ShareMedia {

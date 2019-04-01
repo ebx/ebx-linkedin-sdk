@@ -31,8 +31,7 @@ import java.util.stream.Collectors;
 
 /**
  * Register Upload Request body
- * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
- * community-management/shares/vector-asset-api#register-an-upload">Register an Upload</a>
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#register-an-upload">Register an Upload</a>
  * @author Joanna
  */
 @RequiredArgsConstructor
@@ -128,7 +127,7 @@ public class RegisterUploadRequestBody {
   public enum SupportedUploadMechanism {
     
     /**
-     *  Content filesize < 200MB
+     * Content filesize less than 200MB
      */
     SINGLE_REQUEST_UPLOAD,
   

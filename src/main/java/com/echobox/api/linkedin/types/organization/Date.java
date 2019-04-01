@@ -24,8 +24,7 @@ import lombok.Setter;
 
 /**
  * The type Date.
- * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-lookup-api
- * #date"> Date Schema</a>
+ * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-lookup-api#date"> Date Schema</a>
  * @author clementcaylux
  */
 public class Date {

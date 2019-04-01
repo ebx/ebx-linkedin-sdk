@@ -27,8 +27,8 @@ import java.util.List;
 
 /**
  * The company's profile model type
- * @see <a href="https://developer.linkedin.com/docs/fields/company-profile">Company Profile</a>
- * for more informatiom
+ * See <a href="https://developer.linkedin.com/docs/fields/company-profile">Company Profile</a>
+ * for more information
  * @author Joanna
  *
  */

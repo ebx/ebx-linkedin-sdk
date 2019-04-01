@@ -432,6 +432,8 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    *          as a {@code GET}.
    * @param executeAsDelete
    *          {@code true} to add a special 'treat this request as a {@code DELETE}' parameter.
+   * @param jsonBody
+   *          Post JSON body
    * @param binaryAttachments
    *          A list of binary files to include in a {@code POST} request. Pass {@code null} if no 
    *          attachment should be sent.
@@ -468,14 +470,16 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    *          as a {@code GET}.
    * @param executeAsDelete
    *          {@code true} to add a special 'treat this request as a {@code DELETE}' parameter.
+   * @param jsonBody
+   *          The POST JSON body
+   * @param headers
+   *          The headers for the request
    * @param binaryAttachments
    *          A list of binary files to include in a {@code POST} request. Pass {@code null} if no 
    *          attachment should be sent.
    * @param parameters
    *          Arbitrary number of parameters to send along to LinkedIn as part of the API call.
    * @return The JSON returned by LinkedIn for the API call.
-   * @throws LinkedInException
-   *           If an error occurs while making the LinkedIn API POST or processing the response.
    */
   protected String makeRequestFull(String fullEndpoint, final boolean executeAsPost,
       final boolean executeAsDelete, Object jsonBody, Map<String, String> headers,

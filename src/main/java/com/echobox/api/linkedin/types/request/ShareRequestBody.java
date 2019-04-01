@@ -30,8 +30,7 @@ import lombok.Setter;
 
 /**
  * Share request body class
- * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/
- * community-management/shares/share-api#post-shares">Post Shares</a>
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/share-api#post-shares">Post Shares</a>
  * @author joanna
  */
 @RequiredArgsConstructor

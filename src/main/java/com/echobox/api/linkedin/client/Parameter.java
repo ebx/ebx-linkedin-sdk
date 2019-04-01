@@ -94,8 +94,6 @@ public final class Parameter {
    * @return A {@code Parameter} instance with the given {@code name} and {@code value}.
    * @throws IllegalArgumentException
    *           If {@code name} or {@code value} is {@code null} or a blank string.
-   * @throws LinkedInJsonMappingException
-   *           If an error occurs when converting {@code value} to JSON.
    */
   public static Parameter with(String name, Object value) {
     return Parameter.with(name, value, new DefaultJsonMapper());
@@ -118,8 +116,6 @@ public final class Parameter {
    * @return A {@code Parameter} instance with the given {@code name} and {@code value}.
    * @throws IllegalArgumentException
    *           If {@code name} or {@code value} is {@code null} or a blank string.
-   * @throws LinkedInJsonMappingException
-   *           If an error occurs when converting {@code value} to JSON.
    */
   public static Parameter with(String name, Object value, JsonMapper jsonMapper) {
     return new Parameter(name, value, jsonMapper);

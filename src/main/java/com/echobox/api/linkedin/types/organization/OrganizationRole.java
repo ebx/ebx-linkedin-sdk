@@ -19,8 +19,7 @@ package com.echobox.api.linkedin.types.organization;
 
 /**
  * A role defines the privileges that a member has within the organization
- * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-
- * management/organizations/organization-access-control#organization-roles">
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-access-control#organization-roles">
  * Organization Access Control Schema</a>
  * @author joanna
  *

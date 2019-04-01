@@ -28,8 +28,7 @@ import java.util.List;
 /**
  * Share content
  * @see
- * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management
- * /shares/ugc-post-api#sharecontent">Share Content</a>
+ * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#sharecontent">Share Content</a>
  * @author joanna
  */
 public class ShareContent {
