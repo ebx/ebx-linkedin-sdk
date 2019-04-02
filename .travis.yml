@@ -17,9 +17,8 @@ before_script:
   - source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh
   - source buildscripts/validateBuild.sh
 
-## For DEV and MASTER deploy to maven central (DEV will always be a snapshot)
-## All other builds are simply verified
-script: source buildscripts/build.sh
+script: 
+  - source buildscripts/build.sh
   
 after_failure:
   - cat target/surefire-reports/*.txt
