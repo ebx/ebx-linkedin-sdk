@@ -24,8 +24,8 @@ Recommended installation is via maven (or gradle etc.). For our latest stable re
 </dependency>
 ```
 
-## Installation (Most Up To Date) [![Build Status](https://travis-ci.org/ebx/ebx-linkedin-sdk.svg?branch=dev)](https://travis-ci.org/ebx/ebx-linkedin-sdk)
-
+## Installation (Most Up To Date)
+[![Build Status](https://travis-ci.org/ebx/ebx-linkedin-sdk.svg?branch=dev)](https://travis-ci.org/ebx/ebx-linkedin-sdk)
 If you'd like to use the latest SNAPSHOT build please ensure you have snapshots enabled in your pom:
 
 ```
@@ -39,13 +39,13 @@ If you'd like to use the latest SNAPSHOT build please ensure you have snapshots 
 </repositories>
 ```
 
-and then include the snapshot dependency:
+and then include the snapshot dependency, replacing *x.x.x* with the latest [snapshot version](https://github.com/ebx/ebx-linkedin-sdk/blob/dev/pom.xml):
 
 ```
 <dependency>
   <groupId>com.echobox</groupId>
   <artifactId>ebx-linkedin-sdk</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>x.x.x-SNAPSHOT</version>
 </dependency>
 ```
 
