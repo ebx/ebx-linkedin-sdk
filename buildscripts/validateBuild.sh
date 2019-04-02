@@ -22,11 +22,11 @@ else
   #Get the PR title
   export PR_TITLE=$(curl -s https://api.github.com/repos/$REPO/pulls/$TRAVIS_PULL_REQUEST | grep -Po '(?<="title":[[:space:]]")[^"]*(?=",)')
 
-  printf "${GREEN_COLOUR}Building PR $PR_TITLE from branch $SOURCE_BRANCH_NAME (into $TRAVIS_BRANCH)${NO_COLOUR}\n"
+  printf "${GREEN_COLOUR}Building PR #$TRAVIS_PULL_REQUEST '$PR_TITLE' from branch $SOURCE_BRANCH_NAME (into $TRAVIS_BRANCH)${NO_COLOUR}\n"
   
   ##Ensure the PR name matches our expected format
   if ! [[ $PR_TITLE =~ ^[A-Z]{2,4}-[0-9]+[[:space:]].+$ ]]; then
-    printf "${RED_COLOUR}PR title '$PR_TITLE' does not match the expected format 'GH-[xxxx] [description]'${NO_COLOUR}\n"
+    printf "${RED_COLOUR}PR title '$PR_TITLE' does not match the expected format 'GH-[xxxx] [description]'.${NO_COLOUR}\n"
     travis_terminate 1;
   fi
   
