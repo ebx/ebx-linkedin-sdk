@@ -24,15 +24,12 @@ else
 
   printf "${GREEN_COLOUR}Building PR #$TRAVIS_PULL_REQUEST '$PR_TITLE' from branch $SOURCE_BRANCH_NAME (into $TRAVIS_BRANCH)${NO_COLOUR}\n"
   
+  ##Disabled as travis keeps getting rate limited by github
   ##Ensure the PR name matches our expected format
-  if ! [[ $PR_TITLE =~ ^[A-Z]{2,4}-[0-9]+[[:space:]].+$ ]]; then
-    printf "${RED_COLOUR}PR title '$PR_TITLE' does not match the expected format 'GH-[xxxx] [description]'.${NO_COLOUR}\n"
-    
-    curl -s https://api.github.com/repos/$REPO/pulls/$TRAVIS_PULL_REQUEST > data.json
-    cat data.json
-    
-    travis_terminate 1;
-  fi
+  #if ! [[ $PR_TITLE =~ ^[A-Z]{2,4}-[0-9]+[[:space:]].+$ ]]; then
+  #  printf "${RED_COLOUR}PR title '$PR_TITLE' does not match the expected format 'GH-[xxxx] [description]'.${NO_COLOUR}\n"
+  #  travis_terminate 1;
+  #fi
   
   #Ensure PR cannot be into master, unless it's coming from dev
   if [ "$TRAVIS_BRANCH" == "$RELEASE_BRANCH" ] && [ "$SOURCE_BRANCH_NAME" != "$DEV_BRANCH" ]; then
