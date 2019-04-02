@@ -25,3 +25,9 @@ if [ "$SOURCE_BRANCH_NAME" != "$RELEASE_BRANCH" ]; then
 else
   printf "${GREEN_COLOUR}Build version not modified as this is the $RELEASE_BRANCH branch.${NO_COLOUR}\n"
 fi
+
+#Ensure the project verison is valid
+if ! [[ $MVN_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+.*$ ]]; then
+  printf "${RED_COLOUR}The extracted project version '$MVN_VERSION' was not valid.${NO_COLOUR}\n"
+  travis_terminate 1;
+fi
