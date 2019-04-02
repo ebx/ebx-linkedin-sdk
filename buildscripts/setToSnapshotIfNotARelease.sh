@@ -15,9 +15,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ##
-#Safe mode as per https://ebx.sh/KkWhXp
-set -euo pipefail
-IFS=$'\n\t'
 
 export MVN_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout|grep -v '\[')
 ## If this is not master we dynamically set the version to a snapshot
