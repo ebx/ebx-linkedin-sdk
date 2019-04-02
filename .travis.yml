@@ -10,59 +10,15 @@ env:
     - RED_COLOUR='\033[0;31m'
     - GREEN_COLOUR='\033[0;32m'
 
-## Export GPG details for Maven Central signing and extract the version
-before_install:
+before_script:
   - export SOURCE_BRANCH_NAME=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi) 
   - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import || echo "Failed to import GPG_SECRET_KEYS (probably because this branch is a PR)."
   - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust || echo "Failed to import GPG_OWNERTRUST (probably because this branch is a PR)."
-  - export MVN_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout|grep -v '\[')
-  - |
-    #Ensure the project verison is valid
-    if ! [[ $MVN_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+.*$ ]]; then
-      printf "${RED_COLOUR}The extracted project version '$MVN_VERSION' was not valid.${NO_COLOUR}\n"
-      travis_terminate 1;
-    fi 
-    if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-      printf "${GREEN_COLOUR}Building base branch $SOURCE_BRANCH_NAME which is at version $MVN_VERSION.${NO_COLOUR}\n"
-    else
-      #Get the PR title
-      export PR_TITLE=$(curl -s https://api.github.com/repos/$REPO/pulls/$TRAVIS_PULL_REQUEST | grep -Po '(?<="title":[[:space:]]")[^"]*(?=",)')
-    
-      printf "${GREEN_COLOUR}Building PR $PR_TITLE from branch $SOURCE_BRANCH_NAME (into $TRAVIS_BRANCH)${NO_COLOUR}\n"
-      
-      ##Ensure the PR name matches our expected format
-      ##if ! [[ $PR_TITLE =~ ^[A-Z]{2,4}-[0-9]+[[:space:]].+$ ]]; then
-      ##  printf "${RED_COLOUR}PR title '$PR_TITLE' does not match the expected format 'GH-[xxxx] [description]'${NO_COLOUR}\n"
-      ##  travis_terminate 1;
-      ##fi
-      
-      #Ensure PR cannot be into master, unless it's coming from dev
-      if [ "$TRAVIS_BRANCH" == "$RELEASE_BRANCH" ] && [ "$SOURCE_BRANCH_NAME" != "$DEV_BRANCH" ]; then
-        printf "${RED_COLOUR}Build failed as PR target is master. Please ensure you use $DEV_BRANCH as the target.${NO_COLOUR}\n"
-        travis_terminate 1;
-      fi
-    fi
+  - source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh
+  - source buildscripts/validateBuild.sh
 
-## If this is not master we dynamically set the version to a snapshot
-install:
-  |
-  if [ "$SOURCE_BRANCH_NAME" != "$RELEASE_BRANCH" ]; then 
-    mvn versions:set -q -DnewVersion=$MVN_VERSION-SNAPSHOT
-    export MVN_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout|grep -v '\[')
-    printf "${GREEN_COLOUR}Build version modified to $MVN_VERSION as this is not the $RELEASE_BRANCH branch.${NO_COLOUR}\n"
-  fi
-
-## For DEV and MASTER deploy to maven central (DEV will always be a snapshot)
-## All other builds are simply verified
 script:
-  | 
-  if [ "$SOURCE_BRANCH_NAME" == "$RELEASE_BRANCH" ] || [ "$SOURCE_BRANCH_NAME" == "$DEV_BRANCH" ]; then
-    printf "${GREEN_COLOUR}Performing deploy build to maven central.${NO_COLOUR}\n"
-    mvn clean deploy --settings .maven.xml -B -U -Prelease
-  else
-    printf "${GREEN_COLOUR}Performing a PR verify build. Releases are only created from $DEV_BRANCH and $RELEASE_BRANCH branches.${NO_COLOUR}\n"
-    mvn clean verify
-  fi
+  - source buildscripts/build.sh
   
 after_failure:
   - cat target/surefire-reports/*.txt
@@ -87,7 +43,7 @@ deploy:
     - target/ebx-linkedin-sdk-$MVN_VERSION-sources.jar
   skip_cleanup: true
   on:
-    repo: ebx/ebx-linkedin-sdk
+    repo: $REPO
     branch: $RELEASE_BRANCH
   name: v$MVN_VERSION
   
