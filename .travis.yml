@@ -73,7 +73,7 @@ before_deploy:
   # Set up git user name and tag this commit
   - git config --local user.name "MarcFletcher"
   - git config --local user.email "marc@echobox.com"
-  - export DEPLOY_TAG=${v$MVN_VERSION}
+  - export DEPLOY_TAG=v$MVN_VERSION
   - git tag $DEPLOY_TAG
   
 ## Create the release in Github
