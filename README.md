@@ -26,6 +26,7 @@ Recommended installation is via maven (or gradle etc.). For our latest stable re
 
 ## Installation (Most Up To Date)
 [![Build Status](https://travis-ci.org/ebx/ebx-linkedin-sdk.svg?branch=dev)](https://travis-ci.org/ebx/ebx-linkedin-sdk)
+
 If you'd like to use the latest SNAPSHOT build please ensure you have snapshots enabled in your pom:
 
 ```
