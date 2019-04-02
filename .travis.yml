@@ -73,7 +73,7 @@ before_deploy:
   # Set up git user name and tag this commit
   - git config --local user.name "MarcFletcher"
   - git config --local user.email "marc@echobox.com"
-  - export DEPLOY_TAG=${v$MVN_VERSION}
+  - export DEPLOY_TAG=v$MVN_VERSION
   - git tag $DEPLOY_TAG
   
 ## Create the release in Github
@@ -81,7 +81,10 @@ deploy:
   provider: releases
   api_key:
     secure: LtqM1MYEAj2LBgznSSJUQaM0Tl0Gny37LGgLUNF4yGGoz+ghjwXux7+W8BlR9Fid/CzaoW+Nr4074NfD5N0kz52iHJCHxrcvVuUPYdcNdfne7Rc+MdsXxb8QwUrmYLh5ay1Xtquy9MW1zya7Z1Y3oibvT5wpi/yKhxH5o8pdTZlqSkVgwBMFC8+Z38Dmz09nHYGPpFB7cAW5DtRIqf9qjsd/h7wwItwRWbUQuxuZ4SV/tvqjb4Hppbf3RU9163Q1WteUTx21IX/6IcWZL6KCLJruUMeB22mHfbASHVTL3xg6Ot9P+cpk72rf2VvsvbcaTrUsee8Cyy6s1BBirP4vOKPk81N/mKYLGGbgtr6lYIEia22N01ZF+7lG0JoS+/ynr2HZ2Sa0y5Haxgv5qGD94fJuZ4etEQ5GXaBLkrJr2TtlWjPxP2yg8NYB6JnBA/OE6AnDMQ1lsrZcUjav6oABjNuRqJfa+9zH3T9+nTSeixLmjjGf62+33UR9PZxncuEg8wGa2N9iPavBVEnyJ6yayALu4DskAjG/o7tsBi18u0PeXdjmcsF7hkL7h7XECx9cvdsSAqhdfEZyIosGrBpQqhxfyBzOLSqauxkVWisG6W9222s4EXmZMxja6QteVHQswx5ueXlUd8cGZ70d7s6Bw0gYibX3Ds1RGkQVeSblies=
-  file: target/ebx-linkedin-sdk-$MVN_VERSION.jar
+  file: 
+    - target/ebx-linkedin-sdk-$MVN_VERSION.jar
+    - target/ebx-linkedin-sdk-$MVN_VERSION-javadoc.jar
+    - target/ebx-linkedin-sdk-$MVN_VERSION-sources.jar
   skip_cleanup: true
   on:
     repo: ebx/ebx-linkedin-sdk
