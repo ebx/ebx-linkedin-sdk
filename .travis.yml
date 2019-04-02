@@ -17,7 +17,7 @@ before_script:
   - source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh
   - source buildscripts/validateBuild.sh
 
-script: 
+script:
   - source buildscripts/build.sh
   
 after_failure:
