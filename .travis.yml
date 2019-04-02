@@ -15,7 +15,7 @@ before_script:
   - export SOURCE_BRANCH_NAME=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi) 
   - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import || echo "Failed to import GPG_SECRET_KEYS (probably because this branch is a PR)."
   - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust || echo "Failed to import GPG_OWNERTRUST (probably because this branch is a PR)."
-  - bash buildscripts/setToSnapshotIfNotARelease.sh
+  - bash source buildscripts/setToSnapshotIfNotARelease.sh
   - |
     #Ensure the project verison is valid
     if ! [[ $MVN_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+.*$ ]]; then
