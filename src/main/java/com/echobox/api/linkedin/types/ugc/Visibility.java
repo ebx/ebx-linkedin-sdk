@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.ucg;
+package com.echobox.api.linkedin.types.ugc;
 
 /**
  * Visibility enum

@@ -15,43 +15,57 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.ucg;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.social.actions.CommentAction;
-
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
+package com.echobox.api.linkedin.types.ugc;
 
 /**
- * Commentary
+ * Origin
  * @author joanna
  */
-public class Commentary {
+public enum Origin {
   
   /**
-   * User generated attributes in the text.
+   * Partner using external API
    */
-  @Getter
-  @Setter
-  @LinkedIn
-  private List<CommentAction.Attribute> attributes;
+  API,
   
   /**
-   * The locale that may have be inferred for this text.
+   * Elevate app
    */
-  @Getter
-  @Setter
-  @LinkedIn
-  private String inferredLocale;
+  ELEVATE,
   
   /**
-   * The text content that may be attributed.
+   * Firefox browser extension
    */
-  @Getter
-  @Setter
-  @LinkedIn
-  private String text;
+  FIREFOX,
+  
+  /**
+   * Mobile flagship app
+   */
+  FLAGSHIP,
+  
+  /**
+   * InShare on 3rd party sites
+   */
+  IN_SHARE,
+  
+  /**
+   * Desktop site
+   */
+  DESKTOP,
+  
+  /**
+   * Sales Navigator
+   */
+  LSS,
+  
+  /**
+   * Pulse app
+   */
+  PULSE,
+  
+  /**
+   * InShare on Slideshare
+   */
+  SLIDESHARE;
+
 }
