@@ -15,57 +15,34 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.ucg;
+package com.echobox.api.linkedin.types.ugc;
+
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.URN;
+
+import lombok.Getter;
 
 /**
- * Origin
+ * Response context
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#responsecontext">Response Context</a>
  * @author joanna
  */
-public enum Origin {
+public class ResponseContext {
   
   /**
-   * Partner using external API
+   * The content that a piece of content is a response to. Currently, the only supported Urn is
+   * ugcPost Urn.
    */
-  API,
+  @LinkedIn
+  @Getter
+  private URN parent;
   
   /**
-   * Elevate app
+   * The greatest ancestor content that a piece of content is a response to. Currently, the only
+   * supported Urn is ugcPost Urn.
    */
-  ELEVATE,
-  
-  /**
-   * Firefox browser extension
-   */
-  FIREFOX,
-  
-  /**
-   * Mobile flagship app
-   */
-  FLAGSHIP,
-  
-  /**
-   * InShare on 3rd party sites
-   */
-  IN_SHARE,
-  
-  /**
-   * Desktop site
-   */
-  DESKTOP,
-  
-  /**
-   * Sales Navigator
-   */
-  LSS,
-  
-  /**
-   * Pulse app
-   */
-  PULSE,
-  
-  /**
-   * InShare on Slideshare
-   */
-  SLIDESHARE;
+  @LinkedIn
+  @Getter
+  private URN root;
 
 }

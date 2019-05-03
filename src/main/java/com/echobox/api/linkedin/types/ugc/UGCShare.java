@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.ucg;
+package com.echobox.api.linkedin.types.ugc;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.LinkedInURNIdType;
@@ -28,8 +28,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 /**
- * UCG Share
- * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#schema">UCG Share</a>
+ * UGC Share
+ * @see
+ * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#schema">UGC Share</a>
  * @author joanna
  */
 @RequiredArgsConstructor

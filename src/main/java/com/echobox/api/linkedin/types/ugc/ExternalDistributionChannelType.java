@@ -15,22 +15,28 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.ucg;
+package com.echobox.api.linkedin.types.ugc;
 
 /**
- * The context in which the user generated content is being viewed.
+ * External distribution channel type
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#distribution">External Distribution Channel Type</a>
  * @author joanna
  */
-public enum ViewContext {
+public enum ExternalDistributionChannelType {
   
   /**
-   * View the content as the author
+   * Distribute content to Twitter
    */
-  AUTHOR,
+  TWITTER,
   
   /**
-   * View the content as a reader
+   * Distribute content to Tencent
    */
-  READER;
+  TENCENT,
   
+  /**
+   * Distribute content to Weibo
+   */
+  WEIBO;
+
 }

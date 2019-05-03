@@ -20,8 +20,8 @@ package com.echobox.api.linkedin.connection.v2;
 import com.echobox.api.linkedin.client.Connection;
 import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
-import com.echobox.api.linkedin.types.ucg.UGCShare;
-import com.echobox.api.linkedin.types.ucg.ViewContext;
+import com.echobox.api.linkedin.types.ugc.UGCShare;
+import com.echobox.api.linkedin.types.ugc.ViewContext;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.util.URLUtils;
 
@@ -56,9 +56,9 @@ public class UGCShareConnection extends ConnectionBaseV2 {
    * the media field
    * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#create-ugc-posts">Create UGC Post</a>
    * @param shareBody the share body
-   * @return the created UCG share
+   * @return the created UGC share
    */
-  public UGCShare createUCGPost(UGCShare shareBody) {
+  public UGCShare createUGCPost(UGCShare shareBody) {
     return linkedinClient.publish(UGC_POST, UGCShare.class, shareBody);
   }
   
@@ -70,7 +70,7 @@ public class UGCShareConnection extends ConnectionBaseV2 {
    * @param viewContext the context in which the user generated content is being viewed
    * @return the UGC post from the share URN
    */
-  public UGCShare retrieveUCGPost(URN shareURN, ViewContext viewContext) {
+  public UGCShare retrieveUGCPost(URN shareURN, ViewContext viewContext) {
     Parameter viewContextParam = Parameter.with(VIEW_CONTEXT, viewContext);
     return linkedinClient.fetchObject(UGC_POST + "/" + URLUtils.urlDecode(shareURN.toString()),
         UGCShare.class, viewContextParam);
@@ -92,7 +92,7 @@ public class UGCShareConnection extends ConnectionBaseV2 {
    * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#retrieve-ugc-posts-by-authors">Retrieve UGC Postsby authors</a>
    * @param authorURN the author URN - can be either an organization or person URN
    * @param count the number of entries to be returned per paged request
-   * @return the connection of UCG share which is paged
+   * @return the connection of UGC share which is paged
    */
   public Connection<UGCShare> retrieveUGCPostsByAuthors(URN authorURN, Integer count) {
     List<Parameter> parameters = new ArrayList<>();

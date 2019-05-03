@@ -15,34 +15,43 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.ucg;
+package com.echobox.api.linkedin.types.ugc;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.social.actions.CommentAction;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 /**
- * Distribution
- * @see
- * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#distribution">Distribution</a>
+ * Commentary
  * @author joanna
  */
-public class Distribution {
+public class Commentary {
   
   /**
-   * Whether UGC post is distributed to follow-feed or not.
+   * User generated attributes in the text.
    */
   @Getter
+  @Setter
   @LinkedIn
-  private boolean distributedViaFollowFeed;
+  private List<CommentAction.Attribute> attributes;
   
   /**
-   * External distribution channels that this content is distributed to.
+   * The locale that may have be inferred for this text.
    */
   @Getter
+  @Setter
   @LinkedIn
-  private List<String> externalDistributionChannels;
-
+  private String inferredLocale;
+  
+  /**
+   * The text content that may be attributed.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private String text;
 }
