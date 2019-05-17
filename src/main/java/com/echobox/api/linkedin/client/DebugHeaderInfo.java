@@ -52,16 +52,21 @@ public class DebugHeaderInfo {
 
   /**
    * Initialise the debug header info
-   * @param fabic x-li-fabric header
+   * @param fabric x-li-fabric header
    * @param format x-li-format header
    * @param requestId x-li-request-id request id
    * @param uuid x-li-uuid header
    */
-  public DebugHeaderInfo(String fabic, String format, String requestId, String uuid) {
-    this.fabric = fabic;
+  public DebugHeaderInfo(String fabric, String format, String requestId, String uuid) {
+    this.fabric = fabric;
     this.format = format;
     this.requestId = requestId;
     this.uuid = uuid;
   }
-
+  
+  @Override
+  public String toString() {
+    return String.format("DebugHeaderInfo [x-li-fabric=%s, x-li-format=%s, x-li-request-id=%s, "
+        + "x-li-uuid=%s]", fabric, format, requestId, uuid);
+  }
 }
