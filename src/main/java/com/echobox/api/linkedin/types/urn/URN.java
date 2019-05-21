@@ -38,6 +38,8 @@ public class URN {
   @LinkedIn
   private String id;
 
+  private URN() {}
+  
   /**
    * Instantiates a new Urn.
    *
