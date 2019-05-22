@@ -239,7 +239,7 @@ public class Organization extends LinkedInIdAndURNType {
   @Getter
   @Setter
   @LinkedIn
-  private CroppedImage overviewPhotov2;
+  private CroppedImage overviewPhotoV2;
   
   /**
    * The entity’s logo.
