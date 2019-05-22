@@ -131,6 +131,17 @@ public class OrganizationTest extends DefaultJsonMapperTestBase {
         coverPhoto.getOriginal().toString());
     Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAAkOAAAAJDA3NmYwMzRkLTA2MTAt.png", 
         coverPhoto.getCropped().toString());
+  
+    CroppedImage overviewPhotoV2 = organization.getOverviewPhotoV2();
+    CropInfo cropOverviewPhotoV2 = overviewPhotoV2.getCropInfo();
+    Assert.assertEquals(0, cropOverviewPhotoV2.getXAxis());
+    Assert.assertEquals(0, cropOverviewPhotoV2.getYAxis());
+    Assert.assertEquals(646, cropOverviewPhotoV2.getWidth());
+    Assert.assertEquals(220, cropOverviewPhotoV2.getHeight());
+    Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAAfmAAAAJDQwLTk4YTItNGNlLWRj.png",
+        overviewPhotoV2.getOriginal().toString());
+    Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAAkOAAAAJDA3NmYwMzRkLTA2MTAt.png",
+        overviewPhotoV2.getCropped().toString());
   }
 
 }
