@@ -19,6 +19,7 @@ package com.echobox.api.linkedin.types.objectype;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**
@@ -28,6 +29,7 @@ import lombok.Getter;
  * @author joanna
  *
  */
+@EqualsAndHashCode
 public class Locale {
 
   /**
