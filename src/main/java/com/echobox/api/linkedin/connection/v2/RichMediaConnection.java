@@ -51,6 +51,17 @@ public class RichMediaConnection extends ConnectionBaseV2 {
    */
   public RichMediaLocation uploadRichMedia(String filename, File file) throws IOException {
     byte[] bytes = Files.readAllBytes(file.toPath());
+    return uploadRichMedia(filename, bytes);
+  }
+
+  /**
+   * Upload a file to the rich media API
+   * @param filename the file name 
+   * @param bytes the data as byte array 
+   * @return the location of the of the rich media upload 
+   * @throws IOException IOException
+   */
+  public RichMediaLocation uploadRichMedia(String filename, byte[] bytes) throws IOException {
     return linkedinClient.publish(MEDIA_UPLOAD, RichMediaLocation.class, null,
         BinaryAttachment.with(filename, bytes));
   }
