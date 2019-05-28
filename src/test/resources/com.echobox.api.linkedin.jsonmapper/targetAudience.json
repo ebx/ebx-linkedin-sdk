@@ -1,0 +1,36 @@
+{
+  "targetedEntities": [
+    {
+      "degrees": [
+        "urn:li:degree:258",
+        "urn:li:degree:125"
+      ],
+      "fieldsOfStudy": [
+        "urn:li:fieldOfStudy:100002",
+        "urn:li:fieldOfStudy:100001",
+        "urn:li:fieldOfStudy:100004"
+      ],
+      "industries": [
+        "urn:li:industry:3"
+      ],
+      "interfaceLocales" : [
+        {
+          "country": "US",
+          "language": "en"
+        }
+      ],
+      "locations": [
+        "urn:li:country:us"
+      ],
+      "schools": [
+        "urn:li:school:17914",
+        "urn:li:school:17414"
+      ],
+      "seniorities": [
+        "urn:li:seniority:2",
+        "urn:li:seniority:1"
+      ],
+      "staffCountRanges": "SIZE_51_TO_200"
+    }
+  ]
+}
