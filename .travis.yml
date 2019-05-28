@@ -1,6 +1,12 @@
 language: java
 sudo: false # faster builds
 
+# safelist
+branches:
+  only:
+  - master
+  - dev
+
 env:
   global:
     - DEV_BRANCH=dev
