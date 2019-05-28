@@ -21,6 +21,7 @@ import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.objectype.Locale;
 import com.echobox.api.linkedin.types.urn.URN;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.List;
  * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#targetaudience">Target Audience</a>
  * @author joanna
  */
+@EqualsAndHashCode
 public class TargetAudience {
   
   /**
@@ -44,6 +46,7 @@ public class TargetAudience {
    * TargetAudienceEntity
    * @author joanna
    */
+  @EqualsAndHashCode
   public static class TargetAudienceEntity {
     
     /**
