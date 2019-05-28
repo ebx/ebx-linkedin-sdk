@@ -72,7 +72,7 @@ public class TargetAudienceTest extends DefaultJsonMapperTestBase {
     String json = "{}";
     TargetAudience other = defaultJsonMapper.toJavaObject(json, TargetAudience.class);
     assertNotEquals(this.targetAudience, other);
-    assertNotEquals(this.hashCode(), other.hashCode());
+    assertNotEquals(this.targetAudience.hashCode(), other.hashCode());
   }
   
   private TargetAudience getInstance() {
