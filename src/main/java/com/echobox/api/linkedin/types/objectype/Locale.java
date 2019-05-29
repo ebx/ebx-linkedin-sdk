@@ -21,6 +21,9 @@ import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
+
+import java.io.Serializable;
 
 /**
  * Locale POJO
@@ -30,12 +33,15 @@ import lombok.Getter;
  *
  */
 @EqualsAndHashCode
-public class Locale {
+public class Locale implements Serializable {
+  
+  private static final long serialVersionUID = -1L;
 
   /**
    * An uppercase two-letter country code as defined by ISO-3166.
    */
   @Getter
+  @Setter
   @LinkedIn
   private String country;
   
@@ -43,6 +49,7 @@ public class Locale {
    * A lowercase two-letter language code as defined by ISO-639.
    */
   @Getter
+  @Setter
   @LinkedIn
   private String language;
   

@@ -58,7 +58,7 @@ public abstract class ConnectionBase {
   }
   
   protected void validateURN(URNEntityType urnEntityType, URN urn) {
-    if (!urnEntityType.equals(urn.getURNEntityType())) {
+    if (!urnEntityType.equals(urn.resolveURNEntityType())) {
       throw new IllegalArgumentException("The URN should be type " + urnEntityType);
     }
   }
