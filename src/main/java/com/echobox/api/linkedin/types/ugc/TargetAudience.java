@@ -23,7 +23,9 @@ import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -33,12 +35,15 @@ import java.util.List;
  * @author joanna
  */
 @EqualsAndHashCode
-public class TargetAudience {
+public class TargetAudience implements Serializable {
+  
+  private static final long serialVersionUID = -1L;
   
   /**
    * The entities targeted for distribution.
    */
   @Getter
+  @Setter
   @LinkedIn
   private List<TargetAudienceEntity> targetedEntities;
   
@@ -47,12 +52,15 @@ public class TargetAudience {
    * @author joanna
    */
   @EqualsAndHashCode
-  public static class TargetAudienceEntity {
+  public static class TargetAudienceEntity implements Serializable {
+  
+    private static final long serialVersionUID = -1L;
     
     /**
      * Standardized degrees to be targeted.
      */
     @Getter
+    @Setter
     @LinkedIn
     private List<URN> degrees;
   
@@ -60,6 +68,7 @@ public class TargetAudience {
      * Standardized fields of study to be targeted.
      */
     @Getter
+    @Setter
     @LinkedIn
     private List<URN> fieldsOfStudy;
   
@@ -67,6 +76,7 @@ public class TargetAudience {
      * Industries to be targeted.
      */
     @Getter
+    @Setter
     @LinkedIn
     private List<URN> industries;
     
@@ -74,6 +84,7 @@ public class TargetAudience {
      * Interface locales to be targeted.
      */
     @Getter
+    @Setter
     @LinkedIn
     private List<Locale> interfaceLocales;
   
@@ -81,6 +92,7 @@ public class TargetAudience {
      * Top level groupings of supertitles to be targeted.
      */
     @Getter
+    @Setter
     @LinkedIn
     private List<URN> jobFunctions;
   
@@ -88,6 +100,7 @@ public class TargetAudience {
      * Location to be targeted.
      */
     @Getter
+    @Setter
     @LinkedIn("locations")
     private List<URN> locations;
   
@@ -95,6 +108,7 @@ public class TargetAudience {
      * Standardized schools to be targeted.
      */
     @Getter
+    @Setter
     @LinkedIn
     private List<URN> schools;
     
@@ -102,6 +116,7 @@ public class TargetAudience {
      * Seniorities to be targeted
      */
     @Getter
+    @Setter
     @LinkedIn
     private List<URN> seniorities;
   
@@ -109,6 +124,7 @@ public class TargetAudience {
      * Organization sizes to be targeted.
      */
     @Getter
+    @Setter
     @LinkedIn
     private String staffCountRanges;
   }
