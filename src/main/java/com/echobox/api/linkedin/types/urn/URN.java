@@ -58,6 +58,16 @@ public class URN implements Serializable {
     this.entityType = entityType;
     this.id = id;
   }
+  
+  /**
+   * Instantiates a new Urn.
+   *
+   * @param entityType the entity type
+   * @param id the id
+   */
+  public URN(URNEntityType entityType, String id) {
+    this(entityType.name().toLowerCase(), id);
+  }
 
   /**
    * Instantiates a new Urn.

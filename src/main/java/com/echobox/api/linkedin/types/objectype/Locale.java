@@ -53,4 +53,9 @@ public class Locale implements Serializable {
   @LinkedIn
   private String language;
   
+  @Override
+  public String toString() {
+    return String.format("%s_%s", language, country);
+  }
+  
 }
