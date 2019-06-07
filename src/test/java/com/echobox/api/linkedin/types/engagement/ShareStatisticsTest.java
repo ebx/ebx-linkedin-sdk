@@ -40,7 +40,8 @@ public class ShareStatisticsTest extends DefaultJsonMapperTestBase {
     ShareStatistic shareStatistic = mapper.toJavaObject(
         "{\"totalShareStatistics\": {"
             + "\"shareCount\": 5,\"clickCount\": 78,\"engagement\": 0.022886324947985624,"
-            + "\"likeCount\": 14,\"impressionCount\": 5287,\"commentCount\": 24},\"share\": "
+            + "\"likeCount\": 14,\"impressionCount\": 5287,\"commentCount\": 24, " 
+            + "\"uniqueImpressionsCount\": 10},\"share\": "
             + "\"urn:li:share:1000000\","
             + "\"organizationalEntity\": \"urn:li:organization:2414183\"}", ShareStatistic.class);
 
@@ -49,6 +50,7 @@ public class ShareStatisticsTest extends DefaultJsonMapperTestBase {
     Assert.assertEquals(78, totalShareStatistics.getClickCount());
     Assert.assertEquals(5, totalShareStatistics.getShareCount());
     Assert.assertEquals("urn:li:share:1000000", shareStatistic.getShare());
+    Assert.assertEquals(10, totalShareStatistics.getUniqueImpressionsCount());
 
   }
 }
