@@ -73,7 +73,7 @@ public class AccessControl {
    * Organization target
    * @author Joanna
    */
-  private static class OrganizationalTarget {
+  public static class OrganizationalTarget {
     @Getter
     @LinkedIn
     private String localizedName;
