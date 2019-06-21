@@ -15,39 +15,46 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.organization;
+package com.echobox.api.linkedin.types;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.ImageV2Elements;
-import com.echobox.api.linkedin.types.urn.URN;
 
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 /**
- * The type Cropped image.
- * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-lookup-api#croppedimg"> Cropped Image Schema</a>
- * @author clementcaylux 
+ * A wrapper class to extend V2 Images 
+ * https://developer.linkedin.com/docs/ref/v2/media-migration#migration
+ * @author Alexandros
  */
-public class CroppedImage {
+public class ImageV2Elements {
   
   @Getter
   @Setter
   @LinkedIn
-  private CropInfo cropInfo;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private URN cropped;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private URN original;
+  private List<Element> elements;
   
-  @Setter
-  @Getter
-  @LinkedIn("original~")
-  private ImageV2Elements originalElements;
+  /**
+   * A wrapper class to get the elements
+   */  
+  public static class Element {
+    
+    @Getter
+    @Setter
+    @LinkedIn
+    private List<Identifier> identifiers;
+  }
+  
+  /**
+   * The Identifier object containing the url
+   */
+  public static class Identifier {
+    
+    @Getter
+    @Setter
+    @LinkedIn
+    private String identifier;
+  }
 }
