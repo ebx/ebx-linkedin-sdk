@@ -28,6 +28,7 @@ public enum URNEntityType {
     ORGANIZATION,
     SENIORITY,
     FUNCTION,
-    SHARE
+    SHARE,
+    UGCPOST
   
 }
