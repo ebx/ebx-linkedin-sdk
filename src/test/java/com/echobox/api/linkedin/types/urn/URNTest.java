@@ -30,37 +30,50 @@ public class URNTest {
   
   @Test
   public void testShareURNConstructor() {
-    assertEquals(new URN(URNEntityType.SHARE, "1"), new URN("urn:li:share:1"));
+    URN urn = new URN("urn:li:share:1");
+    assertEquals(new URN(URNEntityType.SHARE, "1"), urn);
+    assertEquals(URNEntityType.SHARE, urn.resolveURNEntityType());
   }
   
   @Test
   public void testUGCPostURNConstructor() {
-    assertEquals(new URN(URNEntityType.UGCPOST, "1"), new URN("urn:li:ugcPost:1"));
+    URN urn = new URN("urn:li:ugcPost:1");
+    assertEquals(new URN(URNEntityType.UGCPOST, "1"), urn);
+    assertEquals(URNEntityType.UGCPOST, urn.resolveURNEntityType());
   }
   
   @Test
   public void testOrganizationURNConstructor() {
-    assertEquals(new URN(URNEntityType.ORGANIZATION, "1"), 
-        new URN("urn:li:organization:1"));
+    URN urn = new URN("urn:li:organization:1");
+    assertEquals(new URN(URNEntityType.ORGANIZATION, "1"), urn);
+    assertEquals(URNEntityType.ORGANIZATION, urn.resolveURNEntityType());
   }
   
   @Test
   public void testPlaceURNConstructor() {
-    assertEquals(new URN(URNEntityType.PLACE, "1"), new URN("urn:li:place:1"));
+    URN urn = new URN("urn:li:place:1");
+    assertEquals(new URN(URNEntityType.PLACE, "1"), urn);
+    assertEquals(URNEntityType.PLACE, urn.resolveURNEntityType());
   }
   
   @Test
   public void testCountryURNConstructor() {
-    assertEquals(new URN(URNEntityType.COUNTRY, "1"), new URN("urn:li:country:1"));
+    URN urn = new URN("urn:li:country:1");
+    assertEquals(new URN(URNEntityType.COUNTRY, "1"), urn);
+    assertEquals(URNEntityType.COUNTRY, urn.resolveURNEntityType());
   }
   
   @Test
   public void testSeniorityURNConstructor() {
-    assertEquals(new URN(URNEntityType.SENIORITY, "1"), new URN("urn:li:seniority:1"));
+    URN urn = new URN("urn:li:seniority:1");
+    assertEquals(new URN(URNEntityType.SENIORITY, "1"), urn);
+    assertEquals(URNEntityType.SENIORITY, urn.resolveURNEntityType());
   }
   
   @Test
   public void testFunctionURNConstructor() {
-    assertEquals(new URN(URNEntityType.FUNCTION, "1"), new URN("urn:li:function:1"));
+    URN urn = new URN("urn:li:function:1");
+    assertEquals(new URN(URNEntityType.FUNCTION, "1"), urn);
+    assertEquals(URNEntityType.FUNCTION, urn.resolveURNEntityType());
   }
 }
