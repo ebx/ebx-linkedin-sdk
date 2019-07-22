@@ -66,7 +66,7 @@ public class URN implements Serializable {
    * @param id the id
    */
   public URN(URNEntityType entityType, String id) {
-    this(entityType.name().toLowerCase(), id);
+    this(entityType.getEntityValue(), id);
   }
 
   /**

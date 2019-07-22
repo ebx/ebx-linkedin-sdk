@@ -23,11 +23,28 @@ package com.echobox.api.linkedin.types.urn;
  */
 public enum URNEntityType {
 
-    PLACE,
-    COUNTRY,
-    ORGANIZATION,
-    SENIORITY,
-    FUNCTION,
-    SHARE
-  
+  PLACE("place"),
+  COUNTRY("country"),
+  ORGANIZATION("organization"),
+  SENIORITY("seniority"),
+  FUNCTION("function"),
+  SHARE("share"),
+  UGCPOST("ugcPost");
+    
+  /**
+   * The string representation of the type
+   */
+  private final String entityValue;
+
+  URNEntityType(String name) {
+    this.entityValue = name;
+  }
+    
+  /**
+   * Getter the value of the entity
+   * @return the value of the entity 
+   */
+  public String getEntityValue() { 
+    return entityValue;
+  }
 }
