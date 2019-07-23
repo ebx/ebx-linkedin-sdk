@@ -4,7 +4,8 @@
 
 ## What it is
 
-ebx-linkedin-sdk is a pure Java LinkedIn API client. It implements the v2 API as described [here](https://docs.microsoft.com/en-us/linkedin/).
+ebx-linkedin-sdk is a pure Java LinkedIn API client. It implements the v2 API as described 
+[here](https://docs.microsoft.com/en-us/linkedin/).
 
 It is created and maintained by [Echobox](http://echobox.com).
 
@@ -14,7 +15,8 @@ ebx-linkedin-sdk itself is open source software released under the terms of the 
 
 ## Installation (Recommended)
 
-Recommended installation is via maven (or gradle etc.). For our latest stable release (recommended) use:
+Recommended installation is via maven (or gradle etc.). For our latest stable release (recommended) 
+use:
 
 ```
 <dependency>
@@ -40,7 +42,8 @@ If you'd like to use the latest SNAPSHOT build please ensure you have snapshots 
 </repositories>
 ```
 
-and then include the snapshot dependency, replacing *x.x.x* with the latest [snapshot version](https://github.com/ebx/ebx-linkedin-sdk/blob/dev/pom.xml):
+and then include the snapshot dependency, replacing *x.x.x* with the latest 
+[snapshot version](https://github.com/ebx/ebx-linkedin-sdk/blob/dev/pom.xml):
 
 ```
 <dependency>
@@ -90,7 +93,8 @@ To create a LinkedIn Share
     shareRequestBody.setText(shareText);
     Share share = shareConnection.postShare(shareRequestBody);
 
-Retrieve an organization from LinkedIn ([See documentation](https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api#retrieve-organizations)):
+Retrieve an organization from LinkedIn 
+([See documentation](https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api#retrieve-organizations)):
     
     Organization organization = connection.retrieveOrganization(organizationURN, Parameter
             .with("projection",
@@ -99,29 +103,35 @@ Retrieve an organization from LinkedIn ([See documentation](https://docs.microso
 
 ## Getting in touch
 
-* **[GitHub Issues](https://github.com/ebx/ebx-linkedin-sdk/issues/new)**: If you have ideas, bugs, or problems with our library, just open a new issue.
+* **[GitHub Issues](https://github.com/ebx/ebx-linkedin-sdk/issues/new)**: If you have ideas, bugs, 
+or problems with our library, just open a new issue.
 
 ## Contributing
 
-If you would like to get involved please follow the instructions [here](https://github.com/ebx/ebx-linkedin-sdk/tree/master/CONTRIBUTING.md)
+If you would like to get involved please follow the instructions 
+[here](https://github.com/ebx/ebx-linkedin-sdk/tree/master/CONTRIBUTING.md)
 
 ## Releases
 
 We use [semantic versioning](https://semver.org/).
 
-Each merge into the MASTER branch will automatically get released to maven central, and github releases, using the current library version. As such, following every merge to master, the version number of the dev branch should be incremented and will represent 'Work In Progress' towards the next release.
+All merges into DEV will automatically get released as a maven central snapshot, which can be easily
+included in any downstream dependencies that always desire the latest changes (see above for 
+'Most Up To Date' installation).
 
-All merges into DEV will automatically get released as a maven central snapshot, which can be easily included in any downstream dependencies that always desire the latest changes.
+Each merge into the MASTER branch will automatically get released to Maven central and github 
+releases, using the current library version. As such, following every merge to master, the version 
+number of the dev branch should be incremented and will represent 'Work In Progress' towards the 
+next release.
 
-To create a release to Maven central please see the following steps:
-1. Update the `CHANGELOG.md` with all the changes in the release.
-2. Create a pull request against `DEV` branch.
-3. Create a pull request with `DEV` against `MASTER` which should
-   contain all changes in `DEV` to be released. Ensure the version in
-   the `pom.xml` is the correct version to be released.
-4. Once `DEV` has merged into `MASTER` a release should automatically
-   get released.
-5. Create a final pull request that contains a incremented version in
-   `pom.xml` against `DEV` so the snapshot can be incremented to the
-   latest version. The pull request should also include an update to the
-   `README.md` installation version.
+To create a full release to Maven central please follow these steps:
+1. Ensure the `CHANGELOG.md` is up to date with all the changes in the release, if not please raise 
+a suitable PR into `DEV`. Typically the change log should be updated as we go.
+3. Create a PR from `DEV` into `MASTER`. Ensure the version in the `pom.xml` is the 
+correct version to be released. Merging this PR into `MASTER` will automatically create the maven 
+and github releases. Please note that a release is final, it can not be undone/deleted/overwritten.
+5. Once the public release has been successful create a final PR into `DEV` that contains an 
+incremented `pom.xml` version to ensure the correct snapshot gets updated on subsequent merges
+into `DEV`. This PR should also include:
+    * An update to the `README.md` latest stable release version number.
+    * A 'Work In Progress' entry for the next anticipated release in `CHANGELOG.md`.
