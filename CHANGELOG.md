@@ -1,10 +1,10 @@
 # ebx-linkedin-sdk Changelog
 
-## 0.1 (November 6, 2018)
+## 0.0.1 (November 6, 2018)
 
 * Initial release
 
-## 0.2 (July 22, 2019)
+## 1.0.2 (July 22, 2019)
 
 * Update incorrect spelling from UCG to UGC.
 * Update `DebugHeaderInfo.toString()` so it is more verbose.
