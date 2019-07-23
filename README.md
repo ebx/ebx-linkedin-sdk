@@ -20,7 +20,7 @@ Recommended installation is via maven (or gradle etc.). For our latest stable re
 <dependency>
   <groupId>com.echobox</groupId>
   <artifactId>ebx-linkedin-sdk</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 </dependency>
 ```
 
@@ -112,3 +112,16 @@ We use [semantic versioning](https://semver.org/).
 Each merge into the MASTER branch will automatically get released to maven central, and github releases, using the current library version. As such, following every merge to master, the version number of the dev branch should be incremented and will represent 'Work In Progress' towards the next release.
 
 All merges into DEV will automatically get released as a maven central snapshot, which can be easily included in any downstream dependencies that always desire the latest changes.
+
+To create a release to Maven central please see the following steps:
+1. Update the `CHANGELOG.md` with all the changes in the release.
+2. Create a pull request against `DEV` branch.
+3. Create a pull request with `DEV` against `MASTER` which should
+   contain all changes in `DEV` to be released. Ensure the version in
+   the `pom.xml` is the correct version to be released.
+4. Once `DEV` has merged into `MASTER` a release should automatically
+   get released.
+5. Create a final pull request that contains a incremented version in
+   `pom.xml` against `DEV` so the snapshot can be incremented to the
+   latest version. The pull request should also include an update to the
+   `README.md` installation version.
