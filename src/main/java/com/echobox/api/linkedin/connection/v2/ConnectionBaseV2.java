@@ -50,7 +50,11 @@ public class ConnectionBaseV2 extends ConnectionBase {
   }
   
   protected void addTimeIntervalToParams(List<Parameter> params, TimeInterval timeInterval) {
-    if (timeInterval != null && timeInterval.getTimeGranularityType() != null) {
+    if (timeInterval == null) {
+      return;
+    }
+    
+    if (timeInterval.getTimeGranularityType() != null) {
       // Time restriction on retrieving share statistics
       params.add(Parameter.with(TIME_INTERVALS_GRANULARITY, timeInterval.getTimeGranularityType()));
       if (timeInterval.getTimeRange() != null) {

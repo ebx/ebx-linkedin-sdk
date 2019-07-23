@@ -22,11 +22,15 @@ import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 /**
  * The type Urn.
  * @author clementcaylux 
  */
-public class URN {
+public class URN implements Serializable {
+  
+  private static final long serialVersionUID = -1L;
 
   @Getter
   @Setter
@@ -38,6 +42,8 @@ public class URN {
   @LinkedIn
   private String id;
 
+  private URN() {}
+  
   /**
    * Instantiates a new Urn.
    *
@@ -51,6 +57,16 @@ public class URN {
     
     this.entityType = entityType;
     this.id = id;
+  }
+  
+  /**
+   * Instantiates a new Urn.
+   *
+   * @param entityType the entity type
+   * @param id the id
+   */
+  public URN(URNEntityType entityType, String id) {
+    this(entityType.getEntityValue(), id);
   }
 
   /**
@@ -77,7 +93,7 @@ public class URN {
    *
    * @return the urn entity type
    */
-  public URNEntityType getURNEntityType() {
+  public URNEntityType resolveURNEntityType() {
     return URNEntityType.valueOf(entityType.toUpperCase());
   }
 

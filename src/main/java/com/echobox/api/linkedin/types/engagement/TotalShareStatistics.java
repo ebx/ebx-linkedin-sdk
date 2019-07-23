@@ -26,7 +26,7 @@ import lombok.Setter;
  * class containing statistics based on a share
  * @author clementcaylux on 27/11/2018.
  */
-class TotalShareStatistics {
+public class TotalShareStatistics {
   
   @Getter 
   @Setter
@@ -57,5 +57,10 @@ class TotalShareStatistics {
   @Setter
   @LinkedIn
   private int commentCount;
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private int uniqueImpressionsCount;
   
 }

@@ -15,43 +15,32 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.ucg;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.social.actions.CommentAction;
-
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
+package com.echobox.api.linkedin.types.ugc;
 
 /**
- * Commentary
+ * Visibility enum
  * @author joanna
  */
-public class Commentary {
+public enum Visibility {
   
   /**
-   * User generated attributes in the text.
+   * Represents 1st degree network of owner.
    */
-  @Getter
-  @Setter
-  @LinkedIn
-  private List<CommentAction.Attribute> attributes;
+  CONNECTIONS,
   
   /**
-   * The locale that may have be inferred for this text.
+   * Anyone can view this.
    */
-  @Getter
-  @Setter
-  @LinkedIn
-  private String inferredLocale;
+  PUBLIC,
   
   /**
-   * The text content that may be attributed.
+   * Viewable by logged in members only.
    */
-  @Getter
-  @Setter
-  @LinkedIn
-  private String text;
+  LOGGED_IN,
+  
+  /**
+   * Represents a dark post, which is only distributed as part of a sponsored campaign.\
+   */
+  DARK;
+  
 }

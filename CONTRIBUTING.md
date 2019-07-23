@@ -21,15 +21,14 @@ Pull requests (PR) are a very important way to contribute code to the library. W
 * Please ensure you have an associated [github issue](https://github.com/ebx/ebx-linkedin-sdk/issues) to hand, this needs to be included in the PR. If a suitable issue doesn't already exist feel free to create one, as described above.
 * The code must be formatted with our code formatter (have a look at the [CodeStyle folder](https://github.com/ebx/ebx-linkedin-sdk/tree/master/CodeStyle)). If you perform a local *mvn verify* before creating the PR your changes will already be getting validated for style.
 * The code layout should conform to our general design standards (if you feel it's necessary to go against the grain, please ask us first!).
-* You must complete the PR template and ensure your PR title uses the format:
+* You should complete the PR template and please format your PR title as follows:
 
         GH-[Issue#] [Summary of change or issue title]
 
   for example:
   
         GH-123 Fixed NPE exception when resvoling an organisation
-        
-  If you don't follow this format your PR will not build.
+
 * The pull request should be mergeable, i.e. no conflicts.
 * Junit tests required for any functional change must be included.
 * The pull request should be targetted at the `dev` branch. If you raise it against `master` the PR will fail to build.

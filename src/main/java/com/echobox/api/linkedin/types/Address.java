@@ -58,4 +58,29 @@ public class Address {
   @LinkedIn
   private String city;
   
+  @Override
+  public String toString() {
+    StringBuilder buffer = new StringBuilder();
+    if (line1 != null) {
+      buffer.append(line1).append("\n"); 
+    }
+    
+    if (line2 != null) {
+      buffer.append(line2).append("\n");
+    }
+    
+    if (city != null) {
+      buffer.append(city).append("\n");
+    }
+    
+    if (postalCode != null) {
+      buffer.append(postalCode).append("\n");
+    }
+    
+    if (country != null) {
+      buffer.append(country).append("\n");
+    }
+    
+    return buffer.toString();
+  }
 }

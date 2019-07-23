@@ -15,14 +15,17 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.ucg;
+package com.echobox.api.linkedin.types.ugc;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.objectype.Locale;
 import com.echobox.api.linkedin.types.urn.URN;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -31,12 +34,16 @@ import java.util.List;
  * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#targetaudience">Target Audience</a>
  * @author joanna
  */
-public class TargetAudience {
+@EqualsAndHashCode
+public class TargetAudience implements Serializable {
+  
+  private static final long serialVersionUID = -1L;
   
   /**
    * The entities targeted for distribution.
    */
   @Getter
+  @Setter
   @LinkedIn
   private List<TargetAudienceEntity> targetedEntities;
   
@@ -44,12 +51,16 @@ public class TargetAudience {
    * TargetAudienceEntity
    * @author joanna
    */
-  public static class TargetAudienceEntity {
+  @EqualsAndHashCode
+  public static class TargetAudienceEntity implements Serializable {
+  
+    private static final long serialVersionUID = -1L;
     
     /**
      * Standardized degrees to be targeted.
      */
     @Getter
+    @Setter
     @LinkedIn
     private List<URN> degrees;
   
@@ -57,6 +68,7 @@ public class TargetAudience {
      * Standardized fields of study to be targeted.
      */
     @Getter
+    @Setter
     @LinkedIn
     private List<URN> fieldsOfStudy;
   
@@ -64,6 +76,7 @@ public class TargetAudience {
      * Industries to be targeted.
      */
     @Getter
+    @Setter
     @LinkedIn
     private List<URN> industries;
     
@@ -71,6 +84,7 @@ public class TargetAudience {
      * Interface locales to be targeted.
      */
     @Getter
+    @Setter
     @LinkedIn
     private List<Locale> interfaceLocales;
   
@@ -78,6 +92,7 @@ public class TargetAudience {
      * Top level groupings of supertitles to be targeted.
      */
     @Getter
+    @Setter
     @LinkedIn
     private List<URN> jobFunctions;
   
@@ -85,6 +100,7 @@ public class TargetAudience {
      * Location to be targeted.
      */
     @Getter
+    @Setter
     @LinkedIn("locations")
     private List<URN> locations;
   
@@ -92,6 +108,7 @@ public class TargetAudience {
      * Standardized schools to be targeted.
      */
     @Getter
+    @Setter
     @LinkedIn
     private List<URN> schools;
     
@@ -99,6 +116,7 @@ public class TargetAudience {
      * Seniorities to be targeted
      */
     @Getter
+    @Setter
     @LinkedIn
     private List<URN> seniorities;
   
@@ -106,6 +124,7 @@ public class TargetAudience {
      * Organization sizes to be targeted.
      */
     @Getter
+    @Setter
     @LinkedIn
     private String staffCountRanges;
   }

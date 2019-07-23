@@ -15,39 +15,57 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.organization;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.ImageV2Elements;
-import com.echobox.api.linkedin.types.urn.URN;
-
-import lombok.Getter;
-import lombok.Setter;
+package com.echobox.api.linkedin.types.ugc;
 
 /**
- * The type Cropped image.
- * @see <a href="https://developer.linkedin.com/docs/guide/v2/organizations/organization-lookup-api#croppedimg"> Cropped Image Schema</a>
- * @author clementcaylux 
+ * Origin
+ * @author joanna
  */
-public class CroppedImage {
+public enum Origin {
   
-  @Getter
-  @Setter
-  @LinkedIn
-  private CropInfo cropInfo;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private URN cropped;
-
-  @Getter
-  @Setter
-  @LinkedIn
-  private URN original;
+  /**
+   * Partner using external API
+   */
+  API,
   
-  @Setter
-  @Getter
-  @LinkedIn("original~")
-  private ImageV2Elements originalElements;
+  /**
+   * Elevate app
+   */
+  ELEVATE,
+  
+  /**
+   * Firefox browser extension
+   */
+  FIREFOX,
+  
+  /**
+   * Mobile flagship app
+   */
+  FLAGSHIP,
+  
+  /**
+   * InShare on 3rd party sites
+   */
+  IN_SHARE,
+  
+  /**
+   * Desktop site
+   */
+  DESKTOP,
+  
+  /**
+   * Sales Navigator
+   */
+  LSS,
+  
+  /**
+   * Pulse app
+   */
+  PULSE,
+  
+  /**
+   * InShare on Slideshare
+   */
+  SLIDESHARE;
+
 }

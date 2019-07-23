@@ -15,32 +15,28 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.ucg;
+package com.echobox.api.linkedin.types.ugc;
 
 /**
- * Visibility enum
+ * External distribution channel type
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#distribution">External Distribution Channel Type</a>
  * @author joanna
  */
-public enum Visibility {
+public enum ExternalDistributionChannelType {
   
   /**
-   * Represents 1st degree network of owner.
+   * Distribute content to Twitter
    */
-  CONNECTIONS,
+  TWITTER,
   
   /**
-   * Anyone can view this.
+   * Distribute content to Tencent
    */
-  PUBLIC,
+  TENCENT,
   
   /**
-   * Viewable by logged in members only.
+   * Distribute content to Weibo
    */
-  LOGGED_IN,
-  
-  /**
-   * Represents a dark post, which is only distributed as part of a sponsored campaign.\
-   */
-  DARK;
-  
+  WEIBO;
+
 }

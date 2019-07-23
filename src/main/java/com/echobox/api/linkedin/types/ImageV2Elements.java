@@ -15,57 +15,46 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.ucg;
+package com.echobox.api.linkedin.types;
+
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
 
 /**
- * Origin
- * @author joanna
+ * A wrapper class to extend V2 Images 
+ * https://developer.linkedin.com/docs/ref/v2/media-migration#migration
+ * @author Alexandros
  */
-public enum Origin {
+public class ImageV2Elements {
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private List<Element> elements;
   
   /**
-   * Partner using external API
-   */
-  API,
+   * A wrapper class to get the elements
+   */  
+  public static class Element {
+    
+    @Getter
+    @Setter
+    @LinkedIn
+    private List<Identifier> identifiers;
+  }
   
   /**
-   * Elevate app
+   * The Identifier object containing the url
    */
-  ELEVATE,
-  
-  /**
-   * Firefox browser extension
-   */
-  FIREFOX,
-  
-  /**
-   * Mobile flagship app
-   */
-  FLAGSHIP,
-  
-  /**
-   * InShare on 3rd party sites
-   */
-  IN_SHARE,
-  
-  /**
-   * Desktop site
-   */
-  DESKTOP,
-  
-  /**
-   * Sales Navigator
-   */
-  LSS,
-  
-  /**
-   * Pulse app
-   */
-  PULSE,
-  
-  /**
-   * InShare on Slideshare
-   */
-  SLIDESHARE;
-
+  public static class Identifier {
+    
+    @Getter
+    @Setter
+    @LinkedIn
+    private String identifier;
+  }
 }

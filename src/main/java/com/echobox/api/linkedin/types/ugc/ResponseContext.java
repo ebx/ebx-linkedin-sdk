@@ -15,22 +15,34 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.ucg;
+package com.echobox.api.linkedin.types.ugc;
+
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.URN;
+
+import lombok.Getter;
 
 /**
- * The context in which the user generated content is being viewed.
+ * Response context
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#responsecontext">Response Context</a>
  * @author joanna
  */
-public enum ViewContext {
+public class ResponseContext {
   
   /**
-   * View the content as the author
+   * The content that a piece of content is a response to. Currently, the only supported Urn is
+   * ugcPost Urn.
    */
-  AUTHOR,
+  @LinkedIn
+  @Getter
+  private URN parent;
   
   /**
-   * View the content as a reader
+   * The greatest ancestor content that a piece of content is a response to. Currently, the only
+   * supported Urn is ugcPost Urn.
    */
-  READER;
-  
+  @LinkedIn
+  @Getter
+  private URN root;
+
 }

@@ -130,5 +130,15 @@
     },
     "original": "urn:li:media:/AAEAAQAAAAAAAAfmAAAAJDQwLTk4YTItNGNlLWRj.png",
     "cropped": "urn:li:media:/AAEAAQAAAAAAAAkOAAAAJDA3NmYwMzRkLTA2MTAt.png"
+  },
+  "overviewPhotoV2": {
+    "cropInfo": {
+      "y": 0,
+      "width": 646,
+      "height": 220,
+      "x": 0
+    },
+    "original": "urn:li:media:/AAEAAQAAAAAAAAfmAAAAJDQwLTk4YTItNGNlLWRj.png",
+    "cropped": "urn:li:media:/AAEAAQAAAAAAAAkOAAAAJDA3NmYwMzRkLTA2MTAt.png"
   }
 }

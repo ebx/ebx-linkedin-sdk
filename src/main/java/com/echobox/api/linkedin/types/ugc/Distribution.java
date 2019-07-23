@@ -15,28 +15,34 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.ucg;
+package com.echobox.api.linkedin.types.ugc;
+
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+
+import lombok.Getter;
+
+import java.util.List;
 
 /**
- * External distribution channel type
- * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#distribution">External Distribution Channel Type</a>
+ * Distribution
+ * @see
+ * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#distribution">Distribution</a>
  * @author joanna
  */
-public enum ExternalDistributionChannelType {
+public class Distribution {
   
   /**
-   * Distribute content to Twitter
+   * Whether UGC post is distributed to follow-feed or not.
    */
-  TWITTER,
+  @Getter
+  @LinkedIn
+  private boolean distributedViaFollowFeed;
   
   /**
-   * Distribute content to Tencent
+   * External distribution channels that this content is distributed to.
    */
-  TENCENT,
-  
-  /**
-   * Distribute content to Weibo
-   */
-  WEIBO;
+  @Getter
+  @LinkedIn
+  private List<String> externalDistributionChannels;
 
 }

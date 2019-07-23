@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/ebx/ebx-linkedin-sdk.svg?branch=master)](https://travis-ci.org/ebx/ebx-linkedin-sdk) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://raw.githubusercontent.com/ebx/ebx-linkedin-sdk/master/LICENSE)
+[![Maven Central](https://img.shields.io/maven-central/v/com.echobox/ebx-linkedin-sdk.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.echobox%22%20AND%20a:%22ebx-linkedin-sdk%22) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://raw.githubusercontent.com/ebx/ebx-linkedin-sdk/master/LICENSE)
 
 # ebx-linkedin-sdk
 
@@ -12,15 +12,41 @@ It is created and maintained by [Echobox](http://echobox.com).
 
 ebx-linkedin-sdk itself is open source software released under the terms of the Apache 2.0 License.
 
-## Installation
+## Installation (Recommended)
 
-Recommended installation is via maven (or similar). Currently we are only releasing a v1.0.0-SNAPSHOT dependency:
+Recommended installation is via maven (or gradle etc.). For our latest stable release (recommended) use:
 
 ```
 <dependency>
   <groupId>com.echobox</groupId>
   <artifactId>ebx-linkedin-sdk</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.1</version>
+</dependency>
+```
+
+## Installation (Most Up To Date)
+[![Build Status](https://travis-ci.org/ebx/ebx-linkedin-sdk.svg?branch=dev)](https://travis-ci.org/ebx/ebx-linkedin-sdk)
+
+If you'd like to use the latest SNAPSHOT build please ensure you have snapshots enabled in your pom:
+
+```
+<repositories>
+    <repository>
+        <id>oss.sonatype.org-snapshot</id>
+        <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+        <releases><enabled>false</enabled></releases>
+        <snapshots><enabled>true</enabled></snapshots>
+    </repository>
+</repositories>
+```
+
+and then include the snapshot dependency, replacing *x.x.x* with the latest [snapshot version](https://github.com/ebx/ebx-linkedin-sdk/blob/dev/pom.xml):
+
+```
+<dependency>
+  <groupId>com.echobox</groupId>
+  <artifactId>ebx-linkedin-sdk</artifactId>
+  <version>x.x.x-SNAPSHOT</version>
 </dependency>
 ```
 
