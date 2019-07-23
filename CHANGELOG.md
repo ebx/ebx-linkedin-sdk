@@ -4,6 +4,10 @@
 
 * Initial release
 
+## 1.0.0 (March 29, 2019)
+
+## 1.0.1 (April 2, 2019)
+
 ## 1.0.2 (July 22, 2019)
 
 * Update incorrect spelling from UCG to UGC.
