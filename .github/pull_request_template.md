@@ -24,6 +24,6 @@ Generate compare URL from https://github.com/ebx/ebx-linkedin-sdk/compare so tha
 Please tick once completed.
 
 - [ ] Build passes.
-- [ ] Versioning Considered (the version number in this PR is inline with semantic 
+- [ ] Versioning considered (the version number in this PR is inline with semantic 
 versioning requirements).
 - [ ] Change log has been updated.
