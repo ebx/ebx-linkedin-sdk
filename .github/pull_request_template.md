@@ -1,6 +1,7 @@
 ### Description of Changes
 
-What has been changed?
+What has been changed? If this is more than bug fixes we should consider incrementing the minor 
+version number. For non backwards compatible changes we need to increment the major version number.
 
 ### Documentation
 
@@ -17,3 +18,12 @@ How have the changes been tested and the potential risks mitigated?
 ### Compare (For layered PRs)
 
 Generate compare URL from https://github.com/ebx/ebx-linkedin-sdk/compare so that it's easily accessible. This is ONLY REQUIRED FOR COMPLICATED, DEPENDENT OR LAYERED PRs. Feel free to delete this section if not required.
+
+## Final Checklist
+
+Please tick once completed.
+
+- [ ] Build passes.
+- [ ] Versioning considered (the version number in this PR is inline with semantic 
+versioning requirements).
+- [ ] Change log has been updated.
