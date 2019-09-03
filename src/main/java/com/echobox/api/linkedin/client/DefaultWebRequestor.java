@@ -122,7 +122,18 @@ public class DefaultWebRequestor implements WebRequestor {
    *
    */
   protected enum HttpMethod {
-    GET, DELETE, POST
+    /**
+     * Get http method.
+     */
+    GET,
+    /**
+     * Delete http method.
+     */
+    DELETE,
+    /**
+     * Post http method.
+     */
+    POST
   }
 
   /**
@@ -519,6 +530,11 @@ public class DefaultWebRequestor implements WebRequestor {
     }
   }
 
+  /**
+   * Fill header and debug info.
+   *
+   * @param httpHeaders the http headers
+   */
   protected void fillHeaderAndDebugInfo(HttpHeaders httpHeaders) {
     currentHeaders = httpHeaders;
 
@@ -530,12 +546,27 @@ public class DefaultWebRequestor implements WebRequestor {
     debugHeaderInfo = new DebugHeaderInfo(liFabric, liFormat, liRequestId, liUUID);
   }
 
+  /**
+   * Fetch response
+   *
+   * @param httpUrlConnection the http url connection
+   * @return the response
+   * @throws IOException the io exception
+   */
   protected Response fetchResponse(HttpResponse httpUrlConnection) throws IOException {
     return fetchResponse(httpUrlConnection.getStatusCode(), httpUrlConnection.getHeaders(),
         fromInputStream(httpUrlConnection
         .getContent()));
   }
 
+  /**
+   * Fetch response
+   *
+   * @param statusCode the status code of the response
+   * @param headers    the HTTP headers
+   * @param body       the response body
+   * @return the response
+   */
   protected Response fetchResponse(int statusCode, HttpHeaders headers, String body) {
     Map<String, String> headerMap = headers.entrySet().stream()
         .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().toString(),

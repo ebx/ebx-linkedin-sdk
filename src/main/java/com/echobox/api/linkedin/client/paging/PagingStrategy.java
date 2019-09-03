@@ -65,13 +65,33 @@ public abstract class PagingStrategy {
    * @return the data key
    */
   public abstract String getDataKey();
-  
+
+  /**
+   * Discover pages.
+   *
+   * @param jsonObject   The JSON object to discover the paging
+   * @param fullEndpoint The full endpoint to build the next page URL
+   */
   protected abstract void discoverPages(JsonObject jsonObject, String fullEndpoint);
 
+  /**
+   * Sets next page url.
+   *
+   * @param fullEndpoint The full endpoint to build the next page URL
+   * @param start        The index of the first item you want results for
+   * @param count        The number of items needed to be included on each page of results.
+   */
   protected void setNextPageURL(String fullEndpoint, int start, int count) {
     nextPageUrl = createPagedURL(fullEndpoint, start + count, count);
   }
 
+  /**
+   * Sets previous page url.
+   *
+   * @param fullEndpoint The full endpoint
+   * @param start        The index of the first item you want results for
+   * @param count        The number of items needed to be included on each page of results.
+   */
   protected void setPreviousPageURL(String fullEndpoint, int start, int count) {
     if (start > 0) {
       // There's a previous page

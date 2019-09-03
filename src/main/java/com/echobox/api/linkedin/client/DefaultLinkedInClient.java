@@ -67,10 +67,25 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    * HTTP parameter names.
    */
   protected static final String METHOD_PARAM_NAME = "method";
+  /**
+   * The grant type parameter name.
+   */
   protected static final String GRANT_TYPE_PARAM_NAME = "grant_type";
+  /**
+   * The code parameter name.
+   */
   protected static final String CODE_PARAM_NAME = "code";
+  /**
+   * The redirect URI parameter name
+   */
   protected static final String REDIRECT_URI_PARAM_NAME = "redirect_uri";
+  /**
+   * The client's ID parameter name
+   */
   protected static final String CLIENT_ID_PARAM_NAME = "client_id";
+  /**
+   * The client's secret parameter name
+   */
   protected static final String CLIENT_SECRET_PARAM_NAME = "client_secret";
 
   /**
@@ -400,6 +415,11 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     return LINKEDIN_API_ENDPOINT_URL + '/' + apiVersion.getUrlElement();
   }
 
+  /**
+   * Gets LinkedIn media endpoint URL
+   *
+   * @return LinkedIn media endpoint URL
+   */
   protected String getLinkedInMediaEndpointUrl() {
     return LINKEDIN_MEDIA_API_ENDPOINT_URL;
   }
@@ -575,11 +595,23 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     return httpDeleteFallback;
   }
 
+  /**
+   * Make request and process response (json).
+   *
+   * @param requestor Requestor interface to make requests to the LinkedIn API
+   * @return the JSON response
+   */
   protected String makeRequestAndProcessResponseJSON(Requestor requestor) {
     Response response = makeRequestAndProcessResponse(requestor);
     return response.getBody();
   }
-  
+
+  /**
+   * Make request and process the response
+   *
+   * @param requestor Requestor interface to make requests to the LinkedIn API
+   * @return the response
+   */
   protected Response makeRequestAndProcessResponse(Requestor requestor) {
     Response response;
     
@@ -628,17 +660,22 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    *
    */
   protected interface Requestor {
+    /**
+     * Make a request
+     * @return the received response
+     * @throws IOException
+     */
     Response makeRequest() throws IOException;
   }
 
   /**
-   * Throws an exception if LinkedIn returned an error response. 
-   * This method extracts relevant information from the error JSON and throws an exception which 
+   * Throws an exception if LinkedIn returned an error response.
+   * This method extracts relevant information from the error JSON and throws an exception which
    * encapsulates it for end-user consumption.
    * For API errors:
    * If the {@code error} JSON field is present, we've got a response status error for this API
    * call.
-   * 
+   *
    * @param json
    *          The JSON returned by LinkedIn in response to an API call.
    * @param httpStatusCode
