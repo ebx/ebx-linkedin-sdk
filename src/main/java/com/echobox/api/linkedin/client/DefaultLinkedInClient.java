@@ -663,7 +663,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     /**
      * Make a request
      * @return the received response
-     * @throws IOException
+     * @throws IOException the IO exception
      */
     Response makeRequest() throws IOException;
   }
