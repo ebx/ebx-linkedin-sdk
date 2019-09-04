@@ -23,12 +23,33 @@ package com.echobox.api.linkedin.types.urn;
  */
 public enum URNEntityType {
 
+  /**
+   * Place URN entity type.
+   */
   PLACE("place"),
+  /**
+   * Country URN entity type.
+   */
   COUNTRY("country"),
+  /**
+   * Organization URN entity type.
+   */
   ORGANIZATION("organization"),
+  /**
+   * Seniority URN entity type.
+   */
   SENIORITY("seniority"),
+  /**
+   * Function URN entity type.
+   */
   FUNCTION("function"),
+  /**
+   * Share URN entity type.
+   */
   SHARE("share"),
+  /**
+   * UGC post URN entity type.
+   */
   UGCPOST("ugcPost");
     
   /**
@@ -36,6 +57,10 @@ public enum URNEntityType {
    */
   private final String entityValue;
 
+  /**
+   * Instantiates a new URN entity type
+   * @param name the URN entity type name
+   */
   URNEntityType(String name) {
     this.entityValue = name;
   }

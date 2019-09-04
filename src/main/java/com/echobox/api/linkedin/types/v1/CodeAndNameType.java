@@ -42,7 +42,12 @@ public class CodeAndNameType {
   @NonNull
   @LinkedIn
   private String name;
-  
+
+  /**
+   * Check if it has null fields
+   *
+   * @return if it has fields, that are null
+   */
   boolean hasNullFields() {
     return code == null || name == null;
   }

@@ -25,13 +25,34 @@ import lombok.Getter;
  *
  */
 public enum StockExchange implements CodeType<Integer> {
-  
+
+  /**
+   * The American stock exchange.
+   */
   ASE(1, "American Stock Exchange"),
+  /**
+   * The New York stock exchange.
+   */
   NYS(2, "New York Stock Exchange"),
+  /**
+   * The National market stock exchange.
+   */
   NMS(3, "NASDAQ"),
+  /**
+   * The London stock exchange.
+   */
   LSE(4, "London Stock Exchange"),
+  /**
+   * The Frankfurt stock exchange.
+   */
   FRA(5, "Frankfurt Stock Exchange"),
+  /**
+   * The German stock excahnge.
+   */
   GER(6, "XETRA Stock Exchange"),
+  /**
+   * The Paris stock exchange.
+   */
   PAR(7, "Euronext Paris");
   
   @Getter
@@ -39,7 +60,12 @@ public enum StockExchange implements CodeType<Integer> {
   
   @Getter
   private String name;
-  
+
+  /**
+   * Instantiates new stock exchange
+   * @param code the stock exchange code
+   * @param name the stock exchange name
+   */
   StockExchange(int code, String name) {
     this.code = code;
     this.name = name;
