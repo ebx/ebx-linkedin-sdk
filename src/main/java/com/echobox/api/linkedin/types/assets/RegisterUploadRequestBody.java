@@ -142,13 +142,26 @@ public class RegisterUploadRequestBody {
    * @author Joanna
    */
   public enum RecipeURN {
+    /**
+     * The feed share video.
+     */
     FEED_SHARE_VIDEO(new URN("urn:li:digitalmediaRecipe:feedshare-video")),
+    /**
+     * The learning image.
+     */
     LEARNING_IMAGE(new URN("urn:li:digitalmediaRecipe:learning-image")),
+    /**
+     * The ads video.
+     */
     ADS_VIDEO(new URN("urn:li:digitalmediaRecipe:ads-video"));
     
     @Getter
     private URN recipeURN;
-    
+
+    /**
+     * Instantiates new recipe URN
+     * @param recipeURN the recipe URN
+     */
     RecipeURN(URN recipeURN) {
       this.recipeURN = recipeURN;
     }
