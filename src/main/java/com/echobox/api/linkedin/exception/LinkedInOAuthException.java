@@ -30,6 +30,17 @@ public class LinkedInOAuthException extends LinkedInAPIException {
    * Serial version UID
    */
   private static final long serialVersionUID = 1L;
+  
+  /**
+   * Initialise the LinkedIn OAuth exception
+   * @param errorMessage
+   *          LinkedIn API message field, e.g. "Invalid access token signature."
+   * @param httpStatusCode
+   *          The HTTP status code returned by the server, e.g. 500.
+   */
+  public LinkedInOAuthException(String errorMessage, Integer httpStatusCode) {
+    super(errorMessage, null, httpStatusCode, null);
+  }
 
   /**
    * Initialise the LinkedIn OAuth exception
