@@ -37,3 +37,10 @@
   `URNEntityType.getEntityValue()` should be used to support UGCPosts.
 
 ## 1.0.3 (Work in progress)
+*  `DefaultLinkedInClient.makeRequestAndProcessResponse` handles 401
+   errors as `LinkedInOAuthException` rather than
+   `LinkedInNetworkException`
+*  `DefaultLinkedInClient.throwLinkedInResponseStatusExceptionIfNecessary`
+   should handle errors if they do not have an `error` attribute in the
+   JSON.
+   
