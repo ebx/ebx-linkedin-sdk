@@ -85,7 +85,7 @@ public final class Parameter {
    * <p>
    * The {@code value} parameter is often a {@link String} or primitive type like {@link Integer}, 
    * but you may pass in a {@link java.util.List}, {@link java.util.Map}, or your own 
-   * <tt>@LinkedIn</tt>-annotated Javabean and it will be converted to JSON automatically. 
+   * {@code LinkedIn-annotated} Javabean and it will be converted to JSON automatically.
    * 
    * @param name
    *          The parameter name.
@@ -105,7 +105,7 @@ public final class Parameter {
    * <p>
    * The {@code value} parameter is often a {@link String} or primitive type like {@link Integer},
    * but you may pass in a {@link java.util.List}, {@link java.util.Map}, or your own
-   * <tt>@LinkedIn</tt>-annotated Javabean and it will be converted to JSON automatically. 
+   * {@code LinkedIn-annotated} Javabean and it will be converted to JSON automatically.
    * 
    * @param name
    *          The parameter name.
