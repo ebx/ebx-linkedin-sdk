@@ -51,7 +51,7 @@ public enum URNEntityType {
    * UGC post URN entity type.
    */
   UGCPOST("ugcPost");
-    
+
   /**
    * The string representation of the type
    */
@@ -64,12 +64,12 @@ public enum URNEntityType {
   URNEntityType(String name) {
     this.entityValue = name;
   }
-    
+
   /**
    * Getter the value of the entity
-   * @return the value of the entity 
+   * @return the value of the entity
    */
-  public String getEntityValue() { 
+  public String getEntityValue() {
     return entityValue;
   }
 }

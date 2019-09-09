@@ -35,3 +35,5 @@
 * Add `URNEntityType.UGCPost` and ensure all enums have the string
   representation of the urn. Instead of using `URNEntityType.name()`
   `URNEntityType.getEntityValue()` should be used to support UGCPosts.
+
+## 1.0.3 (Work in progress)
