@@ -19,9 +19,6 @@ package com.echobox.api.linkedin.client;
 
 import com.echobox.api.linkedin.exception.LinkedInOAuthException;
 
-import mockit.Expectations;
-import mockit.Mocked;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -37,25 +34,17 @@ public class DefaultLinkedInClientTest {
   
   /**
    * Test LinkedIn 401 error throws a LinkedInOauthException
-   * @param requestor requestor
    * @throws GeneralSecurityException GeneralSecurityException
    * @throws IOException IOException
    */
   @Test(expected = LinkedInOAuthException.class)
-  public void test401Error(@Mocked DefaultLinkedInClient.Requestor requestor)
+  public void test401Error()
       throws GeneralSecurityException, IOException {
-    new Expectations() {
-      {
-        requestor.makeRequest();
-        result = new WebRequestor.Response(401, null, "{"
-            + "\"message\": \"Empty oauth2_access_token\","
-            + "\"serviceErrorCode\": 401,\"status\": 401" + "}");
-      }
-    };
-  
     try {
       DefaultLinkedInClient client = new DefaultLinkedInClient("test");
-      client.makeRequestAndProcessResponse(requestor);
+      client.makeRequestAndProcessResponse(() -> new WebRequestor.Response(401, null, "{"
+          + "\"message\": \"Empty oauth2_access_token\","
+          + "\"serviceErrorCode\": 401,\"status\": 401" + "}"));
     } catch (LinkedInOAuthException ex) {
       Assert.assertEquals("Empty oauth2_access_token", ex.getErrorMessage());
       Assert.assertEquals(HttpURLConnection.HTTP_UNAUTHORIZED, ex.getHttpStatusCode().intValue());
@@ -65,23 +54,15 @@ public class DefaultLinkedInClientTest {
   
   /**
    * Test 401 error with unparsable JSON body throws a LinkedInOauthException
-   * @param requestor requestor
    * @throws GeneralSecurityException GeneralSecurityException
    * @throws IOException IOException
    */
   @Test(expected = LinkedInOAuthException.class)
-  public void test401ErrorNoJSON(@Mocked DefaultLinkedInClient.Requestor requestor)
+  public void test401ErrorNoJSON()
       throws GeneralSecurityException, IOException {
-    new Expectations() {
-      {
-        requestor.makeRequest();
-        result = new WebRequestor.Response(401, null, null);
-      }
-    };
-    
     try {
       DefaultLinkedInClient client = new DefaultLinkedInClient("test");
-      client.makeRequestAndProcessResponse(requestor);
+      client.makeRequestAndProcessResponse(() -> new WebRequestor.Response(401, null, null));
     } catch (LinkedInOAuthException ex) {
       Assert.assertEquals("LinkedIn request failed", ex.getErrorMessage());
       Assert.assertEquals(HttpURLConnection.HTTP_UNAUTHORIZED, ex.getHttpStatusCode().intValue());
