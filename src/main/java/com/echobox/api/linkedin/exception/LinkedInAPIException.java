@@ -101,7 +101,7 @@ public class LinkedInAPIException extends LinkedInErrorMessageException {
    * @return the LinkedIn API error {@code requestId}
    */
   public String getLinkedInRequestId() {
-    return getRawErrorJson().getString("requestId", "");
+    return getRawErrorJson() == null ? null : getRawErrorJson().getString("requestId", "");
   }
 
 }
