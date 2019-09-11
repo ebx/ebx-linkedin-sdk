@@ -604,8 +604,12 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     
     String json = response.getBody();
     
-    // If the response contained an error code, throw an exception.
-    throwLinkedInResponseStatusExceptionIfNecessary(json, response.getStatusCode());
+    // If the response is 2XX then we do not need to throw an error response
+    if (HttpURLConnection.HTTP_OK != response.getStatusCode()
+        && HttpURLConnection.HTTP_CREATED != response.getStatusCode()) {
+      // If the response contained an error code, throw an exception.
+      throwLinkedInResponseStatusExceptionIfNecessary(json, response.getStatusCode());
+    }
     
     // If there was no response error information and this was a 500
     // error, something weird happened on LinkedIn's end. Bail.
