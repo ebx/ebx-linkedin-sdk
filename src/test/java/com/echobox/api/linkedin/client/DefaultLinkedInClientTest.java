@@ -33,18 +33,45 @@ import java.security.GeneralSecurityException;
 public class DefaultLinkedInClientTest {
   
   /**
+   * Test 401 error with unparsable JSON body throws a LinkedInOauthException
+   * @throws GeneralSecurityException GeneralSecurityException
+   * @throws IOException IOException
+   */
+  @Test
+  public void test200Response()
+      throws GeneralSecurityException, IOException {
+    DefaultLinkedInClient client = new DefaultLinkedInClient("test");
+    WebRequestor.Response response =
+        client.makeRequestAndProcessResponse(() -> new WebRequestor.Response(200, null, null));
+  }
+  
+  /**
+   * Test 401 error with unparsable JSON body throws a LinkedInOauthException
+   * @throws GeneralSecurityException GeneralSecurityException
+   * @throws IOException IOException
+   */
+  @Test
+  public void test201Response()
+      throws GeneralSecurityException, IOException {
+    DefaultLinkedInClient client = new DefaultLinkedInClient("test");
+    WebRequestor.Response response =
+        client.makeRequestAndProcessResponse(() -> new WebRequestor.Response(201, null, null));
+    Assert.assertEquals(HttpURLConnection.HTTP_CREATED, response.getStatusCode().intValue());
+  }
+  
+  /**
    * Test LinkedIn 401 error throws a LinkedInOauthException
    * @throws GeneralSecurityException GeneralSecurityException
    * @throws IOException IOException
    */
   @Test(expected = LinkedInOAuthException.class)
-  public void test401Error()
+  public void test401ResponseError()
       throws GeneralSecurityException, IOException {
     try {
       DefaultLinkedInClient client = new DefaultLinkedInClient("test");
       client.makeRequestAndProcessResponse(() -> new WebRequestor.Response(401, null, "{"
-          + "\"message\": \"Empty oauth2_access_token\","
-          + "\"serviceErrorCode\": 401,\"status\": 401" + "}"));
+          + "\"message\": \"Empty oauth2_access_token\",\"serviceErrorCode\": 401,"
+          + "\"status\": 401}"));
     } catch (LinkedInOAuthException ex) {
       Assert.assertEquals("Empty oauth2_access_token", ex.getErrorMessage());
       Assert.assertEquals(HttpURLConnection.HTTP_UNAUTHORIZED, ex.getHttpStatusCode().intValue());
@@ -58,7 +85,7 @@ public class DefaultLinkedInClientTest {
    * @throws IOException IOException
    */
   @Test(expected = LinkedInOAuthException.class)
-  public void test401ErrorNoJSON()
+  public void test401ResponseErrorNoJSON()
       throws GeneralSecurityException, IOException {
     try {
       DefaultLinkedInClient client = new DefaultLinkedInClient("test");
