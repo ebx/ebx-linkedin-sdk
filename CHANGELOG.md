@@ -43,4 +43,5 @@
 *  `DefaultLinkedInClient.throwLinkedInResponseStatusExceptionIfNecessary`
    should handle errors if they do not have an `error` attribute in the
    JSON.
+*  Add `Content-Lenght` for post requests in `DefaultWebRequester` 
    
