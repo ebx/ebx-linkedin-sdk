@@ -30,6 +30,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential.Builder;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.HttpRequest;
@@ -279,6 +280,10 @@ public class DefaultWebRequestor implements WebRequestor {
       // Allow subclasses to customize the connection if they'd like to - set their own headers,
       // timeouts, etc.
       customizeConnection(request);
+      
+      HttpContent content = request.getContent();
+      long length = (content != null) ? content.getLength() : 0;
+      httpHeaders.setContentLength(length);
   
       addHeadersToRequest(request, httpHeaders, headers);
 
