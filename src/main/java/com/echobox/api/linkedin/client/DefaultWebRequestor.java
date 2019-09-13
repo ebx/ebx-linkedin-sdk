@@ -31,7 +31,6 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.HttpRequest;
@@ -58,7 +57,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -282,12 +280,6 @@ public class DefaultWebRequestor implements WebRequestor {
       // Allow subclasses to customize the connection if they'd like to - set their own headers,
       // timeouts, etc.
       customizeConnection(request);
-      
-      HttpContent content = request.getContent();
-      if (content == null) {
-        throw new IllegalStateException("The content of a post request cannot be null");
-      }
-      httpHeaders.setContentLength(content.getLength());
   
       addHeadersToRequest(request, httpHeaders, headers);
 
