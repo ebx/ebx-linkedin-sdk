@@ -29,6 +29,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential.Builder;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.ByteArrayContent;
+import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpHeaders;
@@ -57,6 +58,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -271,7 +273,7 @@ public class DefaultWebRequestor implements WebRequestor {
           request.setResponseHeaders(new HttpHeaders().set(FORMAT_HEADER, "json"));
         } else {
           // Plain old POST request
-          request = requestFactory.buildPostRequest(genericUrl, null);
+          request = requestFactory.buildPostRequest(genericUrl, new EmptyContent());
         }
       }
 
@@ -282,8 +284,10 @@ public class DefaultWebRequestor implements WebRequestor {
       customizeConnection(request);
       
       HttpContent content = request.getContent();
-      long length = (content != null) ? content.getLength() : 0;
-      httpHeaders.setContentLength(length);
+      if (content == null) {
+        throw new IllegalStateException("The content of a post request cannot be null");
+      }
+      httpHeaders.setContentLength(content.getLength());
   
       addHeadersToRequest(request, httpHeaders, headers);
 
