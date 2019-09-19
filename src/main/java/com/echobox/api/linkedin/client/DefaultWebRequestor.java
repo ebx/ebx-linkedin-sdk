@@ -29,6 +29,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential.Builder;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.ByteArrayContent;
+import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpMediaType;
@@ -281,7 +282,7 @@ public class DefaultWebRequestor implements WebRequestor {
           request.setResponseHeaders(new HttpHeaders().set(FORMAT_HEADER, "json"));
         } else {
           // Plain old POST request
-          request = requestFactory.buildPostRequest(genericUrl, null);
+          request = requestFactory.buildPostRequest(genericUrl, new EmptyContent());
         }
       }
 

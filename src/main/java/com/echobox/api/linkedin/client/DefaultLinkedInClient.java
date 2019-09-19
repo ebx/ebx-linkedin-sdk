@@ -94,11 +94,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   protected static final String FORMAT_PARAM_NAME = "format";
 
   /**
-   * API error response 'error' attribute name.
-   */
-  protected static final String ERROR_ATTRIBUTE_NAME = "error";
-
-  /**
    * API error response 'code' attribute name.
    */
   protected static final String ERROR_CODE_ATTRIBUTE_NAME = "serviceErrorCode";
@@ -641,14 +636,23 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     
     String json = response.getBody();
     
-    // If the response contained an error code, throw an exception.
-    throwLinkedInResponseStatusExceptionIfNecessary(json, response.getStatusCode());
+    // If the response is 2XX then we do not need to throw an error response
+    if (HttpURLConnection.HTTP_OK != response.getStatusCode()
+        && HttpURLConnection.HTTP_CREATED != response.getStatusCode()) {
+      // If the response contained an error code, throw an exception.
+      throwLinkedInResponseStatusExceptionIfNecessary(json, response.getStatusCode());
+    }
     
-    // If there was no response error information and this was a 500 or 401
+    // If there was no response error information and this was a 500
     // error, something weird happened on LinkedIn's end. Bail.
-    if (HttpURLConnection.HTTP_INTERNAL_ERROR == response.getStatusCode()
-        || HttpURLConnection.HTTP_UNAUTHORIZED == response.getStatusCode()) {
+    if (HttpURLConnection.HTTP_INTERNAL_ERROR == response.getStatusCode()) {
       throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
+    }
+  
+    // If there was no response error information and this was a 401
+    // error, something weird happened on LinkedIn's end. Assume it is a Oauth error.
+    if (HttpURLConnection.HTTP_UNAUTHORIZED == response.getStatusCode()) {
+      throw new LinkedInOAuthException("LinkedIn request failed", response.getStatusCode());
     }
     
     return response;
@@ -689,10 +693,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
       skipResponseStatusExceptionParsing(json);
 
       JsonObject errorObject = Json.parse(json).asObject();
-
-      if (errorObject.get(ERROR_ATTRIBUTE_NAME) == null) {
-        return;
-      }
 
       // If there's an Integer error code, pluck it out.
       Integer errorCode = errorObject.get(ERROR_CODE_ATTRIBUTE_NAME) != null
