@@ -59,6 +59,11 @@ public abstract class LinkedInErrorMessageException extends LinkedInException {
     return rawErrorJson;
   }
 
+  /**
+   * Sets the raw error as JSON.
+   *
+   * @param rawError the raw error
+   */
   protected void setRawErrorJson(JsonObject rawError) {
     rawErrorJson = rawError;
   }

@@ -45,8 +45,6 @@ import java.util.NoSuchElementException;
  *
  * @param <T> The LinkedIn type
  * @author Joanna
- *
- * @param <T> connection type
  */
 public class Connection<T> implements Iterable<List<T>> {
   private LinkedInClient linkedinClient;

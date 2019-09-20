@@ -33,14 +33,28 @@ import java.util.List;
  * @author joanna
  */
 public class ConnectionBaseV2 extends ConnectionBase {
-  
+
+  /**
+   * The query key.
+   */
   protected static final String QUERY_KEY = "q";
+  /**
+   * The edge type.
+   */
   protected static final String EDGE_TYPE = "edgeType";
+  /**
+   * The shares parameter
+   */
   protected static final String SHARES_PARAM = "shares";
   private static final String TIME_INTERVALS_GRANULARITY = "timeIntervals.timeGranularityType";
   private static final String TIME_INTERVALS_START = "timeIntervals.timeRange.start";
   private static final String TIME_INTERVALS_END = "timeIntervals.timeRange.end";
-  
+
+  /**
+   * Instantiates a new connection base v2.
+   *
+   * @param linkedinClient the LinkedIn client
+   */
   protected ConnectionBaseV2(LinkedInClient linkedinClient) {
     super(linkedinClient);
     if (!Version.V2.equals(linkedinClient.getVersion())) {
@@ -48,7 +62,13 @@ public class ConnectionBaseV2 extends ConnectionBase {
           "The LinkedIn client should be set to V2 to access the endpoints");
     }
   }
-  
+
+  /**
+   * Add time interval to parameters.
+   *
+   * @param params       the list of parameters
+   * @param timeInterval the time interval to add
+   */
   protected void addTimeIntervalToParams(List<Parameter> params, TimeInterval timeInterval) {
     if (timeInterval == null) {
       return;
@@ -72,7 +92,12 @@ public class ConnectionBaseV2 extends ConnectionBase {
           "timeIntervals.timeGranularityType cannot be null when " + "timeInterval is provided");
     }
   }
-  
+
+  /**
+   * Validate share urn.
+   *
+   * @param shareURN the share URN parameter to check
+   */
   protected void validateShareURN(URN shareURN) {
     ValidationUtils.verifyParameterPresence("share", shareURN);
     validateURN(URNEntityType.SHARE, shareURN);

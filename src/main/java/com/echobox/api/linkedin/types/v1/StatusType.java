@@ -31,11 +31,26 @@ import org.slf4j.Logger;
  */
 @RequiredArgsConstructor
 public enum StatusType implements CodeType<String> {
-  
+
+  /**
+   * Operating status type.
+   */
   OPERATING("OPR"),
+  /**
+   * Operating subsidiary status type.
+   */
   OPERATING_SUBSIDIARY("OPS"),
+  /**
+   * Reorganising status type.
+   */
   REORGANISING("RRG"),
+  /**
+   * Out of business status type.
+   */
   OUT_OF_BUSINESS("OOB"),
+  /**
+   * Acquired status type.
+   */
   ACQUIRED("ACQ");
   
   private static Logger LOGGER = LinkedInLogger.getLoggerInstance();

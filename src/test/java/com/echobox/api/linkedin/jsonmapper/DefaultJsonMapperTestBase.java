@@ -32,6 +32,12 @@ import java.util.stream.Stream;
  */
 public abstract class DefaultJsonMapperTestBase {
 
+  /**
+   * Read file to string.
+   *
+   * @param fileName the file name
+   * @return the converted to string file
+   */
   protected String readFileToString(final String fileName) {
     Stream<String> lines = null;
     try {

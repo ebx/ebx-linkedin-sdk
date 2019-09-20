@@ -76,7 +76,10 @@ public class CompleteMultiPartUploadBody {
     @Setter
     @LinkedIn
     private Headers headers;
-  
+
+    /**
+     * The HTTP status code.
+     */
     @Getter
     @Setter
     @LinkedIn
