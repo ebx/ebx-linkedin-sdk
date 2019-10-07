@@ -33,7 +33,7 @@ import java.security.GeneralSecurityException;
 public class DefaultLinkedInClientTest {
   
   /**
-   * Test 401 error with unparsable JSON body throws a LinkedInOauthException
+   * Test 200 response status does not throw a LinkedInOauthException
    * @throws GeneralSecurityException GeneralSecurityException
    * @throws IOException IOException
    */
@@ -46,7 +46,7 @@ public class DefaultLinkedInClientTest {
   }
   
   /**
-   * Test 401 error with unparsable JSON body throws a LinkedInOauthException
+   * Test 202 response status does not throw a LinkedInOauthException
    * @throws GeneralSecurityException GeneralSecurityException
    * @throws IOException IOException
    */
@@ -57,6 +57,20 @@ public class DefaultLinkedInClientTest {
     WebRequestor.Response response =
         client.makeRequestAndProcessResponse(() -> new WebRequestor.Response(201, null, null));
     Assert.assertEquals(HttpURLConnection.HTTP_CREATED, response.getStatusCode().intValue());
+  }
+  
+  /**
+   * Test 204 response status does not throw a LinkedInOauthException
+   * @throws GeneralSecurityException GeneralSecurityException
+   * @throws IOException IOException
+   */
+  @Test
+  public void test204Response()
+      throws GeneralSecurityException, IOException {
+    DefaultLinkedInClient client = new DefaultLinkedInClient("test");
+    WebRequestor.Response response =
+        client.makeRequestAndProcessResponse(() -> new WebRequestor.Response(204, null, null));
+    Assert.assertEquals(HttpURLConnection.HTTP_NO_CONTENT, response.getStatusCode().intValue());
   }
   
   /**

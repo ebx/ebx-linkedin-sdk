@@ -45,4 +45,8 @@
    JSON.
 *  Add `Content-Lenght` for post requests in `DefaultWebRequester` (see: 
    [Error handling](https://docs.microsoft.com/en-us/linkedin/shared/api-guide/concepts/error-handling))
+* Ensure HTTP status 204 (No Content) does not throw a
+  `LinkedInException` as it's returned by `DELETE
+  https://api.linkedin.com/v2/ugcPosts/{encoded ugcPostUrn|shareUrn}`
+  [Delete UGC Posts](https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#delete-ugc-posts).
    
