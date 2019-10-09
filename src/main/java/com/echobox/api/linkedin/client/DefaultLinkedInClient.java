@@ -623,6 +623,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     // throw an exception.
     if (HttpURLConnection.HTTP_OK != response.getStatusCode()
         && HttpURLConnection.HTTP_CREATED != response.getStatusCode()
+        && HttpURLConnection.HTTP_NO_CONTENT != response.getStatusCode()
         && HttpURLConnection.HTTP_BAD_REQUEST != response.getStatusCode()
         && HttpURLConnection.HTTP_UNAUTHORIZED != response.getStatusCode()
         && HttpURLConnection.HTTP_NOT_FOUND != response.getStatusCode()
@@ -638,7 +639,8 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     
     // If the response is 2XX then we do not need to throw an error response
     if (HttpURLConnection.HTTP_OK != response.getStatusCode()
-        && HttpURLConnection.HTTP_CREATED != response.getStatusCode()) {
+        && HttpURLConnection.HTTP_CREATED != response.getStatusCode()
+        && HttpURLConnection.HTTP_NO_CONTENT != response.getStatusCode()) {
       // If the response contained an error code, throw an exception.
       throwLinkedInResponseStatusExceptionIfNecessary(json, response.getStatusCode());
     }
