@@ -102,5 +102,4 @@ public class ConnectionBaseV2 extends ConnectionBase {
     ValidationUtils.verifyParameterPresence("share", shareURN);
     validateURN(URNEntityType.SHARE, shareURN);
   }
-
 }

@@ -27,7 +27,6 @@ import com.echobox.api.linkedin.types.assets.CheckStatusUpload;
 import com.echobox.api.linkedin.types.assets.CompleteMultiPartUploadBody;
 import com.echobox.api.linkedin.types.assets.RegisterUpload;
 import com.echobox.api.linkedin.types.assets.RegisterUploadRequestBody;
-import com.echobox.api.linkedin.types.assets.RelationshipType;
 import com.echobox.api.linkedin.types.urn.URN;
 
 import java.io.File;
@@ -37,7 +36,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,7 +52,11 @@ public class AssetsConnection extends ConnectionBaseV2 {
   private static final String ACTION_KEY = "action";
   private static final String REGISTER_UPLOAD = "registerUpload";
   private static final String COMPLETE_MULTIPART_UPLOAD = "completeMultiPartUpload";
-  private static final String USER_GENERATED_CONTENT_IDENTIFIER = "urn:li:userGeneratedContent";
+  
+  /**
+   * Register upload request service relationships identifier
+   */
+  public static final String SERVICE_RELATIONSHIPS_IDENTIFIER = "urn:li:userGeneratedContent";
   
   /**
    * Initialise the assets connection
@@ -71,17 +73,18 @@ public class AssetsConnection extends ConnectionBaseV2 {
    * Register an Upload for Images</a> and
    * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#upload-the-image">
    * Upload the Image</a>
-   * @param targetURN the URN to upload the image asset to
+   * @param registerUploadRequestBody the register upload request body
    * @param filename the file name
    * @param file the file to upload as an image asset
    * @return the digital asset URN
    * @throws IOException IOException
    */
-  public URN uploadImageAsset(URN targetURN, String filename, File file) throws IOException {
+  public URN uploadImageAsset(RegisterUploadRequestBody registerUploadRequestBody, String filename,
+      File file) throws IOException {
     InputStream videoInputStream = new FileInputStream(file);
     byte[] bytes = new byte[(int) file.length()];
     videoInputStream.read(bytes);
-    return uploadImageAsset(targetURN, filename, bytes);
+    return uploadImageAsset(registerUploadRequestBody, filename, bytes);
   }
   
   /**
@@ -91,16 +94,16 @@ public class AssetsConnection extends ConnectionBaseV2 {
    * Register an Upload for Images</a> and
    * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#upload-the-image">
    * Upload the Image</a>
-   * @param targetURN the URN to upload the image asset to
+   * @param registerUploadRequestBody the register upload request body
    * @param filename the file name
    * @param bytes the image bytes to upload as an image asset
    * @return the digital asset URN
    * @throws MalformedURLException MalformedURLException
    */
-  public URN uploadImageAsset(URN targetURN, String filename, byte[] bytes)
-      throws MalformedURLException {
+  public URN uploadImageAsset(RegisterUploadRequestBody registerUploadRequestBody, String filename,
+      byte[] bytes) throws MalformedURLException {
     // Register the file upload
-    RegisterUpload registerUploadResponse = registerUploadForImageAssets(targetURN);
+    RegisterUpload registerUploadResponse = registerUpload(registerUploadRequestBody);
   
     // Upload the image
     AssetsConnection.uploadAsset(linkedinClient.getWebRequestor(),
@@ -108,21 +111,6 @@ public class AssetsConnection extends ConnectionBaseV2 {
             .getUploadUrl()), new HashMap<>(), filename, bytes);
   
     return registerUploadResponse.getValue().getAsset();
-  }
-  
-  private RegisterUpload registerUploadForImageAssets(URN organizationURN) {
-    // Register the upload
-    RegisterUploadRequestBody.ServiceRelationships serviceRelationships =
-        new RegisterUploadRequestBody.ServiceRelationships(USER_GENERATED_CONTENT_IDENTIFIER,
-            RelationshipType.OWNER);
-    RegisterUploadRequestBody.RegisterUploadRequest registerUploadRequest =
-        new RegisterUploadRequestBody.RegisterUploadRequest(organizationURN);
-    registerUploadRequest.setRecipes(
-        Arrays.asList(RegisterUploadRequestBody.RecipeURN.FEED_SHARE_IMAGE));
-    registerUploadRequest.setServiceRelationships(Arrays.asList(serviceRelationships));
-    RegisterUploadRequestBody registerUploadRequestBody =
-        new RegisterUploadRequestBody(registerUploadRequest);
-    return registerUpload(registerUploadRequestBody);
   }
   
   /**

@@ -157,7 +157,19 @@ public class RegisterUploadRequestBody {
     /**
      * The feed share video
      */
-    FEED_SHARE_IMAGE(new URN("urn:li:digitalmediaRecipe:feedshare-image"));
+    FEED_SHARE_IMAGE(new URN("urn:li:digitalmediaRecipe:feedshare-image")),
+    /**
+     * Company update article image
+     */
+    COMPANY_UPDATE_ARTICLE_IMAGE(new URN("urn:li:digitalmediaRecipe:companyUpdate-article-image")),
+    /**
+     * SSU carousel card image
+     */
+    SSU_CAROUSEL_CARD_IMAGE(new URN("urn:li:digitalmediaRecipe:ssu-carousel-card-image")),
+    /**
+     * Right rail logo image
+     */
+    RIGHT_RAIL_LOGO_IMAGE(new URN("urn:li:digitalmediaRecipe:rightRail-logo-image"));
     
     @Getter
     private URN recipeURN;
