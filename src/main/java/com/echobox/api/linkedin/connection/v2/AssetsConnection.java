@@ -157,7 +157,6 @@ public class AssetsConnection extends ConnectionBaseV2 {
    * @param filename the file name of the file to be uploaded
    * @param bytes the bytes to upload
    * @return the map of headers from the request
-   * @throws IOException IOException
    */
   public static Map<String, String> uploadAsset(WebRequestor webRequestor, URL uploadURL,
       Map<String, String> headers, String filename, byte[] bytes) {
