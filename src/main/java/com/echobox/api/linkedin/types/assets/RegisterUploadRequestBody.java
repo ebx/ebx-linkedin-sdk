@@ -153,7 +153,11 @@ public class RegisterUploadRequestBody {
     /**
      * The ads video.
      */
-    ADS_VIDEO(new URN("urn:li:digitalmediaRecipe:ads-video"));
+    ADS_VIDEO(new URN("urn:li:digitalmediaRecipe:ads-video")),
+    /**
+     * The feed share video
+     */
+    FEED_SHARE_IMAGE(new URN("urn:li:digitalmediaRecipe:feedshare-image"));
     
     @Getter
     private URN recipeURN;
