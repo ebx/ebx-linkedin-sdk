@@ -18,11 +18,9 @@
 package com.echobox.api.linkedin.connection.v2;
 
 import com.echobox.api.linkedin.client.BinaryAttachment;
-import com.echobox.api.linkedin.client.DefaultWebRequestor;
 import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.WebRequestor;
-import com.echobox.api.linkedin.exception.LinkedInException;
 import com.echobox.api.linkedin.exception.LinkedInNetworkException;
 import com.echobox.api.linkedin.exception.LinkedInOAuthException;
 import com.echobox.api.linkedin.types.assets.CheckStatusUpload;
@@ -66,15 +64,49 @@ public class AssetsConnection extends ConnectionBaseV2 {
     super(linkedInClient);
   }
   
-  public URN uploadImageAsset(URN organizationURN, String filename, File file) throws IOException {
-    validateOrganizationURN(organizationURN);
-    RegisterUpload registerUploadResponse = registerUploadForImageAssets(organizationURN);
+  /**
+   * Upload an image asset
+   * @see
+   * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#register-an-upload-for-images">
+   * Register an Upload for Images</a> and
+   * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#upload-the-image">
+   * Upload the Image</a>
+   * @param targetURN the URN to upload the image asset to
+   * @param filename the file name
+   * @param file the file to upload as an image asset
+   * @return the digital asset URN
+   * @throws IOException IOException
+   */
+  public URN uploadImageAsset(URN targetURN, String filename, File file) throws IOException {
+    InputStream videoInputStream = new FileInputStream(file);
+    byte[] bytes = new byte[(int) file.length()];
+    videoInputStream.read(bytes);
+    return uploadImageAsset(targetURN, filename, bytes);
+  }
+  
+  /**
+   * Upload an image asset
+   * @see
+   * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#register-an-upload-for-images">
+   * Register an Upload for Images</a> and
+   * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#upload-the-image">
+   * Upload the Image</a>
+   * @param targetURN the URN to upload the image asset to
+   * @param filename the file name
+   * @param bytes the image bytes to upload as an image asset
+   * @return the digital asset URN
+   * @throws MalformedURLException MalformedURLException
+   */
+  public URN uploadImageAsset(URN targetURN, String filename, byte[] bytes)
+      throws MalformedURLException {
+    // Register the file upload
+    RegisterUpload registerUploadResponse = registerUploadForImageAssets(targetURN);
   
     // Upload the image
     AssetsConnection.uploadAsset(linkedinClient.getWebRequestor(),
         new URL(registerUploadResponse.getValue().getUploadMechanism().getMediaUploadHttpRequest()
-            .getUploadUrl()), new HashMap<>(), filename, file);
-    
+            .getUploadUrl()), new HashMap<>(), filename, bytes);
+  
     return registerUploadResponse.getValue().getAsset();
   }
   
@@ -148,17 +180,17 @@ public class AssetsConnection extends ConnectionBaseV2 {
     } catch (Exception ex) {
       throw new LinkedInNetworkException("LinkedIn request failed to upload the asset", ex);
     }
+    
+    // If there was no response error information and this was a 401
+    // error, something weird happened on LinkedIn's end. Assume it is a Oauth error.
+    if (HttpURLConnection.HTTP_UNAUTHORIZED == response.getStatusCode()) {
+      throw new LinkedInOAuthException("LinkedIn request failed", response.getStatusCode());
+    }
   
     // If there was no response error information and this was a 500
     // error, something weird happened on LinkedIn's end. Bail.
     if (HttpURLConnection.HTTP_INTERNAL_ERROR == response.getStatusCode()) {
       throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
-    }
-  
-    // If there was no response error information and this was a 401
-    // error, something weird happened on LinkedIn's end. Assume it is a Oauth error.
-    if (HttpURLConnection.HTTP_UNAUTHORIZED == response.getStatusCode()) {
-      throw new LinkedInOAuthException("LinkedIn request failed", response.getStatusCode());
     }
     
     if (HttpURLConnection.HTTP_OK != response.getStatusCode()
