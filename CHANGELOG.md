@@ -49,4 +49,9 @@
   `LinkedInException` as it's returned by `DELETE
   https://api.linkedin.com/v2/ugcPosts/{encoded ugcPostUrn|shareUrn}`
   [Delete UGC Posts](https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#delete-ugc-posts).
+* Deprecate `RichMediaConnection` as LinkedIn has launched Media Assets 
+  API (previously Vector Platform) to host media types such as images and 
+  videos. LinkedIn is planning to deprecate the existing Rich Media 
+  Platform by `Janurary 30, 2020`.
+  See [migration guide](https://docs.microsoft.com/en-us/linkedin/shared/references/migrations/rich-media-platform-deprecation?context=linkedin/marketing/context&trk=eml-mktg-20191028-developer-email-api-updates-october&mcid=6592215409070530560&src=e-eml).
    

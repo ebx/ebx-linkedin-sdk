@@ -21,16 +21,22 @@ import com.echobox.api.linkedin.client.BinaryAttachment;
 import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.WebRequestor;
+import com.echobox.api.linkedin.exception.LinkedInNetworkException;
+import com.echobox.api.linkedin.exception.LinkedInOAuthException;
 import com.echobox.api.linkedin.types.assets.CheckStatusUpload;
 import com.echobox.api.linkedin.types.assets.CompleteMultiPartUploadBody;
 import com.echobox.api.linkedin.types.assets.RegisterUpload;
 import com.echobox.api.linkedin.types.assets.RegisterUploadRequestBody;
+import com.echobox.api.linkedin.types.urn.URN;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -48,11 +54,64 @@ public class AssetsConnection extends ConnectionBaseV2 {
   private static final String COMPLETE_MULTIPART_UPLOAD = "completeMultiPartUpload";
   
   /**
+   * Register upload request service relationships identifier
+   */
+  public static final String SERVICE_RELATIONSHIPS_IDENTIFIER = "urn:li:userGeneratedContent";
+  
+  /**
    * Initialise the assets connection
    * @param linkedInClient the LinkedIn client
    */
   public AssetsConnection(LinkedInClient linkedInClient) {
     super(linkedInClient);
+  }
+  
+  /**
+   * Upload an image asset
+   * @see
+   * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#register-an-upload-for-images">
+   * Register an Upload for Images</a> and
+   * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#upload-the-image">
+   * Upload the Image</a>
+   * @param registerUploadRequestBody the register upload request body
+   * @param filename the file name
+   * @param file the file to upload as an image asset
+   * @return the digital asset URN
+   * @throws IOException IOException
+   */
+  public URN uploadImageAsset(RegisterUploadRequestBody registerUploadRequestBody, String filename,
+      File file) throws IOException {
+    try (InputStream videoInputStream = new FileInputStream(file)) {
+      byte[] bytes = new byte[(int) file.length()];
+      videoInputStream.read(bytes);
+      return uploadImageAsset(registerUploadRequestBody, filename, bytes);
+    }
+  }
+  
+  /**
+   * Upload an image asset
+   * @see
+   * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#register-an-upload-for-images">
+   * Register an Upload for Images</a> and
+   * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#upload-the-image">
+   * Upload the Image</a>
+   * @param registerUploadRequestBody the register upload request body
+   * @param filename the file name
+   * @param bytes the image bytes to upload as an image asset
+   * @return the digital asset URN
+   * @throws MalformedURLException MalformedURLException
+   */
+  public URN uploadImageAsset(RegisterUploadRequestBody registerUploadRequestBody, String filename,
+      byte[] bytes) throws MalformedURLException {
+    // Register the file upload
+    RegisterUpload registerUploadResponse = registerUpload(registerUploadRequestBody);
+  
+    // Upload the image
+    AssetsConnection.uploadAsset(linkedinClient.getWebRequestor(),
+        new URL(registerUploadResponse.getValue().getUploadMechanism().getMediaUploadHttpRequest()
+            .getUploadUrl()), new HashMap<>(), filename, bytes);
+  
+    return registerUploadResponse.getValue().getAsset();
   }
   
   /**
@@ -82,10 +141,11 @@ public class AssetsConnection extends ConnectionBaseV2 {
    */
   public static Map<String, String> uploadAsset(WebRequestor webRequestor, URL uploadURL,
       Map<String, String> headers, String filename, File file) throws IOException {
-    InputStream videoInputStream = new FileInputStream(file);
-    byte[] bytes = new byte[(int) file.length()];
-    videoInputStream.read(bytes);
-    return uploadAsset(webRequestor, uploadURL, headers, filename, bytes);
+    try (InputStream videoInputStream = new FileInputStream(file)) {
+      byte[] bytes = new byte[(int) file.length()];
+      videoInputStream.read(bytes);
+      return uploadAsset(webRequestor, uploadURL, headers, filename, bytes);
+    }
   }
   
   /**
@@ -99,13 +159,34 @@ public class AssetsConnection extends ConnectionBaseV2 {
    * @param filename the file name of the file to be uploaded
    * @param bytes the bytes to upload
    * @return the map of headers from the request
-   * @throws IOException IOException
    */
   public static Map<String, String> uploadAsset(WebRequestor webRequestor, URL uploadURL,
-      Map<String, String> headers, String filename, byte[] bytes) throws IOException {
-    WebRequestor.Response response = webRequestor
-        .executePut(uploadURL.toString(), null, null, headers,
-            BinaryAttachment.with(filename, bytes));
+      Map<String, String> headers, String filename, byte[] bytes) {
+    WebRequestor.Response response;
+    try {
+      response = webRequestor.executePut(uploadURL.toString(), null, null, headers,
+          BinaryAttachment.with(filename, bytes));
+    } catch (Exception ex) {
+      throw new LinkedInNetworkException("LinkedIn request failed to upload the asset", ex);
+    }
+    
+    // If there was no response error information and this was a 401
+    // error, something weird happened on LinkedIn's end. Assume it is a Oauth error.
+    if (HttpURLConnection.HTTP_UNAUTHORIZED == response.getStatusCode()) {
+      throw new LinkedInOAuthException("LinkedIn request failed", response.getStatusCode());
+    }
+  
+    // If there was no response error information and this was a 500
+    // error, something weird happened on LinkedIn's end. Bail.
+    if (HttpURLConnection.HTTP_INTERNAL_ERROR == response.getStatusCode()) {
+      throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
+    }
+    
+    if (HttpURLConnection.HTTP_OK != response.getStatusCode()
+        && HttpURLConnection.HTTP_CREATED != response.getStatusCode()) {
+      throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
+    }
+    
     return response.getHeaders();
   }
   
