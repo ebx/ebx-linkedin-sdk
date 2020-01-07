@@ -81,10 +81,11 @@ public class AssetsConnection extends ConnectionBaseV2 {
    */
   public URN uploadImageAsset(RegisterUploadRequestBody registerUploadRequestBody, String filename,
       File file) throws IOException {
-    InputStream videoInputStream = new FileInputStream(file);
-    byte[] bytes = new byte[(int) file.length()];
-    videoInputStream.read(bytes);
-    return uploadImageAsset(registerUploadRequestBody, filename, bytes);
+    try (InputStream videoInputStream = new FileInputStream(file)) {
+      byte[] bytes = new byte[(int) file.length()];
+      videoInputStream.read(bytes);
+      return uploadImageAsset(registerUploadRequestBody, filename, bytes);
+    }
   }
   
   /**
@@ -140,10 +141,11 @@ public class AssetsConnection extends ConnectionBaseV2 {
    */
   public static Map<String, String> uploadAsset(WebRequestor webRequestor, URL uploadURL,
       Map<String, String> headers, String filename, File file) throws IOException {
-    InputStream videoInputStream = new FileInputStream(file);
-    byte[] bytes = new byte[(int) file.length()];
-    videoInputStream.read(bytes);
-    return uploadAsset(webRequestor, uploadURL, headers, filename, bytes);
+    try (InputStream videoInputStream = new FileInputStream(file)) {
+      byte[] bytes = new byte[(int) file.length()];
+      videoInputStream.read(bytes);
+      return uploadAsset(webRequestor, uploadURL, headers, filename, bytes);
+    }
   }
   
   /**
