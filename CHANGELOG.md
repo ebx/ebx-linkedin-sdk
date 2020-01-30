@@ -54,4 +54,5 @@
   videos. LinkedIn is planning to deprecate the existing Rich Media 
   Platform by `Janurary 30, 2020`.
   See [migration guide](https://docs.microsoft.com/en-us/linkedin/shared/references/migrations/rich-media-platform-deprecation?context=linkedin/marketing/context&trk=eml-mktg-20191028-developer-email-api-updates-october&mcid=6592215409070530560&src=e-eml).
+* Add `NATIVE_DOCUMENT`, `URN_REFERENCE`, `LIVE_VIDEO` to UGC ShareMediaCategory enum.
    
