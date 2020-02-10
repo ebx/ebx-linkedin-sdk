@@ -22,7 +22,6 @@ import com.echobox.api.linkedin.types.ShareContent;
 import com.echobox.api.linkedin.types.ShareDistribution;
 import com.echobox.api.linkedin.types.ShareText;
 import com.echobox.api.linkedin.types.urn.URN;
-
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

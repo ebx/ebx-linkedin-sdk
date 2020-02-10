@@ -19,7 +19,6 @@ package com.echobox.api.linkedin.types.organization;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.objectype.Locale;
-
 import lombok.Getter;
 
 import java.util.List;

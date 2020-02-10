@@ -20,7 +20,6 @@ package com.echobox.api.linkedin.types.organization;
 import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapper;
 import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapperTestBase;
 import com.echobox.api.linkedin.types.objectype.MultiLocaleString;
-
 import org.junit.Assert;
 import org.junit.Test;
 

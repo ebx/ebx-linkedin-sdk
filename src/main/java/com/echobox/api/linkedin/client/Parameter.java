@@ -29,7 +29,6 @@ import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapper;
 import com.echobox.api.linkedin.jsonmapper.JsonMapper;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.util.DateUtils;
-
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;

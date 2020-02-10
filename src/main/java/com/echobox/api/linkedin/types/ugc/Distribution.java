@@ -18,7 +18,6 @@
 package com.echobox.api.linkedin.types.ugc;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
 import lombok.Getter;
 
 import java.util.List;

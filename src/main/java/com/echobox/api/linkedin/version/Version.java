@@ -21,10 +21,8 @@ import com.echobox.api.linkedin.client.paging.PagingStrategy;
 import com.echobox.api.linkedin.client.paging.V1PagingImpl;
 import com.echobox.api.linkedin.client.paging.V2PagingImpl;
 import com.echobox.api.linkedin.logging.LinkedInLogger;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
 import org.slf4j.Logger;
 
 /**

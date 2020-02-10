@@ -18,7 +18,6 @@
 package com.echobox.api.linkedin.types.statistics.page;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
 import lombok.Getter;
 import lombok.Setter;
 

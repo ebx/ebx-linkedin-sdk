@@ -46,31 +46,11 @@
         <emptyLine />
         <package name="sh" withSubpackages="true" static="false" />
         <emptyLine />
-        <package name="crawlercommons" withSubpackages="true" static="false" />
-        <emptyLine />
-        <package name="ch" withSubpackages="true" static="false" />
-        <emptyLine />
-        <package name="com" withSubpackages="true" static="false" />
-        <emptyLine />
-        <package name="mockit" withSubpackages="true" static="false" />
-        <emptyLine />
-        <package name="opennlp" withSubpackages="true" static="false" />
-        <emptyLine />
-        <package name="net" withSubpackages="true" static="false" />
-        <emptyLine />
-        <package name="org" withSubpackages="true" static="false" />
-        <emptyLine />
-        <package name="org.springframework" withSubpackages="true" static="false" />
-        <emptyLine />
-        <package name="sh" withSubpackages="true" static="false" />
-        <emptyLine />
-        <package name="io" withSubpackages="true" static="false" />
+        <package name="" withSubpackages="true" static="false" />
         <emptyLine />
         <package name="java" withSubpackages="true" static="false" />
         <emptyLine />
         <package name="javax" withSubpackages="true" static="false" />
-        <emptyLine />
-        <package name="" withSubpackages="true" static="false" />
         <emptyLine />
       </value>
     </option>

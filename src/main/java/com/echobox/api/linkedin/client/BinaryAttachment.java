@@ -26,9 +26,7 @@ package com.echobox.api.linkedin.client;
 import static java.lang.String.format;
 
 import com.echobox.api.linkedin.util.ReflectionUtils;
-
 import lombok.Getter;
-
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayInputStream;
