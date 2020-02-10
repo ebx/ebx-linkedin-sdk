@@ -36,7 +36,7 @@
   representation of the urn. Instead of using `URNEntityType.name()`
   `URNEntityType.getEntityValue()` should be used to support UGCPosts.
 
-## 1.0.3
+## 1.0.3 (Work in progress)
 *  `DefaultLinkedInClient.makeRequestAndProcessResponse` handles 401
    errors as `LinkedInOAuthException` rather than
    `LinkedInNetworkException`
@@ -55,6 +55,4 @@
   Platform by `Janurary 30, 2020`.
   See [migration guide](https://docs.microsoft.com/en-us/linkedin/shared/references/migrations/rich-media-platform-deprecation?context=linkedin/marketing/context&trk=eml-mktg-20191028-developer-email-api-updates-october&mcid=6592215409070530560&src=e-eml).
 * Add `NATIVE_DOCUMENT`, `URN_REFERENCE`, `LIVE_VIDEO` to UGC ShareMediaCategory enum.
-   
-## 1.0.4 (Work in progress)
 * checkstyle plugin version bumped. Some code reformatted in order to satisfy new checkstyle rules.
