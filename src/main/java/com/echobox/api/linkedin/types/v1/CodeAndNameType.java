@@ -18,7 +18,6 @@
 package com.echobox.api.linkedin.types.v1;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -42,7 +41,12 @@ public class CodeAndNameType {
   @NonNull
   @LinkedIn
   private String name;
-  
+
+  /**
+   * Check if it has null fields
+   *
+   * @return if it has fields, that are null
+   */
   boolean hasNullFields() {
     return code == null || name == null;
   }

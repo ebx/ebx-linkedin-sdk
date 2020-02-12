@@ -25,7 +25,6 @@ import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapperTestBase;
 import com.echobox.api.linkedin.types.objectype.AuditStamp;
 import com.echobox.api.linkedin.types.social.actions.CommentAction;
 import com.echobox.api.linkedin.types.urn.URN;
-
 import org.junit.Test;
 
 import java.util.List;

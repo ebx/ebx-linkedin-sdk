@@ -11,6 +11,11 @@
       <property name="headerFile" value="${basedir}/licenseheader.txt"/>
     </module>
     <module name="NewlineAtEndOfFile"/>
+    <module name="LineLength">
+        <property name="max" value="100"/>
+        <property name="ignorePattern"
+                  value="(^(?:package|import.*$)|.*editor-fold defaultstate.*|&lt;a\s+(?:[^&gt;]*?\s+)?href=([&quot;'])(.*?))"/>
+    </module>
     <module name="TreeWalker">
         <module name="SuppressionCommentFilter">
           <property name="offCommentFormat" value="CHECKSTYLE:OFF"/>
@@ -45,17 +50,17 @@
         </module>
         <module name="RightCurly">
             <property name="option" value="same"/>
-            <property name="tokens" value="LITERAL_TRY, LITERAL_CATCH, LITERAL_FINALLY"/>
+            <property name="tokens" value="LITERAL_TRY, LITERAL_CATCH, LITERAL_FINALLY, CLASS_DEF, METHOD_DEF, CTOR_DEF"/>
         </module>
         <module name="RightCurly">
             <property name="option" value="alone"/>
             <property name="tokens"
-                      value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, STATIC_INIT, INSTANCE_INIT"/>
+                      value="LITERAL_FOR, LITERAL_WHILE, STATIC_INIT, INSTANCE_INIT"/>
         </module>
         <module name="OneStatementPerLine"/>
         <module name="EmptyLineSeparator">
             <property name="allowNoEmptyLineBetweenFields" value="true"/>
-            <property name="allowMultipleEmptyLines" value="false"/>
+            <property name="allowMultipleEmptyLines" value="true"/>
             <property name="allowMultipleEmptyLinesInsideClassMembers" value="false"/>
         </module>
         <module name="ModifierOrder"/>
@@ -99,11 +104,6 @@
             <property name="tokens" value="METHOD_REF"/>
         </module>
         <module name="WhitespaceAfter"/>
-        <module name="LineLength">
-            <property name="max" value="100"/>
-            <property name="ignorePattern"
-                      value="(^(?:package|import.*$)|.*editor-fold defaultstate.*|&lt;a\s+(?:[^&gt;]*?\s+)?href=([&quot;'])(.*?))"/>
-        </module>
         <module name="MethodLength">
             <property name="max" value="150"/>
         </module>
@@ -225,8 +225,11 @@
         <module name="SuperClone"/>
         <!--JavaDoc-->
         <module name="JavadocMethod">
-            <property name="scope" value="public"/>
+            <property name="scope" value="package"/>
             <property name="allowedAnnotations" value="Override, Test, Mock, Before"/>
+        </module>
+        <module name="JavadocVariable">
+            <property name="scope" value="package"/>
         </module>
         <module name="JavadocType">
             <property name="authorFormat" value="\S"/>

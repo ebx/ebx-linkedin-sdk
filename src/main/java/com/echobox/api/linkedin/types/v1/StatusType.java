@@ -18,10 +18,8 @@
 package com.echobox.api.linkedin.types.v1;
 
 import com.echobox.api.linkedin.logging.LinkedInLogger;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
 import org.slf4j.Logger;
 
 /**
@@ -31,11 +29,26 @@ import org.slf4j.Logger;
  */
 @RequiredArgsConstructor
 public enum StatusType implements CodeType<String> {
-  
+
+  /**
+   * Operating status type.
+   */
   OPERATING("OPR"),
+  /**
+   * Operating subsidiary status type.
+   */
   OPERATING_SUBSIDIARY("OPS"),
+  /**
+   * Reorganising status type.
+   */
   REORGANISING("RRG"),
+  /**
+   * Out of business status type.
+   */
   OUT_OF_BUSINESS("OOB"),
+  /**
+   * Acquired status type.
+   */
   ACQUIRED("ACQ");
   
   private static Logger LOGGER = LinkedInLogger.getLoggerInstance();

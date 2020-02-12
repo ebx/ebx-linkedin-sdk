@@ -24,13 +24,25 @@
 package com.echobox.api.linkedin.util;
 
 import static java.lang.String.format;
-import static java.util.Collections.*;
+import static java.util.Collections.sort;
+import static java.util.Collections.synchronizedMap;
+import static java.util.Collections.unmodifiableList;
 
 import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A collection of reflection-related utility methods.

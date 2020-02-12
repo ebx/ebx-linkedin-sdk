@@ -27,9 +27,15 @@ import java.nio.file.Files;
 
 /**
  * Rich media connection
+ * DEPRECATED 06/01/2020 - LinkedIn is planning to depricate the existing Rich Media Platform by
+ * January 30, 2020
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/shared/references/migrations/rich-media-platform-deprecation?context=linkedin/marketing/context&trk=eml-mktg-20191028-developer-email-api-updates-october&mcid=6592215409070530560&src=e-eml">
+ * Deprecation notice</a>
+ *
  * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/rich-media-shares">Rich Media Shares</a>
  * @author joanna
  */
+@Deprecated
 public class RichMediaConnection extends ConnectionBaseV2 {
   
   private static final String MEDIA_UPLOAD = "/media/upload";

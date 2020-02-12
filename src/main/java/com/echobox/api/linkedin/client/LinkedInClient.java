@@ -30,14 +30,13 @@ import com.echobox.api.linkedin.jsonmapper.JsonMapper.JsonMappingCompleted;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.util.URLUtils;
 import com.echobox.api.linkedin.version.Version;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
 
 /**
  * Specifies how a LinkedIn API client must operate.

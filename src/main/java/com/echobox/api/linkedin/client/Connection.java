@@ -33,7 +33,6 @@ import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.ParseException;
-
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -45,8 +44,6 @@ import java.util.NoSuchElementException;
  *
  * @param <T> The LinkedIn type
  * @author Joanna
- *
- * @param <T> connection type
  */
 public class Connection<T> implements Iterable<List<T>> {
   private LinkedInClient linkedinClient;

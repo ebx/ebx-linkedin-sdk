@@ -18,10 +18,8 @@
 package com.echobox.api.linkedin.types.v1;
 
 import com.echobox.api.linkedin.logging.LinkedInLogger;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
 import org.slf4j.Logger;
 
 /**
@@ -31,14 +29,38 @@ import org.slf4j.Logger;
  */
 @RequiredArgsConstructor
 public enum CompanyType implements CodeType<String> {
-  
+
+  /**
+   * Public company company type.
+   */
   PUBLIC_COMPANY("C"),
+  /**
+   * Educational company type.
+   */
   EDUCATIONAL("D"),
+  /**
+   * Self employed company type.
+   */
   SELF_EMPLOYED("E"),
+  /**
+   * Government agency company type.
+   */
   GOVERNMENT_AGENCY("G"),
+  /**
+   * Non profit company type.
+   */
   NON_PROFIT("N"),
+  /**
+   * Self owned company type.
+   */
   SELF_OWNED("O"),
+  /**
+   * Privately held company type.
+   */
   PRIVATELY_HELD("P"),
+  /**
+   * Partnership company type.
+   */
   PARTNERSHIP("S");
   
   private static Logger LOGGER = LinkedInLogger.getLoggerInstance();

@@ -19,7 +19,6 @@ package com.echobox.api.linkedin.types.assets;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.urn.URN;
-
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -142,13 +141,42 @@ public class RegisterUploadRequestBody {
    * @author Joanna
    */
   public enum RecipeURN {
+    /**
+     * The feed share video.
+     */
     FEED_SHARE_VIDEO(new URN("urn:li:digitalmediaRecipe:feedshare-video")),
+    /**
+     * The learning image.
+     */
     LEARNING_IMAGE(new URN("urn:li:digitalmediaRecipe:learning-image")),
-    ADS_VIDEO(new URN("urn:li:digitalmediaRecipe:ads-video"));
+    /**
+     * The ads video.
+     */
+    ADS_VIDEO(new URN("urn:li:digitalmediaRecipe:ads-video")),
+    /**
+     * The feed share video
+     */
+    FEED_SHARE_IMAGE(new URN("urn:li:digitalmediaRecipe:feedshare-image")),
+    /**
+     * Company update article image
+     */
+    COMPANY_UPDATE_ARTICLE_IMAGE(new URN("urn:li:digitalmediaRecipe:companyUpdate-article-image")),
+    /**
+     * SSU carousel card image
+     */
+    SSU_CAROUSEL_CARD_IMAGE(new URN("urn:li:digitalmediaRecipe:ssu-carousel-card-image")),
+    /**
+     * Right rail logo image
+     */
+    RIGHT_RAIL_LOGO_IMAGE(new URN("urn:li:digitalmediaRecipe:rightRail-logo-image"));
     
     @Getter
     private URN recipeURN;
-    
+
+    /**
+     * Instantiates new recipe URN
+     * @param recipeURN the recipe URN
+     */
     RecipeURN(URN recipeURN) {
       this.recipeURN = recipeURN;
     }

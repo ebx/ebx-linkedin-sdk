@@ -19,7 +19,6 @@ package com.echobox.api.linkedin.types.assets;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.urn.URN;
-
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -76,7 +75,10 @@ public class CompleteMultiPartUploadBody {
     @Setter
     @LinkedIn
     private Headers headers;
-  
+
+    /**
+     * The HTTP status code.
+     */
     @Getter
     @Setter
     @LinkedIn

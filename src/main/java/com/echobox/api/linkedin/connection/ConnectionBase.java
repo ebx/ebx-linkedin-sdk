@@ -34,14 +34,31 @@ import java.util.List;
  *
  */
 public abstract class ConnectionBase {
-  
+
+  /**
+   * The LinkedIn client.
+   */
   protected LinkedInClient linkedinClient;
-  
+
+  /**
+   * Instantiates a new connection base.
+   *
+   * @param linkedinClient the LinkedIn client
+   */
   protected ConnectionBase(LinkedInClient linkedinClient) {
     ValidationUtils.verifyParameterPresence("linkedinClient", linkedinClient);
     this.linkedinClient = linkedinClient;
   }
-  
+
+  /**
+   * Gets list from query.
+   *
+   * @param <T>            the type parameter
+   * @param object         The name of the connection
+   * @param connectionType the connection type
+   * @param parameters     URL parameters to include in the API call
+   * @return the list from query
+   */
   protected <T> List<T> getListFromQuery(String object, Class<T> connectionType,
       Parameter... parameters) {
     List<T> resultList = new ArrayList<>();
@@ -56,13 +73,26 @@ public abstract class ConnectionBase {
 
     return resultList;
   }
-  
+
+  /**
+   * Validate URN.
+   *
+   * @param urnEntityType the urn entity type
+   * @param urn           the uniform resource name
+   */
   protected void validateURN(URNEntityType urnEntityType, URN urn) {
     if (!urnEntityType.equals(urn.resolveURNEntityType())) {
       throw new IllegalArgumentException("The URN should be type " + urnEntityType);
     }
   }
-  
+
+  /**
+   * Add parameters from URNs.
+   *
+   * @param params the list of parameters
+   * @param key    the key to be added
+   * @param urns   the list of URNs
+   */
   protected void addParametersFromURNs(List<Parameter> params, String key, List<URN> urns) {
     if (urns != null && !urns.isEmpty()) {
       for (int i = 0; i < urns.size(); i++) {
@@ -70,7 +100,14 @@ public abstract class ConnectionBase {
       }
     }
   }
-  
+
+  /**
+   * Add start and count parameters.
+   *
+   * @param params the list of parameters
+   * @param start  the index of the first item you want results for.
+   * @param count  the number of items needed to be included on each page of results
+   */
   protected void addStartAndCountParams(List<Parameter> params, Integer start, Integer count) {
     if (start != null && start < 0) {
       throw new IllegalArgumentException("start parameter must be a positive integer");

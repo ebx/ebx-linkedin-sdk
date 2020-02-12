@@ -19,7 +19,6 @@ package com.echobox.api.linkedin.types.assets;
 
 import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapper;
 import com.echobox.api.linkedin.types.urn.URN;
-
 import org.junit.Assert;
 import org.junit.Test;
 

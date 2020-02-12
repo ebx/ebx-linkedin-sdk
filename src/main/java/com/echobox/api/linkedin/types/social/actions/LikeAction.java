@@ -20,7 +20,6 @@ package com.echobox.api.linkedin.types.social.actions;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.objectype.AuditStamp;
 import com.echobox.api.linkedin.types.urn.ContainsURN;
-
 import lombok.Getter;
 import lombok.Setter;
 

@@ -26,7 +26,6 @@ import com.echobox.api.linkedin.types.statistics.page.PageStatisticsCategories.P
 import com.echobox.api.linkedin.types.statistics.page.PageStatisticsCategories.PageStatisticsBySeniority;
 import com.echobox.api.linkedin.types.statistics.page.PageStatisticsCategories.PageStatisticsByStaffCountRange;
 import com.echobox.api.linkedin.types.urn.URN;
-
 import lombok.Getter;
 import lombok.Setter;
 

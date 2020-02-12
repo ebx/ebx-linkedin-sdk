@@ -18,10 +18,8 @@
 package com.echobox.api.linkedin.types.v1;
 
 import com.echobox.api.linkedin.logging.LinkedInLogger;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
 import org.slf4j.Logger;
 
 /**
@@ -31,15 +29,42 @@ import org.slf4j.Logger;
  */
 @RequiredArgsConstructor
 public enum EmployeeCountRange implements CodeType<String> {
-  
+
+  /**
+   * XXXS employee count range.
+   */
   XXXS("A", "1", null, 1),
+  /**
+   * XXS employee count range.
+   */
   XXS("B", "2-10", 2, 10),
+  /**
+   * XS employee count range.
+   */
   XS("C", "11-50", 11, 50),
+  /**
+   * S employee count range.
+   */
   S("D", "51-200", 51, 200),
+  /**
+   * M employee count range.
+   */
   M("E", "201-500", 201, 500),
+  /**
+   * L employee count range.
+   */
   L("F", "501-1000", 501, 1000),
+  /**
+   * XL employee count range.
+   */
   XL("G", "1001-5000", 1001, 5000),
+  /**
+   * XXL employee count range.
+   */
   XXL("H", "5001-10,000", 5001, 10000),
+  /**
+   * XXXL employee count range.
+   */
   XXXL("I", "10,000+", 10001, null);
   
   private static Logger LOGGER = LinkedInLogger.getLoggerInstance();
@@ -49,10 +74,16 @@ public enum EmployeeCountRange implements CodeType<String> {
   
   @Getter
   private final String name;
-  
+
+  /**
+   * The minimum employee count range.
+   */
   @Getter
   public final Integer min;
-  
+
+  /**
+   * The maximum employee count range.
+   */
   @Getter
   public final Integer max;
   

@@ -24,7 +24,6 @@ import com.echobox.api.linkedin.types.objectype.Locale;
 import com.echobox.api.linkedin.types.objectype.LocaleString;
 import com.echobox.api.linkedin.types.objectype.MultiLocaleString;
 import com.echobox.api.linkedin.types.urn.URN;
-
 import lombok.Getter;
 import lombok.Setter;
 

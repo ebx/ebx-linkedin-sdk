@@ -27,8 +27,8 @@ import static java.lang.String.format;
 
 import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapper;
 import com.echobox.api.linkedin.jsonmapper.JsonMapper;
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.util.DateUtils;
-
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
@@ -85,7 +85,7 @@ public final class Parameter {
    * <p>
    * The {@code value} parameter is often a {@link String} or primitive type like {@link Integer}, 
    * but you may pass in a {@link java.util.List}, {@link java.util.Map}, or your own 
-   * <tt>@LinkedIn</tt>-annotated Javabean and it will be converted to JSON automatically. 
+   * {@link LinkedIn} annotated Javabean and it will be converted to JSON automatically.
    * 
    * @param name
    *          The parameter name.
@@ -105,7 +105,7 @@ public final class Parameter {
    * <p>
    * The {@code value} parameter is often a {@link String} or primitive type like {@link Integer},
    * but you may pass in a {@link java.util.List}, {@link java.util.Map}, or your own
-   * <tt>@LinkedIn</tt>-annotated Javabean and it will be converted to JSON automatically. 
+   * {@link LinkedIn} annotated Javabean and it will be converted to JSON automatically.
    * 
    * @param name
    *          The parameter name.

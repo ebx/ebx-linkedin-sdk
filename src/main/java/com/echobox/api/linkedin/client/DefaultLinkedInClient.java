@@ -41,7 +41,6 @@ import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.ParseException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
@@ -67,21 +66,31 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    * HTTP parameter names.
    */
   protected static final String METHOD_PARAM_NAME = "method";
+  /**
+   * The grant type parameter name.
+   */
   protected static final String GRANT_TYPE_PARAM_NAME = "grant_type";
+  /**
+   * The code parameter name.
+   */
   protected static final String CODE_PARAM_NAME = "code";
+  /**
+   * The redirect URI parameter name
+   */
   protected static final String REDIRECT_URI_PARAM_NAME = "redirect_uri";
+  /**
+   * The client's ID parameter name
+   */
   protected static final String CLIENT_ID_PARAM_NAME = "client_id";
+  /**
+   * The client's secret parameter name
+   */
   protected static final String CLIENT_SECRET_PARAM_NAME = "client_secret";
 
   /**
    * Reserved "result format" parameter name.
    */
   protected static final String FORMAT_PARAM_NAME = "format";
-
-  /**
-   * API error response 'error' attribute name.
-   */
-  protected static final String ERROR_ATTRIBUTE_NAME = "error";
 
   /**
    * API error response 'code' attribute name.
@@ -400,6 +409,11 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     return LINKEDIN_API_ENDPOINT_URL + '/' + apiVersion.getUrlElement();
   }
 
+  /**
+   * Gets LinkedIn media endpoint URL
+   *
+   * @return LinkedIn media endpoint URL
+   */
   protected String getLinkedInMediaEndpointUrl() {
     return LINKEDIN_MEDIA_API_ENDPOINT_URL;
   }
@@ -575,11 +589,23 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     return httpDeleteFallback;
   }
 
+  /**
+   * Make request and process response (json).
+   *
+   * @param requestor Requestor interface to make requests to the LinkedIn API
+   * @return the JSON response
+   */
   protected String makeRequestAndProcessResponseJSON(Requestor requestor) {
     Response response = makeRequestAndProcessResponse(requestor);
     return response.getBody();
   }
-  
+
+  /**
+   * Make request and process the response
+   *
+   * @param requestor Requestor interface to make requests to the LinkedIn API
+   * @return the response
+   */
   protected Response makeRequestAndProcessResponse(Requestor requestor) {
     Response response;
     
@@ -596,6 +622,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     // throw an exception.
     if (HttpURLConnection.HTTP_OK != response.getStatusCode()
         && HttpURLConnection.HTTP_CREATED != response.getStatusCode()
+        && HttpURLConnection.HTTP_NO_CONTENT != response.getStatusCode()
         && HttpURLConnection.HTTP_BAD_REQUEST != response.getStatusCode()
         && HttpURLConnection.HTTP_UNAUTHORIZED != response.getStatusCode()
         && HttpURLConnection.HTTP_NOT_FOUND != response.getStatusCode()
@@ -609,14 +636,24 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     
     String json = response.getBody();
     
-    // If the response contained an error code, throw an exception.
-    throwLinkedInResponseStatusExceptionIfNecessary(json, response.getStatusCode());
+    // If the response is 2XX then we do not need to throw an error response
+    if (HttpURLConnection.HTTP_OK != response.getStatusCode()
+        && HttpURLConnection.HTTP_CREATED != response.getStatusCode()
+        && HttpURLConnection.HTTP_NO_CONTENT != response.getStatusCode()) {
+      // If the response contained an error code, throw an exception.
+      throwLinkedInResponseStatusExceptionIfNecessary(json, response.getStatusCode());
+    }
     
-    // If there was no response error information and this was a 500 or 401
+    // If there was no response error information and this was a 500
     // error, something weird happened on LinkedIn's end. Bail.
-    if (HttpURLConnection.HTTP_INTERNAL_ERROR == response.getStatusCode()
-        || HttpURLConnection.HTTP_UNAUTHORIZED == response.getStatusCode()) {
+    if (HttpURLConnection.HTTP_INTERNAL_ERROR == response.getStatusCode()) {
       throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
+    }
+  
+    // If there was no response error information and this was a 401
+    // error, something weird happened on LinkedIn's end. Assume it is a Oauth error.
+    if (HttpURLConnection.HTTP_UNAUTHORIZED == response.getStatusCode()) {
+      throw new LinkedInOAuthException("LinkedIn request failed", response.getStatusCode());
     }
     
     return response;
@@ -628,17 +665,22 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    *
    */
   protected interface Requestor {
+    /**
+     * Make a request
+     * @return the received response
+     * @throws IOException the IO exception
+     */
     Response makeRequest() throws IOException;
   }
 
   /**
-   * Throws an exception if LinkedIn returned an error response. 
-   * This method extracts relevant information from the error JSON and throws an exception which 
+   * Throws an exception if LinkedIn returned an error response.
+   * This method extracts relevant information from the error JSON and throws an exception which
    * encapsulates it for end-user consumption.
    * For API errors:
    * If the {@code error} JSON field is present, we've got a response status error for this API
    * call.
-   * 
+   *
    * @param json
    *          The JSON returned by LinkedIn in response to an API call.
    * @param httpStatusCode
@@ -652,10 +694,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
       skipResponseStatusExceptionParsing(json);
 
       JsonObject errorObject = Json.parse(json).asObject();
-
-      if (errorObject.get(ERROR_ATTRIBUTE_NAME) == null) {
-        return;
-      }
 
       // If there's an Integer error code, pluck it out.
       Integer errorCode = errorObject.get(ERROR_CODE_ATTRIBUTE_NAME) != null

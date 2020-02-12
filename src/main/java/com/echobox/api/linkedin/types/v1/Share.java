@@ -18,7 +18,6 @@
 package com.echobox.api.linkedin.types.v1;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;

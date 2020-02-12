@@ -22,9 +22,18 @@ package com.echobox.api.linkedin.types.assets;
  * @author Joanna
  */
 public enum RelationshipType {
-  
+
+  /**
+   * Generic relationship type.
+   */
   GENERIC,
+  /**
+   * Creator relationship type.
+   */
   CREATOR,
+  /**
+   * Owner relationship type.
+   */
   OWNER;
   
 }

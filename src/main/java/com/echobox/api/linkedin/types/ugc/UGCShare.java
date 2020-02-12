@@ -21,7 +21,6 @@ import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.LinkedInURNIdType;
 import com.echobox.api.linkedin.types.objectype.AuditStamp;
 import com.echobox.api.linkedin.types.urn.URN;
-
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
