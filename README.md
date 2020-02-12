@@ -122,7 +122,9 @@ included in any downstream dependencies that always desire the latest changes (s
 Each merge into the MASTER branch will automatically get released to Maven central and github 
 releases, using the current library version. As such, following every merge to master, the version 
 number of the dev branch should be incremented and will represent 'Work In Progress' towards the 
-next release.
+next release. 
+
+Please use a merge (not rebase) commit when merging dev into master to perform the release.
 
 To create a full release to Maven central please follow these steps:
 1. Ensure the `CHANGELOG.md` is up to date with all the changes in the release, if not please raise 
