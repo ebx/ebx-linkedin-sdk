@@ -21,7 +21,6 @@ import static org.junit.Assert.assertEquals;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
-
 import org.junit.Test;
 
 import java.util.Map;

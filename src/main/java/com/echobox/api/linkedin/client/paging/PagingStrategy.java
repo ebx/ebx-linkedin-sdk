@@ -19,9 +19,7 @@ package com.echobox.api.linkedin.client.paging;
 
 import com.echobox.api.linkedin.util.URLUtils;
 import com.eclipsesource.json.JsonObject;
-
 import lombok.Getter;
-
 import org.apache.commons.lang3.StringUtils;
 
 /**

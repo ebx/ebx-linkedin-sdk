@@ -19,7 +19,6 @@ package com.echobox.api.linkedin.types.ugc;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.social.actions.CommentAction;
-
 import lombok.Getter;
 import lombok.Setter;
 

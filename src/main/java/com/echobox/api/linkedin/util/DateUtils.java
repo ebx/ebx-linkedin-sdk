@@ -26,7 +26,6 @@ package com.echobox.api.linkedin.util;
 import static java.lang.String.format;
 
 import com.echobox.api.linkedin.logging.LinkedInLogger;
-
 import org.slf4j.Logger;
 
 import java.text.ParseException;

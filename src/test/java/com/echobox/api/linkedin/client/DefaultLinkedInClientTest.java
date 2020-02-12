@@ -18,7 +18,6 @@
 package com.echobox.api.linkedin.client;
 
 import com.echobox.api.linkedin.exception.LinkedInOAuthException;
-
 import org.junit.Assert;
 import org.junit.Test;
 

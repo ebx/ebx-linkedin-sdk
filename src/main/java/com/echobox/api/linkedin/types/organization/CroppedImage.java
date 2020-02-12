@@ -20,7 +20,6 @@ package com.echobox.api.linkedin.types.organization;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.ImageV2Elements;
 import com.echobox.api.linkedin.types.urn.URN;
-
 import lombok.Getter;
 import lombok.Setter;
 

@@ -22,7 +22,6 @@ import static org.junit.Assert.assertNull;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
-
 import org.junit.Test;
 
 /**
