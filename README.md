@@ -1,4 +1,4 @@
-[![Maven Central](https://img.shields.io/maven-central/v/com.echobox/ebx-linkedin-sdk.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.echobox%22%20AND%20a:%22ebx-linkedin-sdk%22) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://raw.githubusercontent.com/ebx/ebx-linkedin-sdk/master/LICENSE)
+[![Maven Central](https://img.shields.io/maven-central/v/com.echobox/ebx-linkedin-sdk.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.echobox%22%20AND%20a:%22ebx-linkedin-sdk%22) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://raw.githubusercontent.com/ebx/ebx-linkedin-sdk/master/LICENSE) 
 
 # ebx-linkedin-sdk
 
@@ -22,7 +22,7 @@ use:
 <dependency>
   <groupId>com.echobox</groupId>
   <artifactId>ebx-linkedin-sdk</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
 </dependency>
 ```
 
@@ -122,7 +122,9 @@ included in any downstream dependencies that always desire the latest changes (s
 Each merge into the MASTER branch will automatically get released to Maven central and github 
 releases, using the current library version. As such, following every merge to master, the version 
 number of the dev branch should be incremented and will represent 'Work In Progress' towards the 
-next release.
+next release. 
+
+Please use a merge (not rebase) commit when merging dev into master to perform the release.
 
 To create a full release to Maven central please follow these steps:
 1. Ensure the `CHANGELOG.md` is up to date with all the changes in the release, if not please raise 
