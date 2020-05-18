@@ -36,7 +36,7 @@
   representation of the urn. Instead of using `URNEntityType.name()`
   `URNEntityType.getEntityValue()` should be used to support UGCPosts.
 
-## 1.0.3 (May 18, 2020)
+## 1.0.3 (February 14, 2020)
 *  `DefaultLinkedInClient.makeRequestAndProcessResponse` handles 401
    errors as `LinkedInOAuthException` rather than
    `LinkedInNetworkException`
