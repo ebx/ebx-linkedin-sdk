@@ -53,16 +53,26 @@ public class V2PagingImpl extends PagingStrategy {
           // You will know that you have reached the end of the dataset when your response
           // contains less elements in the entities block of the response than your count
           // parameter requested.
-          Map<String, List<String>> extractParametersFromUrl =
-              URLUtils.extractParametersFromUrl(fullEndpoint);
-          if (extractParametersFromUrl.containsKey("count")) {
-            // Check if the count is less than the elements returned - if so we're at the last page
-            int requestedCount = Integer.parseInt(extractParametersFromUrl.get("count").get(0));
-            if (elements.size() < requestedCount) {
-              nextPageUrl = null;
-              setPreviousPageURL(fullEndpoint, start, count);
-              return;
-            }
+//          Map<String, List<String>> extractParametersFromUrl =
+//              URLUtils.extractParametersFromUrl(fullEndpoint);
+//          if (extractParametersFromUrl.containsKey("count")) {
+//            // Check if the count is less than the elements returned - if so we're at the last page
+//            int requestedCount = Integer.parseInt(extractParametersFromUrl.get("count").get(0));
+//            if (elements.size() <= requestedCount) {
+//              nextPageUrl = null;
+//              setPreviousPageURL(fullEndpoint, start, count);
+//              return;
+//            }
+//          }
+  
+          // LinkedIn paging seems to be currently broken and it might return return elements
+          // where the count is less than the number of items requested but in fact there are
+          // more elements and LinkedIn API has not returned them. Instead, continue to explore
+          // the next page until there are no more pages.
+          if (elements.size() <= 0) {
+            nextPageUrl = null;
+            setPreviousPageURL(fullEndpoint, start, count);
+            return;
           }
 
           // Paging is available
