@@ -52,7 +52,7 @@ public class V2PagingImplTest {
   }
   
   /**
-   *Test providing
+   * Test pagination should stop if there are no more elements returned in the response
    */
   @Test
   public void testNoElementsShouldReturnNullNextPrevURLs() {
