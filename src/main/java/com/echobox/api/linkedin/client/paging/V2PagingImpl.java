@@ -17,12 +17,8 @@
 
 package com.echobox.api.linkedin.client.paging;
 
-import com.echobox.api.linkedin.util.URLUtils;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * The paging strategy for V1 JSON responses
@@ -56,7 +52,7 @@ public class V2PagingImpl extends PagingStrategy {
 //          Map<String, List<String>> extractParametersFromUrl =
 //              URLUtils.extractParametersFromUrl(fullEndpoint);
 //          if (extractParametersFromUrl.containsKey("count")) {
-//            // Check if the count is less than the elements returned - if so we're at the last page
+            // Check if the count is less than the elements returned - if so we're at the last page
 //            int requestedCount = Integer.parseInt(extractParametersFromUrl.get("count").get(0));
 //            if (elements.size() <= requestedCount) {
 //              nextPageUrl = null;

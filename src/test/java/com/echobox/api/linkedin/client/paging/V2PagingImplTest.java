@@ -57,7 +57,8 @@ public class V2PagingImplTest {
   @Test
   public void testNoElementsShouldReturnNullNextPrevURLs() {
     PagingStrategy strategy = new V2PagingImpl();
-    strategy.populatePages(Json.parse("{\"paging\":{\"count\":5,\"start\":0},\"elements\":[]}").asObject(),
+    strategy.populatePages(Json.parse("{\"paging\":{\"count\":5,\"start\":0},\"elements\":[]}")
+            .asObject(),
         "https://test.com/test");
     assertNull(strategy.getNextPageUrl());
     assertNull(strategy.getPreviousPageUrl());
