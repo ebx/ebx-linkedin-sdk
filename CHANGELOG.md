@@ -57,4 +57,10 @@
 * Add `NATIVE_DOCUMENT`, `URN_REFERENCE`, `LIVE_VIDEO` to UGC ShareMediaCategory enum.
 * Checkstyle plugin version bumped. Some code reformatted in order to satisfy new checkstyle rules.
 
-## 1.0.4 (Work in progress)
+## 1.0.4
+* Put in a place an interim fix for Linkedin V2 pagingation. It seems like LinkedIn's pagination 
+is incorrectly returning the number of elements where the number of elements is less than the 
+request amount even though there are are in fact more more results. This fix should continue to 
+the next page until there are no more results.
+
+## 1.0.5 (Work in progress)
