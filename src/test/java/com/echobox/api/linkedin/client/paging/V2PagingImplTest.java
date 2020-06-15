@@ -52,19 +52,32 @@ public class V2PagingImplTest {
   }
   
   /**
-   * Test if the provided count in the URL is greater than the number of elements returned then we
-   * have reached the last page
-   * There is not previous page URL as the start is at 0
+   * Test pagination should stop if there are no more elements returned in the response
    */
   @Test
-  public void testNextAndPrevURLsAreBothNull() {
+  public void testNoElementsShouldReturnNullNextPrevURLs() {
     PagingStrategy strategy = new V2PagingImpl();
-    strategy.populatePages(
-        Json.parse("{\"paging\":{\"count\":5,\"start\":0},\"elements\":[1]}").asObject(),
-        "https://test.com/test?start=10&count=5");
+    strategy.populatePages(Json.parse("{\"paging\":{\"count\":5,\"start\":0},\"elements\":[]}")
+            .asObject(),
+        "https://test.com/test");
     assertNull(strategy.getNextPageUrl());
     assertNull(strategy.getPreviousPageUrl());
   }
+  
+//  /**
+//   * Test if the provided count in the URL is greater than the number of elements returned then we
+//   * have reached the last page
+//   * There is not previous page URL as the start is at 0
+//   */
+//  @Test
+//  public void testNextAndPrevURLsAreBothNull() {
+//    PagingStrategy strategy = new V2PagingImpl();
+//    strategy.populatePages(
+//        Json.parse("{\"paging\":{\"count\":5,\"start\":0},\"elements\":[1]}").asObject(),
+//        "https://test.com/test?start=10&count=5");
+//    assertNull(strategy.getNextPageUrl());
+//    assertNull(strategy.getPreviousPageUrl());
+//  }
   
   /**
    * If the start = 0, there should be no previous page URL available
@@ -93,18 +106,18 @@ public class V2PagingImplTest {
     assertEquals("https://test.com/test?start=0&count=5", strategy.getPreviousPageUrl());
   }
   
-  /**
-   * If the requested count > the number of elements, there next page URL should be null
-   * If the start != 0, there should be a previous page URL with no overlap
-   */
-  @Test
-  public void testNextURLIsNullAndPrevURLsAvailable() {
-    PagingStrategy strategy = new V2PagingImpl();
-    strategy.populatePages(
-        Json.parse("{\"paging\":{\"count\":5,\"start\":15},\"elements\":[1]}").asObject(),
-        "https://test.com/test?start=5&count=5");
-    assertNull(strategy.getNextPageUrl());
-    assertEquals("https://test.com/test?start=10&count=5", strategy.getPreviousPageUrl());
-  }
+//  /**
+//   * If the requested count > the number of elements, there next page URL should be null
+//   * If the start != 0, there should be a previous page URL with no overlap
+//   */
+//  @Test
+//  public void testNextURLIsNullAndPrevURLsAvailable() {
+//    PagingStrategy strategy = new V2PagingImpl();
+//    strategy.populatePages(
+//        Json.parse("{\"paging\":{\"count\":5,\"start\":15},\"elements\":[1]}").asObject(),
+//        "https://test.com/test?start=5&count=5");
+//    assertNull(strategy.getNextPageUrl());
+//    assertEquals("https://test.com/test?start=10&count=5", strategy.getPreviousPageUrl());
+//  }
 
 }
