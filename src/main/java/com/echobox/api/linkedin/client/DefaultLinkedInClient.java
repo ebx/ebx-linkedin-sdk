@@ -254,12 +254,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     final String fullEndpoint = createEndpointForApiCall(connection, false);
     
     List<Parameter> parametersToAdd = new ArrayList<>(Arrays.asList(parameters));
-    if (parametersToAdd.stream().noneMatch(parameter -> parameter.name.equals("start"))) {
-      parametersToAdd.add(Parameter.with("start", 0));
-    }
-    if (parametersToAdd.stream().noneMatch(parameter -> parameter.name.equals("count"))) {
-      parametersToAdd.add(Parameter.with("count", 10));
-    }
     Parameter[] queryParams = parametersToAdd.toArray(new Parameter[parametersToAdd.size()]);
     String parameterString = toParameterString(queryParams);
     final String finalParameterString =
