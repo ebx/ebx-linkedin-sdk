@@ -73,4 +73,7 @@ parameter is provided in the initial request, `V2PaginationImpl` will continue t
 all pages until the number of elements in the response no longer equals the expected count. 
 This will avoid infinitely looping over pages until an empty page is discovered.
 
-## 1.0.6 (Work in progress)
+## 1.0.6 (June 18, 2020)
+* Accidentally skipped this version - no changes
+
+## 1.0.7 (Work in progress)
