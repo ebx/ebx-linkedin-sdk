@@ -64,6 +64,9 @@ request amount even though there are in fact more results. This fix should conti
 the next page until there are no more results.
 
 ## 1.0.5 (June 18, 2020)
+* Accidentally skipped this version - no changes
+
+## 1.0.6 (June 18, 2020)
 * After receiving a response from LinkedIn on the issues surrounding V2 pagination where the 
 `count` value in the response object does not match the number of elements returned or in fact in
 some cases where not all elements are returned, it's best to not provide pagination parameters in
@@ -73,4 +76,4 @@ parameter is provided in the initial request, `V2PaginationImpl` will continue t
 all pages until the number of elements in the response no longer equals the expected count. 
 This will avoid infinitely looping over pages until an empty page is discovered.
 
-## 1.0.6 (Work in progress)
+## 1.0.7 (Work in progress)
