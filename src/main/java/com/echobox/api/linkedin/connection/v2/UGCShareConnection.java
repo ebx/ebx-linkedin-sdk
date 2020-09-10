@@ -20,6 +20,7 @@ package com.echobox.api.linkedin.connection.v2;
 import com.echobox.api.linkedin.client.Connection;
 import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
+import com.echobox.api.linkedin.types.UGCPostsSortBy;
 import com.echobox.api.linkedin.types.ugc.UGCShare;
 import com.echobox.api.linkedin.types.ugc.ViewContext;
 import com.echobox.api.linkedin.types.urn.URN;
@@ -99,6 +100,7 @@ public class UGCShareConnection extends ConnectionBaseV2 {
     parameters.add(Parameter.with(QUERY_KEY, AUTHORS));
     addParametersFromURNs(parameters, AUTHORS, Arrays.asList(authorURN));
     addStartAndCountParams(parameters, null, count);
+    addSortByParam(parameters, UGCPostsSortBy.CREATED);
     return linkedinClient.fetchConnection(UGC_POST, UGCShare.class,
         parameters.toArray(new Parameter[parameters.size()]));
   }
