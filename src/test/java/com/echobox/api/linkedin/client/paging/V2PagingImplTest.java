@@ -22,7 +22,6 @@ import static org.junit.Assert.assertNull;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
-
 import org.junit.Test;
 
 /**
@@ -49,6 +48,60 @@ public class V2PagingImplTest {
     PagingStrategy strategy = new V2PagingImpl();
     strategy.populatePages(null, "https://test.com/test");
     assertNull(strategy.getNextPageUrl());
+    assertNull(strategy.getPreviousPageUrl());
+  }
+  
+  /**
+   * Test pagination should stop if there are no more elements returned in the response
+   */
+  @Test
+  public void testNoElementsShouldReturnNullNextPrevURLs() {
+    PagingStrategy strategy = new V2PagingImpl();
+    strategy.populatePages(Json.parse("{\"paging\":{\"count\":5,\"start\":0},\"elements\":[]}")
+            .asObject(),
+        "https://test.com/test");
+    assertNull(strategy.getNextPageUrl());
+    assertNull(strategy.getPreviousPageUrl());
+  }
+  
+  /**
+   * Test pagination should stop if the number of elements do not match the number of elements
+   * returned in the response with no explicit URL count and start params
+   */
+  @Test
+  public void testMoreElementsReturnedThanIntended() {
+    PagingStrategy strategy = new V2PagingImpl();
+    strategy.populatePages(Json.parse("{\"paging\":{\"count\":3,\"start\":0},\"elements\":[1, 2, "
+            + "3, 4, 5]}").asObject(),
+        "https://test.com/test");
+    assertNull(strategy.getNextPageUrl());
+    assertNull(strategy.getPreviousPageUrl());
+  }
+  
+  /**
+   * Test pagination should stop if the number of elements do not match the number of elements
+   * returned in the response with no explicit URL count and start params
+   */
+  @Test
+  public void testLessElementsReturnedThanIntended() {
+    PagingStrategy strategy = new V2PagingImpl();
+    strategy.populatePages(Json.parse("{\"paging\":{\"count\":5,\"start\":0},\"elements\":[1, 2]}")
+            .asObject(),
+        "https://test.com/test");
+    assertNull(strategy.getNextPageUrl());
+    assertNull(strategy.getPreviousPageUrl());
+  }
+  
+  /**
+   * Test pagination should not stop as there might be more elements on the next page
+   */
+  @Test
+  public void testNumElementsReturnedMatchAndContinue() {
+    PagingStrategy strategy = new V2PagingImpl();
+    strategy.populatePages(Json.parse("{\"paging\":{\"count\":2,\"start\":0},\"elements\":[1, 2]}")
+            .asObject(),
+        "https://test.com/test");
+    assertEquals("https://test.com/test?start=2&count=2", strategy.getNextPageUrl());
     assertNull(strategy.getPreviousPageUrl());
   }
   

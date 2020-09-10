@@ -19,7 +19,6 @@ package com.echobox.api.linkedin.types;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.engagement.TimeGranularityType;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;

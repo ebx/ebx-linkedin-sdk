@@ -19,7 +19,6 @@ package com.echobox.api.linkedin.types.request;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.eclipsesource.json.JsonObject;
-
 import lombok.Data;
 
 /**

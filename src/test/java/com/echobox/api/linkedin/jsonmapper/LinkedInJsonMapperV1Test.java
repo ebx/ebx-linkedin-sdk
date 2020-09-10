@@ -25,7 +25,6 @@ import static org.junit.Assert.assertTrue;
 
 import com.echobox.api.linkedin.types.v1.Company;
 import com.echobox.api.linkedin.types.v1.Location;
-
 import org.junit.Test;
 
 import java.util.Arrays;

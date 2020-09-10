@@ -26,7 +26,6 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.ParseException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 

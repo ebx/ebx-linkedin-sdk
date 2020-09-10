@@ -48,7 +48,6 @@ import com.echobox.api.linkedin.types.urn.location.PlaceURN;
 import com.echobox.api.linkedin.types.urn.location.RegionURN;
 import com.echobox.api.linkedin.types.urn.location.StateURN;
 import com.echobox.api.linkedin.types.v1.Company;
-
 import org.junit.Assert;
 import org.junit.Test;
 

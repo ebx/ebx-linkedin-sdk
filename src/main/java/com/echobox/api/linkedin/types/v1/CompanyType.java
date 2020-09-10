@@ -18,10 +18,8 @@
 package com.echobox.api.linkedin.types.v1;
 
 import com.echobox.api.linkedin.logging.LinkedInLogger;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
 import org.slf4j.Logger;
 
 /**

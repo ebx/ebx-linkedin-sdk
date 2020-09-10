@@ -63,8 +63,15 @@ public class V2PagingImpl extends PagingStrategy {
               setPreviousPageURL(fullEndpoint, start, count);
               return;
             }
+          } else {
+            // No explicit count was requested, check if there are no more datapoints
+            if (elements.size() != count) {
+              nextPageUrl = null;
+              setPreviousPageURL(fullEndpoint, start, count);
+              return;
+            }
           }
-
+  
           // Paging is available
           setNextPageURL(fullEndpoint, start, count);
           setPreviousPageURL(fullEndpoint, start, count);

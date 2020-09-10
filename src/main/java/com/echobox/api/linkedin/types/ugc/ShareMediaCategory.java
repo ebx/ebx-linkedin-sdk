@@ -74,9 +74,27 @@ public enum ShareMediaCategory {
   CAROUSEL,
   
   /**
-   *    * Represents shared content of various types that should be rendered in carousel format
-   *    .Represents shared content that only contains topics.
+   * Represents shared content that only contains topics.
    */
-  TOPIC;
+  TOPIC,
+  
+  /**
+   * Represents shared content of document file types that are uploaded natively.
+   */
+  NATIVE_DOCUMENT,
+  
+  /**
+   * Refer to the media urn for the category of the content, except when urn type is digital media
+   * asset because this urn type does not expose the content type. Use mediaType in ShareMedia
+   * when disambiguation is required.
+   */
+  URN_REFERENCE,
+  
+  /**
+   * Represents shared content of a video that is streamed live. This means that the ugcPost may
+   * be consumed during recording. The resource serving the media is the source of truth for
+   * whether the video is currently live.
+   */
+  LIVE_VIDEO;
 
 }
