@@ -76,4 +76,8 @@ parameter is provided in the initial request, `V2PaginationImpl` will continue t
 all pages until the number of elements in the response no longer equals the expected count. 
 This will avoid infinitely looping over pages until an empty page is discovered.
 
-## 1.0.7 (Work in progress)
+## 1.0.7 (September 17, 2020)
+* UGCShareConnection.retrieveUGCPostsByAuthors() now includes sortBy param to get posts
+sorted by creation date.
+
+## 1.0.8 (Work in progress)
