@@ -49,6 +49,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
 
   private static final String ORGANIZATIONAL_ENTITY_ACLS = "/organizationalEntityAcls";
   private static final String ORGANIZATIONS = "/organizations";
+  private static final String ORGANIZATIONS_BRANDS = "/organizationsBrands";
   private static final String ORGANIZATIONAL_ENTITY_FOLOWER_STATS =
       "/organizationalEntityFollowerStatistics";
   private static final String ORGANIZATIONAL_PAGE_STATS = "/organizationPageStatistics";
@@ -222,10 +223,19 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * Use organization brand id to find all all of its information
    * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api#retrieve-organization-brands">
    * Retrieve an organization brand</a>
-   * @param organizationBrandId organizationBrandId
+   * @param organizationBrandURN organizationBrandId
+   * @param fields the fields to request
+   * @return the organization brand
    */
-  public void retrieveOrganizationBrand(long organizationBrandId) {
-    throw new UnsupportedOperationException("Operation is not implemented yet.");
+  public OrganizationBrand retrieveOrganizationBrand(URN organizationBrandURN, Parameter fields) {
+    validateOrganizationURN("organizationBrandURN", organizationBrandURN);
+    List<Parameter> parameters = new ArrayList<>();
+    if (fields != null) {
+      parameters.add(fields);
+    }
+    String id = organizationBrandURN.getId();
+    return linkedinClient.fetchObject(ORGANIZATIONS_BRANDS + "/" + id, 
+        OrganizationBrand.class, parameters.toArray(new Parameter[0]));
   }
 
   /**
@@ -244,6 +254,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api#retrieve-organization-brands">
    * Retrieve Organization Brand by Parent Organization</a>
    * @param organizationURN parent organization URN
+   * @return all the organization brands
    */
   public List<OrganizationBrand> retrieveOrganizationBrandByParentOrganization(
       URN organizationURN) {
