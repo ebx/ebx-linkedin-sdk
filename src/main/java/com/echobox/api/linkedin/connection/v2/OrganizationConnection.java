@@ -24,6 +24,7 @@ import com.echobox.api.linkedin.types.engagement.ShareStatistic;
 import com.echobox.api.linkedin.types.organization.AccessControl;
 import com.echobox.api.linkedin.types.organization.NetworkSize;
 import com.echobox.api.linkedin.types.organization.Organization;
+import com.echobox.api.linkedin.types.organization.OrganizationBrand;
 import com.echobox.api.linkedin.types.statistics.OrganizationFollowerStatistics;
 import com.echobox.api.linkedin.types.statistics.page.FollowerStatistic;
 import com.echobox.api.linkedin.types.statistics.page.Statistics;
@@ -69,6 +70,9 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   private static final String ORGANIZATIONAL_ENTITY_VALUE = "organizationalEntity";
   private static final String ORGANIZATION_VALUE = "organization";
   private static final String COMPANY_FOLLOWED_BY_MEMEBER = "CompanyFollowedByMember";
+  
+  private static final String PARENT_KEY = "parent";
+  private static final String PARENT_ORGANIZATION_VALUE = "parentOrganization";
 
   /**
    * Initialise an organization connection
@@ -241,8 +245,16 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * Retrieve Organization Brand by Parent Organization</a>
    * @param organizationURN parent organization URN
    */
-  public void retrieveOrganizationBrandByParentOrganization(URN organizationURN) {
-    throw new UnsupportedOperationException("Operation is not implemented yet.");
+  public List<OrganizationBrand> retrieveOrganizationBrandByParentOrganization(
+      URN organizationURN) {
+    validateOrganizationURN("organizationURN", organizationURN);
+    
+    List<Parameter> parameters = new ArrayList<>();
+    parameters.add(Parameter.with(QUERY_KEY, PARENT_ORGANIZATION_VALUE));
+    parameters.add(Parameter.with(PARENT_KEY, organizationURN.toString()));
+    
+    return getListFromQuery(ORGANIZATIONS, OrganizationBrand.class,
+        parameters.toArray(new Parameter[0]));
   }
 
   /**
