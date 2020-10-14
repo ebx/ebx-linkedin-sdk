@@ -49,7 +49,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
 
   private static final String ORGANIZATIONAL_ENTITY_ACLS = "/organizationalEntityAcls";
   private static final String ORGANIZATIONS = "/organizations";
-  private static final String ORGANIZATIONS_BRANDS = "/organizationsBrands";
+  private static final String ORGANIZATIONS_BRANDS = "/organizationBrands";
   private static final String ORGANIZATIONAL_ENTITY_FOLOWER_STATS =
       "/organizationalEntityFollowerStatistics";
   private static final String ORGANIZATIONAL_PAGE_STATS = "/organizationPageStatistics";
@@ -228,7 +228,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @return the organization brand
    */
   public OrganizationBrand retrieveOrganizationBrand(URN organizationBrandURN, Parameter fields) {
-    validateOrganizationURN("organizationBrandURN", organizationBrandURN);
+    validateOrganizationBrandURN("organizationBrandURN", organizationBrandURN);
     List<Parameter> parameters = new ArrayList<>();
     if (fields != null) {
       parameters.add(fields);
@@ -415,8 +415,18 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   }
 
   private void validateOrganizationURN(String paramName, URN organizationURN) {
+    validateURN(paramName, organizationURN, URNEntityType.ORGANIZATION);
     ValidationUtils.verifyParameterPresence(paramName, organizationURN);
     validateURN(URNEntityType.ORGANIZATION, organizationURN);
+  }
+  
+  private void validateOrganizationBrandURN(String paramName, URN organizationBrandURN) {
+    validateURN(paramName, organizationBrandURN, URNEntityType.ORGANIZATIONBRAND);
+  }
+  
+  private void validateURN(String paramName, URN urn, URNEntityType type) {
+    ValidationUtils.verifyParameterPresence(paramName, urn);
+    validateURN(type, urn);
   }
   
   private void addRoleStateParams(String role, String state, Parameter projection,

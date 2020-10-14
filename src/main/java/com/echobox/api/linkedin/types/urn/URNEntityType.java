@@ -36,6 +36,10 @@ public enum URNEntityType {
    */
   ORGANIZATION("organization"),
   /**
+   * Organization Brand URN entity type.
+   */
+  ORGANIZATIONBRAND("organizationBrand"),
+  /**
    * Seniority URN entity type.
    */
   SENIORITY("seniority"),
