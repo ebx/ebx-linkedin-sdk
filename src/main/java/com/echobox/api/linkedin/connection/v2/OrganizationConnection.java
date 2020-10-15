@@ -24,6 +24,7 @@ import com.echobox.api.linkedin.types.engagement.ShareStatistic;
 import com.echobox.api.linkedin.types.organization.AccessControl;
 import com.echobox.api.linkedin.types.organization.NetworkSize;
 import com.echobox.api.linkedin.types.organization.Organization;
+import com.echobox.api.linkedin.types.organization.OrganizationBrand;
 import com.echobox.api.linkedin.types.statistics.OrganizationFollowerStatistics;
 import com.echobox.api.linkedin.types.statistics.page.FollowerStatistic;
 import com.echobox.api.linkedin.types.statistics.page.Statistics;
@@ -48,6 +49,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
 
   private static final String ORGANIZATIONAL_ENTITY_ACLS = "/organizationalEntityAcls";
   private static final String ORGANIZATIONS = "/organizations";
+  private static final String ORGANIZATIONS_BRANDS = "/organizationBrands";
   private static final String ORGANIZATIONAL_ENTITY_FOLOWER_STATS =
       "/organizationalEntityFollowerStatistics";
   private static final String ORGANIZATIONAL_PAGE_STATS = "/organizationPageStatistics";
@@ -69,6 +71,9 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   private static final String ORGANIZATIONAL_ENTITY_VALUE = "organizationalEntity";
   private static final String ORGANIZATION_VALUE = "organization";
   private static final String COMPANY_FOLLOWED_BY_MEMEBER = "CompanyFollowedByMember";
+  
+  private static final String PARENT_KEY = "parent";
+  private static final String PARENT_ORGANIZATION_VALUE = "parentOrganization";
 
   /**
    * Initialise an organization connection
@@ -218,10 +223,19 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * Use organization brand id to find all all of its information
    * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api#retrieve-organization-brands">
    * Retrieve an organization brand</a>
-   * @param organizationBrandId organizationBrandId
+   * @param organizationBrandURN organizationBrandId
+   * @param fields the fields to request
+   * @return the organization brand
    */
-  public void retrieveOrganizationBrand(long organizationBrandId) {
-    throw new UnsupportedOperationException("Operation is not implemented yet.");
+  public OrganizationBrand retrieveOrganizationBrand(URN organizationBrandURN, Parameter fields) {
+    validateOrganizationBrandURN("organizationBrandURN", organizationBrandURN);
+    List<Parameter> parameters = new ArrayList<>();
+    if (fields != null) {
+      parameters.add(fields);
+    }
+    String id = organizationBrandURN.getId();
+    return linkedinClient.fetchObject(ORGANIZATIONS_BRANDS + "/" + id, 
+        OrganizationBrand.class, parameters.toArray(new Parameter[0]));
   }
 
   /**
@@ -240,9 +254,18 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api#retrieve-organization-brands">
    * Retrieve Organization Brand by Parent Organization</a>
    * @param organizationURN parent organization URN
+   * @return all the organization brands
    */
-  public void retrieveOrganizationBrandByParentOrganization(URN organizationURN) {
-    throw new UnsupportedOperationException("Operation is not implemented yet.");
+  public List<OrganizationBrand> retrieveOrganizationBrandByParentOrganization(
+      URN organizationURN) {
+    validateOrganizationURN("organizationURN", organizationURN);
+    
+    List<Parameter> parameters = new ArrayList<>();
+    parameters.add(Parameter.with(QUERY_KEY, PARENT_ORGANIZATION_VALUE));
+    parameters.add(Parameter.with(PARENT_KEY, organizationURN.toString()));
+    
+    return getListFromQuery(ORGANIZATIONS, OrganizationBrand.class,
+        parameters.toArray(new Parameter[0]));
   }
 
   /**
@@ -392,8 +415,18 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   }
 
   private void validateOrganizationURN(String paramName, URN organizationURN) {
+    validateURN(paramName, organizationURN, URNEntityType.ORGANIZATION);
     ValidationUtils.verifyParameterPresence(paramName, organizationURN);
     validateURN(URNEntityType.ORGANIZATION, organizationURN);
+  }
+  
+  private void validateOrganizationBrandURN(String paramName, URN organizationBrandURN) {
+    validateURN(paramName, organizationBrandURN, URNEntityType.ORGANIZATIONBRAND);
+  }
+  
+  private void validateURN(String paramName, URN urn, URNEntityType type) {
+    ValidationUtils.verifyParameterPresence(paramName, urn);
+    validateURN(type, urn);
   }
   
   private void addRoleStateParams(String role, String state, Parameter projection,
