@@ -83,7 +83,7 @@ sorted by creation date.
 ## 1.0.8 (October 15, 2020)
 * OrganizationConnection.retrieveOrganizationBrand will return an organization brand
  based on the organization URN.
- OrganizationConnection.retrieveOrganizationBrandByParentOrganization will return 
+* OrganizationConnection.retrieveOrganizationBrandByParentOrganization will return 
  all the organization brands linked to an orginzation  
  
 ## 1.0.9 (Work in progress)
