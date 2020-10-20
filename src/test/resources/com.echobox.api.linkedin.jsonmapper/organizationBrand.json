@@ -1,0 +1,59 @@
+{
+  "$URN": "urn:li:organizationBrand:11111111",
+  "alternativeNames": [],
+  "autoCreated": false,
+  "defaultLocale": {
+    "country": "US",
+    "language": "en"
+  },
+  "description": {
+    "localized": {
+      "en_US": "Please follow LinkedIn's Company Page at https://www.linkedin.com/company/linkedin."
+    },
+    "preferredLocale": {
+      "country": "US",
+      "language": "en"
+    }
+  },
+  "logo": {
+    "cropInfo": {
+      "height": 0,
+      "width": 0,
+      "x": 0,
+      "y": 0
+    },
+    "cropped": "urn:li:media:/p/8/000/206/3de/1111111.png",
+    "original": "urn:li:media:/p/8/000/206/3de/1111111.png"
+  },
+  "id": 11111111,
+  "industries": [
+    "urn:li:industry:94"
+  ],
+  "localizedDescription": "Please follow LinkedIn's Company Page at https://www.linkedin.com/company/linkedin.",
+  "localizedName": "example.com",
+  "localizedSpecialties": [],
+  "name": {
+    "localized": {
+      "en_US": "test_product"
+    },
+    "preferredLocale": {
+      "country": "US",
+      "language": "en"
+    }
+  },
+  "parentRelationship": {
+    "parent": "urn:li:organization:2222222"
+  },
+  "specialties": [],
+  "vanityName": "example.com",
+  "versionTag": "2",
+  "website": {
+    "localized": {
+      "en_US": "http://www.example.com/"
+    },
+    "preferredLocale": {
+      "country": "US",
+      "language": "en"
+    }
+  }
+}
