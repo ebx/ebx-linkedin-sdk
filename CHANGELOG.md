@@ -86,4 +86,6 @@ sorted by creation date.
 * OrganizationConnection.retrieveOrganizationBrandByParentOrganization will return 
  all the organization brands linked to an orginzation  
  
-## 1.0.9 (Work in progress)
+## 2.0.0 (November 24, 2020)
+* Updated all dependencies. 
+* RemovedLinkedinLogger as EventLogger had been removed from slf4j-ext.

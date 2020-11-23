@@ -33,7 +33,6 @@ import com.echobox.api.linkedin.exception.LinkedInResourceNotFoundException;
 import com.echobox.api.linkedin.exception.ResponseErrorJsonParsingException;
 import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapper;
 import com.echobox.api.linkedin.jsonmapper.JsonMapper;
-import com.echobox.api.linkedin.logging.LinkedInLogger;
 import com.echobox.api.linkedin.util.URLUtils;
 import com.echobox.api.linkedin.util.ValidationUtils;
 import com.echobox.api.linkedin.version.Version;
@@ -43,6 +42,7 @@ import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.ParseException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -60,7 +60,7 @@ import java.util.Map;
  */
 public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedInClient {
 
-  private static final Logger LOGGER = LinkedInLogger.getLoggerInstance();
+  private static final Logger LOGGER = LoggerFactory.getLogger(DefaultLinkedInClient.class);
 
   /**
    * HTTP parameter names.

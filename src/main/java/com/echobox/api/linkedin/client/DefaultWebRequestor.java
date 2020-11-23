@@ -19,7 +19,6 @@ package com.echobox.api.linkedin.client;
 
 import static java.lang.String.format;
 
-import com.echobox.api.linkedin.logging.LinkedInLogger;
 import com.echobox.api.linkedin.util.JsonUtils;
 import com.echobox.api.linkedin.util.URLUtils;
 import com.eclipsesource.json.Json;
@@ -46,6 +45,7 @@ import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -66,7 +66,7 @@ import java.util.stream.Collectors;
  */
 public class DefaultWebRequestor implements WebRequestor {
 
-  private static final Logger LOGGER = LinkedInLogger.getLoggerInstance();
+  private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWebRequestor.class);
 
   /**
    * Arbitrary unique boundary marker for multipart {@code POST}s.

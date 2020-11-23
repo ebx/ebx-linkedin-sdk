@@ -25,8 +25,8 @@ package com.echobox.api.linkedin.util;
 
 import static java.lang.String.format;
 
-import com.echobox.api.linkedin.logging.LinkedInLogger;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -38,7 +38,7 @@ import java.util.Date;
  */
 public final class DateUtils {
   
-  private static Logger LOGGER = LinkedInLogger.getLoggerInstance();
+  private static Logger LOGGER = LoggerFactory.getLogger(DateUtils.class);
   
   /**
    * LinkedIn "long" date format (IETF RFC 3339). Example: {@code 2010-02-28T16:11:08+0000}
