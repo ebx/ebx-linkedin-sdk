@@ -17,9 +17,9 @@
 
 package com.echobox.api.linkedin.types.v1;
 
-import com.echobox.api.linkedin.logging.LinkedInLogger;
 import lombok.Getter;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Industry code
@@ -621,7 +621,7 @@ public enum IndustryCode implements CodeType<Integer> {
    */
   WRITING_EDITING(103, "Writing and Editing", Group.ART, Group.MED, Group.REC);
   
-  private static Logger LOGGER = LinkedInLogger.getLoggerInstance();
+  private static Logger LOGGER = LoggerFactory.getLogger(IndustryCode.class);
   
   @Getter
   private final Integer code;

@@ -17,10 +17,10 @@
 
 package com.echobox.api.linkedin.types.v1;
 
-import com.echobox.api.linkedin.logging.LinkedInLogger;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * EmployeeCountRange
@@ -67,7 +67,7 @@ public enum EmployeeCountRange implements CodeType<String> {
    */
   XXXL("I", "10,000+", 10001, null);
   
-  private static Logger LOGGER = LinkedInLogger.getLoggerInstance();
+  private static Logger LOGGER = LoggerFactory.getLogger(EmployeeCountRange.class);
   
   @Getter
   private final String code;

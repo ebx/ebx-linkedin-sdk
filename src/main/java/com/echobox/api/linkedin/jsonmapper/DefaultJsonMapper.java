@@ -28,7 +28,6 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableSet;
 
 import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
-import com.echobox.api.linkedin.logging.LinkedInLogger;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.util.DateUtils;
 import com.echobox.api.linkedin.util.ObjectUtil;
@@ -41,6 +40,7 @@ import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.ParseException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -63,7 +63,7 @@ import java.util.Set;
  */
 public class DefaultJsonMapper implements JsonMapper {
   
-  private static final Logger LOGGER = LinkedInLogger.getLoggerInstance();
+  private static final Logger LOGGER = LoggerFactory.getLogger(DefaultJsonMapper.class);
   
   /**
    * We call this instance's {@link JsonMappingErrorHandler#handleMappingError(String, Class, Exception)} method on
