@@ -17,10 +17,10 @@
 
 package com.echobox.api.linkedin.types.v1;
 
-import com.echobox.api.linkedin.logging.LinkedInLogger;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Status type
@@ -51,7 +51,7 @@ public enum StatusType implements CodeType<String> {
    */
   ACQUIRED("ACQ");
   
-  private static Logger LOGGER = LinkedInLogger.getLoggerInstance();
+  private static Logger LOGGER = LoggerFactory.getLogger(StatusType.class);
   
   @Getter
   private final String code;

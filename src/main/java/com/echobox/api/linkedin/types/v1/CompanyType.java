@@ -17,10 +17,10 @@
 
 package com.echobox.api.linkedin.types.v1;
 
-import com.echobox.api.linkedin.logging.LinkedInLogger;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Company type
@@ -63,7 +63,7 @@ public enum CompanyType implements CodeType<String> {
    */
   PARTNERSHIP("S");
   
-  private static Logger LOGGER = LinkedInLogger.getLoggerInstance();
+  private static Logger LOGGER = LoggerFactory.getLogger(CompanyType.class);
   
   @Getter
   private final String code;
