@@ -65,7 +65,7 @@ public class RegisterUploadRequestBody {
     @Getter
     @Setter
     @LinkedIn
-    private SupportedUploadMechanism supportedUploadMechanism;
+    private List<SupportedUploadMechanism> supportedUploadMechanism;
   
     /**
      * Size in bytes

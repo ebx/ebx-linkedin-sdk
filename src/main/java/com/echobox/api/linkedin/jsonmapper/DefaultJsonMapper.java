@@ -23,10 +23,6 @@
 
 package com.echobox.api.linkedin.jsonmapper;
 
-import static java.lang.String.format;
-import static java.util.Collections.unmodifiableList;
-import static java.util.Collections.unmodifiableSet;
-
 import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.util.DateUtils;
@@ -55,6 +51,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import static java.lang.String.format;
+import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableSet;
 
 /**
  * Default implementation of a JSON-to-Java mapper.
@@ -250,6 +250,8 @@ public class DefaultJsonMapper implements JsonMapper {
           invokeJsonMappingCompletedMethods(instance);
 
           return instance;
+        } else if (type.isEnum()) {
+          return (T) toEnumType(json, type);
         } else {
           return toPrimitiveJavaType(json, type);
         }
@@ -732,17 +734,7 @@ public class DefaultJsonMapper implements JsonMapper {
     }
 
     if (type.isEnum()) {
-      Class<? extends Enum> enumType = type.asSubclass(Enum.class);
-      try {
-        return Enum.valueOf(enumType, rawValue.asString());
-      } catch (IllegalArgumentException iae) {
-        LOGGER.debug("Cannot map string {} to enum {}, try fallback toUpperString next...", rawValue.asString(), enumType.getName());
-      }
-      try {
-        return Enum.valueOf(enumType, rawValue.asString().toUpperCase());
-      } catch (IllegalArgumentException iae) {
-        LOGGER.debug("Mapping string {} to enum {} not possible", rawValue.asString(), enumType.getName());
-      }
+      return toEnumType(rawValue.asString(), type);
     }
 
     if (Date.class.equals(type)) {
@@ -753,6 +745,21 @@ public class DefaultJsonMapper implements JsonMapper {
 
     // Some other type - recurse into it
     return toJavaObject(rawValueAsString, type);
+  }
+
+  private Object toEnumType(String rawValue, Class<?> type) {
+    Class<? extends Enum> enumType = type.asSubclass(Enum.class);
+    try {
+      return Enum.valueOf(enumType, rawValue);
+    } catch (IllegalArgumentException iae) {
+      LOGGER.debug("Cannot map string {} to enum {}, try fallback toUpperString next...", rawValue, enumType.getName());
+    }
+    try {
+      return Enum.valueOf(enumType, rawValue.toUpperCase());
+    } catch (IllegalArgumentException iae) {
+      LOGGER.debug("Mapping string {} to enum {} not possible", rawValue, enumType.getName());
+    }
+    return null;
   }
 
   private Map convertJsonObjectToMap(String json, Field field) {
