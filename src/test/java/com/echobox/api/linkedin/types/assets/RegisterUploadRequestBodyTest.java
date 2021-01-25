@@ -32,13 +32,23 @@ public class RegisterUploadRequestBodyTest {
 
   @Test
   public void testRegisterUploadRequestBody() {
-    String json = "{\n" + "    \"registerUploadRequest\": {\n"
-        + "        \"owner\": \"urn:li:organization:10000\",\n" + "        \"recipes\": [\n"
-        + "            \"urn:li:digitalmediaRecipe:feedshare-video\"\n" + "        ],\n"
-        + "        \"serviceRelationships\": [\n" + "            {\n"
+    String json = "{\n"
+        + "    \"registerUploadRequest\": {\n"
+        + "        \"owner\": \"urn:li:organization:10000\",\n"
+        + "        \"recipes\": [\n"
+        + "            \"urn:li:digitalmediaRecipe:feedshare-video\"\n"
+        + "        ],\n"
+        + "        \"serviceRelationships\": [\n"
+        + "            {\n"
         + "                \"identifier\": \"urn:li:userGeneratedContent\",\n"
-        + "                \"relationshipType\": \"OWNER\"\n" + "            }\n" + "        ]\n"
-        + "    }\n" + "}";
+        + "                \"relationshipType\": \"OWNER\"\n"
+        + "            }\n"
+        + "        ],\n"
+        + "        \"supportedUploadMechanism\":[\n"
+        + "            \"SINGLE_REQUEST_UPLOAD\"\n"
+        + "        ]\n"
+        + "    }\n"
+        + "}";
   
     DefaultJsonMapper defaultJsonMapper = new DefaultJsonMapper();
     RegisterUploadRequestBody registerUploadRequestBody =
@@ -60,6 +70,12 @@ public class RegisterUploadRequestBodyTest {
     Assert.assertEquals("urn:li:userGeneratedContent",
         serviceRelationships.get(0).getIdentifier());
     Assert.assertEquals(RelationshipType.OWNER, serviceRelationships.get(0).getRelationshipType());
+
+    List<RegisterUploadRequestBody.SupportedUploadMechanism> supportedUploadMechanism =
+            registerUploadRequest.getSupportedUploadMechanism();
+    Assert.assertEquals(1, supportedUploadMechanism.size());
+    Assert.assertEquals(RegisterUploadRequestBody.SupportedUploadMechanism.SINGLE_REQUEST_UPLOAD,
+            supportedUploadMechanism.get(0));
   }
 
 }

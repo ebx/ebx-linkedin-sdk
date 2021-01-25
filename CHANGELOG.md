@@ -89,3 +89,6 @@ sorted by creation date.
 ## 2.0.0 (November 24, 2020)
 * Updated all dependencies. 
 * RemovedLinkedinLogger as EventLogger had been removed from slf4j-ext.
+
+## 2.0.1 (Jan 13, 2020)
+* Change `RegisterUploadRequestBody.supportedUploadMechanism` from `SupportedUploadMechanism ` to `List< SupportedUploadMechanism >`
