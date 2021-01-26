@@ -92,3 +92,5 @@ sorted by creation date.
 
 ## 2.0.1 (Jan 13, 2020)
 * Change `RegisterUploadRequestBody.supportedUploadMechanism` from `SupportedUploadMechanism ` to `List< SupportedUploadMechanism >`
+
+## 2.0.1 (Work in Progress)
