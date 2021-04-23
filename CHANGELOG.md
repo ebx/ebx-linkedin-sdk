@@ -93,4 +93,7 @@ sorted by creation date.
 ## 2.0.1 (Jan 13, 2020)
 * Change `RegisterUploadRequestBody.supportedUploadMechanism` from `SupportedUploadMechanism ` to `List< SupportedUploadMechanism >`
 
-## 2.0.1 (Work in Progress)
+## 2.0.2 (April 23, 2021)
+* Add `application/x-wwww-form-urlenconded` header to obtain access token request and update additional header method to add headers as a list.
+
+## 2.0.3 (Work in Progress)
