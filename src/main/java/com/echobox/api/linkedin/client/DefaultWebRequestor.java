@@ -55,6 +55,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
+import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -634,9 +635,7 @@ public class DefaultWebRequestor implements WebRequestor {
     if (headers != null) {
       // Add any additional headers
       for (String headerKey : headers.keySet()) {
-        if (!headerKey.equalsIgnoreCase("content-type")) {
-          httpHeaders.put(headerKey, headers.get(headerKey));
-        }
+        httpHeaders.putIfAbsent(headerKey, Collections.singletonList(headers.get(headerKey)));
       }
     }
   
