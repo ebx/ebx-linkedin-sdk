@@ -1,0 +1,16 @@
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/"
+  schedule:
+    interval: daily
+  ignore:
+  - dependency-name: com.puppycrawl.tools:checkstyle
+    versions:
+    - "8.39"
+    - "8.40"
+    - "8.41"
+    - 8.41.1
+  - dependency-name: org.projectlombok:lombok
+    versions:
+    - 1.18.18
