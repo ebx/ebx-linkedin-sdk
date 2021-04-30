@@ -96,4 +96,3 @@ sorted by creation date.
 ## 2.0.2 (April 23, 2021)
 * Add `application/x-wwww-form-urlenconded` header to obtain access token request and update additional header method to add headers as a list.
 
-## 2.0.3 (Work in Progress)
