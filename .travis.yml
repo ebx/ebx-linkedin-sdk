@@ -48,7 +48,7 @@ deploy:
     - target/ebx-linkedin-sdk-$MVN_VERSION.jar
     - target/ebx-linkedin-sdk-$MVN_VERSION-javadoc.jar
     - target/ebx-linkedin-sdk-$MVN_VERSION-sources.jar
-  skip_cleanup: true
+  edge: true
   on:
     repo: $REPO
     branch: $RELEASE_BRANCH
