@@ -117,7 +117,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @param count the number of entries to be returned per paged request
    * @return List of access controls for an organization
    */
-  public List<AccessControl> findOrganizationAccessControlNew(URN organizationURN,
+  public List<AccessControl> findOrganizationAccessControl(URN organizationURN,
       String role,
       String state, Parameter projection, Integer count) {
     validateOrganizationURN("organization", organizationURN);
