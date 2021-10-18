@@ -225,7 +225,7 @@
         <module name="SuperClone"/>
         <!--JavaDoc-->
         <module name="JavadocMethod">
-            <property name="scope" value="package"/>
+            <property name="accessModifiers" value="package, protected, public"/>
             <property name="allowedAnnotations" value="Override, Test, Mock, Before"/>
         </module>
         <module name="JavadocVariable">
