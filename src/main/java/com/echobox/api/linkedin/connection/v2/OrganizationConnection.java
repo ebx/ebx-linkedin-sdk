@@ -151,7 +151,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
     addRoleStateParams(role, state, projection, parameters);
     addStartAndCountParams(parameters, null, count);
 
-    return getListFromQuery(ORGANIZATION_ACLS, AccessControl.class,
+    return getListFromQuery(ORGANIZATIONAL_ENTITY_ACLS, AccessControl.class,
         parameters.toArray(new Parameter[0]));
   }
   
