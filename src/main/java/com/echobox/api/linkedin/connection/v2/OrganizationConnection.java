@@ -22,7 +22,6 @@ import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.types.TimeInterval;
 import com.echobox.api.linkedin.types.engagement.ShareStatistic;
 import com.echobox.api.linkedin.types.organization.AccessControl;
-import com.echobox.api.linkedin.types.organization.AccessControlNew;
 import com.echobox.api.linkedin.types.organization.NetworkSize;
 import com.echobox.api.linkedin.types.organization.Organization;
 import com.echobox.api.linkedin.types.organization.OrganizationBrand;
@@ -48,7 +47,6 @@ import java.util.List;
  */
 public class OrganizationConnection extends ConnectionBaseV2 {
   
-  private static final String ORGANIZATIONAL_ENTITY_ACLS = "/organizationalEntityAcls";
   private static final String ORGANIZATION_ACLS = "/organizationAcls";
   private static final String ORGANIZATIONS = "/organizations";
   private static final String ORGANIZATIONS_BRANDS = "/organizationBrands";
@@ -87,28 +85,6 @@ public class OrganizationConnection extends ConnectionBaseV2 {
 
   /**
    * Find a Member's Organization Access Control Information
-   * E.g. https://api.linkedin.com/v2/organizationalEntityAcls?q=roleAssignee
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-access-control">
-   * Access Control</a>
-   * @param role Limit results to specific roles, such as ADMINISTRATOR.
-   * @param state Limit results to specific role states, such as APPROVED.
-   * @param projection Field projection
-   * @param count the number of entries to be returned per paged request
-   * @return List of access controls for a given role and state for the member
-   */
-  public List<AccessControl> fetchMemberOrganizationAccessControl(String role, String state,
-      Parameter projection, Integer count) {
-    List<Parameter> parameters = new ArrayList<>();
-    parameters.add(Parameter.with(QUERY_KEY, ROLE_ASSIGNEE_VALUE));
-    addRoleStateParams(role, state, projection, parameters);
-    addStartAndCountParams(parameters, null, count);
-
-    return getListFromQuery(ORGANIZATIONAL_ENTITY_ACLS, AccessControl.class,
-        parameters.toArray(new Parameter[0]));
-  }
-  
-  /**
-   * Find a Member's Organization Access Control Information
    * E.g. https://api.linkedin.com/v2/organizationAcls?q=roleAssignee
    * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-access-control-by-role">
    * Access Control</a>
@@ -118,41 +94,15 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @param count the number of entries to be returned per paged request
    * @return List of access controls for a given role and state for the member
    */
-  public List<AccessControlNew> fetchMemberOrganizationAccessControlNew(String role, String state,
+  public List<AccessControl> fetchMemberOrganizationAccessControl(String role, String state,
       Parameter projection, Integer count) {
     List<Parameter> params = new ArrayList<>();
     params.add(Parameter.with(QUERY_KEY, ROLE_ASSIGNEE_VALUE));
     addRoleStateParams(role, state, projection, params);
     addStartAndCountParams(params, null, count);
     
-    return getListFromQuery(ORGANIZATION_ACLS, AccessControlNew.class,
+    return getListFromQuery(ORGANIZATION_ACLS, AccessControl.class,
         params.toArray(new Parameter[0]));
-  }
-  
-  /**
-   * Find an Organization's Access Control Information
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-access-control">
-   * Access Control</a>
-   * @param organizationalTarget The organizational entity for which access control information
-   * is retrieved.
-   * @param role Limit results to specific roles
-   * @param state Limit results to specific role states
-   * @param projection Field projection
-   * @param count the number of entries to be returned per paged request
-   * @return List of access controls for an organization
-   */
-  public List<AccessControl> findOrganizationAccessControl(URN organizationalTarget, String role,
-      String state, Parameter projection, Integer count) {
-    validateOrganizationURN("organizationalTarget", organizationalTarget);
-
-    List<Parameter> parameters = new ArrayList<>();
-    parameters.add(Parameter.with(QUERY_KEY, ORGANIZATION_TARGET_VALUE));
-    parameters.add(Parameter.with(ORGANIZATIONAL_TARGET_KEY, organizationalTarget.toString()));
-    addRoleStateParams(role, state, projection, parameters);
-    addStartAndCountParams(parameters, null, count);
-
-    return getListFromQuery(ORGANIZATIONAL_ENTITY_ACLS, AccessControl.class,
-        parameters.toArray(new Parameter[0]));
   }
   
   /**
@@ -167,7 +117,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @param count the number of entries to be returned per paged request
    * @return List of access controls for an organization
    */
-  public List<AccessControlNew> findOrganizationAccessControlNew(URN organizationURN,
+  public List<AccessControl> findOrganizationAccessControlNew(URN organizationURN,
       String role,
       String state, Parameter projection, Integer count) {
     validateOrganizationURN("organization", organizationURN);
@@ -178,7 +128,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
     addRoleStateParams(role, state, projection, parameters);
     addStartAndCountParams(parameters, null, count);
     
-    return getListFromQuery(ORGANIZATION_ACLS, AccessControlNew.class,
+    return getListFromQuery(ORGANIZATION_ACLS, AccessControl.class,
         parameters.toArray(new Parameter[0]));
   }
 

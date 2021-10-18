@@ -8,7 +8,7 @@
 
   <groupId>com.echobox</groupId>
   <artifactId>ebx-linkedin-sdk</artifactId>
-  <version>3.0.0-SNAPSHOT-2</version>
+  <version>3.0.0</version>
   <packaging>jar</packaging>
 
   <properties>
