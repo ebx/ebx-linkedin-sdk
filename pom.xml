@@ -53,7 +53,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.16</version>
+      <version>1.18.20</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -183,7 +183,7 @@
           <dependency>
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
-            <version>8.37</version>
+            <version>8.45</version>
           </dependency>
           <dependency>
             <groupId>com.github.sevntu-checkstyle</groupId>
@@ -195,7 +195,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>3.13.0</version>
+        <version>3.14.0</version>
         <executions>
           <execution>
             <id>cpd</id>
