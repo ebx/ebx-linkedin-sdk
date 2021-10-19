@@ -68,14 +68,4 @@ public class AccessControl {
     private String localizedFirstName;
   }
   
-  /**
-   * Organization target
-   * @author Joanna
-   */
-  public static class Organization {
-    @Getter
-    @LinkedIn
-    private String localizedName;
-  }
-  
 }
