@@ -58,14 +58,12 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   
   private static final String ROLE_KEY = "role";
   private static final String STATE_KEY = "state";
-  private static final String ORGANIZATIONAL_TARGET_KEY = "organizationalTarget";
   private static final String VANITY_NAME_KEY = "vanityName";
   private static final String EMAIL_DOMAIN_KEY = "emailDomain";
   private static final String ORGANIZATIONAL_ENTITY_KEY = "organizationalEntity";
   private static final String ORGANIZATION_KEY = "organization";
   
   private static final String ROLE_ASSIGNEE_VALUE = "roleAssignee";
-  private static final String ORGANIZATION_TARGET_VALUE = "organizationalTarget";
   private static final String VANITY_NAME_VALUE = "vanityName";
   private static final String EMAIL_DOMAIN_VALUE = "emailDomain";
   private static final String ORGANIZATIONAL_ENTITY_VALUE = "organizationalEntity";
