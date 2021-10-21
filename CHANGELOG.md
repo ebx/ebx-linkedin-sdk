@@ -96,3 +96,6 @@ sorted by creation date.
 ## 3.0.0 (October 19, 2021)
 * Change `OrganizationConnection.fetchMemberOrganizationAccessControl` and `OrganizationConnection.findOrganizationAccessControl`
 to use `/OrganizationAcls` endpoint instead of `/OrganizationalEntityAcls` endpoint as the LinkedIn API will remove support for organisation entity ACLs  and replace it with organisation ACLs on October 30, 2021.
+
+## 3.0.1 (Work in progress)
+
