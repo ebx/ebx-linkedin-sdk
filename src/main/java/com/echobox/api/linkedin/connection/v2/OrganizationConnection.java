@@ -203,7 +203,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @return the number of followers for the organization
    */
   public Long retrieveOrganizationFollowerCount(URN organizationURN) {
-    validateOrganizationURN("organizationURN", organizationURN);
+    validateOrganizationOrBrandURN("organizationURN", organizationURN);
     NetworkSize networkSize = linkedinClient.fetchObject(NETWORK_SIZES + "/" + organizationURN,
         NetworkSize.class, Parameter.with(EDGE_TYPE, COMPANY_FOLLOWED_BY_MEMEBER));
     return networkSize.getFirstDegreeSize();
@@ -395,7 +395,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    */
   public List<ShareStatistic> retrieveShareStatistics(URN organizationURN,
       TimeInterval timeInterval, List<URN> shareURNs, Integer count) {
-    validateOrganizationURN("organizationURN", organizationURN);
+    validateOrganizationOrBrandURN("organizationURN", organizationURN);
     
     List<Parameter> params = new ArrayList<>();
     params.add(Parameter.with(QUERY_KEY, ORGANIZATIONAL_ENTITY_KEY));
@@ -411,6 +411,15 @@ public class OrganizationConnection extends ConnectionBaseV2 {
     
     return getListFromQuery(SHARE_STATISTICS, ShareStatistic.class,
         params.toArray(new Parameter[0]));
+  }
+  
+  private void validateOrganizationOrBrandURN(String paramName, URN organizationOrBrandURN) {
+    ValidationUtils.verifyParameterPresence(paramName, organizationOrBrandURN);
+    if (!(URNEntityType.ORGANIZATION.equals(organizationOrBrandURN.resolveURNEntityType())
+        || URNEntityType.ORGANIZATIONBRAND.equals(organizationOrBrandURN.resolveURNEntityType()))) {
+      throw new IllegalArgumentException(String.format("The URN should be type %s or %s",
+          URNEntityType.ORGANIZATION, URNEntityType.ORGANIZATIONBRAND));
+    }
   }
 
   private void validateOrganizationURN(String paramName, URN organizationURN) {
