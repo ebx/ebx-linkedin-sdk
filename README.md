@@ -22,12 +22,12 @@ use:
 <dependency>
   <groupId>com.echobox</groupId>
   <artifactId>ebx-linkedin-sdk</artifactId>
-  <version>3.0.0</version>
+  <version>3.0.1</version>
 </dependency>
 ```
 
 ## Installation (Most Up To Date)
-[![Build Status](https://travis-ci.org/ebx/ebx-linkedin-sdk.svg?branch=dev)](https://travis-ci.org/ebx/ebx-linkedin-sdk)
+[![Build Status](https://travis-ci.org/ebx/ebx-linkedin-sdk.svg?branch=dev)](https://app.travis-ci.com/github/ebx/ebx-linkedin-sdk)
 
 If you'd like to use the latest SNAPSHOT build please ensure you have snapshots enabled in your pom:
 
