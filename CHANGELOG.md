@@ -101,3 +101,4 @@ to use `/OrganizationAcls` endpoint instead of `/OrganizationalEntityAcls` endpo
 * Ensure `OrganizationConnection.retrieveOrganizationFollowerCount` and `OrgnizationConnection. retrieveShareStatistics`
 can get data for both organization and organization brand pages.
 
+## 3.0.2 (Work in progress)
