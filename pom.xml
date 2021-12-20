@@ -78,15 +78,9 @@
       <version>1.7.30</version>
     </dependency>
     <dependency>
-      <groupId>ch.qos.logback.contrib</groupId>
-      <artifactId>logback-json-classic</artifactId>
-      <version>0.1.5</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.logback.contrib</groupId>
-      <artifactId>logback-jackson</artifactId>
-      <version>0.1.5</version>
+      <groupId>com.echobox</groupId>
+      <artifactId>ebx-structuredlogging-sdk</artifactId>
+      <version>1.0.0</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
