@@ -104,6 +104,6 @@ can get data for both organization and organization brand pages.
 ## 3.0.2 (Dec 20, 2021)
 * Update logback dependencies to move away from logback-classic and logback-core due to a 
   security vulnerability. See [CVE-2017-5929](https://nvd.nist.gov/vuln/detail/CVE-2017-5929) 
-  for more information. Using ebx-structured logging instead.
+  for more information. Using ebx-structured-logging instead.
 
 ## 3.0.3 (Work in progress)
