@@ -108,7 +108,7 @@ can get data for both organization and organization brand pages.
 
 ## 3.0.3 (Mar 25, 2022)
 * Add attribute `primaryOrganizationType` in OrganizationBase class
-* Update `findOrganizationByVanityName` to return `OrganizationBrand` if `primaryOrganizationType` is 
+* Update `findOrganizationByVanityName` to return `OrganizationBrand` if `primaryOrganizationType` is
   `BRAND`.
 
 ## 3.0.4 (Work in progress)
