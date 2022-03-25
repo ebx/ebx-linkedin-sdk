@@ -26,7 +26,7 @@ import com.echobox.api.linkedin.types.organization.NetworkSize;
 import com.echobox.api.linkedin.types.organization.Organization;
 import com.echobox.api.linkedin.types.organization.OrganizationBase;
 import com.echobox.api.linkedin.types.organization.OrganizationBrand;
-import com.echobox.api.linkedin.types.organization.OrganizationResult;
+import com.echobox.api.linkedin.types.organization.PrimaryOrganizationType;
 import com.echobox.api.linkedin.types.statistics.OrganizationFollowerStatistics;
 import com.echobox.api.linkedin.types.statistics.page.FollowerStatistic;
 import com.echobox.api.linkedin.types.statistics.page.Statistics;
@@ -36,8 +36,8 @@ import com.echobox.api.linkedin.util.ValidationUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Organization connection class that should contain all organization operations
@@ -159,7 +159,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @param count the number of entries to be returned per paged request
    * @return The organization with the vanity name
    */
-  public List<OrganizationBase> findOrganizationByVanityName(String vanityName,
+  public List<? extends OrganizationBase> findOrganizationByVanityName(String vanityName,
       Parameter fields, Integer count) {
     ValidationUtils.verifyParameterPresence("vanityName", vanityName);
   
@@ -170,11 +170,25 @@ public class OrganizationConnection extends ConnectionBaseV2 {
     parameters.add(Parameter.with(QUERY_KEY, VANITY_NAME_VALUE));
     parameters.add(Parameter.with(VANITY_NAME_KEY, vanityName));
     addStartAndCountParams(parameters, null, count);
-    List<OrganizationResult> organizationList = getListFromQuery(ORGANIZATIONS,
-        OrganizationResult.class, parameters.toArray(new Parameter[0]));
+    List<Organization> organizationList = getListFromQuery(ORGANIZATIONS,
+        Organization.class, parameters.toArray(new Parameter[0]));
+    if (organizationList.size() == 0) {
+      return organizationList;
+    }
     
-    return organizationList.stream().map(OrganizationResult::getOrganization)
-        .collect(Collectors.toList());
+    PrimaryOrganizationType targetType = organizationList.get(0).getPrimaryOrganizationType();
+    if (PrimaryOrganizationType.NONE.equals(targetType)) {
+      // return the list if they are Organization
+      return organizationList;
+    } else if (PrimaryOrganizationType.BRAND.equals(targetType)) {
+      // Retrieve as OrganizationBrand
+      return getListFromQuery(ORGANIZATIONS, OrganizationBrand.class,
+          parameters.toArray(new Parameter[0]));
+    }
+    
+    // Not supported for other organization types
+    return Collections.emptyList();
+    
   }
 
   /**
