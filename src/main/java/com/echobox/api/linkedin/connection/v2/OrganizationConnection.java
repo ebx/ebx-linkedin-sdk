@@ -177,18 +177,21 @@ public class OrganizationConnection extends ConnectionBaseV2 {
     }
     
     PrimaryOrganizationType targetType = organizationList.get(0).getPrimaryOrganizationType();
-    if (PrimaryOrganizationType.NONE.equals(targetType)) {
-      // return the list if they are Organization
-      return organizationList;
-    } else if (PrimaryOrganizationType.BRAND.equals(targetType)) {
-      // Retrieve as OrganizationBrand
-      return getListFromQuery(ORGANIZATIONS, OrganizationBrand.class,
-          parameters.toArray(new Parameter[0]));
+    List<? extends OrganizationBase> result;
+    switch (targetType) {
+      case NONE:
+      case SCHOOL:
+        result = organizationList;
+        break;
+      case BRAND:
+        result = getListFromQuery(ORGANIZATIONS, OrganizationBrand.class,
+            parameters.toArray(new Parameter[0]));
+        break;
+      default:
+        // Should not happen
+        result = Collections.emptyList();
     }
-    
-    // Not supported for other organization types
-    return Collections.emptyList();
-    
+    return result;
   }
 
   /**
