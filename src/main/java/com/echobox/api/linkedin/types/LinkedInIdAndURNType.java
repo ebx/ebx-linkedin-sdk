@@ -20,6 +20,7 @@ package com.echobox.api.linkedin.types;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.urn.URN;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Linked in types that contain a URN field
@@ -29,6 +30,7 @@ import lombok.Getter;
 public abstract class LinkedInIdAndURNType extends LinkedInIdType {
   
   @Getter
+  @Setter
   @LinkedIn("$URN")
   private URN urn;
 
