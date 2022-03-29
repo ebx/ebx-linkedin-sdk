@@ -77,9 +77,7 @@ public class OrganizationResult extends Organization {
       organization.setSpecialties(this.getSpecialties());
       organization.setStaffCountRange(this.getStaffCountRange());
       organization.setSchoolAttributes(this.getSchoolAttributes());
-      organization.setOverviewPhoto(this.getOverviewPhoto());
       organization.setOverviewPhotoV2(this.getOverviewPhotoV2());
-      organization.setOrganizationStatus(this.getOrganizationStatus());
       organization.setOrganizationType(this.getOrganizationType());
 
       result = organization;
@@ -87,7 +85,6 @@ public class OrganizationResult extends Organization {
     
     // Common fields in OrganizationBase
     result.setAlternativeNames(this.getAlternativeNames());
-    result.setCoverPhoto(this.getCoverPhoto());
     result.setCoverPhotoV2(this.getCoverPhotoV2());
     result.setDefaultLocale(this.getDefaultLocale());
     result.setDescription(this.getDescription());
@@ -101,11 +98,8 @@ public class OrganizationResult extends Organization {
     result.setVanityName(this.getVanityName());
     result.setVersionTag(this.getVersionTag());
     result.setWebsite(this.getWebsite());
-    result.setLogo(this.getLogo());
     result.setLogoV2(this.getLogoV2());
     result.setPrimaryOrganizationType(this.getPrimaryOrganizationType());
-    result.setUrn(this.getUrn());
-    result.setId(this.getId());
     
     return result;
   }
