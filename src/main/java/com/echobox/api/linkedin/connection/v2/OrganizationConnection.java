@@ -36,7 +36,6 @@ import com.echobox.api.linkedin.util.ValidationUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -179,17 +178,13 @@ public class OrganizationConnection extends ConnectionBaseV2 {
     PrimaryOrganizationType targetType = organizationList.get(0).getPrimaryOrganizationType();
     List<? extends OrganizationBase> result;
     switch (targetType) {
-      case NONE:
-      case SCHOOL:
-        result = organizationList;
-        break;
       case BRAND:
         result = getListFromQuery(ORGANIZATIONS, OrganizationBrand.class,
             parameters.toArray(new Parameter[0]));
         break;
       default:
-        // Should not happen
-        result = Collections.emptyList();
+        // NONE or SCHOOL
+        result = organizationList;
     }
     return result;
   }
