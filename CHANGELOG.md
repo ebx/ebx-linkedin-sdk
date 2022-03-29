@@ -107,7 +107,8 @@ can get data for both organization and organization brand pages.
   for more information. Using ebx-structured-logging instead.
 
 ## 3.0.3 (Mar 25, 2022)
+* Add attribute `primaryOrganizationType` in OrganizationBase class
 * Update `findOrganizationByVanityName` to return `OrganizationBrand` if `primaryOrganizationType` is 
-  `BRAND`
+  `BRAND`.
 
 ## 3.0.4 (Work in progress)
