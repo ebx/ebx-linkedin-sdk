@@ -100,6 +100,7 @@ public class OrganizationResult extends Organization {
     result.setWebsite(this.getWebsite());
     result.setLogoV2(this.getLogoV2());
     result.setPrimaryOrganizationType(this.getPrimaryOrganizationType());
+    result.setId(this.getId());
     
     return result;
   }
