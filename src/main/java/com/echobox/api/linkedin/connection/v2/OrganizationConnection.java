@@ -24,7 +24,9 @@ import com.echobox.api.linkedin.types.engagement.ShareStatistic;
 import com.echobox.api.linkedin.types.organization.AccessControl;
 import com.echobox.api.linkedin.types.organization.NetworkSize;
 import com.echobox.api.linkedin.types.organization.Organization;
+import com.echobox.api.linkedin.types.organization.OrganizationBase;
 import com.echobox.api.linkedin.types.organization.OrganizationBrand;
+import com.echobox.api.linkedin.types.organization.OrganizationResult;
 import com.echobox.api.linkedin.types.statistics.OrganizationFollowerStatistics;
 import com.echobox.api.linkedin.types.statistics.page.FollowerStatistic;
 import com.echobox.api.linkedin.types.statistics.page.Statistics;
@@ -35,6 +37,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Organization connection class that should contain all organization operations
@@ -156,8 +159,8 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @param count the number of entries to be returned per paged request
    * @return The organization with the vanity name
    */
-  public List<Organization> findOrganizationByVanityName(String vanityName, Parameter fields,
-      Integer count) {
+  public List<OrganizationBase> findOrganizationByVanityName(String vanityName,
+      Parameter fields, Integer count) {
     ValidationUtils.verifyParameterPresence("vanityName", vanityName);
   
     List<Parameter> parameters = new ArrayList<>();
@@ -167,8 +170,11 @@ public class OrganizationConnection extends ConnectionBaseV2 {
     parameters.add(Parameter.with(QUERY_KEY, VANITY_NAME_VALUE));
     parameters.add(Parameter.with(VANITY_NAME_KEY, vanityName));
     addStartAndCountParams(parameters, null, count);
-    return getListFromQuery(ORGANIZATIONS, Organization.class,
-        parameters.toArray(new Parameter[0]));
+    List<OrganizationResult> organizationList = getListFromQuery(ORGANIZATIONS,
+        OrganizationResult.class, parameters.toArray(new Parameter[0]));
+    
+    return organizationList.stream().map(OrganizationResult::getOrganization)
+        .collect(Collectors.toList());
   }
 
   /**

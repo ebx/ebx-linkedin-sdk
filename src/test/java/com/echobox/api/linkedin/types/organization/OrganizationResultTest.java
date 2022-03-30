@@ -17,6 +17,9 @@
 
 package com.echobox.api.linkedin.types.organization;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapper;
 import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapperTestBase;
 import com.echobox.api.linkedin.types.objectype.MultiLocaleString;
@@ -26,22 +29,26 @@ import org.junit.Test;
 import java.util.List;
 
 /**
- * The type Organization test.
- * @author clementcaylux 
+ * Test for OrganizationResult to convert to Organization
+ * @author Kenneth Wong
  */
-public class OrganizationTest extends DefaultJsonMapperTestBase {
-
+public class OrganizationResultTest extends DefaultJsonMapperTestBase {
   /**
    * Test organization json can be deserialized.
    */
   @Test
   public void testOrganizationJsonCanBeDeserialized() {
-
+    
     String json = readFileToString("com.echobox.api.linkedin.jsonmapper/organization.json");
-
+    
     DefaultJsonMapper defaultJsonMapper = new DefaultJsonMapper();
     
-    Organization organization = defaultJsonMapper.toJavaObject(json, Organization.class);
+    OrganizationResult result = defaultJsonMapper.toJavaObject(json,
+        OrganizationResult.class);
+    OrganizationBase converted = result.getOrganization();
+    assertTrue(converted instanceof Organization);
+    
+    Organization organization = (Organization) converted;
     
     Assert.assertFalse(organization.getLocalizedDescription().isEmpty());
     Assert.assertEquals(1, organization.getLocations().size());
@@ -62,15 +69,15 @@ public class OrganizationTest extends DefaultJsonMapperTestBase {
     Assert.assertEquals(10, cropInfo.getYAxis());
     Assert.assertEquals(800, cropInfo.getWidth());
     Assert.assertEquals(800, cropInfo.getHeight());
-    Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAAH-AAAAJDRRlZTNlZDQwLTk4YTIt.png", 
+    Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAAH-AAAAJDRRlZTNlZDQwLTk4YTIt.png",
         logo.getOriginal().toString());
-    Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAANyAAAAJGRlZTNlZDQwLTk4YTIt.png", 
+    Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAANyAAAAJGRlZTNlZDQwLTk4YTIt.png",
         logo.getCropped().toString());
     
     Assert.assertEquals("linkedin", organization.getVanityName());
     
-    Assert.assertTrue(organization.getAlternativeNames().isEmpty());
-
+    assertTrue(organization.getAlternativeNames().isEmpty());
+    
     Assert.assertEquals(1337, organization.getId());
     
     Assert.assertEquals(1, organization.getIndustries().size());
@@ -81,36 +88,36 @@ public class OrganizationTest extends DefaultJsonMapperTestBase {
     Assert.assertEquals("LinkedIn", organization.getLocalizedName());
     
     Assert.assertEquals(new Integer(2003), organization.getFoundedOn().getYear());
-
+    
     Assert.assertEquals("http://www.linkedin.com", organization.getLocalizedWebsite());
-
+    
     MultiLocaleString website = organization.getWebsite();
     Assert.assertEquals("US", website.getPreferredLocale().getCountry());
     Assert.assertEquals("en", website.getPreferredLocale().getLanguage());
     Assert.assertEquals("http://www.linkedin.com", website.getLocalized().get("en_US"));
-
+    
     Assert.assertEquals("OPERATING", organization.getOrganizationStatus());
     
     MultiLocaleString description = organization.getDescription();
     Assert.assertEquals("US", description.getPreferredLocale().getCountry());
     Assert.assertEquals("en", description.getPreferredLocale().getLanguage());
-    Assert.assertTrue(description.getLocalized().containsKey("ja_JP"));
-    Assert.assertTrue(description.getLocalized().containsKey("en_US"));
-
+    assertTrue(description.getLocalized().containsKey("ja_JP"));
+    assertTrue(description.getLocalized().containsKey("en_US"));
+    
     Assert.assertEquals("PUBLIC_COMPANY", organization.getOrganizationType());
     
-    Assert.assertTrue(organization.getGroups().isEmpty());
+    assertTrue(organization.getGroups().isEmpty());
     
     Assert.assertEquals("US", organization.getDefaultLocale().getCountry());
     Assert.assertEquals("en", organization.getDefaultLocale().getLanguage());
-
+    
     Assert.assertEquals(8, organization.getLocalizedSpecialties().size());
-
+    
     MultiLocaleString name = organization.getName();
     Assert.assertEquals("US", name.getPreferredLocale().getCountry());
     Assert.assertEquals("en", name.getPreferredLocale().getLanguage());
     Assert.assertEquals(22, name.getLocalized().size());
-
+    
     Assert.assertEquals("SIZE_5001_TO_10000", organization.getStaffCountRange());
     
     List<Specialty> specialties = organization.getSpecialties();
@@ -119,18 +126,18 @@ public class OrganizationTest extends DefaultJsonMapperTestBase {
     Assert.assertEquals("US", specialty.getLocale().getCountry());
     Assert.assertEquals("en", specialty.getLocale().getLanguage());
     Assert.assertEquals(8, specialty.getTags().size());
-
+    
     CroppedImage coverPhoto = organization.getCoverPhoto();
     CropInfo cropInfoCoverPhoto = coverPhoto.getCropInfo();
     Assert.assertEquals(0, cropInfoCoverPhoto.getXAxis());
     Assert.assertEquals(0, cropInfoCoverPhoto.getYAxis());
     Assert.assertEquals(646, cropInfoCoverPhoto.getWidth());
     Assert.assertEquals(220, cropInfoCoverPhoto.getHeight());
-    Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAAfmAAAAJDQwLTk4YTItNGNlLWRj.png", 
+    Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAAfmAAAAJDQwLTk4YTItNGNlLWRj.png",
         coverPhoto.getOriginal().toString());
-    Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAAkOAAAAJDA3NmYwMzRkLTA2MTAt.png", 
+    Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAAkOAAAAJDA3NmYwMzRkLTA2MTAt.png",
         coverPhoto.getCropped().toString());
-  
+    
     CroppedImage overviewPhotoV2 = organization.getOverviewPhotoV2();
     CropInfo cropOverviewPhotoV2 = overviewPhotoV2.getCropInfo();
     Assert.assertEquals(0, cropOverviewPhotoV2.getXAxis());
@@ -141,7 +148,46 @@ public class OrganizationTest extends DefaultJsonMapperTestBase {
         overviewPhotoV2.getOriginal().toString());
     Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAAkOAAAAJDA3NmYwMzRkLTA2MTAt.png",
         overviewPhotoV2.getCropped().toString());
-    Assert.assertEquals(PrimaryOrganizationType.NONE, organization.getPrimaryOrganizationType());
   }
-
+  
+  /**
+   * Test organization brand json can be deserialized.
+   */
+  @Test
+  public void testOrganizationBrandJsonCanBeDeserialized() {
+    String json = readFileToString(
+        "com.echobox.api.linkedin.jsonmapper/organizationBrand.json");
+    
+    DefaultJsonMapper defaultJsonMapper = new DefaultJsonMapper();
+    
+    OrganizationResult result = defaultJsonMapper.toJavaObject(json, OrganizationResult.class);
+    OrganizationBase converted = result.getOrganization();
+    assertTrue(converted instanceof OrganizationBrand);
+    OrganizationBrand organizationBrand = (OrganizationBrand) converted;
+    
+    assertEquals(11111111L, organizationBrand.getId());
+    assertEquals("example.com", organizationBrand.getLocalizedName());
+    
+    assertEquals("urn:li:media:/p/8/000/206/3de/1111111.png",
+        organizationBrand.getLogo().getCropped().toString());
+    assertEquals("urn:li:media:/p/8/000/206/3de/1111111.png",
+        organizationBrand.getLogo().getOriginal().toString());
+    assertEquals(0, organizationBrand.getLogo().getCropInfo().getHeight());
+    assertEquals(0, organizationBrand.getLogo().getCropInfo().getWidth());
+    assertEquals(0, organizationBrand.getLogo().getCropInfo().getXAxis());
+    assertEquals(0, organizationBrand.getLogo().getCropInfo().getYAxis());
+    
+    assertEquals("test_product", organizationBrand.getName().getLocalized().get("en_US"));
+    assertEquals("US", organizationBrand.getName().getPreferredLocale().getCountry());
+    assertEquals("en", organizationBrand.getName().getPreferredLocale().getLanguage());
+    
+    assertEquals("example.com", organizationBrand.getVanityName());
+    
+    assertEquals("2", organizationBrand.getVersionTag());
+    
+    assertEquals("urn:li:organization:2222222",
+        organizationBrand.getParentRelationship().getParent().toString());
+  }
+  
+  
 }

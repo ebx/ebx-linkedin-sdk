@@ -64,6 +64,7 @@ public class OrganizationBrandTest extends DefaultJsonMapperTestBase {
     
     assertEquals("urn:li:organization:2222222", 
         organizationBrand.getParentRelationship().getParent().toString());
+    assertEquals(PrimaryOrganizationType.BRAND, organizationBrand.getPrimaryOrganizationType());
   }
   
 }

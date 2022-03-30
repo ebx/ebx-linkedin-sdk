@@ -180,4 +180,12 @@ public abstract class OrganizationBase extends LinkedInIdAndURNType {
   @LinkedIn
   private CroppedImage logoV2;
   
+  /**
+   * Primary Organization type
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private PrimaryOrganizationType primaryOrganizationType;
+  
 }
