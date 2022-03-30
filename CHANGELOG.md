@@ -106,4 +106,9 @@ can get data for both organization and organization brand pages.
   security vulnerability. See [CVE-2017-5929](https://nvd.nist.gov/vuln/detail/CVE-2017-5929) 
   for more information. Using ebx-structured-logging instead.
 
-## 3.0.3 (Work in progress)
+## 3.0.3 (Mar 25, 2022)
+* Add attribute `primaryOrganizationType` in OrganizationBase class
+* Update `findOrganizationByVanityName` to return `OrganizationBrand` if `primaryOrganizationType` is 
+  `BRAND`.
+
+## 3.0.4 (Work in progress)
