@@ -46,7 +46,9 @@ public class JsonUtilsTest {
         + "       \"description\": \"content description\","
         + "       \"submitted-image-url\": \"https://ichef.bbci.co.uk/news/660/cpsprodpb"
         + "/13398/production/_104444787_whatsubject.jpg\""
-        + "    }"
+        + "    },"
+        + "   \"numbers\": {\"long\":523412423423, \"double\":2.434343423432, "
+        + "    \"int\": 42}"
         + "}";
     JsonObject asObject = Json.parse(json).asObject();
     Map<String, Object> map = JsonUtils.toMap(asObject);
@@ -63,6 +65,12 @@ public class JsonUtilsTest {
     assertEquals("content description", content.get("description"));
     assertEquals("https://ichef.bbci.co.uk/news/660/cpsprodpb/13398/production/_104444787_"
         + "whatsubject.jpg", content.get("submitted-image-url"));
+  
+    Map<String, Object> numbers = (Map) map.get("numbers");
+    assertEquals(42L, numbers.get("int"));
+    assertEquals(523412423423L, numbers.get("long"));
+    assertEquals(2.434343423432, numbers.get("double"));
+    
   }
 
 }

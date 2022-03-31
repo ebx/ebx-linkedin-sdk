@@ -65,8 +65,22 @@ public abstract class JsonUtils {
       value = toMap(jsonValue.asObject());
     } else if (jsonValue.isString()) {
       value = jsonValue.asString();
+    } else if (jsonValue.isNumber()) {
+      value = getNumber(jsonValue);
     }
     return value;
+  }
+  
+  private static Object getNumber(JsonValue jsonValue) {
+    try {
+      return jsonValue.asLong();
+    } catch (NumberFormatException e) {
+      try {
+        return jsonValue.asDouble();
+      } catch (NumberFormatException ex) {
+        return jsonValue;
+      }
+    }
   }
 
 }
