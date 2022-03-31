@@ -112,3 +112,4 @@ can get data for both organization and organization brand pages.
   `BRAND`.
 
 ## 3.0.4 (Work in progress)
+* Update `JsonUtils.getValue` method to handle JsonNumeric values correctly.
