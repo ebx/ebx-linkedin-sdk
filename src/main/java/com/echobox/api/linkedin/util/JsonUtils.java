@@ -72,6 +72,9 @@ public abstract class JsonUtils {
   }
   
   private static Object getNumber(JsonValue jsonValue) {
+    if (!jsonValue.isNumber()) {
+      throw new IllegalArgumentException("Json input value should be numeric");
+    }
     try {
       return jsonValue.asLong();
     } catch (NumberFormatException e) {
