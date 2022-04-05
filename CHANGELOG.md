@@ -113,3 +113,4 @@ can get data for both organization and organization brand pages.
 
 ## 3.0.4 (Apr 1, 2022)
 * Update `JsonUtils.getValue` method to handle JsonNumeric values correctly.
+
