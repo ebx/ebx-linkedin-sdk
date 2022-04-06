@@ -111,4 +111,7 @@ can get data for both organization and organization brand pages.
 * Update `findOrganizationByVanityName` to return `OrganizationBrand` if `primaryOrganizationType` is 
   `BRAND`.
 
-## 3.0.4 (Work in progress)
+## 3.0.4 (Apr 1, 2022)
+* Update `JsonUtils.getValue` method to handle JsonNumeric values correctly.
+
+## 3.0.5 (Work in progress)
