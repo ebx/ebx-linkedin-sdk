@@ -113,8 +113,6 @@ public class CommentAction extends ContainsURN {
     @LinkedIn
     private Integer start;
     
-    @Getter
-    @Setter
     @LinkedIn("value")
     private CommentAction.AttributedEntity value;
   
@@ -126,7 +124,9 @@ public class CommentAction extends ContainsURN {
     }
   
     public void setCompanyValue(CommentAction.CompanyAttributedEntity companyValue) {
-      value = new AttributedEntity();
+      if (value == null) {
+        value = new AttributedEntity();
+      }
       value.setCompany(companyValue.getCompany());
     }
   
@@ -138,7 +138,9 @@ public class CommentAction extends ContainsURN {
     }
   
     public void setMemberVaue(CommentAction.MemberAttributedEntity memberValue) {
-      value = new AttributedEntity();
+      if (value == null) {
+        value = new AttributedEntity();
+      }
       value.setMember(memberValue.getMember());
     }
   
@@ -149,9 +151,11 @@ public class CommentAction extends ContainsURN {
       return schoolValue;
     }
   
-    public void setSchoolValue(CommentAction.CompanyAttributedEntity schoolValue) {
-      value = new AttributedEntity();
-      value.setSchool(schoolValue.getCompany());
+    public void setSchoolValue(CommentAction.SchoolAttributedEntity schoolValue) {
+      if (value == null) {
+        value = new AttributedEntity();
+      }
+      value.setSchool(schoolValue.getSchool());
     }
   }
   
