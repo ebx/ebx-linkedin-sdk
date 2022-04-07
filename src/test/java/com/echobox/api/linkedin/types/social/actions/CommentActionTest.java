@@ -35,7 +35,7 @@ public class CommentActionTest extends DefaultJsonMapperTestBase {
   @Test
   public void testAttributeGetCompanyValue() {
     String json =
-        readFileToString("com.echobox.api.linkedin.jsonmapper/mentionAttribute.json");
+        readFileToString("com.echobox.api.linkedin.jsonmapper/ugcShareWithMentions.json");
     DefaultJsonMapper defaultJsonMapper = new DefaultJsonMapper();
     UGCShare ugcShare = defaultJsonMapper.toJavaObject(json, UGCShare.class);
   
@@ -70,7 +70,7 @@ public class CommentActionTest extends DefaultJsonMapperTestBase {
   @Test
   public void testAttributeGetMemberValue() {
     String json =
-        readFileToString("com.echobox.api.linkedin.jsonmapper/mentionAttribute.json");
+        readFileToString("com.echobox.api.linkedin.jsonmapper/ugcShareWithMentions.json");
     DefaultJsonMapper defaultJsonMapper = new DefaultJsonMapper();
     UGCShare ugcShare = defaultJsonMapper.toJavaObject(json, UGCShare.class);
     
