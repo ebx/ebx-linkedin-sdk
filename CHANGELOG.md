@@ -113,3 +113,7 @@ can get data for both organization and organization brand pages.
 
 ## 3.0.4 (Apr 1, 2022)
 * Update `JsonUtils.getValue` method to handle JsonNumeric values correctly.
+
+## 3.0.5 (Apr 7, 2022)
+* Updated CommentAction.Attribute.value to use AttributedEntity, to fix issue where share 
+  requests with mentions aren't being persisted correctly.
