@@ -1,0 +1,30 @@
+{
+  "actor": "urn:li:organization:5637409",
+  "agent": "urn:li:person:CnpTkB7V70",
+  "created": {
+    "actor": "urn:li:organization:5637409",
+    "impersonator": "urn:li:person:CnpTkB7V70",
+    "time": 1583863835990
+  },
+  "id": "6643206422739898368",
+  "lastModified": {
+    "actor": "urn:li:organization:5637409",
+    "impersonator": "urn:li:person:CnpTkB7V70",
+    "time": 1583863835991
+  },
+  "message": {
+    "attributes": [],
+    "text": "commentV2 with image urn"
+  },
+  "$URN": "urn:li:comment:(urn:li:activity:6641861161010679808,6643206422739898368)",
+  "content": [
+    {
+      "type": "IMAGE",
+      "url": "https://media.licdn-ei.com/dms/image/C552CAQGu16obsGZENQ/comment-image-shrink_8192_800/0?e=1585180800&v=beta&t=d8E35ZP3x0_Lrk0utXbn3YPw9_5ybihj2AWXWb8xHdc",
+      "entity": {
+        "digitalmediaAsset": "urn:li:digitalmediaAsset:C552CAQGu16obsGZENQ"
+      }
+    }
+  ],
+  "object": "urn:li:activity:6641861161010679808"
+}

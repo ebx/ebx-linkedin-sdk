@@ -118,4 +118,5 @@ can get data for both organization and organization brand pages.
 * Updated `CommentAction.Attribute.value` to use AttributedEntity, to fix issue where share 
   requests with mentions aren't being persisted correctly.
 
-## 3.0.6 (work in progress)
+## 3.1.0 (Sep 7, 2022)
+* Add CommentConnection for posting comment to a post (by URN)
