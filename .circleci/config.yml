@@ -22,6 +22,8 @@ workflows:
             - predeploy
           title: Circle CI release
           tag: v$MVN_VERSION
+          files: ../target/ebx-linkedin-sdk-${MVN_VERSION}*.jar
+          notes-file: ../CHANGELOG.md
 
 jobs:
   prebuild:
@@ -67,5 +69,3 @@ jobs:
     steps:
       - run: |
           echo "Deploying to github releases..."
-    files: ../target/ebx-linkedin-sdk-${MVN_VERSION}*.jar
-    notes-file: ../CHANGELOG.md
