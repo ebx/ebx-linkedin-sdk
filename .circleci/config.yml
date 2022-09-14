@@ -30,9 +30,10 @@ jobs:
     machine:
       image: ubuntu-2004:202010-01
     steps:
+      - checkout
       - run: 
           name: "What branch am I on?"
-          command: pwd
+          command: echo "Source branch = ${CIRCLE_BRANCH}"
       - run:
           name: "Import GPG keys"
           command: echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import || echo "Failed to import GPG_SECRET_KEYS (probably because this branch is a PR)."
@@ -46,6 +47,7 @@ jobs:
     machine:
       image: ubuntu-2004:202010-01
     steps:
+      - checkout
       - run:
           name: "Run build script"
           command: source buildscripts/build.sh
