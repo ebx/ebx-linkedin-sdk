@@ -28,7 +28,7 @@ workflows:
 jobs:
   prebuild:
     machine:
-      image: ubuntu-2004:202010-01
+      image: ubuntu-2004:2022.07.1
     steps:
       - checkout
       - run: 
@@ -45,7 +45,7 @@ jobs:
           command: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh && source buildscripts/validateBuild.sh
   build:
     machine:
-      image: ubuntu-2004:202010-01
+      image: ubuntu-2004:2022.07.1
     steps:
       - checkout
       - run:
@@ -57,7 +57,7 @@ jobs:
           when: on_fail
   predeploy:
     machine:
-      image: ubuntu-2004:202010-01
+      image: ubuntu-2004:2022.07.1
     steps:
       # Set up git user name and tag this commit
       - run: |
@@ -67,7 +67,7 @@ jobs:
           git tag $DEPLOY_TAG
   gh/release:
     machine:
-      image: ubuntu-2004:202010-01
+      image: ubuntu-2004:2022.07.1
     steps:
       - run: |
           echo "Deploying to github releases..."
