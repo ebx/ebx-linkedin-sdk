@@ -22,8 +22,8 @@ workflows:
             - predeploy
           title: Circle CI release
           tag: v$MVN_VERSION
-          files: ./target/ebx-linkedin-sdk-${MVN_VERSION}*.jar
-          notes-file: ./CHANGELOG.md
+          files: target/ebx-linkedin-sdk-${MVN_VERSION}*.jar
+          notes-file: CHANGELOG.md
 
 jobs:
   prebuild:
@@ -41,17 +41,17 @@ jobs:
           command: echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust || echo "Failed to import GPG_OWNERTRUST (probably because this branch is a PR)."
       - run:
           name: "Source scripts"
-          command: source ./buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh && source ./buildscripts/validateBuild.sh
+          command: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh && source buildscripts/validateBuild.sh
   build:
     machine:
       image: ubuntu-2004:202010-01
     steps:
       - run:
           name: "Run build script"
-          command: source ./buildscripts/build.sh
+          command: source buildscripts/build.sh
       - run:
           name: "If build failure"
-          command: cat ./target/surefire-reports/*.txt
+          command: cat target/surefire-reports/*.txt
           when: on_fail
   predeploy:
     machine:
