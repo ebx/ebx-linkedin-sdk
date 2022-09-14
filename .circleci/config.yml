@@ -50,7 +50,7 @@ jobs:
       - checkout
       - run:
           name: "Run build script"
-          command: source buildscripts/build.sh
+          command: bash buildscripts/build.sh
       - run:
           name: "If build failure"
           command: cat target/surefire-reports/*.txt
