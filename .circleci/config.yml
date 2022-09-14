@@ -13,7 +13,7 @@ workflows:
       - predeploy:
           requires:
             - build
-      - deploy:
+      - gh/release:
           context: github-credentials
           filters:
             branches:
@@ -61,7 +61,7 @@ jobs:
           git config --local user.email "marc@echobox.com"
           export DEPLOY_TAG=v$MVN_VERSION
           git tag $DEPLOY_TAG
-  deploy:
+  gh/release:
     machine:
       image: ubuntu-2004:202010-01
     steps:
