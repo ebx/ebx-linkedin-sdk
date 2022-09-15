@@ -16,13 +16,13 @@
 # limitations under the License.
 ##
 
-if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-  printf "${GREEN_COLOUR}Building base branch $SOURCE_BRANCH_NAME which is at version $MVN_VERSION.${NO_COLOUR}\n"
+if [ "$CIRCLE_BRANCH" == "dev" ] || [ "$CIRCLE_BRANCH" == "master" ]; then
+  printf "${GREEN_COLOUR}Building base branch $CIRCLE_BRANCH which is at version $MVN_VERSION.${NO_COLOUR}\n"
 else
   #Get the PR title
-  export PR_TITLE=$(curl -s https://api.github.com/repos/$REPO/pulls/$TRAVIS_PULL_REQUEST | grep -Po '(?<="title":[[:space:]]")[^"]*(?=",)')
+  export PR_TITLE=$(curl -s https://api.github.com/repos/$REPO/pulls/${CIRCLE_PULL_REQUEST##*/} | grep -Po '(?<="title":[[:space:]]")[^"]*(?=",)')
 
-  printf "${GREEN_COLOUR}Building PR #$TRAVIS_PULL_REQUEST '$PR_TITLE' from branch $SOURCE_BRANCH_NAME (into $TRAVIS_BRANCH)${NO_COLOUR}\n"
+  printf "${GREEN_COLOUR}Building PR #${CIRCLE_PULL_REQUEST##*/} '$PR_TITLE' from branch $CIRCLE_BRANCH (into $DEV_BRANCH)${NO_COLOUR}\n"
   
   ##Disabled as travis keeps getting rate limited by github
   ##Ensure the PR name matches our expected format
@@ -31,9 +31,9 @@ else
   #  travis_terminate 1;
   #fi
   
-  #Ensure PR cannot be into master, unless it's coming from dev
-  if [ "$TRAVIS_BRANCH" == "$RELEASE_BRANCH" ] && [ "$SOURCE_BRANCH_NAME" != "$DEV_BRANCH" ]; then
+  #Ensure PR cannot be merged into master, unless it's coming from dev
+  if [ "$CIRCLE_BRANCH" == "$RELEASE_BRANCH" ] && [ "$CIRCLE_BRANCH" != "$DEV_BRANCH" ]; then
     printf "${RED_COLOUR}Build failed as PR target is master. Please ensure you use $DEV_BRANCH as the target.${NO_COLOUR}\n"
-    travis_terminate 1;
+    circleci-agent step halt;
   fi
 fi

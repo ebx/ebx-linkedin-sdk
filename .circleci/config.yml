@@ -1,0 +1,90 @@
+version: 2.1
+orbs:
+  gh: circleci/github-cli@2.1.0
+
+workflows:
+  version: 2
+  prebuild-build:
+    jobs:
+      - prebuild:
+          context: Open Source Release Credentials
+      - build:
+          context: Open Source Release Credentials
+          requires:
+            - prebuild
+  predeploy-deploy:
+    when:
+      or:
+        - equal: [ master, << pipeline.git.branch >> ]
+        - equal: [ dev, << pipeline.git.branch >> ]
+    jobs:
+      - predeploy:
+          requires:
+            - build
+      - gh/release:
+          context: Open Source Release Credentials
+          filters:
+            branches:
+              only: master
+          requires:
+            - predeploy
+          title: Circle CI release
+          tag: v$MVN_VERSION
+          files: target/ebx-linkedin-sdk-${MVN_VERSION}*.jar
+          notes-file: CHANGELOG.md
+
+jobs:
+  prebuild:
+    machine:
+      image: ubuntu-2004:2022.07.1
+    environment:
+        DEV_BRANCH: dev
+        RELEASE_BRANCH: master
+        REPO: ebx/ebx-linkedin-sdk
+        NO_COLOUR: '\033[0m'
+        RED_COLOUR: '\033[0;31m'
+        GREEN_COLOUR: '\033[0;32m'
+    steps:
+      - checkout
+      - run: 
+          name: "What branch am I on?"
+          command: export SOURCE_BRANCH_NAME=$CIRCLE_BRANCH
+      - run:
+          name: "Import GPG keys"
+          command: echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import || echo "Failed to import GPG_SECRET_KEYS (probably because this branch is a PR)."
+      - run:
+          name: "Import GPG owner trust"
+          command: echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust || echo "Failed to import GPG_OWNERTRUST (probably because this branch is a PR)."
+      - run:
+          name: "Export version & Validate build"
+          command: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh && source buildscripts/validateBuild.sh
+  build:
+    machine:
+      image: ubuntu-2004:2022.07.1
+    environment:
+      JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
+    steps:
+      - checkout
+      - run:
+          name: "Run build script"
+          command: source buildscripts/build.sh
+      - run:
+          name: "If build failure"
+          command: cat target/surefire-reports/*.txt
+          when: on_fail
+  predeploy:
+    machine:
+      image: ubuntu-2004:2022.07.1
+    steps:
+      # Set up git user name and tag this commit
+      - run: |
+          git config --local user.name "MarcFletcher"
+          git config --local user.email "marc@echobox.com"
+          export DEPLOY_TAG=v$MVN_VERSION
+          git tag $DEPLOY_TAG
+  gh/release:
+    machine:
+      image: ubuntu-2004:2022.07.1
+    steps:
+      - run: |
+          echo "Deploying to github releases..."
