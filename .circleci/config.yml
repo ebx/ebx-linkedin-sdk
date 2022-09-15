@@ -18,9 +18,7 @@ workflows:
         - equal: [ master, << pipeline.git.branch >> ]
         - equal: [ dev, << pipeline.git.branch >> ]
     jobs:
-      - predeploy:
-          requires:
-            - build
+      - predeploy
       - gh/release:
           context: Open Source Release Credentials
           filters:
