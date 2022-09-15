@@ -38,10 +38,10 @@ jobs:
           command: echo "Source branch = ${CIRCLE_BRANCH}"
       - run:
           name: "Import GPG keys"
-          command: if [ "$GPG_SECRET_KEYS" != "" ]; then echo $GPG_SECRET_KEYS; else echo "Variable missing"; fi
+          command: if [ "$GPG_SECRET_KEYS" != "" ]; then $(gpg --import); else echo "Variable missing"; fi
       - run:
           name: "Import GPG owner trust"
-          command: echo $GPG_OWNERTRUST
+          command: if [ "$GPG_OWNERTRUST" != "" ]; then $(gpg --import-ownertrust); else echo "Variable missing"; fi
       - run:
           name: "Source scripts"
           command: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh && source buildscripts/validateBuild.sh
