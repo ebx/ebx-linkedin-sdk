@@ -38,6 +38,7 @@ jobs:
         NO_COLOUR: '\033[0m'
         RED_COLOUR: '\033[0;31m'
         GREEN_COLOUR: '\033[0;32m'
+        PR_OR_DESTINATION_BRANCH_NAME: $CIRCLE_BRANCH
     steps:
       - checkout
       - run: 
@@ -50,10 +51,8 @@ jobs:
           name: "Import GPG owner trust"
           command: echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust || echo "Failed to import GPG_OWNERTRUST (probably because this branch is a PR)."
       - run:
-          name: "Export version & Validate build" |
-          export SOURCE_BRANCH_NAME=$CIRCLE_BRANCH
-          source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh
-          source buildscripts/validateBuild.sh
+          name: "Export version & Validate build"
+          command: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh && source buildscripts/validateBuild.sh
   build:
     machine:
       image: ubuntu-2004:2022.07.1
