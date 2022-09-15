@@ -7,16 +7,16 @@ workflows:
   prebuild-build-predeploy-deploy:
     jobs:
       - prebuild:
-          context: github-credentials
+          context: Open Source Release Credentials
       - build:
-          context: github-credentials
+          context: Open Source Release Credentials
           requires:
             - prebuild
       - predeploy:
           requires:
             - build
       - gh/release:
-          context: github-credentials
+          context: Open Source Release Credentials
           filters:
             branches:
               only: master
@@ -36,9 +36,6 @@ jobs:
       - run: 
           name: "What branch am I on?"
           command: echo "Source branch = ${CIRCLE_BRANCH}"
-      - run:
-          name: "Test non-present variable"
-          command: if [ "$MISSING_VAR" != "" ]; then echo $MISSING_VAR; else echo "Variable missing"; fi
       - run:
           name: "Import GPG keys"
           command: if [ "$GPG_SECRET_KEYS" != "" ]; then echo $GPG_SECRET_KEYS; else echo "Variable missing"; fi
