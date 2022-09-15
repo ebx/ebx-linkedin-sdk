@@ -36,8 +36,11 @@ jobs:
           name: "What branch am I on?"
           command: echo "Source branch = ${CIRCLE_BRANCH}"
       - run:
+          name: "Test non-present variable"
+          command: if [[ $GPG_SECRET != "" ]]; then echo "GPG Secret variable found"
+      - run:
           name: "Import GPG keys"
-          command: echo $GPG_SECRET_KEYS
+          command: if [[ $GPG_SECRET_KEYS != "" ]]; then echo "GPG keys variable found"
       - run:
           name: "Import GPG owner trust"
           command: echo $GPG_OWNERTRUST
