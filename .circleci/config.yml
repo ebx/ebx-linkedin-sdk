@@ -8,6 +8,14 @@ workflows:
     jobs:
       - prebuild:
           context: Open Source Release Credentials
+          environment:
+              DEV_BRANCH: dev
+              RELEASE_BRANCH: master
+              REPO: ebx/ebx-linkedin-sdk
+              NO_COLOUR: '\033[0m'
+              RED_COLOUR: '\033[0;31m'
+              GREEN_COLOUR: '\033[0;32m'
+
       - build:
           context: Open Source Release Credentials
           requires:
