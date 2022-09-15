@@ -8,6 +8,7 @@ workflows:
     jobs:
       - prebuild
       - build:
+          context: github-credentials
           requires:
             - prebuild
       - predeploy:
@@ -36,10 +37,10 @@ jobs:
           command: echo "Source branch = ${CIRCLE_BRANCH}"
       - run:
           name: "Import GPG keys"
-          command: echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import || echo "Failed to import GPG_SECRET_KEYS (probably because this branch is a PR)."
+          command: echo $GPG_SECRET_KEYS
       - run:
           name: "Import GPG owner trust"
-          command: echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust || echo "Failed to import GPG_OWNERTRUST (probably because this branch is a PR)."
+          command: echo $GPG_OWNERTRUST
       - run:
           name: "Source scripts"
           command: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh && source buildscripts/validateBuild.sh
