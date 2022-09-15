@@ -6,7 +6,8 @@ workflows:
   version: 2
   prebuild-build-predeploy-deploy:
     jobs:
-      - prebuild
+      - prebuild:
+          context: github-credentials
       - build:
           context: github-credentials
           requires:
