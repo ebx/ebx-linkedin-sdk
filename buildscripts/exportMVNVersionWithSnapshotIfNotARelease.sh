@@ -18,7 +18,7 @@
 
 export MVN_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout|grep -v '\[')
 ## If this is not master we dynamically set the version to a snapshot
-if [ "$PR_OR_DESTINATION_BRANCH_NAME" != "$RELEASE_BRANCH" ]; then 
+if [ "$CIRCLE_BRANCH" != "$RELEASE_BRANCH" ]; then 
   mvn versions:set -q -DnewVersion=$MVN_VERSION-SNAPSHOT
   export MVN_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout|grep -v '\[')
   printf "${GREEN_COLOUR}Build version modified to $MVN_VERSION as this is not the $RELEASE_BRANCH branch.${NO_COLOUR}\n"

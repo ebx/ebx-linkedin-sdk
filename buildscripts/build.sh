@@ -18,7 +18,7 @@
 
 ## For DEV and MASTER deploy to maven central (DEV will always be a snapshot)
 ## All other builds are simply verified
-if [ "$PR_OR_DESTINATION_BRANCH_NAME" == "$RELEASE_BRANCH" ] || [ "$PR_OR_DESTINATION_BRANCH_NAME" == "$DEV_BRANCH" ]; then
+if [ "$CIRCLE_BRANCH" == "$RELEASE_BRANCH" ] || [ "$CIRCLE_BRANCH" == "$DEV_BRANCH" ]; then
   printf "${GREEN_COLOUR}Performing deploy build to maven central.${NO_COLOUR}\n"
   mvn clean deploy --settings .maven.xml -B -U -Prelease
 else
