@@ -38,7 +38,7 @@ jobs:
           command: echo "Source branch = ${CIRCLE_BRANCH}"
       - run:
           name: "Import GPG keys"
-          command: if [ "$GPG_SECRET_KEYS" != "" ]; then $(echo $GPG_SECRET_KEYS | base64 --decode | gpg --import); else echo "Variable missing"; fi
+          command: if [ "$GPG_SECRET_KEYS" != "" ]; then $(gpg --export-secret-key $GPG_SECRET_KEYS | base64); else echo "Variable missing"; fi
       - run:
           name: "Import GPG owner trust"
           command: if [ "$GPG_OWNERTRUST" != "" ]; then $(echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust); else echo "Variable missing"; fi
