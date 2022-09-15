@@ -13,6 +13,10 @@ workflows:
           requires:
             - prebuild
       - predeploy:
+          when:
+            or:
+              - equal: [ master, << pipeline.git.branch >> ]
+              - equal: [ dev, << pipeline.git.branch >> ]
           requires:
             - build
       - gh/release:
