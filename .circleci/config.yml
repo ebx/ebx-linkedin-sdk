@@ -49,7 +49,8 @@ jobs:
       - run:
           name: "Import GPG owner trust"
           command: echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust || echo "Failed to import GPG_OWNERTRUST (probably because this branch is a PR)."
-      - run: |
+      - run:
+          name: "Export version & Validate build" |
           export SOURCE_BRANCH_NAME=$CIRCLE_BRANCH
           source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh
           source buildscripts/validateBuild.sh
