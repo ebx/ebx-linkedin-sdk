@@ -4,7 +4,7 @@ orbs:
 
 workflows:
   version: 2
-  prebuild-build:
+  prebuild-build-predeploy-deploy:
     jobs:
       - prebuild:
           context: Open Source Release Credentials
@@ -12,13 +12,9 @@ workflows:
           context: Open Source Release Credentials
           requires:
             - prebuild
-  predeploy-deploy:
-    when:
-      or:
-        - equal: [ master, << pipeline.git.branch >> ]
-        - equal: [ dev, << pipeline.git.branch >> ]
-    jobs:
-      - predeploy
+      - predeploy:
+          requires:
+            - build
       - gh/release:
           context: Open Source Release Credentials
           filters:
@@ -70,6 +66,10 @@ jobs:
           name: "If build failure"
           command: cat target/surefire-reports/*.txt
           when: on_fail
+      - run: |
+          if [ "$CIRCLE_BRANCH" != "dev" ] && [ "$CIRCLE_BRANCH" != "master" ]; then
+              circleci-agent step halt
+          fi
   predeploy:
     machine:
       image: ubuntu-2004:2022.07.1
