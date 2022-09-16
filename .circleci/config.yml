@@ -7,11 +7,13 @@ workflows:
   prebuild-build-predeploy-deploy:
     jobs:
       - prebuild:
-          context: Open Source Release Credentials
-          context: Non-sensitive Env Vars
+          context: 
+            - Open Source Release Credentials
+            - Non-sensitive Env Vars
       - build:
-          context: Open Source Release Credentials
-          context: Non-sensitive Env Vars
+          context: 
+            - Open Source Release Credentials
+            - Non-sensitive Env Vars
           requires:
             - prebuild
       - predeploy:
