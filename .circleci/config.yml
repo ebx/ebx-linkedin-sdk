@@ -67,7 +67,7 @@ jobs:
       image: ubuntu-2004:2022.07.1
     steps:
       - run: |
-          if [ "$CIRCLE_BRANCH" != "dev" ] && [ "$CIRCLE_BRANCH" != "master" ]; then
+          if [ "$CIRCLE_BRANCH" != "$DEV_BRANCH" ] && [ "$CIRCLE_BRANCH" != "$RELEASE_BRANCH" ]; then
               circleci-agent step halt
           fi
       - run: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh
