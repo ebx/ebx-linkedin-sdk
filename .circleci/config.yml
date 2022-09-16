@@ -8,11 +8,14 @@ workflows:
     jobs:
       - prebuild:
           context: Open Source Release Credentials
+          context: Non-sensitive Env Vars
       - build:
           context: Open Source Release Credentials
+          context: Non-sensitive Env Vars
           requires:
             - prebuild
       - predeploy:
+          context: Non-sensitive Env Vars
           requires:
             - build
       - gh/release:
@@ -31,13 +34,6 @@ jobs:
   prebuild:
     machine:
       image: ubuntu-2004:2022.07.1
-    environment:
-      DEV_BRANCH: dev
-      RELEASE_BRANCH: master
-      REPO: ebx/ebx-linkedin-sdk
-      NO_COLOUR: '\033[0m'
-      RED_COLOUR: '\033[0;31m'
-      GREEN_COLOUR: '\033[0;32m'
     steps:
       - checkout
       - run: 
@@ -55,14 +51,6 @@ jobs:
   build:
     machine:
       image: ubuntu-2004:2022.07.1
-    environment:
-      JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
-      DEV_BRANCH: dev
-      RELEASE_BRANCH: master
-      REPO: ebx/ebx-linkedin-sdk
-      NO_COLOUR: '\033[0m'
-      RED_COLOUR: '\033[0;31m'
-      GREEN_COLOUR: '\033[0;32m'
     steps:
       - checkout
       - run:
@@ -73,14 +61,6 @@ jobs:
           command: cat target/surefire-reports/*.txt
           when: on_fail
   predeploy:
-    environment:
-      JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
-      DEV_BRANCH: dev
-      RELEASE_BRANCH: master
-      REPO: ebx/ebx-linkedin-sdk
-      NO_COLOUR: '\033[0m'
-      RED_COLOUR: '\033[0;31m'
-      GREEN_COLOUR: '\033[0;32m'
     machine:
       image: ubuntu-2004:2022.07.1
     steps:
