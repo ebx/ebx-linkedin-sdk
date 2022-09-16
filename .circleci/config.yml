@@ -66,14 +66,14 @@ jobs:
           name: "If build failure"
           command: cat target/surefire-reports/*.txt
           when: on_fail
-      - run: |
-          if [ "$CIRCLE_BRANCH" != "dev" ] && [ "$CIRCLE_BRANCH" != "master" ]; then
-              circleci-agent step halt
-          fi
   predeploy:
     machine:
       image: ubuntu-2004:2022.07.1
     steps:
+      - run: |
+          if [ "$CIRCLE_BRANCH" != "dev" ] && [ "$CIRCLE_BRANCH" != "master" ]; then
+              circleci-agent step halt
+          fi
       # Set up git user name and tag this commit
       - run: |
           git config --local user.name "MarcFletcher"
