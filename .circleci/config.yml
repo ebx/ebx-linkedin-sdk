@@ -4,21 +4,22 @@ orbs:
 
 workflows:
   version: 2
-  prebuild-build:
+  build-and-deploy:
     jobs:
       - prebuild:
-          context: Open Source Release Credentials
+          context: 
+            - Open Source Release Credentials
+            - Non-sensitive Env Vars
       - build:
-          context: Open Source Release Credentials
+          context: 
+            - Open Source Release Credentials
+            - Non-sensitive Env Vars
           requires:
             - prebuild
-  predeploy-deploy:
-    when:
-      or:
-        - equal: [ master, << pipeline.git.branch >> ]
-        - equal: [ dev, << pipeline.git.branch >> ]
-    jobs:
-      - predeploy
+      - predeploy:
+          context: Non-sensitive Env Vars
+          requires:
+            - build
       - gh/release:
           context: Open Source Release Credentials
           filters:
@@ -35,13 +36,6 @@ jobs:
   prebuild:
     machine:
       image: ubuntu-2004:2022.07.1
-    environment:
-        DEV_BRANCH: dev
-        RELEASE_BRANCH: master
-        REPO: ebx/ebx-linkedin-sdk
-        NO_COLOUR: '\033[0m'
-        RED_COLOUR: '\033[0;31m'
-        GREEN_COLOUR: '\033[0;32m'
     steps:
       - checkout
       - run: 
@@ -59,8 +53,6 @@ jobs:
   build:
     machine:
       image: ubuntu-2004:2022.07.1
-    environment:
-      JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
     steps:
       - checkout
       - run:
@@ -74,6 +66,11 @@ jobs:
     machine:
       image: ubuntu-2004:2022.07.1
     steps:
+      - run: |
+          if [ "$CIRCLE_BRANCH" != "$DEV_BRANCH" ] && [ "$CIRCLE_BRANCH" != "$RELEASE_BRANCH" ]; then
+              circleci-agent step halt
+          fi
+      - run: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh
       # Set up git user name and tag this commit
       - run: |
           git config --local user.name "MarcFletcher"

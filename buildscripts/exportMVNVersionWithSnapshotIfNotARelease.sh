@@ -29,5 +29,5 @@ fi
 #Ensure the project verison is valid
 if ! [[ $MVN_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+.*$ ]]; then
   printf "${RED_COLOUR}The extracted project version '$MVN_VERSION' was not valid.${NO_COLOUR}\n"
-  travis_terminate 1;
+  exit 1;
 fi
