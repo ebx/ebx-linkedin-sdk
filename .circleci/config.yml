@@ -73,6 +73,14 @@ jobs:
           command: cat target/surefire-reports/*.txt
           when: on_fail
   predeploy:
+    environment:
+      JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
+      DEV_BRANCH: dev
+      RELEASE_BRANCH: master
+      REPO: ebx/ebx-linkedin-sdk
+      NO_COLOUR: '\033[0m'
+      RED_COLOUR: '\033[0;31m'
+      GREEN_COLOUR: '\033[0;32m'
     machine:
       image: ubuntu-2004:2022.07.1
     steps:
@@ -80,6 +88,7 @@ jobs:
           if [ "$CIRCLE_BRANCH" != "dev" ] && [ "$CIRCLE_BRANCH" != "master" ]; then
               circleci-agent step halt
           fi
+      - run: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh
       # Set up git user name and tag this commit
       - run: |
           git config --local user.name "MarcFletcher"

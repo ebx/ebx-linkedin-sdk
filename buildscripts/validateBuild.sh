@@ -32,8 +32,8 @@ else
   #fi
   
   #Ensure PR cannot be merged into master, unless it's coming from dev
-  if [ "$CIRCLE_BRANCH" == "$RELEASE_BRANCH" ] && [ "$CIRCLE_BRANCH" != "$DEV_BRANCH" ]; then
-    printf "${RED_COLOUR}Build failed as PR target is master. Please ensure you use $DEV_BRANCH as the target.${NO_COLOUR}\n"
-    circleci-agent step halt;
-  fi
+  # if [ "$CIRCLE_BRANCH" == "$RELEASE_BRANCH" ] && [ "$CIRCLE_BRANCH" != "$DEV_BRANCH" ]; then
+  #   printf "${RED_COLOUR}Build failed as PR target is master. Please ensure you use $DEV_BRANCH as the target.${NO_COLOUR}\n"
+  #   circleci-agent step halt;
+  # fi
 fi
