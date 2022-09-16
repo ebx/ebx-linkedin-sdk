@@ -32,12 +32,12 @@ jobs:
     machine:
       image: ubuntu-2004:2022.07.1
     environment:
-        DEV_BRANCH: dev
-        RELEASE_BRANCH: master
-        REPO: ebx/ebx-linkedin-sdk
-        NO_COLOUR: '\033[0m'
-        RED_COLOUR: '\033[0;31m'
-        GREEN_COLOUR: '\033[0;32m'
+      DEV_BRANCH: dev
+      RELEASE_BRANCH: master
+      REPO: ebx/ebx-linkedin-sdk
+      NO_COLOUR: '\033[0m'
+      RED_COLOUR: '\033[0;31m'
+      GREEN_COLOUR: '\033[0;32m'
     steps:
       - checkout
       - run: 
@@ -57,6 +57,12 @@ jobs:
       image: ubuntu-2004:2022.07.1
     environment:
       JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
+      DEV_BRANCH: dev
+      RELEASE_BRANCH: master
+      REPO: ebx/ebx-linkedin-sdk
+      NO_COLOUR: '\033[0m'
+      RED_COLOUR: '\033[0;31m'
+      GREEN_COLOUR: '\033[0;32m'
     steps:
       - checkout
       - run:
