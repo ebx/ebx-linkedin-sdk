@@ -1,0 +1,88 @@
+version: 2.1
+orbs:
+  gh: circleci/github-cli@2.1.0
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - prebuild:
+          context: 
+            - Open Source Release Credentials
+            - Non-sensitive Env Vars
+      - build:
+          context: 
+            - Open Source Release Credentials
+            - Non-sensitive Env Vars
+          requires:
+            - prebuild
+      - predeploy:
+          context: Non-sensitive Env Vars
+          requires:
+            - build
+      - gh/release:
+          context: Open Source Release Credentials
+          filters:
+            branches:
+              only: master
+          requires:
+            - predeploy
+          title: Circle CI release
+          tag: v$MVN_VERSION
+          files: target/ebx-linkedin-sdk-${MVN_VERSION}*.jar
+          notes-file: CHANGELOG.md
+
+jobs:
+  prebuild:
+    machine:
+      image: ubuntu-2004:2022.07.1
+    steps:
+      - checkout
+      - run: 
+          name: "What branch am I on?"
+          command: export SOURCE_BRANCH_NAME=$CIRCLE_BRANCH
+      - run:
+          name: "Export version & Validate build"
+          command: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh && source buildscripts/validateBuild.sh
+  build:
+    machine:
+      image: ubuntu-2004:2022.07.1
+    steps:
+      - checkout
+      - run: 
+          name: "Check gpg version"
+          command: gpg --version
+      - run:
+          name: "Import GPG keys"
+          command: echo $GPG_SECRET_KEYS2 | base64 --decode | $GPG_EXECUTABLE --import || echo "Failed to import GPG_SECRET_KEYS (probably because this branch is a PR)."
+      - run:
+          name: "Import GPG owner trust"
+          command: echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust || echo "Failed to import GPG_OWNERTRUST (probably because this branch is a PR)."
+      - run:
+          name: "Run build script"
+          command: source buildscripts/build.sh
+      - run:
+          name: "If build failure"
+          command: cat target/surefire-reports/*.txt
+          when: on_fail
+  predeploy:
+    machine:
+      image: ubuntu-2004:2022.07.1
+    steps:
+      - run: |
+          if [ "$CIRCLE_BRANCH" != "$DEV_BRANCH" ] && [ "$CIRCLE_BRANCH" != "$RELEASE_BRANCH" ]; then
+              circleci-agent step halt
+          fi
+      - run: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh
+      # Set up git user name and tag this commit
+      - run: |
+          git config --local user.name "MarcFletcher"
+          git config --local user.email "marc@echobox.com"
+          export DEPLOY_TAG=v$MVN_VERSION
+          git tag $DEPLOY_TAG
+  gh/release:
+    machine:
+      image: ubuntu-2004:2022.07.1
+    steps:
+      - run: |
+          echo "Deploying to github releases..."
