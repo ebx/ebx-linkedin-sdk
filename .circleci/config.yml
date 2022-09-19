@@ -54,7 +54,7 @@ jobs:
           command: gpg --version
       - run:
           name: "Import GPG keys"
-          command: echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import || echo "Failed to import GPG_SECRET_KEYS (probably because this branch is a PR)."
+          command: echo $GPG_SECRET_KEYS2 | base64 --decode | $GPG_EXECUTABLE --import || echo "Failed to import GPG_SECRET_KEYS (probably because this branch is a PR)."
       - run:
           name: "Import GPG owner trust"
           command: echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust || echo "Failed to import GPG_OWNERTRUST (probably because this branch is a PR)."
