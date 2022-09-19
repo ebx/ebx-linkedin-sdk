@@ -49,6 +49,9 @@ jobs:
       image: ubuntu-2004:2022.07.1
     steps:
       - checkout
+      - run: 
+          name: "Check gpg version"
+          command: gpg --version
       - run:
           name: "Import GPG keys"
           command: echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import || echo "Failed to import GPG_SECRET_KEYS (probably because this branch is a PR)."
