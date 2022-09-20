@@ -53,6 +53,7 @@ jobs:
           if [ "$CIRCLE_BRANCH" == "$DEV_BRANCH" ] || [ "$CIRCLE_BRANCH" == "$RELEASE_BRANCH" ]; then
               echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import --batch --passphrase $GPG_PASSPHRASE || echo "Failed to import GPG_SECRET_KEYS."
               echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust || echo "Failed to import GPG_OWNERTRUST."
+              export GPG_TTY=$(tty)
           fi
       - run:
           name: "Run build script"
