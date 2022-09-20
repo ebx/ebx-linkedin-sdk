@@ -21,7 +21,7 @@
 if [ "$CIRCLE_BRANCH" == "$RELEASE_BRANCH" ] || [ "$CIRCLE_BRANCH" == "$DEV_BRANCH" ]; then
   printf "${GREEN_COLOUR}Performing deploy build to maven central.${NO_COLOUR}\n"
   echo "${GPG_SECRET_KEYS}" | base64 --decode | $GPG_EXECUTABLE --import --batch --passphrase "${GPG_PASSPHRASE}" || echo "Failed to import GPG_SECRET_KEYS."
-  echo "${GPG_OWNERTRUST}" | base64 --decode | $GPG_EXECUTABLE --import-ownertrust || echo "Failed to import GPG_OWNERTRUST."
+  echo "${GPG_OWNERTRUST}" | base64 --decode | $GPG_EXECUTABLE --import-ownertrust --batch --passphrase "${GPG_PASSPHRASE}" || echo "Failed to import GPG_OWNERTRUST."
   GPG_TTY=$(tty)
   export GPG_TTY
   mvn clean deploy --settings .maven.xml -B -U -Prelease
