@@ -52,8 +52,8 @@ jobs:
       - when:
           condition:
             - or:
-                equal: [ dev, << pipeline.git.branch >> ]
-                equal: [ master, << pipeline.git.branch >> ]
+                - equal: [ dev, << pipeline.git.branch >> ]
+                - equal: [ master, << pipeline.git.branch >> ]
           steps:
             - run:
                 name: "Import GPG keys"
