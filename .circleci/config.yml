@@ -51,7 +51,7 @@ jobs:
       - checkout
       - run:
           name: "Run build script"
-          command: source buildscripts/build.sh
+          command: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh && source buildscripts/build.sh
       - run:
           name: "If build failure"
           command: cat target/surefire-reports/*.txt
