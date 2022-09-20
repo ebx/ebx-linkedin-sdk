@@ -19,7 +19,7 @@
 ## For DEV and MASTER deploy to maven central (DEV will always be a snapshot)
 ## All other builds are simply verified
 if [ "$CIRCLE_BRANCH" == "$RELEASE_BRANCH" ] || [ "$CIRCLE_BRANCH" == "$DEV_BRANCH" ]; then
-  printf "${GREEN_COLOUR}Performing deploy build to maven central.${NO_COLOUR}\n"
+  printf "${GREEN_COLOUR}Performing deploy build to maven central${NO_COLOUR}\n"
   echo "${GPG_SECRET_KEYS}" | base64 --decode | $GPG_EXECUTABLE --import --batch --passphrase "${GPG_PASSPHRASE}" || echo "Failed to import GPG_SECRET_KEYS."
   echo "${GPG_OWNERTRUST}" | base64 --decode | $GPG_EXECUTABLE --import-ownertrust --batch --passphrase "${GPG_PASSPHRASE}" || echo "Failed to import GPG_OWNERTRUST."
   GPG_TTY=$(tty)
