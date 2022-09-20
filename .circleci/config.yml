@@ -49,17 +49,11 @@ jobs:
       image: ubuntu-2004:2022.07.1
     steps:
       - checkout
-      - when:
-          or:
-            - equal: [ dev, << pipeline.git.branch >> ]
-            - equal: [ master, << pipeline.git.branch >> ]
-          steps:
-            - run:
-                name: "Import GPG keys"
-                command: echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import --batch --passphrase $GPG_PASSPHRASE || echo "Failed to import GPG_SECRET_KEYS."
-            - run:
-                name: "Import GPG owner trust"
-                command: echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust || echo "Failed to import GPG_OWNERTRUST."
+      - run: |
+          if [ "$CIRCLE_BRANCH" == "$DEV_BRANCH" ] || [ "$CIRCLE_BRANCH" == "$RELEASE_BRANCH" ]; then
+              echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import --batch --passphrase $GPG_PASSPHRASE || echo "Failed to import GPG_SECRET_KEYS."
+              echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust || echo "Failed to import GPG_OWNERTRUST."
+          fi
       - run:
           name: "Run build script"
           command: source buildscripts/build.sh
