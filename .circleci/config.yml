@@ -60,11 +60,14 @@ jobs:
     machine:
       image: ubuntu-2004:2022.07.1
     steps:
+      - checkout
       - run: |
           if [ "$CIRCLE_BRANCH" != "$DEV_BRANCH" ] && [ "$CIRCLE_BRANCH" != "$RELEASE_BRANCH" ]; then
               circleci-agent step halt
           fi
-      - run: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh
+      - run: 
+          name: "Export maven version"
+          command: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh
       # Set up git user name and tag this commit
       - run: |
           git config --local user.name "MarcFletcher"
