@@ -123,3 +123,5 @@ can get data for both organization and organization brand pages.
 
 ## 3.1.0 (Sep 7, 2022)
 * Add CommentConnection for posting comment to a post (by URN)
+
+## 3.1.1 (work in progress)
