@@ -50,6 +50,7 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -148,6 +149,13 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
    * By default this is <code>false</code>, so real http DELETE is used
    */
   protected boolean httpDeleteFallback = false;
+  
+  /**
+   * Month versioning
+   */
+  protected String versioningMonth;
+  
+  private static final String HEADER_VERSIONING = "Linkedin-Version";
 
   /**
    * Creates a LinkedIn API client with the given {@code accessToken}.
@@ -207,6 +215,13 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     this(webRequestor, jsonMapper, apiVersion, new DefaultLinkedInExceptionMapper());
     ValidationUtils.verifyParameterPresence("webRequestor", webRequestor);
   }
+  
+  public DefaultLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper,
+      Version apiVersion, String versioningMonth) {
+    this(webRequestor, jsonMapper, apiVersion, new DefaultLinkedInExceptionMapper(),
+        versioningMonth);
+    ValidationUtils.verifyParameterPresence("webRequestor", webRequestor);
+  }
 
   /**
    * Creates a LinkedIn API client with the given {@code accessToken}.
@@ -232,6 +247,19 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     this.jsonMapper = jsonMapper;
     this.apiVersion = apiVersion;
     this.linkedinExceptionMapper = linkedinExceptionMapper;
+  }
+  
+  public DefaultLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper, Version apiVersion,
+      LinkedInExceptionMapper linkedinExceptionMapper, String versioningMonth) {
+    ValidationUtils.verifyParameterPresence("jsonMapper", jsonMapper);
+    ValidationUtils.verifyParameterPresence("apiVersion", apiVersion);
+    ValidationUtils.verifyParameterPresence("linkedinExceptionMapper", linkedinExceptionMapper);
+    
+    this.webRequestor = webRequestor;
+    this.jsonMapper = jsonMapper;
+    this.apiVersion = apiVersion;
+    this.linkedinExceptionMapper = linkedinExceptionMapper;
+    this.versioningMonth = versioningMonth;
   }
 
   @Override
@@ -461,9 +489,14 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
     final String fullEndpoint = createEndpointForApiCall(endpoint,
         binaryAttachments != null && !binaryAttachments.isEmpty());
+    
+    Map<String, String> headers = new HashMap<>();
+    if (StringUtils.isNotBlank(versioningMonth)) {
+      headers.put(HEADER_VERSIONING, versioningMonth);
+    }
 
     return makeRequestFull(fullEndpoint, executeAsPost, executeAsDelete, jsonBody,
-        null, binaryAttachments, parameters);
+        headers, binaryAttachments, parameters);
   }
 
   /**
