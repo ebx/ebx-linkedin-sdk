@@ -215,7 +215,12 @@ public class DefaultWebRequestor implements WebRequestor {
 
   @Override
   public Response executeGet(String url) throws IOException {
-    return execute(url, HttpMethod.GET);
+    return executeGet(url, null);
+  }
+  
+  @Override
+  public Response executeGet(String url, Map<String, String> headers) throws IOException {
+    return execute(url, HttpMethod.GET, headers);
   }
 
   @Override
@@ -235,6 +240,7 @@ public class DefaultWebRequestor implements WebRequestor {
           + URLUtils.urlDecode(parameters)
           + (binaryAttachments.length > 0 ? " and " + binaryAttachments.length
               + " binary attachment[s]." : ""));
+      LOGGER.debug("headers: {}", headers);
     }
 
     if (binaryAttachments == null) {
@@ -499,7 +505,7 @@ public class DefaultWebRequestor implements WebRequestor {
 
   @Override
   public Response executeDelete(String url) throws IOException {
-    return execute(url, HttpMethod.DELETE);
+    return execute(url, HttpMethod.DELETE, null);
   }
 
   @Override
@@ -507,7 +513,8 @@ public class DefaultWebRequestor implements WebRequestor {
     return debugHeaderInfo;
   }
 
-  private Response execute(String url, HttpMethod httpMethod) throws IOException {
+  private Response execute(String url, HttpMethod httpMethod, Map<String, String> headers)
+      throws IOException {
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug(format("Making a %s request to %s", httpMethod.name(), url));
     }
@@ -521,6 +528,8 @@ public class DefaultWebRequestor implements WebRequestor {
       // Allow subclasses to customize the connection if they'd like to - set their own headers,
       // timeouts, etc.
       customizeConnection(request);
+      HttpHeaders httpHeaders = new HttpHeaders();
+      addHeadersToRequest(request, httpHeaders, headers);
 
       return getResponse(request);
     } catch (HttpResponseException ex) {
@@ -639,6 +648,7 @@ public class DefaultWebRequestor implements WebRequestor {
         }
       }
     }
+    LOGGER.debug("Add headers: {}", headers);
   
     request.setHeaders(httpHeaders);
   }

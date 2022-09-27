@@ -114,6 +114,15 @@ public interface WebRequestor {
    *           If an error occurs while performing the {@code GET} operation.
    */
   Response executeGet(String url) throws IOException;
+  
+  /**
+   * Given a LinkedIn API endpoint URL, execute a {@code GET} against it with headers.
+   * @param url The URL to make a {@code GET} request for, including URL parameters.
+   * @param headers HTTP headers
+   * @return HTTP response data
+   * @throws IOException If an error occurs while performing the {@code GET} operation.
+   */
+  Response executeGet(String url, Map<String, String> headers) throws IOException;
 
   /**
    * Given a LinkedIn API endpoint URL and parameter string, execute a {@code POST} to the endpoint

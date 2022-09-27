@@ -493,6 +493,8 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     Map<String, String> headers = new HashMap<>();
     if (StringUtils.isNotBlank(versioningMonth)) {
       headers.put(HEADER_VERSIONING, versioningMonth);
+    } else {
+      LOGGER.debug("Non versioning API");
     }
 
     return makeRequestFull(fullEndpoint, executeAsPost, executeAsDelete, jsonBody,
@@ -552,7 +554,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
                   headers,
                   binaryAttachments == null ? null
                       : binaryAttachments.toArray(new BinaryAttachment[binaryAttachments.size()]))
-              : webRequestor.executeGet(fullEndpoint + finalParameterString);
+              : webRequestor.executeGet(fullEndpoint + finalParameterString, headers);
         }
       }
     });
