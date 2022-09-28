@@ -125,3 +125,4 @@ can get data for both organization and organization brand pages.
 * Add CommentConnection for posting comment to a post (by URN)
 
 ## 3.1.1 (work in progress)
+* Add explicit dependency for google-api-client
