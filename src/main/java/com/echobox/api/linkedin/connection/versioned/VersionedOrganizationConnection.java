@@ -19,8 +19,12 @@ package com.echobox.api.linkedin.connection.versioned;
 
 import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
+import com.echobox.api.linkedin.types.organization.Organization;
 import com.echobox.api.linkedin.types.organization.OrganizationBase;
+import com.echobox.api.linkedin.types.organization.OrganizationBrand;
 import com.echobox.api.linkedin.types.organization.OrganizationResult;
+import com.echobox.api.linkedin.types.urn.URN;
+import com.echobox.api.linkedin.types.urn.URNEntityType;
 import com.echobox.api.linkedin.util.ValidationUtils;
 
 import java.util.ArrayList;
@@ -31,10 +35,16 @@ public class VersionedOrganizationConnection extends VersionedConnection {
   
   
   private static final String ORGANIZATIONS = "/organizations";
+  private static final String ORGANIZATIONS_BRANDS = "/organizationBrands";
   
   private static final String VANITY_NAME_VALUE = "vanityName";
   private static final String VANITY_NAME_KEY = "vanityName";
-
+  
+  private static final String EMAIL_DOMAIN_KEY = "emailDomain";
+  private static final String EMAIL_DOMAIN_VALUE = "emailDomain";
+  
+  private static final String PARENT_KEY = "parent";
+  private static final String PARENT_ORGANIZATION_VALUE = "parentOrganization";
   
   public VersionedOrganizationConnection(LinkedInClient linkedinClient) {
     super(linkedinClient);
@@ -62,6 +72,41 @@ public class VersionedOrganizationConnection extends VersionedConnection {
     return organizationList.stream().map(OrganizationResult::getOrganization)
         .collect(Collectors.toList());
   }
-
+  
+  public Organization retrieveOrganization(URN organizationURN, Parameter fields) {
+    validateOrganizationURN("organizationURN", organizationURN);
+    List<Parameter> parameters = new ArrayList<>();
+    if (fields != null) {
+      parameters.add(fields);
+    }
+    return linkedinClient.fetchObject(ORGANIZATIONS + "/" + organizationURN.getId(),
+        Organization.class, parameters.toArray(new Parameter[0]));
+  }
+  
+  public OrganizationBrand retrieveOrganizationBrand(URN organizationBrandURN, Parameter fields) {
+    validateOrganizationBrandURN("organizationBrandURN", organizationBrandURN);
+    List<Parameter> parameters = new ArrayList<>();
+    if (fields != null) {
+      parameters.add(fields);
+    }
+    String id = organizationBrandURN.getId();
+    return linkedinClient.fetchObject(ORGANIZATIONS_BRANDS + "/" + id,
+        OrganizationBrand.class, parameters.toArray(new Parameter[0]));
+  }
+  
+  private void validateOrganizationURN(String paramName, URN organizationURN) {
+    validateURN(paramName, organizationURN, URNEntityType.ORGANIZATION);
+    ValidationUtils.verifyParameterPresence(paramName, organizationURN);
+    validateURN(URNEntityType.ORGANIZATION, organizationURN);
+  }
+  
+  private void validateOrganizationBrandURN(String paramName, URN organizationBrandURN) {
+    validateURN(paramName, organizationBrandURN, URNEntityType.ORGANIZATIONBRAND);
+  }
+  
+  private void validateURN(String paramName, URN urn, URNEntityType type) {
+    ValidationUtils.verifyParameterPresence(paramName, urn);
+    validateURN(type, urn);
+  }
   // CPD-ON
 }
