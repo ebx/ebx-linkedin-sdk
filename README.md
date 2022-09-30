@@ -22,7 +22,7 @@ use:
 <dependency>
   <groupId>com.echobox</groupId>
   <artifactId>ebx-linkedin-sdk</artifactId>
-  <version>3.1.0</version>
+  <version>3.1.1</version>
 </dependency>
 ```
 
@@ -131,11 +131,10 @@ To create a full release to Maven central please follow these steps:
 a suitable PR into `DEV`. Typically, the change log should be updated as we go.
 3. Create a PR from `DEV` into `MASTER`. Ensure the version in the `pom.xml` is the 
 correct version to be released. Merging this PR into `MASTER` will automatically create the maven 
-and github releases, **it must be squashed and merged so that all the changes of the PR are a 
-single commit**. Please note that a release is final, it can not be undone/deleted/overwritten.
-5. Once the public release has been successful create a final PR into `DEV` that contains an 
+and github releases, **This PR should never be squashed, but just merged** to ensure all commits 
+   from dev are included in master. Please note that a release is final, it cannot be undone/deleted/overwritten.
+5. Once the public release has been successful, create a final PR into `DEV` that contains an 
 incremented `pom.xml` version to ensure the correct snapshot gets updated on subsequent merges
-into `DEV`. **This PR should never be squashed but just merged** to ensure all commits from dev 
-are included in master, it should include:
+into `DEV`. This PR should include:
     * An update to the `README.md` latest stable release version number.
     * A 'Work In Progress' entry for the next anticipated release in `CHANGELOG.md`.

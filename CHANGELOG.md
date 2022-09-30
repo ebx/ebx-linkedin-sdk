@@ -126,3 +126,5 @@ can get data for both organization and organization brand pages.
 
 ## 3.1.1 (Sep 29, 2022)
 * Add explicit dependency for google-api-client
+
+## 3.1.2 (Work In Progress)
