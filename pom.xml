@@ -59,7 +59,7 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.11</version>
+      <version>3.12.0</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -224,7 +224,7 @@
       <plugin>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok-maven-plugin</artifactId>
-        <version>1.18.16.0</version>
+        <version>1.18.20.0</version>
         <executions>
           <execution>
             <phase>generate-sources</phase>
