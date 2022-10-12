@@ -131,3 +131,5 @@ can get data for both organization and organization brand pages.
 * Updated error handling so that the response body is included in the exception when a 422 error 
   is received after a request to the LinkedIn API
 * Updated dependencies
+
+## 3.1.3 (Work In Progress)
