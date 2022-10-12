@@ -3,7 +3,9 @@ updates:
 - package-ecosystem: maven
   directory: "/"
   schedule:
-    interval: daily
+    interval: "weekly"
+    day: "sunday"
+    time: "17:00"
   ignore:
   - dependency-name: com.puppycrawl.tools:checkstyle
     versions:
@@ -14,3 +16,5 @@ updates:
   - dependency-name: org.projectlombok:lombok
     versions:
     - 1.18.18
+  - dependency-name: "*"
+    update-types: ["version-update:semver-patch"]
