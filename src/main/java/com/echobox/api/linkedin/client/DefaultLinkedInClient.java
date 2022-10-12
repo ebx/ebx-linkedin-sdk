@@ -612,8 +612,8 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     
     // If we get any HTTP response code other than a 200 OK or 400 Bad Request
     // or 401 Not Authorized or 403 Forbidden or 404 Not Found or 500 Internal
-    // Server Error or 302 Not Modified or 504 Gateway Timeout or 429 Rate Limit
-    // throw an exception.
+    // Server Error or 302 Not Modified or 504 Gateway Timeout or 422 Unprocessable Entity or 429
+    // Rate Limit throw an exception.
     if (HttpURLConnection.HTTP_OK != response.getStatusCode()
         && HttpURLConnection.HTTP_CREATED != response.getStatusCode()
         && HttpURLConnection.HTTP_NO_CONTENT != response.getStatusCode()
@@ -624,6 +624,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
         && HttpURLConnection.HTTP_FORBIDDEN != response.getStatusCode()
         && HttpURLConnection.HTTP_NOT_MODIFIED != response.getStatusCode()
         && HttpURLConnection.HTTP_GATEWAY_TIMEOUT != response.getStatusCode()
+        && 422 != response.getStatusCode()
         && 429 != response.getStatusCode()) {
       throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
     }
