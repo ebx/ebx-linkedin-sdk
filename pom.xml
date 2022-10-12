@@ -8,7 +8,7 @@
 
   <groupId>com.echobox</groupId>
   <artifactId>ebx-linkedin-sdk</artifactId>
-  <version>3.1.1</version>
+  <version>3.1.2</version>
   <packaging>jar</packaging>
 
   <properties>
@@ -59,7 +59,7 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.11</version>
+      <version>3.12.0</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -105,7 +105,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
+        <version>3.10.1</version>
         <configuration>
           <showDeprecation>true</showDeprecation>
         </configuration>
@@ -125,7 +125,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.4.1</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -139,7 +139,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>3.1.2</version>
+        <version>3.2.0</version>
         <executions>
           <execution>
             <id>validate</id>
@@ -187,14 +187,14 @@
           <dependency>
             <groupId>com.github.sevntu-checkstyle</groupId>
             <artifactId>sevntu-checks</artifactId>
-            <version>1.38.0</version>
+            <version>1.42.0</version>
           </dependency>
         </dependencies>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>3.14.0</version>
+        <version>3.19.0</version>
         <executions>
           <execution>
             <id>cpd</id>
@@ -224,7 +224,7 @@
       <plugin>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok-maven-plugin</artifactId>
-        <version>1.18.16.0</version>
+        <version>1.18.20.0</version>
         <executions>
           <execution>
             <phase>generate-sources</phase>
@@ -278,7 +278,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.2.0</version>
+            <version>3.4.1</version>
             <executions>
               <execution>
                 <id>attach-javadocs</id>
