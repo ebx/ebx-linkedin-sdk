@@ -42,7 +42,7 @@ import com.google.api.client.http.MultipartContent;
 import com.google.api.client.http.json.JsonHttpContent;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,7 +104,7 @@ public class DefaultWebRequestor implements WebRequestor {
    */
   private static final int DEFAULT_READ_TIMEOUT_IN_MS = 180000;
 
-  private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+  private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
   private Map<String, Object> currentHeaders;
 
@@ -627,7 +627,7 @@ public class DefaultWebRequestor implements WebRequestor {
     JsonObject asObject = Json.parse(jsonBody).asObject();
     Map<String, Object> map = JsonUtils.toMap(asObject);
   
-    return new JsonHttpContent(new JacksonFactory(), map);
+    return new JsonHttpContent(new GsonFactory(), map);
   }
   
   private void addHeadersToRequest(HttpRequest request, HttpHeaders httpHeaders,

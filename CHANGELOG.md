@@ -93,6 +93,44 @@ sorted by creation date.
 ## 2.0.1 (Jan 13, 2020)
 * Change `RegisterUploadRequestBody.supportedUploadMechanism` from `SupportedUploadMechanism ` to `List< SupportedUploadMechanism >`
 
-## 2.0.2 (April 23, 2021)
-* Add `application/x-wwww-form-urlenconded` header to obtain access token request and update additional header method to add headers as a list.
+## 3.0.0 (October 19, 2021)
+* Change `OrganizationConnection.fetchMemberOrganizationAccessControl` and `OrganizationConnection.findOrganizationAccessControl`
+to use `/OrganizationAcls` endpoint instead of `/OrganizationalEntityAcls` endpoint as the LinkedIn API will remove support for organisation entity ACLs  and replace it with organisation ACLs on October 30, 2021.
 
+## 3.0.1 (Dec 2, 2021)
+* Ensure `OrganizationConnection.retrieveOrganizationFollowerCount` and `OrgnizationConnection. retrieveShareStatistics`
+can get data for both organization and organization brand pages.
+
+## 3.0.2 (Dec 20, 2021)
+* Update logback dependencies to move away from logback-classic and logback-core due to a 
+  security vulnerability. See [CVE-2017-5929](https://nvd.nist.gov/vuln/detail/CVE-2017-5929) 
+  for more information. Using ebx-structured-logging instead.
+
+## 3.0.3 (Mar 25, 2022)
+* Add attribute `primaryOrganizationType` in OrganizationBase class
+* Update `findOrganizationByVanityName` to return `OrganizationBrand` if `primaryOrganizationType` is 
+  `BRAND`.
+
+## 3.0.4 (Apr 1, 2022)
+* Update `JsonUtils.getValue` method to handle JsonNumeric values correctly.
+
+## 3.0.5 (Apr 7, 2022)
+* Updated `CommentAction.Attribute.value` to use AttributedEntity, to fix issue where share 
+  requests with mentions aren't being persisted correctly.
+
+## 3.0.6 (Sep 20, 2022)
+* Accidentally released. This is the same as 3.0.5
+
+## 3.1.0 (Sep 7, 2022)
+* Add CommentConnection for posting comment to a post (by URN)
+
+## 3.1.1 (Sep 29, 2022)
+* Add explicit dependency for google-api-client
+
+## 3.1.2 (Oct 13, 2022)
+* Updated error handling so that the response body is included in the exception when a 422 error 
+  is received after a request to the LinkedIn API
+* Updated dependencies
+
+## 3.1.3 (Oct 17, 2022)
+* Add `application/x-wwww-form-urlenconded` header to obtain access token request and update additional header method to add headers as a list.

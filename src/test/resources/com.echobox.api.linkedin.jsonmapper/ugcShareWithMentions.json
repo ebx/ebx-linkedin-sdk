@@ -1,0 +1,49 @@
+{
+  "author": "urn:li:person:8675309",
+  "lifecycleState": "PUBLISHED",
+  "specificContent": {
+    "com.linkedin.ugc.ShareContent": {
+      "media": [
+        {
+          "description": {
+            "attributes": [],
+            "text": "Official LinkedIn Blog - Your source for insights and information about LinkedIn."
+          },
+          "originalUrl": "https://blog.linkedin.com/",
+          "status": "READY",
+          "title": {
+            "attributes": [],
+            "text": "Official LinkedIn Blog"
+          }
+        }
+      ],
+      "shareCommentary": {
+        "attributes": [
+          {
+            "length": 8,
+            "start": 20,
+            "value": {
+              "com.linkedin.common.CompanyAttributedEntity": {
+                "company": "urn:li:organization:1337"
+              }
+            }
+          },
+          {
+            "length": 8,
+            "start": 20,
+            "value": {
+              "com.linkedin.common.MemberAttributedEntity": {
+                "member": "urn:li:person:1337"
+              }
+            }
+          }
+        ],
+        "text": "Learning more about LinkedIn by reading the LinkedIn Blog!"
+      },
+      "shareMediaCategory": "ARTICLE"
+    }
+  },
+  "visibility": {
+    "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+  }
+}

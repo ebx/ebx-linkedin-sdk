@@ -23,7 +23,7 @@ import lombok.Getter;
 
 /**
  * Access Control POJO
- * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-access-control#find-access-control-information">
+ * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-access-control-by-role">
  * Access Control Schema</a>
  * @author joanna
  *
@@ -47,12 +47,12 @@ public class AccessControl {
   private RoleAssignee roleAssignee;
   
   @Getter
-  @LinkedIn("organizationalTarget")
-  private URN organizationalTargetURN;
+  @LinkedIn("organization")
+  private URN organizationURN;
   
   @Getter
-  @LinkedIn("organizationalTarget~")
-  private OrganizationalTarget organizationalTarget;
+  @LinkedIn("organization~")
+  private Organization organization;
   
   /**
    * Role Assignee
@@ -66,16 +66,6 @@ public class AccessControl {
     @Getter
     @LinkedIn
     private String localizedFirstName;
-  }
-  
-  /**
-   * Organization target
-   * @author Joanna
-   */
-  public static class OrganizationalTarget {
-    @Getter
-    @LinkedIn
-    private String localizedName;
   }
   
 }
