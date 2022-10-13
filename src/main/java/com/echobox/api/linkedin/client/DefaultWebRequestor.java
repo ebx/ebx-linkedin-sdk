@@ -55,7 +55,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
-import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -630,13 +629,16 @@ public class DefaultWebRequestor implements WebRequestor {
     return new JsonHttpContent(new GsonFactory(), map);
   }
   
-  private void addHeadersToRequest(HttpRequest request, HttpHeaders httpHeaders,
-      Map<String, String> headers) {
+  private void addHeadersToRequest(HttpRequest request, HttpHeaders httpHeaders, Map<String, String> headers) {
     if (headers != null) {
       // Add any additional headers
-      for (String headerKey : headers.keySet()) {
-        httpHeaders.putIfAbsent(headerKey, Collections.singletonList(headers.get(headerKey)));
-      }
+        headers.entrySet()
+                .stream()
+                .filter(headerEntry -> {
+                  String lowerCaseHeaderName = headerEntry.getKey().toLowerCase();
+                  return !httpHeaders.containsKey(lowerCaseHeaderName);
+                })
+                .forEach(headerEntry -> httpHeaders.put(headerEntry.getKey(), headerEntry.getValue()));
     }
   
     request.setHeaders(httpHeaders);
