@@ -39,10 +39,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Run build script"
+          name: "Run maven deploy script"
           command: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh && source buildscripts/build.sh
       - run:
-          name: "If build failure"
+          name: "If failure"
           command: cat target/surefire-reports/*.txt
           when: on_fail
   predeploy:
