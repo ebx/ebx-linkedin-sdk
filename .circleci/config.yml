@@ -39,7 +39,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Run maven deploy script"
+          name: "Run build/deploy scripts"
           command: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh && source buildscripts/build.sh
       - run:
           name: "If failure"
