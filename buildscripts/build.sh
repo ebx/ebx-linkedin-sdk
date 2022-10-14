@@ -28,3 +28,5 @@ else
   printf "${GREEN_COLOUR}Performing a PR verify build. Releases are only created from $DEV_BRANCH and $RELEASE_BRANCH branches.${NO_COLOUR}\n"
   mvn clean verify
 fi
+
+
