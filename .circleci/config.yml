@@ -20,17 +20,6 @@ workflows:
           context: Non-sensitive Env Vars
           requires:
             - build
-      - gh/release:
-          context: Open Source Release Credentials
-          filters:
-            branches:
-              only: master
-          requires:
-            - predeploy
-          title: Circle CI release
-          tag: v$MVN_VERSION
-          files: target/ebx-linkedin-sdk-${MVN_VERSION}*.jar
-          notes-file: CHANGELOG.md
 
 jobs:
   prebuild:
@@ -50,10 +39,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Run build script"
+          name: "Run build/deploy scripts"
           command: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh && source buildscripts/build.sh
       - run:
-          name: "If build failure"
+          name: "If failure"
           command: cat target/surefire-reports/*.txt
           when: on_fail
   predeploy:
@@ -74,9 +63,3 @@ jobs:
           git config --local user.email "marc@echobox.com"
           export DEPLOY_TAG=v$MVN_VERSION
           git tag $DEPLOY_TAG
-  gh/release:
-    machine:
-      image: ubuntu-2004:2022.07.1
-    steps:
-      - run: |
-          echo "Deploying to github releases..."
