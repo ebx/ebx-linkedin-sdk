@@ -13,7 +13,7 @@ workflows:
       - pre-gh-release:
           context: Non-sensitive Env Vars
           requires:
-            - build
+            - PR-verify-OR-mvn-deploy
 
 jobs:
   PR-verify-OR-mvn-deploy:
