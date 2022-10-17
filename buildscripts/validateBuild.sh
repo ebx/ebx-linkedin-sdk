@@ -23,5 +23,4 @@ else
   export PR_TITLE=$(curl -s https://api.github.com/repos/$REPO/pulls/${CIRCLE_PULL_REQUEST##*/} | grep -Po '(?<="title":[[:space:]]")[^"]*(?=",)')
 
   printf "${GREEN_COLOUR}Building PR #${CIRCLE_PULL_REQUEST##*/} '$PR_TITLE' from branch $CIRCLE_BRANCH (into $DEV_BRANCH)${NO_COLOUR}\n"
-
 fi
