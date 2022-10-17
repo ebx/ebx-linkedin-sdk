@@ -23,14 +23,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Export MVN version"
-          command: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh
-      - run:
           name: "Validate build"
-          command: source buildscripts/validateBuild.sh
+          command: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh && source buildscripts/validateBuild.sh
       - run:
           name: "Build (and deploy if dev/master)"
-          command: source buildscripts/build.sh
+          command: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh && source buildscripts/build.sh
       - run:
           name: "If failure"
           command: cat target/surefire-reports/*.txt
