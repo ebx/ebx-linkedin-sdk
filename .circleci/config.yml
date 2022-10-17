@@ -24,7 +24,7 @@ jobs:
       - checkout
       - run:
           name: "Validate build"
-          command: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh && source buildscripts/validateBuild.sh
+          command: source buildscripts/validateBuild.sh
       - run:
           name: "Build (and deploy if dev/master)"
           command: source buildscripts/exportMVNVersionWithSnapshotIfNotARelease.sh && source buildscripts/build.sh
