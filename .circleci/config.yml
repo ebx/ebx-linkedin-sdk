@@ -6,6 +6,7 @@ workflows:
   version: 2
   build-and-deploy:
     jobs:
+      # Performs a verify build for PRs. Deploys to maven central for dev or master (snapshot for dev)
       - PR-verify-OR-mvn-deploy:
           context: 
             - Open Source Release Credentials
