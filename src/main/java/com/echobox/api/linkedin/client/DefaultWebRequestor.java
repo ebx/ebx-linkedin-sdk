@@ -629,16 +629,15 @@ public class DefaultWebRequestor implements WebRequestor {
     return new JsonHttpContent(new GsonFactory(), map);
   }
   
-  private void addHeadersToRequest(HttpRequest request, HttpHeaders httpHeaders, Map<String, String> headers) {
+  private void addHeadersToRequest(HttpRequest request, HttpHeaders httpHeaders,
+      Map<String, String> headers) {
     if (headers != null) {
       // Add any additional headers
-        headers.entrySet()
-                .stream()
-                .filter(headerEntry -> {
-                  String lowerCaseHeaderName = headerEntry.getKey().toLowerCase();
-                  return !httpHeaders.containsKey(lowerCaseHeaderName);
-                })
-                .forEach(headerEntry -> httpHeaders.put(headerEntry.getKey(), headerEntry.getValue()));
+      headers.entrySet().stream()
+          .filter(headerEntry -> {
+            String lowerCaseHeaderName = headerEntry.getKey().toLowerCase();
+            return !httpHeaders.containsKey(lowerCaseHeaderName);
+          }).forEach(headerEntry -> httpHeaders.put(headerEntry.getKey(), headerEntry.getValue()));
     }
   
     request.setHeaders(httpHeaders);
