@@ -132,4 +132,5 @@ can get data for both organization and organization brand pages.
   is received after a request to the LinkedIn API
 * Updated dependencies
 
-## 3.1.3 (Work In Progress)
+## 3.1.3 (Oct 17, 2022)
+* Add `application/x-wwww-form-urlenconded` header to obtain access token request and update additional header method to add headers as a list.
