@@ -633,11 +633,11 @@ public class DefaultWebRequestor implements WebRequestor {
       Map<String, String> headers) {
     if (headers != null) {
       // Add any additional headers
-      for (String headerKey : headers.keySet()) {
-        if (!headerKey.equalsIgnoreCase("content-type")) {
-          httpHeaders.put(headerKey, headers.get(headerKey));
-        }
-      }
+      headers.entrySet().stream()
+          .filter(headerEntry -> {
+            String lowerCaseHeaderName = headerEntry.getKey().toLowerCase();
+            return !httpHeaders.containsKey(lowerCaseHeaderName);
+          }).forEach(headerEntry -> httpHeaders.put(headerEntry.getKey(), headerEntry.getValue()));
     }
   
     request.setHeaders(httpHeaders);

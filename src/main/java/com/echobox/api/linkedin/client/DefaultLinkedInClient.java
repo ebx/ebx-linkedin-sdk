@@ -50,6 +50,7 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -339,9 +340,12 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
     try {
       this.webRequestor = new DefaultWebRequestor(appId, appSecret);
+  
+      Map<String, String> headers = new HashMap<>();
+      headers.put("Content-Type", "application/x-www-form-urlencoded");
 
-      final String response = makeRequestFull(ENDPOINT_ACCESS_TOKEN, true, false, new JsonObject(),
-          null, Collections.emptyList(), Parameter.with(GRANT_TYPE_PARAM_NAME,
+      final String response = makeRequestFull(ENDPOINT_ACCESS_TOKEN, true, false, null,
+          headers, Collections.emptyList(), Parameter.with(GRANT_TYPE_PARAM_NAME,
           "authorization_code"),
           Parameter.with(CODE_PARAM_NAME, verificationCode),
           Parameter.with(REDIRECT_URI_PARAM_NAME, redirectUri),
