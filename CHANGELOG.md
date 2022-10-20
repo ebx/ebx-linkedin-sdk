@@ -134,3 +134,5 @@ can get data for both organization and organization brand pages.
 
 ## 3.1.3 (Oct 17, 2022)
 * Add `application/x-wwww-form-urlenconded` header to obtain access token request and update additional header method to add headers as a list.
+
+## 3.1.4 (Work In Progress)
