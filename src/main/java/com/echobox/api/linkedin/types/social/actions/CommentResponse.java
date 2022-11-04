@@ -15,23 +15,27 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
+package com.echobox.api.linkedin.types.social.actions;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.urn.URN;
+import com.echobox.api.linkedin.types.objectype.AuditStamp;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Linked in types that contain a URN field
- * @author Joanna
- *
+ * Response class for comment posting
+ * @author Kenneth Wong
  */
-public abstract class LinkedInIdAndURNType extends LinkedInIdType {
+public class CommentResponse extends CommentAction {
   
   @Getter
   @Setter
-  @LinkedIn("$URN")
-  private URN urn;
-
+  @LinkedIn
+  private AuditStamp created;
+  
+  @Getter
+  @Setter
+  @LinkedIn
+  private AuditStamp lastModified;
+  
 }

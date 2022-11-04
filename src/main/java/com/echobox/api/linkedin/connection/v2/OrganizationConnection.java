@@ -24,7 +24,9 @@ import com.echobox.api.linkedin.types.engagement.ShareStatistic;
 import com.echobox.api.linkedin.types.organization.AccessControl;
 import com.echobox.api.linkedin.types.organization.NetworkSize;
 import com.echobox.api.linkedin.types.organization.Organization;
+import com.echobox.api.linkedin.types.organization.OrganizationBase;
 import com.echobox.api.linkedin.types.organization.OrganizationBrand;
+import com.echobox.api.linkedin.types.organization.OrganizationResult;
 import com.echobox.api.linkedin.types.statistics.OrganizationFollowerStatistics;
 import com.echobox.api.linkedin.types.statistics.page.FollowerStatistic;
 import com.echobox.api.linkedin.types.statistics.page.Statistics;
@@ -35,6 +37,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Organization connection class that should contain all organization operations
@@ -46,8 +49,8 @@ import java.util.List;
  *
  */
 public class OrganizationConnection extends ConnectionBaseV2 {
-
-  private static final String ORGANIZATIONAL_ENTITY_ACLS = "/organizationalEntityAcls";
+  
+  private static final String ORGANIZATION_ACLS = "/organizationAcls";
   private static final String ORGANIZATIONS = "/organizations";
   private static final String ORGANIZATIONS_BRANDS = "/organizationBrands";
   private static final String ORGANIZATIONAL_ENTITY_FOLOWER_STATS =
@@ -58,14 +61,12 @@ public class OrganizationConnection extends ConnectionBaseV2 {
   
   private static final String ROLE_KEY = "role";
   private static final String STATE_KEY = "state";
-  private static final String ORGANIZATIONAL_TARGET_KEY = "organizationalTarget";
   private static final String VANITY_NAME_KEY = "vanityName";
   private static final String EMAIL_DOMAIN_KEY = "emailDomain";
   private static final String ORGANIZATIONAL_ENTITY_KEY = "organizationalEntity";
   private static final String ORGANIZATION_KEY = "organization";
   
   private static final String ROLE_ASSIGNEE_VALUE = "roleAssignee";
-  private static final String ORGANIZATION_TARGET_VALUE = "organizationalTarget";
   private static final String VANITY_NAME_VALUE = "vanityName";
   private static final String EMAIL_DOMAIN_VALUE = "emailDomain";
   private static final String ORGANIZATIONAL_ENTITY_VALUE = "organizationalEntity";
@@ -85,8 +86,8 @@ public class OrganizationConnection extends ConnectionBaseV2 {
 
   /**
    * Find a Member's Organization Access Control Information
-   * E.g. https://api.linkedin.com/v2/organizationalEntityAcls?q=roleAssignee
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-access-control">
+   * E.g. https://api.linkedin.com/v2/organizationAcls?q=roleAssignee
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-access-control-by-role">
    * Access Control</a>
    * @param role Limit results to specific roles, such as ADMINISTRATOR.
    * @param state Limit results to specific role states, such as APPROVED.
@@ -96,20 +97,20 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    */
   public List<AccessControl> fetchMemberOrganizationAccessControl(String role, String state,
       Parameter projection, Integer count) {
-    List<Parameter> parameters = new ArrayList<>();
-    parameters.add(Parameter.with(QUERY_KEY, ROLE_ASSIGNEE_VALUE));
-    addRoleStateParams(role, state, projection, parameters);
-    addStartAndCountParams(parameters, null, count);
-
-    return getListFromQuery(ORGANIZATIONAL_ENTITY_ACLS, AccessControl.class,
-        parameters.toArray(new Parameter[0]));
+    List<Parameter> params = new ArrayList<>();
+    params.add(Parameter.with(QUERY_KEY, ROLE_ASSIGNEE_VALUE));
+    addRoleStateParams(role, state, projection, params);
+    addStartAndCountParams(params, null, count);
+    
+    return getListFromQuery(ORGANIZATION_ACLS, AccessControl.class,
+        params.toArray(new Parameter[0]));
   }
-
+  
   /**
    * Find an Organization's Access Control Information
-   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-access-control">
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-access-control-by-role">
    * Access Control</a>
-   * @param organizationalTarget The organizational entity for which access control information
+   * @param organizationURN The organization for which access control information
    * is retrieved.
    * @param role Limit results to specific roles
    * @param state Limit results to specific role states
@@ -117,17 +118,18 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @param count the number of entries to be returned per paged request
    * @return List of access controls for an organization
    */
-  public List<AccessControl> findOrganizationAccessControl(URN organizationalTarget, String role,
+  public List<AccessControl> findOrganizationAccessControl(URN organizationURN,
+      String role,
       String state, Parameter projection, Integer count) {
-    validateOrganizationURN("organizationalTarget", organizationalTarget);
-
+    validateOrganizationURN("organization", organizationURN);
+    
     List<Parameter> parameters = new ArrayList<>();
-    parameters.add(Parameter.with(QUERY_KEY, ORGANIZATION_TARGET_VALUE));
-    parameters.add(Parameter.with(ORGANIZATIONAL_TARGET_KEY, organizationalTarget.toString()));
+    parameters.add(Parameter.with(QUERY_KEY, ORGANIZATION_VALUE));
+    parameters.add(Parameter.with(ORGANIZATION_KEY, organizationURN.toString()));
     addRoleStateParams(role, state, projection, parameters);
     addStartAndCountParams(parameters, null, count);
-
-    return getListFromQuery(ORGANIZATIONAL_ENTITY_ACLS, AccessControl.class,
+    
+    return getListFromQuery(ORGANIZATION_ACLS, AccessControl.class,
         parameters.toArray(new Parameter[0]));
   }
 
@@ -157,8 +159,8 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @param count the number of entries to be returned per paged request
    * @return The organization with the vanity name
    */
-  public List<Organization> findOrganizationByVanityName(String vanityName, Parameter fields,
-      Integer count) {
+  public List<OrganizationBase> findOrganizationByVanityName(String vanityName,
+      Parameter fields, Integer count) {
     ValidationUtils.verifyParameterPresence("vanityName", vanityName);
   
     List<Parameter> parameters = new ArrayList<>();
@@ -168,8 +170,11 @@ public class OrganizationConnection extends ConnectionBaseV2 {
     parameters.add(Parameter.with(QUERY_KEY, VANITY_NAME_VALUE));
     parameters.add(Parameter.with(VANITY_NAME_KEY, vanityName));
     addStartAndCountParams(parameters, null, count);
-    return getListFromQuery(ORGANIZATIONS, Organization.class,
-        parameters.toArray(new Parameter[0]));
+    List<OrganizationResult> organizationList = getListFromQuery(ORGANIZATIONS,
+        OrganizationResult.class, parameters.toArray(new Parameter[0]));
+    
+    return organizationList.stream().map(OrganizationResult::getOrganization)
+        .collect(Collectors.toList());
   }
 
   /**
@@ -204,7 +209,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * @return the number of followers for the organization
    */
   public Long retrieveOrganizationFollowerCount(URN organizationURN) {
-    validateOrganizationURN("organizationURN", organizationURN);
+    validateOrganizationOrBrandURN("organizationURN", organizationURN);
     NetworkSize networkSize = linkedinClient.fetchObject(NETWORK_SIZES + "/" + organizationURN,
         NetworkSize.class, Parameter.with(EDGE_TYPE, COMPANY_FOLLOWED_BY_MEMEBER));
     return networkSize.getFirstDegreeSize();
@@ -396,7 +401,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    */
   public List<ShareStatistic> retrieveShareStatistics(URN organizationURN,
       TimeInterval timeInterval, List<URN> shareURNs, Integer count) {
-    validateOrganizationURN("organizationURN", organizationURN);
+    validateOrganizationOrBrandURN("organizationURN", organizationURN);
     
     List<Parameter> params = new ArrayList<>();
     params.add(Parameter.with(QUERY_KEY, ORGANIZATIONAL_ENTITY_KEY));
@@ -412,6 +417,15 @@ public class OrganizationConnection extends ConnectionBaseV2 {
     
     return getListFromQuery(SHARE_STATISTICS, ShareStatistic.class,
         params.toArray(new Parameter[0]));
+  }
+  
+  private void validateOrganizationOrBrandURN(String paramName, URN organizationOrBrandURN) {
+    ValidationUtils.verifyParameterPresence(paramName, organizationOrBrandURN);
+    if (!(URNEntityType.ORGANIZATION.equals(organizationOrBrandURN.resolveURNEntityType())
+        || URNEntityType.ORGANIZATIONBRAND.equals(organizationOrBrandURN.resolveURNEntityType()))) {
+      throw new IllegalArgumentException(String.format("The URN should be type %s or %s",
+          URNEntityType.ORGANIZATION, URNEntityType.ORGANIZATIONBRAND));
+    }
   }
 
   private void validateOrganizationURN(String paramName, URN organizationURN) {

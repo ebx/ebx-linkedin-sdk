@@ -15,23 +15,31 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.urn.URN;
-import lombok.Getter;
-import lombok.Setter;
+package com.echobox.api.linkedin.types.organization;
 
 /**
- * Linked in types that contain a URN field
- * @author Joanna
+ * Primary orgranization type
+ * @see
+ * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api?tabs=http">
+ * Organization Lookup</a>
+ *
+ * @author Kenneth Wong
  *
  */
-public abstract class LinkedInIdAndURNType extends LinkedInIdType {
+public enum PrimaryOrganizationType {
   
-  @Getter
-  @Setter
-  @LinkedIn("$URN")
-  private URN urn;
-
+  /**
+   * Schools, such as Universities
+   */
+  SCHOOL,
+  
+  /**
+   * Organization brands (previously known as Showcase pages)
+   */
+  BRAND,
+  
+  /**
+   * Organizations
+   */
+  NONE
 }

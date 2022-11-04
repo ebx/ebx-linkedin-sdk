@@ -124,20 +124,71 @@ public class CommentAction extends ContainsURN {
     @LinkedIn
     private Integer start;
     
+    @LinkedIn("value")
+    private CommentAction.AttributedEntity value;
+  
+    public CommentAction.CompanyAttributedEntity getCompanyValue() {
+      CommentAction.CompanyAttributedEntity companyValue =
+          new CommentAction.CompanyAttributedEntity();
+      companyValue.setCompany(value.getCompany());
+      return companyValue;
+    }
+  
+    public void setCompanyValue(CommentAction.CompanyAttributedEntity companyValue) {
+      if (value == null) {
+        value = new AttributedEntity();
+      }
+      value.setCompany(companyValue.getCompany());
+    }
+  
+    public CommentAction.MemberAttributedEntity getMemberVaue() {
+      CommentAction.MemberAttributedEntity memberValue =
+          new CommentAction.MemberAttributedEntity();
+      memberValue.setMember(value.getMember());
+      return memberValue;
+    }
+  
+    public void setMemberVaue(CommentAction.MemberAttributedEntity memberValue) {
+      if (value == null) {
+        value = new AttributedEntity();
+      }
+      value.setMember(memberValue.getMember());
+    }
+  
+    public CommentAction.CompanyAttributedEntity getSchoolValue() {
+      CommentAction.CompanyAttributedEntity schoolValue =
+          new CommentAction.CompanyAttributedEntity();
+      schoolValue.setCompany(value.getSchool());
+      return schoolValue;
+    }
+  
+    public void setSchoolValue(CommentAction.SchoolAttributedEntity schoolValue) {
+      if (value == null) {
+        value = new AttributedEntity();
+      }
+      value.setSchool(schoolValue.getSchool());
+    }
+  }
+  
+  /**
+   * Attributed Entity
+   */
+  public static class AttributedEntity {
+  
     @Getter
     @Setter
-    @LinkedIn("value")
-    private CommentAction.CompanyAttributedEntity companyValue;
-    
+    @LinkedIn("com.linkedin.common.CompanyAttributedEntity")
+    private CompanyURN company;
+  
     @Getter
     @Setter
-    @LinkedIn("value")
-    private CommentAction.MemberAttributedEntity memberVaue;
-    
+    @LinkedIn("com.linkedin.common.MemberAttributedEntity")
+    private MemberURN member;
+  
     @Getter
     @Setter
-    @LinkedIn("value")
-    private CommentAction.SchoolAttributedEntity schoolValue;
+    @LinkedIn("com.linkedin.common.SchoolAttributedEntity")
+    private CompanyURN school;
     
   }
   

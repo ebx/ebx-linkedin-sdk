@@ -41,15 +41,16 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.ParseException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -339,9 +340,12 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
     try {
       this.webRequestor = new DefaultWebRequestor(appId, appSecret);
+  
+      Map<String, String> headers = new HashMap<>();
+      headers.put("Content-Type", "application/x-www-form-urlencoded");
 
-      final String response = makeRequestFull(ENDPOINT_ACCESS_TOKEN, true, false, new JsonObject(),
-          null, Collections.emptyList(), Parameter.with(GRANT_TYPE_PARAM_NAME,
+      final String response = makeRequestFull(ENDPOINT_ACCESS_TOKEN, true, false, null,
+          headers, Collections.emptyList(), Parameter.with(GRANT_TYPE_PARAM_NAME,
           "authorization_code"),
           Parameter.with(CODE_PARAM_NAME, verificationCode),
           Parameter.with(REDIRECT_URI_PARAM_NAME, redirectUri),
@@ -612,41 +616,42 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
     
     // If we get any HTTP response code other than a 200 OK or 400 Bad Request
     // or 401 Not Authorized or 403 Forbidden or 404 Not Found or 500 Internal
-    // Server Error or 302 Not Modified or 504 Gateway Timeout or 429 Rate Limit
-    // throw an exception.
-    if (HttpURLConnection.HTTP_OK != response.getStatusCode()
-        && HttpURLConnection.HTTP_CREATED != response.getStatusCode()
-        && HttpURLConnection.HTTP_NO_CONTENT != response.getStatusCode()
-        && HttpURLConnection.HTTP_BAD_REQUEST != response.getStatusCode()
-        && HttpURLConnection.HTTP_UNAUTHORIZED != response.getStatusCode()
-        && HttpURLConnection.HTTP_NOT_FOUND != response.getStatusCode()
-        && HttpURLConnection.HTTP_INTERNAL_ERROR != response.getStatusCode()
-        && HttpURLConnection.HTTP_FORBIDDEN != response.getStatusCode()
-        && HttpURLConnection.HTTP_NOT_MODIFIED != response.getStatusCode()
-        && HttpURLConnection.HTTP_GATEWAY_TIMEOUT != response.getStatusCode()
-        && 429 != response.getStatusCode()) {
+    // Server Error or 302 Not Modified or 504 Gateway Timeout or 422 Unprocessable Entity or 429
+    // Rate Limit throw an exception.
+    if (HttpStatus.SC_OK != response.getStatusCode()
+        && HttpStatus.SC_CREATED != response.getStatusCode()
+        && HttpStatus.SC_NO_CONTENT != response.getStatusCode()
+        && HttpStatus.SC_NOT_MODIFIED != response.getStatusCode()
+        && HttpStatus.SC_BAD_REQUEST != response.getStatusCode()
+        && HttpStatus.SC_UNAUTHORIZED != response.getStatusCode()
+        && HttpStatus.SC_FORBIDDEN != response.getStatusCode()
+        && HttpStatus.SC_NOT_FOUND != response.getStatusCode()
+        && HttpStatus.SC_UNPROCESSABLE_ENTITY != response.getStatusCode()
+        && HttpStatus.SC_TOO_MANY_REQUESTS != response.getStatusCode()
+        && HttpStatus.SC_INTERNAL_SERVER_ERROR != response.getStatusCode()
+        && HttpStatus.SC_GATEWAY_TIMEOUT != response.getStatusCode()) {
       throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
     }
     
     String json = response.getBody();
     
     // If the response is 2XX then we do not need to throw an error response
-    if (HttpURLConnection.HTTP_OK != response.getStatusCode()
-        && HttpURLConnection.HTTP_CREATED != response.getStatusCode()
-        && HttpURLConnection.HTTP_NO_CONTENT != response.getStatusCode()) {
+    if (HttpStatus.SC_OK != response.getStatusCode()
+        && HttpStatus.SC_CREATED != response.getStatusCode()
+        && HttpStatus.SC_NO_CONTENT != response.getStatusCode()) {
       // If the response contained an error code, throw an exception.
       throwLinkedInResponseStatusExceptionIfNecessary(json, response.getStatusCode());
     }
     
     // If there was no response error information and this was a 500
     // error, something weird happened on LinkedIn's end. Bail.
-    if (HttpURLConnection.HTTP_INTERNAL_ERROR == response.getStatusCode()) {
+    if (HttpStatus.SC_INTERNAL_SERVER_ERROR == response.getStatusCode()) {
       throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
     }
   
     // If there was no response error information and this was a 401
     // error, something weird happened on LinkedIn's end. Assume it is a Oauth error.
-    if (HttpURLConnection.HTTP_UNAUTHORIZED == response.getStatusCode()) {
+    if (HttpStatus.SC_UNAUTHORIZED == response.getStatusCode()) {
       throw new LinkedInOAuthException("LinkedIn request failed", response.getStatusCode());
     }
     

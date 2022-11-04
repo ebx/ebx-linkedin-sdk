@@ -22,12 +22,12 @@ use:
 <dependency>
   <groupId>com.echobox</groupId>
   <artifactId>ebx-linkedin-sdk</artifactId>
-  <version>2.0.1</version>
+  <version>3.1.3</version>
 </dependency>
 ```
 
 ## Installation (Most Up To Date)
-[![Build Status](https://travis-ci.org/ebx/ebx-linkedin-sdk.svg?branch=dev)](https://travis-ci.org/ebx/ebx-linkedin-sdk)
+[![Build Status](https://travis-ci.org/ebx/ebx-linkedin-sdk.svg?branch=dev)](https://app.travis-ci.com/github/ebx/ebx-linkedin-sdk)
 
 If you'd like to use the latest SNAPSHOT build please ensure you have snapshots enabled in your pom:
 
@@ -128,12 +128,13 @@ Please use a merge (not rebase) commit when merging dev into master to perform t
 
 To create a full release to Maven central please follow these steps:
 1. Ensure the `CHANGELOG.md` is up to date with all the changes in the release, if not please raise 
-a suitable PR into `DEV`. Typically the change log should be updated as we go.
+a suitable PR into `DEV`. Typically, the change log should be updated as we go.
 3. Create a PR from `DEV` into `MASTER`. Ensure the version in the `pom.xml` is the 
 correct version to be released. Merging this PR into `MASTER` will automatically create the maven 
-and github releases. Please note that a release is final, it can not be undone/deleted/overwritten.
-5. Once the public release has been successful create a final PR into `DEV` that contains an 
+and github releases, **This PR should never be squashed, but just merged** to ensure all commits 
+   from dev are included in master. Please note that a release is final, it cannot be undone/deleted/overwritten.
+5. Once the public release has been successful, create a final PR into `DEV` that contains an 
 incremented `pom.xml` version to ensure the correct snapshot gets updated on subsequent merges
-into `DEV`. This PR should also include:
+into `DEV`. This PR should include:
     * An update to the `README.md` latest stable release version number.
     * A 'Work In Progress' entry for the next anticipated release in `CHANGELOG.md`.
