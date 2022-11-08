@@ -136,3 +136,5 @@ can get data for both organization and organization brand pages.
 * Add `application/x-wwww-form-urlenconded` header to obtain access token request and update additional header method to add headers as a list.
 
 ## 3.1.4 (Work In Progress)
+* Bump sl4j depenencies from 1.7.x to 2.0.x
+* Removed google-api-services-oauth2 dependency
