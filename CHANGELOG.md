@@ -135,6 +135,8 @@ can get data for both organization and organization brand pages.
 ## 3.1.3 (Oct 17, 2022)
 * Add `application/x-wwww-form-urlenconded` header to obtain access token request and update additional header method to add headers as a list.
 
-## 3.1.4 (Work In Progress)
-* Bump sl4j depenencies from 1.7.x to 2.0.x
+## 3.1.4 (Dec 9, 2022)
+* Bump sl4j dependencies from 1.7.x to 2.0.x
 * Removed google-api-services-oauth2 dependency
+* Bump sevntu-checks dependencies from 1.42.0 to 1.44.0
+* Fix getShares method in ShareConnection
