@@ -59,25 +59,24 @@ public class ShareConnection extends ConnectionBaseV2 {
   public Share getShare(long shareId) {
     return linkedinClient.fetchObject(SHARES + "/" + shareId, Share.class);
   }
-  
+
   /**
    * Retrieve the collection of shares owned by a specific member or organization. Use URNs
    * formatted as urn:li:person:{id} , urn:li:organization:{id} , or urn:li:organizationBrand:{id}
    * to retrieve shares for the relevant entity.
    * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/share-api#retrieve-shares">
    * Retrieve Shares</a>
-   * @param ownerURNs the URNs of the owner
+   * @param ownerURN the URN of the owner
    * @param sharesPerOwner the number of shares per owner
    * @param count the number of entries to be returned per paged request
    * @return the share corresponding to the share id
    */
-  public List<Share> getShares(List<URN> ownerURNs, int sharesPerOwner, Integer count) {
+  public List<Share> getShares(URN ownerURN, int sharesPerOwner, Integer count) {
     List<Parameter> params = new ArrayList<>();
   
     params.add(Parameter.with(QUERY_KEY, OWNERS));
-    addParametersFromURNs(params, SHARES_PARAM, ownerURNs);
+    params.add(Parameter.with(OWNERS, ownerURN));
     params.add(Parameter.with(SHARES_PER_OWNER, sharesPerOwner));
-    params.add(Parameter.with(COUNT, 20));
     addStartAndCountParams(params, null, count);
     
     return getListFromQuery(SHARES, Share.class, params.toArray(new Parameter[0]));

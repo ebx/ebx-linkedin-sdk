@@ -18,6 +18,7 @@
 package com.echobox.api.linkedin.types.social.actions;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.objectype.AuditStamp;
 import com.echobox.api.linkedin.types.urn.ContainsURN;
 import com.echobox.api.linkedin.types.urn.URN;
 import lombok.Getter;
@@ -65,6 +66,16 @@ public class CommentAction extends ContainsURN {
   @Setter
   @LinkedIn
   private URN object;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private AuditStamp created;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private AuditStamp lastModified;
   
   /**
    * A Model to describe the content of a comment
