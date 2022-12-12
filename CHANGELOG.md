@@ -140,3 +140,5 @@ can get data for both organization and organization brand pages.
 * Removed google-api-services-oauth2 dependency
 * Bump sevntu-checks dependencies from 1.42.0 to 1.44.0
 * Fix getShares method in ShareConnection
+
+## 3.1.5 (Work In progress)
