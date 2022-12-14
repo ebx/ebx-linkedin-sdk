@@ -121,7 +121,7 @@ public class VersionedLinkedInClient extends BaseLinkedInClient implements Linke
   /**
    * Request header to put API version
    */
-  private static final String HEADER_NAME_VERSION = "LinkedIn-Version";
+  private static final String HEADER_NAME_VERSION = "Linkedin-Version";
 
   /**
    * Default LinkedIn-version header
