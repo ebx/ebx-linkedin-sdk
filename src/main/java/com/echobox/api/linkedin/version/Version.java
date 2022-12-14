@@ -47,7 +47,7 @@ public enum Version {
   /**
    * LinkedIn versioned API
    */
-  VERSIONING("rest", new V2PagingImpl(), false);
+  VERSIONED("rest", new V2PagingImpl(), false);
   
   private static Logger LOGGER = LoggerFactory.getLogger(Version.class);
   

@@ -171,7 +171,7 @@ public class VersionedLinkedInClient extends BaseLinkedInClient implements Linke
    */
   public VersionedLinkedInClient(String accessToken)
       throws GeneralSecurityException, IOException {
-    this(accessToken, Version.VERSIONING);
+    this(accessToken, Version.VERSIONED);
   }
   
   /**
