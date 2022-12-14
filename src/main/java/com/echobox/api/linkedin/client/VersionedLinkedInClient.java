@@ -119,9 +119,24 @@ public class VersionedLinkedInClient extends BaseLinkedInClient implements Linke
   protected static final String END = "end";
   
   /**
+   * Request header to put API version
+   */
+  private static final String HEADER_NAME_VERSION = "LinkedIn-Version";
+
+  /**
    * Default LinkedIn-version header
    */
   public static final String DEFAULT_VERSIONED_MONTH = "202211";
+  
+  /**
+   * Request header of protocol
+   */
+  private static final String HEADER_NAME_PROTOCOL = "X-Restli-Protocol-Version";
+  
+  /**
+   * Default LinkedIn Protocol
+   */
+  private static final String DEFAULT_LINKEDIN_PROTOCOL = "2.0.0";
   
   /**
    * Graph API access token.
@@ -497,8 +512,11 @@ public class VersionedLinkedInClient extends BaseLinkedInClient implements Linke
     final String fullEndpoint = createEndpointForApiCall(endpoint,
         binaryAttachments != null && !binaryAttachments.isEmpty());
     
+    Map<String, String> headers = new HashMap<>();
+    headers.put(HEADER_NAME_VERSION, versionedMonth);
+    headers.put(HEADER_NAME_PROTOCOL, DEFAULT_LINKEDIN_PROTOCOL);
     return makeRequestFull(fullEndpoint, executeAsPost, executeAsDelete, jsonBody,
-        null, binaryAttachments, parameters);
+        headers, binaryAttachments, parameters);
   }
   
   /**
