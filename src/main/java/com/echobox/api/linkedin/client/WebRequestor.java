@@ -114,6 +114,19 @@ public interface WebRequestor {
    *           If an error occurs while performing the {@code GET} operation.
    */
   Response executeGet(String url) throws IOException;
+  
+  /**
+   * Given a LinkedIn API endpoint URL, execute a {@code GET} against it.
+   *
+   * @param url
+   *          The URL to make a {@code GET} request for, including URL parameters.
+   * @param headers
+   *          The headers for the GET request
+   * @return HTTP response data.
+   * @throws IOException
+   *           If an error occurs while performing the {@code GET} operation.
+   */
+  Response executeGet(String url, Map<String, String> headers) throws IOException;
 
   /**
    * Given a LinkedIn API endpoint URL and parameter string, execute a {@code POST} to the endpoint
@@ -142,7 +155,7 @@ public interface WebRequestor {
    * @param jsonBody
    *          The POST JSON body
    * @param headers
-   *          The headers for the post request
+   *          The headers for the POST request
    * @param binaryAttachments
    *          Optional binary attachments to be included in the {@code POST} body (e.g. photos and
    *          videos).
@@ -170,6 +183,20 @@ public interface WebRequestor {
    */
   Response executeDelete(String url) throws IOException;
 
+  /**
+   * Given a LinkedIn API endpoint URL and parameter string, execute a {@code DELETE} to the
+   * endpoint URL.
+   *
+   * @param url
+   *          The URL to submit the {@code DELETE} to.
+   * @param headers
+   *          The headers for the DELETE request
+   * @return HTTP response data.
+   * @throws IOException
+   *           If an error occurs while performing the {@code DELETE}.
+   */
+  Response executeDelete(String url, Map<String, String> headers) throws IOException;
+  
   /**
    * Provides access to the LinkedIn header information.
    * 
