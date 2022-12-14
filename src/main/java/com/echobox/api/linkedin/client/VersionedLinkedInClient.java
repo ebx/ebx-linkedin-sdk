@@ -61,7 +61,7 @@ import java.util.Map;
 public class VersionedLinkedInClient extends BaseLinkedInClient implements LinkedInClient {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(VersionedLinkedInClient.class);
-  
+
   /**
    * HTTP parameter names.
    */
