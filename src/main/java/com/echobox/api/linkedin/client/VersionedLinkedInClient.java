@@ -752,34 +752,34 @@ public class VersionedLinkedInClient extends BaseLinkedInClient implements Linke
     public LinkedInException exceptionForTypeAndMessage(Integer errorCode, Integer httpStatusCode,
         String message, Boolean isTransient, JsonObject rawError) {
       // Bad Request - client mistakes
-      if (new Integer(400).equals(httpStatusCode)) {
+      if (Integer.valueOf(HttpStatus.SC_BAD_REQUEST).equals(httpStatusCode)) {
         return new LinkedInQueryParseException(message, errorCode, httpStatusCode, rawError);
       }
       
       // Unauthorised
-      if (new Integer(401).equals(httpStatusCode)) {
+      if (Integer.valueOf(HttpStatus.SC_UNAUTHORIZED).equals(httpStatusCode)) {
         return new LinkedInOAuthException(message, errorCode, httpStatusCode, rawError);
       }
       
       // Resource not found
-      if (new Integer(404).equals(httpStatusCode)) {
+      if (Integer.valueOf(HttpStatus.SC_NOT_FOUND).equals(httpStatusCode)) {
         return new LinkedInResourceNotFoundException(message, errorCode, httpStatusCode,
             rawError);
       }
       
       // 429 Rate limit
-      if (new Integer(429).equals(httpStatusCode)) {
+      if (Integer.valueOf(HttpStatus.SC_TOO_MANY_REQUESTS).equals(httpStatusCode)) {
         return new LinkedInRateLimitException(message, errorCode, httpStatusCode,
             rawError);
       }
       
       // Internal Server Error
-      if (new Integer(500).equals(httpStatusCode)) {
+      if (Integer.valueOf(HttpStatus.SC_INTERNAL_SERVER_ERROR).equals(httpStatusCode)) {
         return new LinkedInInteralServerException(message, errorCode, httpStatusCode, rawError);
       }
       
       // Gateway timeout
-      if (new Integer(504).equals(httpStatusCode)) {
+      if (Integer.valueOf(HttpStatus.SC_GATEWAY_TIMEOUT).equals(httpStatusCode)) {
         return new LinkedInGatewayTimeoutException(message, errorCode, httpStatusCode, rawError);
       }
       
