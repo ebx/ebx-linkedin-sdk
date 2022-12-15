@@ -48,6 +48,9 @@ import java.util.stream.Collectors;
  * @author joanna
  *
  */
+
+// Ignore CPD as this will be removed after migration
+// CPD-OFF
 public class OrganizationConnection extends ConnectionBaseV2 {
   
   private static final String ORGANIZATION_ACLS = "/organizationAcls";
