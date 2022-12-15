@@ -564,7 +564,7 @@ public class VersionedLinkedInClient extends BaseLinkedInClient implements Linke
       @Override
       public WebRequestor.Response makeRequest() throws IOException {
         if (executeAsDelete && !isHttpDeleteFallback()) {
-          return webRequestor.executeDelete(fullEndpoint + finalParameterString);
+          return webRequestor.executeDelete(fullEndpoint + finalParameterString, headers);
         } else {
           return executeAsPost
               ? webRequestor.executePost(fullEndpoint, parameterString,
@@ -572,7 +572,7 @@ public class VersionedLinkedInClient extends BaseLinkedInClient implements Linke
               headers,
               binaryAttachments == null ? null
                   : binaryAttachments.toArray(new BinaryAttachment[binaryAttachments.size()]))
-              : webRequestor.executeGet(fullEndpoint + finalParameterString);
+              : webRequestor.executeGet(fullEndpoint + finalParameterString, headers);
         }
       }
     });
