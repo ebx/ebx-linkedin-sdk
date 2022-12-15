@@ -17,8 +17,8 @@
 
 package com.echobox.api.linkedin.connection.versioned;
 
-import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
+import com.echobox.api.linkedin.client.VersionedLinkedInClient;
 import com.echobox.api.linkedin.types.organization.OrganizationBase;
 import com.echobox.api.linkedin.types.organization.OrganizationResult;
 import com.echobox.api.linkedin.util.ValidationUtils;
@@ -58,7 +58,7 @@ public class VersionedOrganizationConnection extends VersionedConnection {
    *
    * @param linkedinClient the LinkedIn client
    */
-  public VersionedOrganizationConnection(LinkedInClient linkedinClient) {
+  public VersionedOrganizationConnection(VersionedLinkedInClient linkedinClient) {
     super(linkedinClient);
   }
   
