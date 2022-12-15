@@ -26,10 +26,10 @@ import java.net.HttpURLConnection;
 import java.security.GeneralSecurityException;
 
 /**
- * Test for {@link VersionedLinkedInClient}
+ * Test for {@link DefaultVersionedLinkedInClient}
  * @author Kenneth Wong
  */
-public class VersionedLinkedInClientTest {
+public class DefaultVersionedLinkedInClientTest {
   /**
    * Test 200 response status does not throw a LinkedInOauthException
    * @throws GeneralSecurityException GeneralSecurityException
@@ -38,7 +38,7 @@ public class VersionedLinkedInClientTest {
   @Test
   public void test200Response()
       throws GeneralSecurityException, IOException {
-    VersionedLinkedInClient client = new VersionedLinkedInClient("test");
+    DefaultVersionedLinkedInClient client = new DefaultVersionedLinkedInClient("test");
     WebRequestor.Response response =
         client.makeRequestAndProcessResponse(() -> new WebRequestor.Response(200, null, null));
   }
@@ -51,7 +51,7 @@ public class VersionedLinkedInClientTest {
   @Test
   public void test201Response()
       throws GeneralSecurityException, IOException {
-    VersionedLinkedInClient client = new VersionedLinkedInClient("test");
+    DefaultVersionedLinkedInClient client = new DefaultVersionedLinkedInClient("test");
     WebRequestor.Response response =
         client.makeRequestAndProcessResponse(() -> new WebRequestor.Response(201, null, null));
     Assert.assertEquals(HttpURLConnection.HTTP_CREATED, response.getStatusCode().intValue());
@@ -65,7 +65,7 @@ public class VersionedLinkedInClientTest {
   @Test
   public void test204Response()
       throws GeneralSecurityException, IOException {
-    VersionedLinkedInClient client = new VersionedLinkedInClient("test");
+    DefaultVersionedLinkedInClient client = new DefaultVersionedLinkedInClient("test");
     WebRequestor.Response response =
         client.makeRequestAndProcessResponse(() -> new WebRequestor.Response(204, null, null));
     Assert.assertEquals(HttpURLConnection.HTTP_NO_CONTENT, response.getStatusCode().intValue());
@@ -80,7 +80,7 @@ public class VersionedLinkedInClientTest {
   public void test401ResponseError()
       throws GeneralSecurityException, IOException {
     try {
-      VersionedLinkedInClient client = new VersionedLinkedInClient("test");
+      DefaultVersionedLinkedInClient client = new DefaultVersionedLinkedInClient("test");
       client.makeRequestAndProcessResponse(() -> new WebRequestor.Response(401, null, "{"
           + "\"message\": \"Empty oauth2_access_token\",\"serviceErrorCode\": 401,"
           + "\"status\": 401}"));
@@ -100,7 +100,7 @@ public class VersionedLinkedInClientTest {
   public void test401ResponseErrorNoJSON()
       throws GeneralSecurityException, IOException {
     try {
-      VersionedLinkedInClient client = new VersionedLinkedInClient("test");
+      DefaultVersionedLinkedInClient client = new DefaultVersionedLinkedInClient("test");
       client.makeRequestAndProcessResponse(() -> new WebRequestor.Response(401, null, null));
     } catch (LinkedInOAuthException ex) {
       Assert.assertEquals("LinkedIn request failed", ex.getErrorMessage());
