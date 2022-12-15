@@ -215,7 +215,12 @@ public class DefaultWebRequestor implements WebRequestor {
 
   @Override
   public Response executeGet(String url) throws IOException {
-    return execute(url, HttpMethod.GET);
+    return executeGet(url, null);
+  }
+  
+  @Override
+  public Response executeGet(String url, Map<String, String> headers) throws IOException {
+    return execute(url, HttpMethod.GET, headers);
   }
 
   @Override
@@ -499,15 +504,21 @@ public class DefaultWebRequestor implements WebRequestor {
 
   @Override
   public Response executeDelete(String url) throws IOException {
-    return execute(url, HttpMethod.DELETE);
+    return executeDelete(url, null);
   }
 
+  @Override
+  public Response executeDelete(String url, Map<String, String> headers) throws IOException {
+    return execute(url, HttpMethod.DELETE, headers);
+  }
+  
   @Override
   public DebugHeaderInfo getDebugHeaderInfo() {
     return debugHeaderInfo;
   }
 
-  private Response execute(String url, HttpMethod httpMethod) throws IOException {
+  private Response execute(String url, HttpMethod httpMethod, Map<String, String> headers)
+      throws IOException {
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug(format("Making a %s request to %s", httpMethod.name(), url));
     }
@@ -521,6 +532,8 @@ public class DefaultWebRequestor implements WebRequestor {
       // Allow subclasses to customize the connection if they'd like to - set their own headers,
       // timeouts, etc.
       customizeConnection(request);
+      HttpHeaders requestHeaders = new HttpHeaders();
+      addHeadersToRequest(request, requestHeaders, headers);
 
       return getResponse(request);
     } catch (HttpResponseException ex) {
