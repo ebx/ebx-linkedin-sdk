@@ -17,7 +17,7 @@
 
 package com.echobox.api.linkedin.connection.versioned;
 
-import com.echobox.api.linkedin.client.LinkedInClient;
+import com.echobox.api.linkedin.client.VersionedLinkedInClient;
 import com.echobox.api.linkedin.connection.ConnectionBase;
 import com.echobox.api.linkedin.version.Version;
 
@@ -37,7 +37,7 @@ public abstract class VersionedConnection extends ConnectionBase {
    *
    * @param linkedinClient the LinkedIn client
    */
-  protected VersionedConnection(LinkedInClient linkedinClient) {
+  protected VersionedConnection(VersionedLinkedInClient linkedinClient) {
     super(linkedinClient);
     if (Version.VERSIONED != linkedinClient.getVersion()) {
       throw new IllegalArgumentException("The version of linkedInClient is not VERSIONED");
