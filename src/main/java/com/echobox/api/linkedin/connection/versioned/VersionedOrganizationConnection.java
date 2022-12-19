@@ -19,8 +19,11 @@ package com.echobox.api.linkedin.connection.versioned;
 
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.VersionedLinkedInClient;
+import com.echobox.api.linkedin.types.organization.Organization;
 import com.echobox.api.linkedin.types.organization.OrganizationBase;
 import com.echobox.api.linkedin.types.organization.OrganizationResult;
+import com.echobox.api.linkedin.types.urn.URN;
+import com.echobox.api.linkedin.types.urn.URNEntityType;
 import com.echobox.api.linkedin.util.ValidationUtils;
 
 import java.util.ArrayList;
@@ -63,6 +66,23 @@ public class VersionedOrganizationConnection extends VersionedConnection {
   }
   
   /**
+   * Find an organization using an organization ID, parent organization ID
+   * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api#retrieve-organizations">Retrieve organization</a>
+   * @param organizationURN The organization URN
+   * @param fields the fields to project
+   * @return the requested organization
+   */
+  public Organization retrieveOrganization(URN organizationURN, Parameter fields) {
+    validateOrganizationURN("organizationURN", organizationURN);
+    List<Parameter> parameters = new ArrayList<>();
+    if (fields != null) {
+      parameters.add(fields);
+    }
+    return linkedinClient.fetchObject(ORGANIZATIONS + "/" + organizationURN.getId(),
+        Organization.class, parameters.toArray(new Parameter[0]));
+  }
+  
+  /**
    * Lookup an organization by vanity name
    * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api?view=li-lms-2022-11&tabs=http#find-organization-by-vanity-name">
    * Retrieve organization</a>
@@ -87,6 +107,18 @@ public class VersionedOrganizationConnection extends VersionedConnection {
     
     return organizationList.stream().map(OrganizationResult::getOrganization)
         .collect(Collectors.toList());
+  }
+  
+  // Validation
+  private void validateOrganizationURN(String paramName, URN organizationURN) {
+    validateURN(paramName, organizationURN, URNEntityType.ORGANIZATION);
+    ValidationUtils.verifyParameterPresence(paramName, organizationURN);
+    validateURN(URNEntityType.ORGANIZATION, organizationURN);
+  }
+  
+  private void validateURN(String paramName, URN urn, URNEntityType type) {
+    ValidationUtils.verifyParameterPresence(paramName, urn);
+    validateURN(type, urn);
   }
   
 }
