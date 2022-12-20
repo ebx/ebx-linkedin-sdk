@@ -21,6 +21,7 @@ import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.VersionedLinkedInClient;
 import com.echobox.api.linkedin.types.organization.Organization;
 import com.echobox.api.linkedin.types.organization.OrganizationBase;
+import com.echobox.api.linkedin.types.organization.OrganizationBrand;
 import com.echobox.api.linkedin.types.organization.OrganizationResult;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.urn.URNEntityType;
@@ -45,6 +46,7 @@ public class VersionedOrganizationConnection extends VersionedConnection {
    * endpoint path
    */
   private static final String ORGANIZATIONS = "/organizations";
+  private static final String ORGANIZATIONS_BRANDS = "/organizationBrands";
   
   /**
    * Keys
@@ -135,12 +137,34 @@ public class VersionedOrganizationConnection extends VersionedConnection {
         parameters.toArray(new Parameter[0]));
   }
   
+  /**
+   * Use organization brand id to find all all of its information
+   * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api?view=li-lms-2022-11&tabs=http#retrieve-an-administered-organization-brand">
+   * Retrieve an organization brand</a>
+   * @param organizationBrandURN organizationBrandURN
+   * @param fields the fields to request
+   * @return the organization brand
+   */
+  public OrganizationBrand retrieveOrganizationBrand(URN organizationBrandURN, Parameter fields) {
+    validateOrganizationBrandURN("organizationBrandURN", organizationBrandURN);
+    List<Parameter> parameters = new ArrayList<>();
+    if (fields != null) {
+      parameters.add(fields);
+    }
+    String id = organizationBrandURN.getId();
+    return linkedinClient.fetchObject(ORGANIZATIONS_BRANDS + "/" + id,
+        OrganizationBrand.class, parameters.toArray(new Parameter[0]));
+  }
   
   // Validation
   private void validateOrganizationURN(String paramName, URN organizationURN) {
     validateURN(paramName, organizationURN, URNEntityType.ORGANIZATION);
     ValidationUtils.verifyParameterPresence(paramName, organizationURN);
     validateURN(URNEntityType.ORGANIZATION, organizationURN);
+  }
+  
+  private void validateOrganizationBrandURN(String paramName, URN organizationBrandURN) {
+    validateURN(paramName, organizationBrandURN, URNEntityType.ORGANIZATIONBRAND);
   }
   
   private void validateURN(String paramName, URN urn, URNEntityType type) {
