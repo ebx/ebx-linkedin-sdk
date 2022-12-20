@@ -176,6 +176,8 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    */
   protected boolean httpDeleteFallback = false;
   
+  private Map<String, String> defaultHeaders;
+  
   /**
    * Creates a LinkedIn API client with the given {@code accessToken}.
    *
@@ -284,6 +286,11 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
     this.apiVersion = apiVersion;
     this.linkedinExceptionMapper = linkedinExceptionMapper;
     this.versionedMonth = versionedMonth;
+    if (this.defaultHeaders == null) {
+      this.defaultHeaders = new HashMap<>();
+      this.defaultHeaders.put(HEADER_NAME_VERSION, versionedMonth);
+      this.defaultHeaders.put(HEADER_NAME_PROTOCOL, DEFAULT_LINKEDIN_PROTOCOL);
+    }
   }
   
   @Override
@@ -320,7 +327,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
       String pageURL = apiVersion.isSpecifyFormat()
           ? URLUtils.replaceOrAddQueryParameter(connectionPageUrl, "format", "json")
           : connectionPageUrl;
-      return webRequestor.executeGet(pageURL);
+      return webRequestor.executeGet(pageURL, defaultHeaders);
     });
     
     return new Connection<T>(connectionPageUrl, this, connectionJson, connectionType);
@@ -513,12 +520,9 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
     
     final String fullEndpoint = createEndpointForApiCall(endpoint,
         binaryAttachments != null && !binaryAttachments.isEmpty());
-    
-    Map<String, String> headers = new HashMap<>();
-    headers.put(HEADER_NAME_VERSION, versionedMonth);
-    headers.put(HEADER_NAME_PROTOCOL, DEFAULT_LINKEDIN_PROTOCOL);
+
     return makeRequestFull(fullEndpoint, executeAsPost, executeAsDelete, jsonBody,
-        headers, binaryAttachments, parameters);
+        defaultHeaders, binaryAttachments, parameters);
   }
   
   /**
