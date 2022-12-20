@@ -50,11 +50,13 @@ public class VersionedOrganizationConnection extends VersionedConnection {
    * Keys
    */
   private static final String VANITY_NAME_KEY = "vanityName";
+  private static final String EMAIL_DOMAIN_KEY = "emailDomain";
   
   /**
    * Param value
    */
   private static final String VANITY_NAME_VALUE = "vanityName";
+  private static final String EMAIL_DOMAIN_VALUE = "emailDomain";
   
   /**
    * Instantiates a new connection base.
@@ -108,6 +110,31 @@ public class VersionedOrganizationConnection extends VersionedConnection {
     return organizationList.stream().map(OrganizationResult::getOrganization)
         .collect(Collectors.toList());
   }
+  
+  /**
+   * Lookup an organization by email domain
+   * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api?view=li-lms-2022-11&tabs=http#find-organization-by-email-domain">
+   * Find Organization by Email Domain</a>
+   * @param emailDomain the email domain for the organization
+   * @param fields the fields to request
+   * @param count the number of entries to be returned per paged request
+   * @return A list of organizations with the email domain
+   */
+  public List<Organization> findOrganizationByEmailDomain(String emailDomain, Parameter fields,
+      Integer count) {
+    ValidationUtils.verifyParameterPresence("emailDomain", emailDomain);
+    
+    List<Parameter> parameters = new ArrayList<>();
+    if (fields != null) {
+      parameters.add(fields);
+    }
+    parameters.add(Parameter.with(QUERY_KEY, EMAIL_DOMAIN_VALUE));
+    parameters.add(Parameter.with(EMAIL_DOMAIN_KEY, emailDomain));
+    addStartAndCountParams(parameters, null, count);
+    return getListFromQuery(ORGANIZATIONS, Organization.class,
+        parameters.toArray(new Parameter[0]));
+  }
+  
   
   // Validation
   private void validateOrganizationURN(String paramName, URN organizationURN) {
