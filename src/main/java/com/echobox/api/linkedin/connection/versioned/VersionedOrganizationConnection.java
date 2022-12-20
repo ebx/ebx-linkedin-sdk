@@ -130,7 +130,7 @@ public class VersionedOrganizationConnection extends VersionedConnection {
     }
     parameters.add(Parameter.with(QUERY_KEY, EMAIL_DOMAIN_VALUE));
     parameters.add(Parameter.with(EMAIL_DOMAIN_KEY, emailDomain));
-    addStartAndCountParams(parameters, 0, count);
+    addStartAndCountParams(parameters, null, count);
     return getListFromQuery(ORGANIZATIONS, Organization.class,
         parameters.toArray(new Parameter[0]));
   }
