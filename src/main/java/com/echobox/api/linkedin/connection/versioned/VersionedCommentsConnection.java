@@ -22,6 +22,12 @@ import com.echobox.api.linkedin.types.social.actions.CommentAction;
 import com.echobox.api.linkedin.types.social.actions.CommentResponse;
 import com.echobox.api.linkedin.types.urn.URN;
 
+/**
+ * Comment connection class for posting comments
+ *
+ * @author Sergio Abplanalp
+ *
+ */
 public class VersionedCommentsConnection extends VersionedConnection {
   
   /**
