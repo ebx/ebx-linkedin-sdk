@@ -21,6 +21,7 @@ import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.VersionedLinkedInClient;
 import com.echobox.api.linkedin.types.organization.Organization;
 import com.echobox.api.linkedin.types.organization.OrganizationBase;
+import com.echobox.api.linkedin.types.organization.OrganizationBrand;
 import com.echobox.api.linkedin.types.organization.OrganizationResult;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.urn.URNEntityType;
@@ -51,12 +52,14 @@ public class VersionedOrganizationConnection extends VersionedConnection {
    */
   private static final String VANITY_NAME_KEY = "vanityName";
   private static final String EMAIL_DOMAIN_KEY = "emailDomain";
+  private static final String PARENT_KEY = "parent";
   
   /**
    * Param value
    */
   private static final String VANITY_NAME_VALUE = "vanityName";
   private static final String EMAIL_DOMAIN_VALUE = "emailDomain";
+  private static final String PARENT_ORGANIZATION_VALUE = "parentOrganization";
   
   /**
    * Instantiates a new connection base.
@@ -135,6 +138,25 @@ public class VersionedOrganizationConnection extends VersionedConnection {
         parameters.toArray(new Parameter[0]));
   }
   
+  /**
+   * Use organization parent URN to get a list of array of brands that belong to the specified
+   * parent
+   * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api?view=li-lms-2022-11&tabs=http#find-administered-organization-brands-by-parent-organization">
+   * Retrieve Organization Brand by Parent Organization</a>
+   * @param organizationURN parent organization URN
+   * @return all the organization brands
+   */
+  public List<OrganizationBrand> retrieveOrganizationBrandByParentOrganization(
+      URN organizationURN) {
+    validateOrganizationURN("organizationURN", organizationURN);
+    
+    List<Parameter> parameters = new ArrayList<>();
+    parameters.add(Parameter.with(QUERY_KEY, PARENT_ORGANIZATION_VALUE));
+    parameters.add(Parameter.with(PARENT_KEY, organizationURN.toString()));
+    
+    return getListFromQuery(ORGANIZATIONS, OrganizationBrand.class,
+        parameters.toArray(new Parameter[0]));
+  }
   
   // Validation
   private void validateOrganizationURN(String paramName, URN organizationURN) {
