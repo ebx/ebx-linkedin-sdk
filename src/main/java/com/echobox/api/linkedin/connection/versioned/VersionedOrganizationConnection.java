@@ -19,6 +19,7 @@ package com.echobox.api.linkedin.connection.versioned;
 
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.VersionedLinkedInClient;
+import com.echobox.api.linkedin.types.organization.AccessControl;
 import com.echobox.api.linkedin.types.organization.Organization;
 import com.echobox.api.linkedin.types.organization.OrganizationBase;
 import com.echobox.api.linkedin.types.organization.OrganizationBrand;
@@ -26,6 +27,7 @@ import com.echobox.api.linkedin.types.organization.OrganizationResult;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.urn.URNEntityType;
 import com.echobox.api.linkedin.util.ValidationUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +49,7 @@ public class VersionedOrganizationConnection extends VersionedConnection {
    */
   private static final String ORGANIZATIONS = "/organizations";
   private static final String ORGANIZATIONS_BRANDS = "/organizationBrands";
+  private static final String ORGANIZATION_ACLS = "/organizationAcls";
   
   /**
    * Keys
@@ -54,6 +57,8 @@ public class VersionedOrganizationConnection extends VersionedConnection {
   private static final String VANITY_NAME_KEY = "vanityName";
   private static final String EMAIL_DOMAIN_KEY = "emailDomain";
   private static final String PARENT_KEY = "parent";
+  private static final String ROLE_KEY = "role";
+  private static final String STATE_KEY = "state";
   
   /**
    * Param value
@@ -61,6 +66,7 @@ public class VersionedOrganizationConnection extends VersionedConnection {
   private static final String VANITY_NAME_VALUE = "vanityName";
   private static final String EMAIL_DOMAIN_VALUE = "emailDomain";
   private static final String PARENT_ORGANIZATION_VALUE = "parentOrganization";
+  private static final String ROLE_ASSIGNEE_VALUE = "roleAssignee";
   
   /**
    * Instantiates a new connection base.
@@ -178,6 +184,28 @@ public class VersionedOrganizationConnection extends VersionedConnection {
         parameters.toArray(new Parameter[0]));
   }
   
+  /**
+   * Find a Member's Organization Access Control Information
+   * E.g. https://api.linkedin.com/rest/organizationAcls?q=roleAssignee
+   * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-access-control-by-role?view=li-lms-2022-11&tabs=http">
+   * Access Control</a>
+   * @param role Limit results to specific roles, such as ADMINISTRATOR.
+   * @param state Limit results to specific role states, such as APPROVED.
+   * @param projection Field projection
+   * @param count the number of entries to be returned per paged request
+   * @return List of access controls for a given role and state for the member
+   */
+  public List<AccessControl> fetchMemberOrganizationAccessControl(String role, String state,
+      Parameter projection, Integer count) {
+    List<Parameter> params = new ArrayList<>();
+    params.add(Parameter.with(QUERY_KEY, ROLE_ASSIGNEE_VALUE));
+    addRoleStateParams(role, state, projection, params);
+    addStartAndCountParams(params, null, count);
+    
+    return getListFromQuery(ORGANIZATION_ACLS, AccessControl.class,
+        params.toArray(new Parameter[0]));
+  }
+  
   // Validation
   private void validateOrganizationURN(String paramName, URN organizationURN) {
     validateURN(paramName, organizationURN, URNEntityType.ORGANIZATION);
@@ -192,6 +220,19 @@ public class VersionedOrganizationConnection extends VersionedConnection {
   private void validateURN(String paramName, URN urn, URNEntityType type) {
     ValidationUtils.verifyParameterPresence(paramName, urn);
     validateURN(type, urn);
+  }
+  
+  private void addRoleStateParams(String role, String state, Parameter projection,
+      List<Parameter> parameters) {
+    if (StringUtils.isNotBlank(role)) {
+      parameters.add(Parameter.with(ROLE_KEY, role));
+    }
+    if (StringUtils.isNotBlank(state)) {
+      parameters.add(Parameter.with(STATE_KEY, state));
+    }
+    if (projection != null) {
+      parameters.add(projection);
+    }
   }
   
 }
