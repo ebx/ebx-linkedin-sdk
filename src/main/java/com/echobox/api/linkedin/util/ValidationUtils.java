@@ -21,8 +21,7 @@ import com.echobox.api.linkedin.client.WebRequestor;
 import com.echobox.api.linkedin.exception.LinkedInNetworkException;
 import com.echobox.api.linkedin.exception.LinkedInOAuthException;
 import org.apache.commons.lang3.StringUtils;
-
-import java.net.HttpURLConnection;
+import org.apache.http.HttpStatus;
 
 /**
  * Valiation utility class
@@ -74,18 +73,18 @@ public class ValidationUtils {
   public static void validateResponse(WebRequestor.Response response) {
     // If there was no response error information and this was a 401
     // error, something weird happened on LinkedIn's end. Assume it is a Oauth error.
-    if (HttpURLConnection.HTTP_UNAUTHORIZED == response.getStatusCode()) {
+    if (HttpStatus.SC_UNAUTHORIZED == response.getStatusCode()) {
       throw new LinkedInOAuthException("LinkedIn request failed", response.getStatusCode());
     }
   
     // If there was no response error information and this was a 500
     // error, something weird happened on LinkedIn's end. Bail.
-    if (HttpURLConnection.HTTP_INTERNAL_ERROR == response.getStatusCode()) {
+    if (HttpStatus.SC_INTERNAL_SERVER_ERROR == response.getStatusCode()) {
       throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
     }
   
-    if (HttpURLConnection.HTTP_OK != response.getStatusCode()
-        && HttpURLConnection.HTTP_CREATED != response.getStatusCode()) {
+    if (HttpStatus.SC_OK != response.getStatusCode()
+        && HttpStatus.SC_CREATED != response.getStatusCode()) {
       throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
     }
   }
