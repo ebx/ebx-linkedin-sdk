@@ -28,7 +28,7 @@ import com.echobox.api.linkedin.types.urn.URN;
  * @author Sergio Abplanalp
  *
  */
-public class VersionedCommentsConnection extends VersionedConnection {
+public class VersionedCommentConnection extends VersionedConnection {
   
   /**
    * endpoint path
@@ -40,7 +40,7 @@ public class VersionedCommentsConnection extends VersionedConnection {
    *
    * @param linkedinClient the LinkedIn client
    */
-  protected VersionedCommentsConnection(VersionedLinkedInClient linkedinClient) {
+  protected VersionedCommentConnection(VersionedLinkedInClient linkedinClient) {
     super(linkedinClient);
   }
   
