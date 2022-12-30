@@ -375,6 +375,42 @@ public class VersionedOrganizationConnection extends VersionedConnection {
         params.toArray(new Parameter[0]));
   }
   
+  /**
+   * Look up a member's positions and related organization IDs.
+   */
+  public void findOrganizationsAssociatedToMemberPosition() {
+    throw new UnsupportedOperationException("Operation is not implemented yet.");
+  }
+  
+  /**
+   * Use organization parent URN to get a list of array of brands that belong to the specified
+   * parent
+   * @param organizationId organization id
+   */
+  public void retrieveOrganizationMediaContent(long organizationId) {
+    throw new UnsupportedOperationException("Operation is not implemented yet.");
+  }
+  
+  /**
+   * Search for organizations
+   * @param searchTerm the search term
+   * @return a list of organizations that match the organization
+   */
+  public List<Organization> searchForOrganizations(String searchTerm) {
+    throw new UnsupportedOperationException("Operation is not implemented yet.");
+  }
+  
+  /**
+   * Retrieve organization brand page statistics
+   * @param organizationBrand the organization brand URN
+   * @param timeInterval the time interval for time bounded statistics
+   * @return list of page statistics for the organization brand
+   */
+  public List<Statistics.BrandStatistics> retrieveOrganizationBrandPageStatistics(
+      URN organizationBrand, TimeInterval timeInterval) {
+    throw new UnsupportedOperationException("Operation is not implemented yet.");
+  }
+  
   // Validation
   /**
    * Validate share urn.
