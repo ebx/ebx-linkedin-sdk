@@ -19,11 +19,15 @@ package com.echobox.api.linkedin.connection.versioned;
 
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.VersionedLinkedInClient;
+import com.echobox.api.linkedin.types.TimeInterval;
 import com.echobox.api.linkedin.types.organization.AccessControl;
 import com.echobox.api.linkedin.types.organization.Organization;
 import com.echobox.api.linkedin.types.organization.OrganizationBase;
 import com.echobox.api.linkedin.types.organization.OrganizationBrand;
 import com.echobox.api.linkedin.types.organization.OrganizationResult;
+import com.echobox.api.linkedin.types.statistics.OrganizationFollowerStatistics;
+import com.echobox.api.linkedin.types.statistics.page.FollowerStatistic;
+import com.echobox.api.linkedin.types.statistics.page.Statistics;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.urn.URNEntityType;
 import com.echobox.api.linkedin.util.ValidationUtils;
@@ -50,6 +54,9 @@ public class VersionedOrganizationConnection extends VersionedConnection {
   private static final String ORGANIZATIONS = "/organizations";
   private static final String ORGANIZATIONS_BRANDS = "/organizationBrands";
   private static final String ORGANIZATION_ACLS = "/organizationAcls";
+  private static final String ORGANIZATIONAL_ENTITY_FOLLOWER_STATS =
+      "/organizationalEntityFollowerStatistics";
+  private static final String ORGANIZATIONAL_PAGE_STATS = "/organizationPageStatistics";
   
   /**
    * Keys
@@ -60,6 +67,7 @@ public class VersionedOrganizationConnection extends VersionedConnection {
   private static final String ROLE_KEY = "role";
   private static final String STATE_KEY = "state";
   private static final String ORGANIZATION_KEY = "organization";
+  private static final String ORGANIZATIONAL_ENTITY_KEY = "organizationalEntity";
   
   /**
    * Param value
@@ -69,6 +77,7 @@ public class VersionedOrganizationConnection extends VersionedConnection {
   private static final String PARENT_ORGANIZATION_VALUE = "parentOrganization";
   private static final String ROLE_ASSIGNEE_VALUE = "roleAssignee";
   private static final String ORGANIZATION_VALUE = "organization";
+  private static final String ORGANIZATIONAL_ENTITY_VALUE = "organizationalEntity";
   
   /**
    * Instantiates a new connection base.
@@ -234,6 +243,85 @@ public class VersionedOrganizationConnection extends VersionedConnection {
         parameters.toArray(new Parameter[0]));
   }
   
+  /**
+   * Retrieve the lifetime follower statistics. Providing the time interval will retrieve
+   * time-bounded follower statistics, otherwise the lifetime follower statistics will be returned
+   * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/follower-statistics?view=li-lms-2022-11&tabs=http#retrieve-lifetime-follower-statistics">
+   * Organization Follower Statistics</a>
+   * @param organizationURN the organization URN to retrieve the follower statistics
+   * @param count the number of entries to be returned per paged request
+   * @return a list of organization's follower statistics
+   */
+  public List<OrganizationFollowerStatistics> retrieveOrganizationFollowerStatistics(
+      URN organizationURN, Integer count) {
+    validateOrganizationURN("organizationURN", organizationURN);
+    List<Parameter> parameters = new ArrayList<>();
+    
+    addParametersForStatistics(organizationURN, null, parameters);
+    addStartAndCountParams(parameters, null, count);
+    
+    return getListFromQuery(ORGANIZATIONAL_ENTITY_FOLLOWER_STATS,
+        OrganizationFollowerStatistics.class,
+        parameters.toArray(new Parameter[0]));
+  }
+  
+  /**
+   * Retrieve both lifetime and time-bound statistics on followers for an organization.
+   * Lifetime follower statistics: To retrieve lifetime follower statistics, omit the
+   * timeIntervals query parameter. The API returns follower counts segmented by various facets
+   * such as region and industry.
+   *
+   * Time-bound follower statistics: To retrieve time-bound follower statistics, include the
+   * timeIntervals query parameter. The API returns the aggregate follower count for both paid
+   * and organic followers during the days or months of the selected date range, based on the
+   * specified timeIntervals.timeGranularityType.
+   * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/follower-statistics?view=li-lms-2022-11&tabs=http#retrieve-time-bound-follower-statistics">
+   * Organization Follower Statistics</a>
+   * @param organizationURN the organization RUN
+   * @param timeInterval the time interval for time bound follower statistics
+   * @param count the number of entries to be returned per paged request
+   * @return a list of organization follower statistics
+   */
+  public List<FollowerStatistic> retrieveOrganizationFollowerStatistics(URN organizationURN,
+      TimeInterval timeInterval, Integer count) {
+    validateOrganizationURN("organizationURN", organizationURN);
+    
+    List<Parameter> parameters = new ArrayList<>();
+    
+    addParametersForStatistics(organizationURN, timeInterval, parameters);
+    addStartAndCountParams(parameters, null, count);
+    
+    return getListFromQuery(ORGANIZATIONAL_ENTITY_FOLLOWER_STATS, FollowerStatistic.class,
+        parameters.toArray(new Parameter[0]));
+  }
+  
+  /**
+   * Retrieve the lifetime follower statistics. Providing the time interval will retrieve
+   * time-bounded follower statistics, otherwise the lifetime follower statistics will be returned
+   * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/page-statistics?view=li-lms-2022-11&tabs=http#retrieve-lifetime-organization-page-statistics">
+   * Organization Page Statistics - Lifetime</a>
+   * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/page-statistics?view=li-lms-2022-11&tabs=http#retrieve-time-bound-organization-page-statistics">
+   * Organization Page Statistics - time-bound</a>
+   * @param organizationURN the organization URN to retrieve the page statistics
+   * @param timeInterval the time interval  for time-bound follower statistics
+   * @param count the number of entries to be returned per paged request
+   * @return a list of organization's follower statistics
+   */
+  public List<Statistics.OrganizationStatistics> retrieveOrganizationPageStatistics(
+      URN organizationURN, TimeInterval timeInterval, Integer count) {
+    validateOrganizationURN("organizationURN", organizationURN);
+    
+    List<Parameter> parameters = new ArrayList<>();
+    parameters.add(Parameter.with(QUERY_KEY, ORGANIZATION_VALUE));
+    parameters.add(Parameter.with(ORGANIZATION_KEY, organizationURN.toString()));
+    
+    addTimeIntervalToParams(parameters, timeInterval);
+    addStartAndCountParams(parameters, null, count);
+    
+    return getListFromQuery(ORGANIZATIONAL_PAGE_STATS, Statistics.OrganizationStatistics.class,
+        parameters.toArray(new Parameter[0]));
+  }
+  
   // Validation
   private void validateOrganizationURN(String paramName, URN organizationURN) {
     validateURN(paramName, organizationURN, URNEntityType.ORGANIZATION);
@@ -261,6 +349,16 @@ public class VersionedOrganizationConnection extends VersionedConnection {
     if (projection != null) {
       parameters.add(projection);
     }
+  }
+  
+  private void addParametersForStatistics(URN organizationURN, TimeInterval timeInterval,
+      List<Parameter> parameters) {
+    validateOrganizationURN("organizationURN", organizationURN);
+    
+    parameters.add(Parameter.with(QUERY_KEY, ORGANIZATIONAL_ENTITY_VALUE));
+    parameters.add(Parameter.with(ORGANIZATIONAL_ENTITY_KEY, organizationURN.toString()));
+    
+    addTimeIntervalToParams(parameters, timeInterval);
   }
   
 }
