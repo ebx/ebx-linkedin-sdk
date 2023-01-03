@@ -195,7 +195,7 @@ public class VersionedOrganizationConnection extends VersionedConnection {
    * @param count the number of entries to be returned per paged request
    * @return List of access controls for a given role and state for the member
    */
-  public List<AccessControl> fetchMemberOrganizationAccessControl(String role, String state,
+  public List<AccessControl> retrieveMemberOrganizationAccessControl(String role, String state,
       Parameter projection, Integer count) {
     List<Parameter> params = new ArrayList<>();
     params.add(Parameter.with(QUERY_KEY, ROLE_ASSIGNEE_VALUE));
