@@ -20,7 +20,9 @@ package com.echobox.api.linkedin.connection.versioned;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.VersionedLinkedInClient;
 import com.echobox.api.linkedin.types.TimeInterval;
+import com.echobox.api.linkedin.types.engagement.ShareStatistic;
 import com.echobox.api.linkedin.types.organization.AccessControl;
+import com.echobox.api.linkedin.types.organization.NetworkSize;
 import com.echobox.api.linkedin.types.organization.Organization;
 import com.echobox.api.linkedin.types.organization.OrganizationBase;
 import com.echobox.api.linkedin.types.organization.OrganizationBrand;
@@ -57,6 +59,8 @@ public class VersionedOrganizationConnection extends VersionedConnection {
   private static final String ORGANIZATIONAL_ENTITY_FOLLOWER_STATS =
       "/organizationalEntityFollowerStatistics";
   private static final String ORGANIZATIONAL_PAGE_STATS = "/organizationPageStatistics";
+  private static final String NETWORK_SIZES = "/networkSizes";
+  private static final String SHARE_STATISTICS = "/organizationalEntityShareStatistics";
   
   /**
    * Keys
@@ -68,6 +72,8 @@ public class VersionedOrganizationConnection extends VersionedConnection {
   private static final String STATE_KEY = "state";
   private static final String ORGANIZATION_KEY = "organization";
   private static final String ORGANIZATIONAL_ENTITY_KEY = "organizationalEntity";
+  private static final String EDGE_TYPE_KEY = "edgeType";
+  private static final String SHARES_PARAM_KEY = "shares";
   
   /**
    * Param value
@@ -78,6 +84,7 @@ public class VersionedOrganizationConnection extends VersionedConnection {
   private static final String ROLE_ASSIGNEE_VALUE = "roleAssignee";
   private static final String ORGANIZATION_VALUE = "organization";
   private static final String ORGANIZATIONAL_ENTITY_VALUE = "organizationalEntity";
+  private static final String COMPANY_FOLLOWED_BY_MEMBER_VALUE = "CompanyFollowedByMember";
   
   /**
    * Instantiates a new connection base.
@@ -322,7 +329,72 @@ public class VersionedOrganizationConnection extends VersionedConnection {
         parameters.toArray(new Parameter[0]));
   }
   
+  /**
+   * Retrieve the number of first-degree connections (followers) for any organization.
+   * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api?view=li-lms-2022-11&tabs=http#retrieve-organization-follower-count">
+   * Retrieve Organization Follower Count</a>
+   * @param organizationURN the organization URN
+   * @return the number of followers for the organization
+   */
+  public Long retrieveOrganizationFollowerCount(URN organizationURN) {
+    validateOrganizationOrBrandURN("organizationURN", organizationURN);
+    NetworkSize networkSize = linkedinClient.fetchObject(NETWORK_SIZES + "/" + organizationURN,
+        NetworkSize.class, Parameter.with(EDGE_TYPE_KEY, COMPANY_FOLLOWED_BY_MEMBER_VALUE));
+    return networkSize.getFirstDegreeSize();
+  }
+  
+  /**
+   * retrieve both lifetime and time-bound organic statistics on shares for an organization,
+   * including specific organization share URNs. This endpoint returns organic statistics only.
+   * Sponsored activity is not counted in this endpoint.
+   * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/share-statistics?view=li-lms-2022-11&tabs=http#retrieve-time-bound-share-statistics">
+   * Organization Share Statistics</a>
+   * @param organizationURN the organizational entity URN for which the statistics represents
+   * @param timeInterval Time restriction for the query. When omitted, lifetime stats are returned
+   * @param shareURNs References to one or more shares for which statistics are returned
+   * @param count the number of entries to be returned per paged request
+   * @return aggregated stats for an organization's shares
+   */
+  public List<ShareStatistic> retrieveShareStatistics(URN organizationURN,
+      TimeInterval timeInterval, List<URN> shareURNs, Integer count) {
+    validateOrganizationOrBrandURN("organizationURN", organizationURN);
+    
+    List<Parameter> params = new ArrayList<>();
+    params.add(Parameter.with(QUERY_KEY, ORGANIZATIONAL_ENTITY_KEY));
+    params.add(Parameter.with(ORGANIZATIONAL_ENTITY_KEY, organizationURN));
+    
+    if (shareURNs != null && !shareURNs.isEmpty()) {
+      shareURNs.forEach(this::validateShareURN);
+      addParametersFromURNs(params, SHARES_PARAM_KEY, shareURNs);
+    }
+    
+    addTimeIntervalToParams(params, timeInterval);
+    addStartAndCountParams(params, null, count);
+    
+    return getListFromQuery(SHARE_STATISTICS, ShareStatistic.class,
+        params.toArray(new Parameter[0]));
+  }
+  
   // Validation
+  /**
+   * Validate share urn.
+   *
+   * @param shareURN the share URN parameter to check
+   */
+  private void validateShareURN(URN shareURN) {
+    ValidationUtils.verifyParameterPresence("share", shareURN);
+    validateURN(URNEntityType.SHARE, shareURN);
+  }
+  
+  private void validateOrganizationOrBrandURN(String paramName, URN organizationOrBrandURN) {
+    ValidationUtils.verifyParameterPresence(paramName, organizationOrBrandURN);
+    if (!(URNEntityType.ORGANIZATION.equals(organizationOrBrandURN.resolveURNEntityType())
+        || URNEntityType.ORGANIZATIONBRAND.equals(organizationOrBrandURN.resolveURNEntityType()))) {
+      throw new IllegalArgumentException(String.format("The URN should be type %s or %s",
+          URNEntityType.ORGANIZATION, URNEntityType.ORGANIZATIONBRAND));
+    }
+  }
+  
   private void validateOrganizationURN(String paramName, URN organizationURN) {
     validateURN(paramName, organizationURN, URNEntityType.ORGANIZATION);
     ValidationUtils.verifyParameterPresence(paramName, organizationURN);
