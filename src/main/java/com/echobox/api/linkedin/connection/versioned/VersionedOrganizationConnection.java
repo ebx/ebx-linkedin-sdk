@@ -59,6 +59,7 @@ public class VersionedOrganizationConnection extends VersionedConnection {
   private static final String PARENT_KEY = "parent";
   private static final String ROLE_KEY = "role";
   private static final String STATE_KEY = "state";
+  private static final String ORGANIZATION_KEY = "organization";
   
   /**
    * Param value
@@ -67,6 +68,7 @@ public class VersionedOrganizationConnection extends VersionedConnection {
   private static final String EMAIL_DOMAIN_VALUE = "emailDomain";
   private static final String PARENT_ORGANIZATION_VALUE = "parentOrganization";
   private static final String ROLE_ASSIGNEE_VALUE = "roleAssignee";
+  private static final String ORGANIZATION_VALUE = "organization";
   
   /**
    * Instantiates a new connection base.
@@ -204,6 +206,32 @@ public class VersionedOrganizationConnection extends VersionedConnection {
     
     return getListFromQuery(ORGANIZATION_ACLS, AccessControl.class,
         params.toArray(new Parameter[0]));
+  }
+  
+  /**
+   * Find an Organization's Access Control Information
+   * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-access-control-by-role?view=li-lms-2022-11&tabs=http#find-organization-administrators">
+   * Access Control</a>
+   * @param organizationURN The organization for which access control information
+   * is retrieved.
+   * @param role Limit results to specific roles
+   * @param state Limit results to specific role states
+   * @param projection Field projection
+   * @param count the number of entries to be returned per paged request
+   * @return List of access controls for an organization
+   */
+  public List<AccessControl> findOrganizationAccessControl(URN organizationURN,
+      String role, String state, Parameter projection, Integer count) {
+    validateOrganizationURN("organization", organizationURN);
+    
+    List<Parameter> parameters = new ArrayList<>();
+    parameters.add(Parameter.with(QUERY_KEY, ORGANIZATION_VALUE));
+    parameters.add(Parameter.with(ORGANIZATION_KEY, organizationURN.toString()));
+    addRoleStateParams(role, state, projection, parameters);
+    addStartAndCountParams(parameters, null, count);
+    
+    return getListFromQuery(ORGANIZATION_ACLS, AccessControl.class,
+        parameters.toArray(new Parameter[0]));
   }
   
   // Validation
