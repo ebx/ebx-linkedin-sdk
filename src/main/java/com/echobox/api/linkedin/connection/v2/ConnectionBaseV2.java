@@ -35,6 +35,7 @@ import java.util.List;
 public class ConnectionBaseV2 extends ConnectionBase {
 
   // CPD-OFF
+  // Ignore CPD as this will be removed after migration (use VersionedConnection)
   /**
    * The query key.
    */
