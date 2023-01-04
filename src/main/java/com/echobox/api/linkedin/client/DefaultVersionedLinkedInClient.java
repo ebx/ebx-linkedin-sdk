@@ -289,7 +289,6 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
     if (this.defaultHeaders == null) {
       this.defaultHeaders = new HashMap<>();
       this.defaultHeaders.put(HEADER_NAME_VERSION, versionedMonth);
-      this.defaultHeaders.put(HEADER_NAME_PROTOCOL, DEFAULT_LINKEDIN_PROTOCOL);
     }
   }
   
