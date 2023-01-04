@@ -22,6 +22,7 @@ import com.echobox.api.linkedin.types.LinkedInURNIdType;
 import com.echobox.api.linkedin.types.ugc.Distribution;
 import com.echobox.api.linkedin.types.urn.URN;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -33,6 +34,7 @@ import lombok.Setter;
  * @author Sergio Abplanalp
  */
 @RequiredArgsConstructor
+@NoArgsConstructor
 public class Post extends LinkedInURNIdType {
   
   /**

@@ -43,7 +43,7 @@ public class VersionedPostConnection extends VersionedConnection {
    *
    * @param linkedinClient the LinkedIn client
    */
-  protected VersionedPostConnection(VersionedLinkedInClient linkedinClient) {
+  public VersionedPostConnection(VersionedLinkedInClient linkedinClient) {
     super(linkedinClient);
   }
   
