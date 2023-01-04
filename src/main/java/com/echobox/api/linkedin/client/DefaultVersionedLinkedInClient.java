@@ -176,7 +176,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    */
   protected boolean httpDeleteFallback = false;
   
-  private Map<String, String> defaultHeaders;
+  private final Map<String, String> defaultHeaders = new HashMap<>();
   
   /**
    * Creates a LinkedIn API client with the given {@code accessToken}.
@@ -286,11 +286,8 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
     this.apiVersion = apiVersion;
     this.linkedinExceptionMapper = linkedinExceptionMapper;
     this.versionedMonth = versionedMonth;
-    if (this.defaultHeaders == null) {
-      this.defaultHeaders = new HashMap<>();
-      this.defaultHeaders.put(HEADER_NAME_VERSION, versionedMonth);
-      this.defaultHeaders.put(HEADER_NAME_PROTOCOL, DEFAULT_LINKEDIN_PROTOCOL);
-    }
+    this.defaultHeaders.put(HEADER_NAME_VERSION, versionedMonth);
+    this.defaultHeaders.put(HEADER_NAME_PROTOCOL, DEFAULT_LINKEDIN_PROTOCOL);
   }
   
   @Override
