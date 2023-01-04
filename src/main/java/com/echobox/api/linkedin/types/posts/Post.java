@@ -90,7 +90,7 @@ public class Post extends LinkedInURNIdType {
   @Getter
   @Setter
   @LinkedIn
-  private LifecycleStateInfo lifecycleState;
+  private LifecycleStateInfo lifecycleStateInfo;
   
   /**
    * The reshare state of this content
