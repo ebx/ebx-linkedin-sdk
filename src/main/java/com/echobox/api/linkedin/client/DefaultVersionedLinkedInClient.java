@@ -324,7 +324,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
       String pageURL = apiVersion.isSpecifyFormat()
           ? URLUtils.replaceOrAddQueryParameter(connectionPageUrl, "format", "json")
           : connectionPageUrl;
-      return webRequestor.executeGet(pageURL, defaultHeaders);
+      return webRequestor.executeGet(pageURL);
     });
     
     return new Connection<T>(connectionPageUrl, this, connectionJson, connectionType);
