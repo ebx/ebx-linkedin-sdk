@@ -83,6 +83,7 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * Initialise an organization connection
    * @param linkedinClient the linkedIn API client to create a LinkedIn organization connection
    */
+  @Deprecated
   public OrganizationConnection(LinkedInClient linkedinClient) {
     super(linkedinClient);
   }
