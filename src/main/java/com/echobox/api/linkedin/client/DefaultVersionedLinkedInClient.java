@@ -519,7 +519,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
         binaryAttachments != null && !binaryAttachments.isEmpty());
 
     return makeRequestFull(fullEndpoint, executeAsPost, executeAsDelete, jsonBody,
-        binaryAttachments, parameters);
+        defaultHeaders, binaryAttachments, parameters);
   }
   
   /**
@@ -536,6 +536,8 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    *          {@code true} to add a special 'treat this request as a {@code DELETE}' parameter.
    * @param jsonBody
    *          The POST JSON body
+   * @param headers
+   *          The headers for the request
    * @param binaryAttachments
    *          A list of binary files to include in a {@code POST} request. Pass {@code null} if no
    *          attachment should be sent.
@@ -544,7 +546,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    * @return The JSON returned by LinkedIn for the API call.
    */
   protected String makeRequestFull(String fullEndpoint, final boolean executeAsPost,
-      final boolean executeAsDelete, Object jsonBody,
+      final boolean executeAsDelete, Object jsonBody, Map<String, String> headers,
       final List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
     verifyParameterLegality(parameters);
     
@@ -565,15 +567,15 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
       @Override
       public WebRequestor.Response makeRequest() throws IOException {
         if (executeAsDelete && !isHttpDeleteFallback()) {
-          return webRequestor.executeDelete(fullEndpoint + finalParameterString, defaultHeaders);
+          return webRequestor.executeDelete(fullEndpoint + finalParameterString, headers);
         } else {
           return executeAsPost
               ? webRequestor.executePost(fullEndpoint, parameterString,
               jsonBody == null ? null : jsonMapper.toJson(jsonBody, true),
-              defaultHeaders,
+              headers,
               binaryAttachments == null ? null
                   : binaryAttachments.toArray(new BinaryAttachment[binaryAttachments.size()]))
-              : webRequestor.executeGet(fullEndpoint + finalParameterString, defaultHeaders);
+              : webRequestor.executeGet(fullEndpoint + finalParameterString, headers);
         }
       }
     });
