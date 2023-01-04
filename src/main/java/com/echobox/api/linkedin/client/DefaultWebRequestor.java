@@ -94,8 +94,6 @@ public class DefaultWebRequestor implements WebRequestor {
    */
   public static final String ENCODING_CHARSET = "UTF-8";
   
-  private static final String CONTENT_TYPE = "application/json";
-  
   private static final String FORMAT_HEADER = "x-li-format";
 
   /**
@@ -279,9 +277,6 @@ public class DefaultWebRequestor implements WebRequestor {
         if (jsonBody != null) {
           request = requestFactory.buildPostRequest(genericUrl, getJsonHttpContent(jsonBody));
 
-          // Ensure the headers are set to JSON
-          httpHeaders.setContentType(CONTENT_TYPE).set(FORMAT_HEADER, "json");
-
           // Ensure the response headers are also set to JSON
           request.setResponseHeaders(new HttpHeaders().set(FORMAT_HEADER, "json"));
         } else {
@@ -346,9 +341,6 @@ public class DefaultWebRequestor implements WebRequestor {
       } else {
         if (jsonBody != null) {
           request = requestFactory.buildPutRequest(genericUrl, getJsonHttpContent(jsonBody));
-        
-          // Ensure the headers are set to JSON
-          httpHeaders.setContentType(CONTENT_TYPE).set(FORMAT_HEADER, "json");
         
           // Ensure the response headers are also set to JSON
           request.setResponseHeaders(new HttpHeaders().set(FORMAT_HEADER, "json"));

@@ -22,18 +22,17 @@ import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.WebRequestor;
 import com.echobox.api.linkedin.exception.LinkedInNetworkException;
-import com.echobox.api.linkedin.exception.LinkedInOAuthException;
 import com.echobox.api.linkedin.types.assets.CheckStatusUpload;
 import com.echobox.api.linkedin.types.assets.CompleteMultiPartUploadBody;
 import com.echobox.api.linkedin.types.assets.RegisterUpload;
 import com.echobox.api.linkedin.types.assets.RegisterUploadRequestBody;
 import com.echobox.api.linkedin.types.urn.URN;
+import com.echobox.api.linkedin.util.ValidationUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -46,6 +45,7 @@ import java.util.Map;
  * Assets API</a>
  * @author Joanna
  */
+@Deprecated
 public class AssetsConnection extends ConnectionBaseV2 {
   
   private static final String ASSETS = "/assets";
@@ -148,6 +148,7 @@ public class AssetsConnection extends ConnectionBaseV2 {
     }
   }
   
+  // CPD-OFF
   /**
    * Upload the asset bytes, this should be used to upload each asset chunk
    * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#upload-the-asset">
@@ -170,25 +171,11 @@ public class AssetsConnection extends ConnectionBaseV2 {
       throw new LinkedInNetworkException("LinkedIn request failed to upload the asset", ex);
     }
     
-    // If there was no response error information and this was a 401
-    // error, something weird happened on LinkedIn's end. Assume it is a Oauth error.
-    if (HttpURLConnection.HTTP_UNAUTHORIZED == response.getStatusCode()) {
-      throw new LinkedInOAuthException("LinkedIn request failed", response.getStatusCode());
-    }
-  
-    // If there was no response error information and this was a 500
-    // error, something weird happened on LinkedIn's end. Bail.
-    if (HttpURLConnection.HTTP_INTERNAL_ERROR == response.getStatusCode()) {
-      throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
-    }
-    
-    if (HttpURLConnection.HTTP_OK != response.getStatusCode()
-        && HttpURLConnection.HTTP_CREATED != response.getStatusCode()) {
-      throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
-    }
+    ValidationUtils.validateResponse(response);
     
     return response.getHeaders();
   }
+  // CPD-ON
   
   /**
    * Complete the multipart upload
