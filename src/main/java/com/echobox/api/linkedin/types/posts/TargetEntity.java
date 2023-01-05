@@ -21,11 +21,9 @@ import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.StaffCountRanges;
 import com.echobox.api.linkedin.types.objectype.Locale;
 import com.echobox.api.linkedin.types.urn.URN;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -35,6 +33,8 @@ import java.util.List;
  * @author Sergio Abplanalp
  */
 public class TargetEntity {
+  // CPD-OFF
+  // Ignore CPD as this will be removed after migration (use VersionedConnection)
 
   /**
    * Standardized degrees to be targeted.
@@ -115,4 +115,6 @@ public class TargetEntity {
   @Setter
   @LinkedIn
   private List<StaffCountRanges> staffCountRanges;
+
+  // CPD-ON
 }
