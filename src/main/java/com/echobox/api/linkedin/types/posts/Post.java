@@ -87,12 +87,20 @@ public class Post extends LinkedInURNIdType {
   private Distribution distribution;
   
   /**
-   * The state of this content
+   * The state info of this content
    */
   @Getter
   @Setter
   @LinkedIn
   private LifecycleStateInfo lifecycleStateInfo;
+  
+  /**
+   * The state of this content
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private LifecycleState lifecycleState;
   
   /**
    * The reshare state of this content
@@ -158,5 +166,34 @@ public class Post extends LinkedInURNIdType {
      * Visibility is delegated to the owner of the container entity.
      */
     CONTAINER
+  }
+  
+  /**
+   * Lifecycle state enum
+   * @author Sergio Abplanalp
+   */
+  public enum LifecycleState {
+    /**
+     * Represents content that is accessible only to the author and is not yet published.
+     */
+    DRAFT,
+    
+    /**
+     * Represents content that is accessible to all entities.
+     * This is the only accepted field during creation.
+     */
+    PUBLISHED,
+    
+    /**
+     * Represents content that has been submitted for publishing but is not yet ready for rendering.
+     * The content will be published asynchronously once the processing has successfully completed.
+     */
+    PUBLISH_REQUESTED,
+    
+    /**
+     * Represents content that has been submitted for publishing but was not processed.
+     * An edit is required in order to re-attempt publishing.
+     */
+    PUBLISH_FAILED
   }
 }
