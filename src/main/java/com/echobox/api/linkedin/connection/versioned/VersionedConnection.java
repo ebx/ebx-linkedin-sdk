@@ -17,9 +17,13 @@
 
 package com.echobox.api.linkedin.connection.versioned;
 
+import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.VersionedLinkedInClient;
 import com.echobox.api.linkedin.connection.ConnectionBase;
+import com.echobox.api.linkedin.types.TimeInterval;
 import com.echobox.api.linkedin.version.Version;
+
+import java.util.List;
 
 /**
  * Base class for all connections using versioned API
@@ -32,6 +36,10 @@ public abstract class VersionedConnection extends ConnectionBase {
    */
   protected static final String QUERY_KEY = "q";
   
+  private static final String TIME_INTERVALS_GRANULARITY = "timeIntervals.timeGranularityType";
+  private static final String TIME_INTERVALS_START = "timeIntervals.timeRange.start";
+  private static final String TIME_INTERVALS_END = "timeIntervals.timeRange.end";
+  
   /**
    * Instantiates a new connection base.
    *
@@ -43,4 +51,35 @@ public abstract class VersionedConnection extends ConnectionBase {
       throw new IllegalArgumentException("The version of linkedInClient is not VERSIONED");
     }
   }
+  
+  /**
+   * Add time interval to parameters.
+   *
+   * @param params       the list of parameters
+   * @param timeInterval the time interval to add
+   */
+  protected void addTimeIntervalToParams(List<Parameter> params, TimeInterval timeInterval) {
+    if (timeInterval == null) {
+      return;
+    }
+    
+    if (timeInterval.getTimeGranularityType() != null) {
+      // Time restriction on retrieving share statistics
+      params.add(Parameter.with(TIME_INTERVALS_GRANULARITY, timeInterval.getTimeGranularityType()));
+      if (timeInterval.getTimeRange() != null) {
+        if (timeInterval.getTimeRange().getStart() != null
+            && timeInterval.getTimeRange().getEnd() != null) {
+          params.add(Parameter.with(TIME_INTERVALS_START, timeInterval.getTimeRange().getStart()));
+          params.add(Parameter.with(TIME_INTERVALS_END, timeInterval.getTimeRange().getEnd()));
+        }
+      } else {
+        throw new IllegalStateException(
+            "timeIntervals.timeRange cannot be null when " + "timeInterval is provided");
+      }
+    } else {
+      throw new IllegalStateException(
+          "timeIntervals.timeGranularityType cannot be null when " + "timeInterval is provided");
+    }
+  }
+  
 }
