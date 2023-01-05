@@ -18,52 +18,37 @@
 package com.echobox.api.linkedin.types.posts;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.URN;
 import lombok.Getter;
-
-import java.util.List;
+import lombok.Setter;
 
 /**
- * Distribution schema
- * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/posts-api#distribution">Distribution Schema</a>
+ * MediaContent object
  *
  * @author Sergio Abplanalp
  */
-public class Distribution {
+public class MediaContent {
+  /**
+   * The URN of the media such as image or video.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private URN id;
   
   /**
-   * External distribution channels that this content is distributed to.
+   * The media title. No title if empty.
    */
   @Getter
+  @Setter
   @LinkedIn
-  private List<String> thirdPartyDistributionChannels;
-
-  /**
-   * Specifies the feeds distributed to within LinkedIn.
-   */
-  @Getter
-  @LinkedIn
-  private FeedDistribution feedDistribution;
-
-  /**
-   * Intended audience for this post. The target entities targeted for distribution.
-   */
-  @Getter
-  @LinkedIn
-  private List<TargetEntity> targetEntities;
+  private String title;
   
   /**
-   * Specifies the feeds distributed to within LinkedIn.
+   * The alternate text for the media. None if empty.
    */
-  public enum FeedDistribution {
-
-    /**
-     * Do not distribute within LinkedIn via feed.
-     */
-    NONE,
-
-    /**
-     * Distribute to the flagship feed, and container entity feed if applicable.
-     */
-    MAIN_FEED
-  }
+  @Getter
+  @Setter
+  @LinkedIn
+  private String altText;
 }

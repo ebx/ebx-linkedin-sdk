@@ -17,55 +17,64 @@
 
 package com.echobox.api.linkedin.types.posts;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import lombok.Getter;
-import lombok.Setter;
-
 /**
- * Content schema
- * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/posts-api#content">Content Schema</a>
+ * PollSettings object
  *
  * @author Sergio Abplanalp
  */
-public class Content {
+public class PollSettings {
+  /**
+   * The selection type of votes on the poll.
+   */
+  private VoteSelectionType voteSelectionType;
   
   /**
-   * Details of the Media content such as Image, Video
+   * Duration of poll being open for votes.
    */
-  @Getter
-  @Setter
-  @LinkedIn
-  private MediaContent media;
+  private Duration duration;
   
   /**
-   * Details of Poll content
+   * Poll author’s visibility to voters.
+   * Currently, isVoterVisibleToAuthor=false is not supported
    */
-  @Getter
-  @Setter
-  @LinkedIn
-  private PollContent poll;
+  private Boolean isVoterVisibleToAuthor = true;
   
   /**
-   * Details of MultiImage content
+   * VoteSelectionType enum
+   * @author Sergio Abplanalp
    */
-  @Getter
-  @Setter
-  @LinkedIn
-  private MultiImageContent multiImage;
+  public enum VoteSelectionType {
+    /**
+     * Single-select vote.
+     */
+    SINGLE_VOTE,
   
-  /**
-   * Details of Article content (can be either non-sponsored or sponsored)
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private ArticleContent article;
+    /**
+     * Multiple-select vote.
+     * To be supported later in future.
+     */
+    MULTIPLE_VOTE
+  }
   
-  /**
-   * Details of Carousel content
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private CarouselContent carousel;
+  public enum Duration {
+    /**
+    * Poll is open for 1 day.
+    */
+    ONE_DAY,
+    
+    /**
+    * Poll is open for 3 days.
+    */
+    THREE_DAYS,
+    
+    /**
+    * Poll is open for 7 days.
+    */
+    SEVEN_DAYS,
+    
+    /**
+    * Poll is open for 14 days.
+    */
+    FOURTEEN_DAYS
+  }
 }

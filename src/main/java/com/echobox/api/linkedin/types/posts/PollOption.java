@@ -17,55 +17,24 @@
 
 package com.echobox.api.linkedin.types.posts;
 
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import lombok.Getter;
-import lombok.Setter;
-
 /**
- * Content schema
- * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/posts-api#content">Content Schema</a>
+ * PollOption object
  *
  * @author Sergio Abplanalp
  */
-public class Content {
+public class PollOption {
+  /**
+   * Text describing the option.
+   */
+  private String text;
   
   /**
-   * Details of the Media content such as Image, Video
+   * Boolean value to show whether the viewer voted this poll option.
    */
-  @Getter
-  @Setter
-  @LinkedIn
-  private MediaContent media;
+  private Boolean isVotedByViewer;
   
   /**
-   * Details of Poll content
+   * Vote counts of the poll option.
    */
-  @Getter
-  @Setter
-  @LinkedIn
-  private PollContent poll;
-  
-  /**
-   * Details of MultiImage content
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private MultiImageContent multiImage;
-  
-  /**
-   * Details of Article content (can be either non-sponsored or sponsored)
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private ArticleContent article;
-  
-  /**
-   * Details of Carousel content
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private CarouselContent carousel;
+  private Long voteCount;
 }

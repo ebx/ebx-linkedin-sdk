@@ -19,51 +19,28 @@ package com.echobox.api.linkedin.types.posts;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import lombok.Getter;
-
-import java.util.List;
+import lombok.Setter;
 
 /**
- * Distribution schema
- * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/posts-api#distribution">Distribution Schema</a>
+ * CarouselCard object
  *
  * @author Sergio Abplanalp
  */
-public class Distribution {
+public class CarouselCard {
+  /**
+   * The web page that can be associated with the content and is opened when the member clicks on
+   * the content.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private String landingPage;
   
   /**
-   * External distribution channels that this content is distributed to.
+   * The media contained in the card.
    */
   @Getter
+  @Setter
   @LinkedIn
-  private List<String> thirdPartyDistributionChannels;
-
-  /**
-   * Specifies the feeds distributed to within LinkedIn.
-   */
-  @Getter
-  @LinkedIn
-  private FeedDistribution feedDistribution;
-
-  /**
-   * Intended audience for this post. The target entities targeted for distribution.
-   */
-  @Getter
-  @LinkedIn
-  private List<TargetEntity> targetEntities;
-  
-  /**
-   * Specifies the feeds distributed to within LinkedIn.
-   */
-  public enum FeedDistribution {
-
-    /**
-     * Do not distribute within LinkedIn via feed.
-     */
-    NONE,
-
-    /**
-     * Distribute to the flagship feed, and container entity feed if applicable.
-     */
-    MAIN_FEED
-  }
+  private MediaContent media;
 }
