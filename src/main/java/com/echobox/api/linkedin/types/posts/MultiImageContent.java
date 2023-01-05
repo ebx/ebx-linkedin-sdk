@@ -35,7 +35,7 @@ public class MultiImageContent {
   @Getter
   @Setter
   @LinkedIn
-  private List<MultiImageContentMedia> images;
+  private List<MediaContent> images;
   
   /**
    * The alternate text of this thumbnail. Used for screen reader accessibility.

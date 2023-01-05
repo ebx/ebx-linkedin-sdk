@@ -33,9 +33,6 @@ import java.util.List;
  * @author Sergio Abplanalp
  */
 public class TargetEntity {
-  // CPD-OFF
-  // Ignore CPD as this will be removed after migration (use VersionedConnection)
-
   /**
    * Standardized degrees to be targeted.
    */
@@ -115,6 +112,4 @@ public class TargetEntity {
   @Setter
   @LinkedIn
   private List<StaffCountRanges> staffCountRanges;
-
-  // CPD-ON
 }
