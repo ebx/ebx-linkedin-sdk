@@ -30,10 +30,52 @@ import lombok.Setter;
 public class LifecycleStateInfo {
   
   /**
-   * Whether this post is DSC. A posted DSC is created for the sole purpose of sponsorship.
+   * Status for post content.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private ProcessingState contentStatus;
+  
+  /**
+   * Indicates whether a post was edited by the author after publishing.
    */
   @Getter
   @Setter
   @LinkedIn
   private boolean isEditedByAuthor;
+  
+  /**
+   * Review status of the post.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private ProcessingState reviewStatus;
+  
+  /**
+   * ContentStatus state enum
+   * @author Sergio Abplanalp
+   */
+  public enum ProcessingState {
+    /**
+     * Pending status.
+     */
+    PENDING,
+    
+    /**
+     * Processing status.
+     */
+    PROCESSING,
+    
+    /**
+     * Failed status.
+     */
+    FAILED,
+    
+    /**
+     * Published status.
+     */
+    PUBLISHED
+  }
 }
