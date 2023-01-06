@@ -19,7 +19,6 @@ package com.echobox.api.linkedin.types.posts;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.LinkedInURNIdType;
-import com.echobox.api.linkedin.types.ugc.Distribution;
 import com.echobox.api.linkedin.types.urn.URN;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,6 +44,38 @@ public class Post extends LinkedInURNIdType {
   @NonNull
   @LinkedIn
   private URN author;
+  
+  /**
+   * The ads specific metadata associated with the post.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private AdContext adContext;
+  
+  /**
+   * The comment of this content.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private String commentary;
+  
+  /**
+   * Container Entity URN that contains user generated content.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private URN container;
+  
+  /**
+   * Represents the content of this object.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private Content content;
   
   /**
    * A timestamp corresponding to the creation of this resource.
@@ -109,30 +140,6 @@ public class Post extends LinkedInURNIdType {
   @Setter
   @LinkedIn
   private boolean isReshareDisabledByAuthor;
-  
-  /**
-   * The comment of this content
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private String commentary;
-  
-  /**
-   * Represents the content of this object.
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private Content content;
-  
-  /**
-   * The ads specific metadata associated with the post.
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private AdContext adContext;
   
   /**
    * Visibility restrictions on content.

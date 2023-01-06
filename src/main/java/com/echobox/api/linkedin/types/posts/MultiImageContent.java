@@ -19,51 +19,29 @@ package com.echobox.api.linkedin.types.posts;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 /**
- * Distribution schema
- * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/posts-api#distribution">Distribution Schema</a>
+ * MultiImageContent object
  *
  * @author Sergio Abplanalp
  */
-public class Distribution {
+public class MultiImageContent {
+  /**
+   * The array of images in the MultiImage content. Only supports images (type urn:li:image:{id}).
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private List<MediaContent> images;
   
   /**
-   * External distribution channels that this content is distributed to.
+   * The alternate text of this thumbnail. Used for screen reader accessibility.
    */
   @Getter
+  @Setter
   @LinkedIn
-  private List<String> thirdPartyDistributionChannels;
-
-  /**
-   * Specifies the feeds distributed to within LinkedIn.
-   */
-  @Getter
-  @LinkedIn
-  private FeedDistribution feedDistribution;
-
-  /**
-   * Intended audience for this post. The target entities targeted for distribution.
-   */
-  @Getter
-  @LinkedIn
-  private List<TargetEntity> targetEntities;
-  
-  /**
-   * Specifies the feeds distributed to within LinkedIn.
-   */
-  public enum FeedDistribution {
-
-    /**
-     * Do not distribute within LinkedIn via feed.
-     */
-    NONE,
-
-    /**
-     * Distribute to the flagship feed, and container entity feed if applicable.
-     */
-    MAIN_FEED
-  }
+  private String altText;
 }

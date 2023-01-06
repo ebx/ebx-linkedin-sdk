@@ -18,52 +18,55 @@
 package com.echobox.api.linkedin.types.posts;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.URN;
 import lombok.Getter;
-
-import java.util.List;
+import lombok.Setter;
 
 /**
- * Distribution schema
- * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/posts-api#distribution">Distribution Schema</a>
+ * ArticleContent object
  *
  * @author Sergio Abplanalp
  */
-public class Distribution {
+public class ArticleContent {
   
   /**
-   * External distribution channels that this content is distributed to.
+   * Custom or saved description of the article. If empty, there is none.
+   * The length must be less than 4086 characters.
    */
   @Getter
+  @Setter
   @LinkedIn
-  private List<String> thirdPartyDistributionChannels;
-
-  /**
-   * Specifies the feeds distributed to within LinkedIn.
-   */
-  @Getter
-  @LinkedIn
-  private FeedDistribution feedDistribution;
-
-  /**
-   * Intended audience for this post. The target entities targeted for distribution.
-   */
-  @Getter
-  @LinkedIn
-  private List<TargetEntity> targetEntities;
+  private String description;
   
   /**
-   * Specifies the feeds distributed to within LinkedIn.
+   * A URL of the article. Typically the URL that was ingested to maintain URL parameters.
    */
-  public enum FeedDistribution {
-
-    /**
-     * Do not distribute within LinkedIn via feed.
-     */
-    NONE,
-
-    /**
-     * Distribute to the flagship feed, and container entity feed if applicable.
-     */
-    MAIN_FEED
-  }
+  @Getter
+  @Setter
+  @LinkedIn
+  private String source;
+  
+  /**
+   * Custom or saved thumbnail for the article.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private URN thumbnail;
+  
+  /**
+   * Alt text for the custom thumbnail.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private String thumbnailAltText;
+  
+  /**
+   * Custom or saved title of the article.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private String title;
 }
