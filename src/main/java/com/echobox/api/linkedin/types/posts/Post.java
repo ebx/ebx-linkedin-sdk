@@ -78,36 +78,28 @@ public class Post extends LinkedInURNIdType {
   private Content content;
   
   /**
+   * Web page that is opened when the member clicks on the associated content.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private String contentLandingPage;
+  
+  /**
+   * The call to action label which a member can act upon that is associated with the content.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private ContentCallToActionLabel contentCallToActionLabel;
+  
+  /**
    * A timestamp corresponding to the creation of this resource.
    */
   @Getter
   @Setter
   @LinkedIn
   private Long createdAt;
-  
-  /**
-   * A timestamp corresponding to the publication of this resource.
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private Long publishedAt;
-  
-  /**
-   * A timestamp corresponding to the deletion of this resource.
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private Long deletedAt;
-
-  /**
-   * A timestamp corresponding to the last modification of this resource.
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private Long lastModifiedAt;
   
   /**
    * LinkedIn and external destinations where the post will be distributed.
@@ -118,20 +110,12 @@ public class Post extends LinkedInURNIdType {
   private Distribution distribution;
   
   /**
-   * The state info of this content
+   * ugcPostUrn or shareUrn
    */
   @Getter
   @Setter
   @LinkedIn
-  private LifecycleStateInfo lifecycleStateInfo;
-  
-  /**
-   * The state of this content
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private LifecycleState lifecycleState;
+  private URN id;
   
   /**
    * The reshare state of this content
@@ -142,6 +126,46 @@ public class Post extends LinkedInURNIdType {
   private boolean isReshareDisabledByAuthor;
   
   /**
+   * A timestamp corresponding to the last modification of this resource.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private Long lastModifiedAt;
+  
+  /**
+   * The state of this content
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private LifecycleState lifecycleState;
+  
+  /**
+   * The state info of this content
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private LifecycleStateInfo lifecycleStateInfo;
+  
+  /**
+   * A timestamp corresponding to the publication of this resource.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private Long publishedAt;
+  
+  /**
+   * The context in which the post was re-shared.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private ReshareContext reshareContext;
+  
+  /**
    * Visibility restrictions on content.
    */
   @Getter
@@ -150,29 +174,64 @@ public class Post extends LinkedInURNIdType {
   private Visibility visibility;
   
   /**
-   * Visibility enum
+   * ContentCallToActionLabel enum
    * @author Sergio Abplanalp
    */
-  public enum Visibility {
+  public enum ContentCallToActionLabel {
     /**
-     * Represents 1st degree network of owner.
+     *  Call To Action button on the creative shows 'Apply'.
      */
-    CONNECTIONS,
+    APPLY,
     
     /**
-     * Anyone can view this.
+     *  Call To Action button on the creative shows 'Download'.
      */
-    PUBLIC,
+    DOWNLOAD,
     
     /**
-     * Viewable by logged in members only.
+     *  Call To Action button on the creative shows 'View Quote'.
      */
-    LOGGED_IN,
+    VIEW_QUOTE,
     
     /**
-     * Visibility is delegated to the owner of the container entity.
+     *  Call To Action button on the creative shows 'Learn More'.
      */
-    CONTAINER
+    LEARN_MORE,
+    
+    /**
+     *  Call To Action button on the creative shows 'Sign Up'.
+     */
+    SIGN_UP,
+    
+    /**
+     *  Call To Action button on the creative shows 'Subscribe'.
+     */
+    SUBSCRIBE,
+    
+    /**
+     *  Call To Action button on the creative shows 'Register'.
+     */
+    REGISTER,
+    
+    /**
+     *  Call To Action button on the creative shows 'Join'.
+     */
+    JOIN,
+    
+    /**
+     *  Call To Action button on the creative shows 'Attend'.
+     */
+    ATTEND,
+    
+    /**
+     *  Call To Action button on the creative shows 'Register Demo'.
+     */
+    REQUEST_DEMO,
+    
+    /**
+     *  Call To Action button on the creative shows 'See More'.
+     */
+    SEE_MORE
   }
   
   /**
@@ -202,5 +261,31 @@ public class Post extends LinkedInURNIdType {
      * An edit is required in order to re-attempt publishing.
      */
     PUBLISH_FAILED
+  }
+  
+  /**
+   * Visibility enum
+   * @author Sergio Abplanalp
+   */
+  public enum Visibility {
+    /**
+     * Represents 1st degree network of owner.
+     */
+    CONNECTIONS,
+    
+    /**
+     * Anyone can view this.
+     */
+    PUBLIC,
+    
+    /**
+     * Viewable by logged in members only.
+     */
+    LOGGED_IN,
+    
+    /**
+     * Visibility is delegated to the owner of the container entity.
+     */
+    CONTAINER
   }
 }
