@@ -17,12 +17,16 @@
 
 package com.echobox.api.linkedin.connection.versioned;
 
+import com.echobox.api.linkedin.client.Connection;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.VersionedLinkedInClient;
 import com.echobox.api.linkedin.types.posts.Post;
 import com.echobox.api.linkedin.types.posts.ViewContext;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.util.URLUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Post connection
@@ -36,8 +40,18 @@ public class VersionedPostConnection extends VersionedConnection {
    * endpoint path
    */
   private static final String POSTS = "/posts";
+  
+  /**
+   * keys
+   */
+  private static final String KEY_AUTHOR = "author";
   private static final String VIEW_CONTEXT = "viewContext";
-
+  
+  /**
+   * Param
+   */
+  private static final String PARAM_AUTHOR = "author";
+  
   /**
    * Instantiates a new connection base.
    *
@@ -58,5 +72,14 @@ public class VersionedPostConnection extends VersionedConnection {
     Parameter viewContextParam = Parameter.with(VIEW_CONTEXT, viewContext);
     return linkedinClient.fetchObject(POSTS + "/" + URLUtils.urlDecode(shareURN.toString()),
         Post.class, viewContextParam);
+  }
+  
+  public Connection<Post> retrievePostsByAuthor(URN authorURN, Integer count) {
+    List<Parameter> parameters = new ArrayList<>();
+    parameters.add(Parameter.with(QUERY_KEY, KEY_AUTHOR));
+    parameters.add(Parameter.with(PARAM_AUTHOR, authorURN));
+    addStartAndCountParams(parameters, null, count);
+    return linkedinClient.fetchConnection(POSTS, Post.class,
+        parameters.toArray(new Parameter[parameters.size()]));
   }
 }
