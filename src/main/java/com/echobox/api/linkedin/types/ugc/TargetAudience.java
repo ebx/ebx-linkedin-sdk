@@ -35,6 +35,8 @@ import java.util.List;
  */
 @EqualsAndHashCode
 public class TargetAudience implements Serializable {
+  // CPD-OFF
+  // Ignore CPD as this will be removed after migration (use VersionedConnection)
   
   private static final long serialVersionUID = -1L;
   
@@ -128,4 +130,5 @@ public class TargetAudience implements Serializable {
     private String staffCountRanges;
   }
 
+  // CPD-ON
 }
