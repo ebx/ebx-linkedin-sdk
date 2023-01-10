@@ -82,4 +82,8 @@ public class VersionedPostConnection extends VersionedConnection {
     return linkedinClient.fetchConnection(POSTS, Post.class,
         parameters.toArray(new Parameter[parameters.size()]));
   }
+  
+  public Post createPost(Post post) {
+    return linkedinClient.publish(POSTS, Post.class, post);
+  }
 }

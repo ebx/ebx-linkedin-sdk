@@ -19,6 +19,10 @@ package com.echobox.api.linkedin.types.posts;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -28,12 +32,15 @@ import java.util.List;
  *
  * @author Sergio Abplanalp
  */
+@RequiredArgsConstructor
+@NoArgsConstructor
 public class Distribution {
   
   /**
    * External distribution channels that this content is distributed to.
    */
   @Getter
+  @Setter
   @LinkedIn
   private List<String> thirdPartyDistributionChannels;
 
@@ -41,6 +48,8 @@ public class Distribution {
    * Specifies the feeds distributed to within LinkedIn.
    */
   @Getter
+  @Setter
+  @NonNull
   @LinkedIn
   private FeedDistribution feedDistribution;
 
@@ -48,6 +57,7 @@ public class Distribution {
    * Intended audience for this post. The target entities targeted for distribution.
    */
   @Getter
+  @Setter
   @LinkedIn
   private List<TargetEntity> targetEntities;
   
