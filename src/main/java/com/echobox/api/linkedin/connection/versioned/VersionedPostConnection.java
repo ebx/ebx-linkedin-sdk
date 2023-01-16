@@ -74,6 +74,16 @@ public class VersionedPostConnection extends VersionedConnection {
         Post.class, viewContextParam);
   }
   
+  /**
+   * Retrieve posts by author (organization)
+   * @see
+   *
+   * <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/posts-api?view=li-lms-2022-12&tabs=http#find-posts-by-authors">Find Posts by Authors</a>
+   *
+   * @param authorURN author of the post - Posts author Organization
+   * @param count page count
+   * @return Connection object of the posts by the author
+   */
   public Connection<Post> retrievePostsByAuthor(URN authorURN, Integer count) {
     List<Parameter> parameters = new ArrayList<>();
     parameters.add(Parameter.with(QUERY_KEY, KEY_AUTHOR));
@@ -82,6 +92,16 @@ public class VersionedPostConnection extends VersionedConnection {
     return linkedinClient.fetchConnection(POSTS, Post.class,
         parameters.toArray(new Parameter[parameters.size()]));
   }
+  
+  /**
+   * Delete Posts
+   * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/posts-api?view=li-lms-2022-12&tabs=http#delete-posts">Delete Posts</a>
+   * @param shareURN the share URN of the share to delete - can be either a UGC share or share URN
+   */
+  public void deletePost(URN shareURN) {
+    linkedinClient.deleteObject(POSTS + "/" + URLUtils.urlEncode(shareURN.toString()));
+  }
+  
   
   /**
    * Create a post.
