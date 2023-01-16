@@ -86,7 +86,7 @@ public class VersionedPostConnection extends VersionedConnection {
   /**
    * Create a post.
    * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/posts-api#create-a-post">Create a Post</a>
-   * @param post The UGC Post to share
+   * @param post The Post to share
    */
   public void createPost(Post post) {
     linkedinClient.publish(POSTS, post);
