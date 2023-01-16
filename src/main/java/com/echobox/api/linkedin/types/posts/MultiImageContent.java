@@ -19,6 +19,8 @@ package com.echobox.api.linkedin.types.posts;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -28,12 +30,14 @@ import java.util.List;
  *
  * @author Sergio Abplanalp
  */
+@RequiredArgsConstructor
 public class MultiImageContent {
   /**
    * The array of images in the MultiImage content. Only supports images (type urn:li:image:{id}).
    */
   @Getter
   @Setter
+  @NonNull
   @LinkedIn
   private List<MediaContent> images;
   
