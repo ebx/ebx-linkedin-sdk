@@ -333,6 +333,11 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   }
   
   @Override
+  public void publish(String connection, Object jsonBody, Parameter... parameters) {
+    makeRequest(connection, true, false, jsonBody, new ArrayList<>(), parameters);
+  }
+  
+  @Override
   public <T> T publish(String connection, Class<T> objectType, Object jsonBody,
       Parameter... parameters) {
     return publish(connection, objectType, jsonBody, new ArrayList<>(), parameters);

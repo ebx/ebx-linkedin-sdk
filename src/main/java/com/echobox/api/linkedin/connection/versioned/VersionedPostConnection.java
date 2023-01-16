@@ -83,7 +83,12 @@ public class VersionedPostConnection extends VersionedConnection {
         parameters.toArray(new Parameter[parameters.size()]));
   }
   
-  public Post createPost(Post post) {
-    return linkedinClient.publish(POSTS, Post.class, post);
+  /**
+   * Create a post.
+   * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/posts-api#create-a-post">Create a Post</a>
+   * @param post The UGC Post to share
+   */
+  public void createPost(Post post) {
+    linkedinClient.publish(POSTS, post);
   }
 }

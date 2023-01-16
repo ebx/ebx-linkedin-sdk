@@ -278,6 +278,11 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
     return new Connection<T>(connectionPageUrl, this, connectionJson, connectionType);
   }
+
+  @Override
+  public void publish(String connection, Object jsonBody, Parameter... parameters) {
+    makeRequest(connection, true, false, jsonBody, new ArrayList<>(), parameters);
+  }
   
   @Override
   public <T> T publish(String connection, Class<T> objectType, Object jsonBody,
