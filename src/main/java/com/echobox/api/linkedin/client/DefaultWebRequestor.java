@@ -55,6 +55,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -580,10 +581,14 @@ public class DefaultWebRequestor implements WebRequestor {
     return new Response(statusCode, headerMap, body);
   }
   
-  private Function<Map.Entry<String, Object>, String> headerValueMapper() {
+  protected Function<Map.Entry<String, Object>, String> headerValueMapper() {
     return entry -> {
+      if (!(entry.getValue() instanceof List)) {
+        return entry.getValue().toString();
+      }
+      
       List<Object> value = (List<Object>) entry.getValue();
-      if (value == null || value.isEmpty()) {
+      if (value.isEmpty()) {
         return "";
       }
   
