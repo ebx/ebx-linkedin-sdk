@@ -50,7 +50,7 @@ public class PostTest extends DefaultJsonMapperTestBase {
         post.getContent().getMedia().getId());
     
     assertFalse(post.getLifecycleStateInfo().isEditedByAuthor());
-    assertFalse(post.isReshareDisabledByAuthor());
+    assertFalse(post.getIsReshareDisabledByAuthor());
     assertEquals(1634790968743L, post.getCreatedAt().longValue());
     assertEquals(new URN("urn:li:share:6844785523593134080"), post.getId());
     assertEquals("comment on Oct 20", post.getCommentary());
