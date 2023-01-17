@@ -15,37 +15,34 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.types.posts;
-
-import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-
-import java.util.List;
+package com.echobox.api.linkedin.exception;
 
 /**
- * MultiImageContent object
+ * LinkedIn response exception
+ * @author Joanna
  *
- * @author Sergio Abplanalp
  */
-@RequiredArgsConstructor
-public class MultiImageContent {
+public class LinkedInResponseException extends LinkedInException {
+
   /**
-   * The array of images in the MultiImage content. Only supports images (type urn:li:image:{id}).
+   * Default serial version UID
    */
-  @Getter
-  @Setter
-  @NonNull
-  @LinkedIn
-  private List<MediaContent> images;
-  
+  private static final long serialVersionUID = 1L;
+
   /**
-   * The alternate text of this thumbnail. Used for screen reader accessibility.
+   * Initialise a LinkedInResponseException with a message
+   * @param message message
    */
-  @Getter
-  @Setter
-  @LinkedIn
-  private String altText;
+  public LinkedInResponseException(String message) {
+    super(message);
+  }
+
+  /**
+   * Initialise a LinkedInResponseException with a message and a cause
+   * @param message message
+   * @param cause cause
+   */
+  public LinkedInResponseException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }
