@@ -278,6 +278,12 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
 
     return new Connection<T>(connectionPageUrl, this, connectionJson, connectionType);
   }
+
+  @Override
+  public WebRequestor.Response publish(String connection, Object jsonBody,
+      Parameter... parameters) {
+    throw new UnsupportedOperationException();
+  }
   
   @Override
   public <T> T publish(String connection, Class<T> objectType, Object jsonBody,
