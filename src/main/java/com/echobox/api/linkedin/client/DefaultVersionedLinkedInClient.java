@@ -301,7 +301,8 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   public <T> T fetchObject(String object, Class<T> objectType, Parameter... parameters) {
     ValidationUtils.verifyParameterPresence("object", object);
     ValidationUtils.verifyParameterPresence("objectType", objectType);
-    return jsonMapper.toJavaObject(makeRequest(object, parameters), objectType);
+    WebRequestor.Response response = makeRequest(object, parameters);
+    return jsonMapper.toJavaObject(response.getBody(), objectType);
   }
   
   @Override
@@ -316,8 +317,9 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
     String parameterString = toParameterString(queryParams);
     final String finalParameterString =
         StringUtils.isBlank(parameterString) ? "" : ("?" + parameterString);
-    return new Connection<T>(fullEndpoint + finalParameterString, this,
-        makeRequest(connection, queryParams), connectionType);
+    WebRequestor.Response response = makeRequest(connection, queryParams);
+    return new Connection<>(fullEndpoint + finalParameterString, this, response.getBody(),
+        connectionType);
   }
   
   @Override
@@ -333,6 +335,13 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   }
   
   @Override
+  public WebRequestor.Response publish(String connection, Object jsonBody,
+      Parameter... parameters) {
+    return makeRequest(connection, true, false, jsonBody,
+        new ArrayList<>(), parameters);
+  }
+  
+  @Override
   public <T> T publish(String connection, Class<T> objectType, Object jsonBody,
       Parameter... parameters) {
     return publish(connection, objectType, jsonBody, new ArrayList<>(), parameters);
@@ -342,8 +351,9 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   public <T> T publish(String connection, Class<T> objectType, Object jsonBody,
       List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
     
-    return jsonMapper.toJavaObject(makeRequest(connection, true, false, jsonBody,
-        binaryAttachments, parameters), objectType);
+    WebRequestor.Response response = makeRequest(connection, true, false, jsonBody,
+        binaryAttachments, parameters);
+    return jsonMapper.toJavaObject(response.getBody(), objectType);
   }
   
   @Override
@@ -362,9 +372,11 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   public boolean deleteObject(String object, Parameter... parameters) {
     ValidationUtils.verifyParameterPresence("object", object);
     
-    String responseString = makeRequest(object, false, true, null, null, parameters);
+    WebRequestor.Response response = makeRequest(object, false, true, null, null, parameters);
+    String responseBody = response.getBody();
+  
     try {
-      JsonValue jObj = Json.parse(responseString);
+      JsonValue jObj = Json.parse(responseBody);
       if (jObj.isObject()) {
         if (jObj.asObject().get("result") != null) {
           return jObj.asObject().get("result").asString().contains("Successfully deleted");
@@ -381,7 +393,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
       }
     }
     
-    return "true".equals(responseString);
+    return "true".equals(responseBody);
   }
   
   @Override
@@ -398,7 +410,8 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
       Map<String, String> headers = new HashMap<>();
       headers.put("Content-Type", "application/x-www-form-urlencoded");
       
-      final String response = makeRequestFull(ENDPOINT_ACCESS_TOKEN, true, false, null,
+      final WebRequestor.Response response = makeRequestFull(ENDPOINT_ACCESS_TOKEN,
+          true, false, null,
           headers, Collections.emptyList(), Parameter.with(GRANT_TYPE_PARAM_NAME,
               "authorization_code"),
           Parameter.with(CODE_PARAM_NAME, verificationCode),
@@ -406,7 +419,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
           Parameter.with(CLIENT_ID_PARAM_NAME, appId),
           Parameter.with(CLIENT_SECRET_PARAM_NAME, appSecret));
       
-      return getAccessTokenFromResponse(response);
+      return getAccessTokenFromResponse(response.getBody());
     } catch (Exception ex) {
       throw new LinkedInAccessTokenException(ex);
     }
@@ -482,7 +495,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    * @throws LinkedInException
    *           If an error occurs while making the LinkedIn API POST or processing the response.
    */
-  protected String makeRequest(String endpoint, Parameter... parameters) {
+  protected WebRequestor.Response makeRequest(String endpoint, Parameter... parameters) {
     return makeRequest(endpoint, false, false, null, null, parameters);
   }
   
@@ -505,11 +518,11 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    *          attachment should be sent.
    * @param parameters
    *          Arbitrary number of parameters to send along to LinkedIn as part of the API call.
-   * @return The JSON returned by LinkedIn for the API call.
+   * @return The WebRequestor response returned by LinkedIn for the API call.
    * @throws LinkedInException
    *           If an error occurs while making the LinkedIn API POST or processing the response.
    */
-  protected String makeRequest(String endpoint, final boolean executeAsPost,
+  protected WebRequestor.Response makeRequest(String endpoint, final boolean executeAsPost,
       final boolean executeAsDelete, Object jsonBody,
       final List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
     
@@ -545,9 +558,9 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    *          attachment should be sent.
    * @param parameters
    *          Arbitrary number of parameters to send along to LinkedIn as part of the API call.
-   * @return The JSON returned by LinkedIn for the API call.
+   * @return The WebRequestor response returned by LinkedIn for the API call.
    */
-  protected String makeRequestFull(String fullEndpoint, final boolean executeAsPost,
+  protected WebRequestor.Response makeRequestFull(String fullEndpoint, final boolean executeAsPost,
       final boolean executeAsDelete, Object jsonBody, Map<String, String> headers,
       final List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
     verifyParameterLegality(parameters);
@@ -561,7 +574,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
     final String finalParameterString =
         StringUtils.isBlank(parameterString) ? "" : ("?" + parameterString);
     
-    return makeRequestAndProcessResponseJSON(new Requestor() {
+    return makeRequestAndProcessResponse(new Requestor() {
       /**
        * Make the request
        * @see DefaultVersionedLinkedInClient.Requestor#makeRequest()

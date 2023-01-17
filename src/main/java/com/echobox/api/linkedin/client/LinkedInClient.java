@@ -101,6 +101,19 @@ public interface LinkedInClient {
   <T> Connection<T> fetchConnectionPage(String connectionPageUrl, Class<T> connectionType);
 
   /**
+   * Performs a LinkedIn API publish operation on the given {@code connection}.
+   *
+   * @param connection
+   *          The Connection to publish to.
+   * @param jsonBody
+   *          The json body to publish.
+   * @param parameters
+   *          URL parameters to include in the API call.
+   * @return The WebRequestor response
+   */
+  WebRequestor.Response publish(String connection, Object jsonBody, Parameter... parameters);
+  
+  /**
    * Performs a LinkedIn API publish operation on the given {@code connection}, mapping the result
    * to an instance of {@code objectType}.
    * 
