@@ -280,8 +280,9 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   }
 
   @Override
-  public void publish(String connection, Object jsonBody, Parameter... parameters) {
-    makeRequest(connection, true, false, jsonBody, new ArrayList<>(), parameters);
+  public WebRequestor.Response publish(String connection, Object jsonBody,
+      Parameter... parameters) {
+    throw new UnsupportedOperationException();
   }
   
   @Override

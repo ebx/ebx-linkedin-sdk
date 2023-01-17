@@ -109,8 +109,9 @@ public interface LinkedInClient {
    *          The json body to publish.
    * @param parameters
    *          URL parameters to include in the API call.
+   * @return The WebRequestor response
    */
-  void publish(String connection, Object jsonBody, Parameter... parameters);
+  WebRequestor.Response publish(String connection, Object jsonBody, Parameter... parameters);
   
   /**
    * Performs a LinkedIn API publish operation on the given {@code connection}, mapping the result

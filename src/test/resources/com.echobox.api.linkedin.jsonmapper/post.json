@@ -1,0 +1,29 @@
+{
+  "lifecycleState": "PUBLISHED",
+  "lastModifiedAt": 1634790968775,
+  "visibility": "PUBLIC",
+  "publishedAt": 1634790968774,
+  "author": "urn:li:organization:5515715",
+  "distribution": {
+    "feedDistribution": "NONE",
+    "thirdPartyDistributionChannels": []
+  },
+  "content": {
+    "media": {
+      "id": "urn:li:video:C5F10AQGKQg_6y2a4sQ"
+    }
+  },
+  "lifecycleStateInfo": {
+    "isEditedByAuthor": false
+  },
+  "isReshareDisabledByAuthor": false,
+  "createdAt": 1634790968743,
+  "id": "urn:li:share:6844785523593134080",
+  "commentary": "comment on Oct 20",
+  "adContext": {
+    "dscStatus": "ACTIVE",
+    "dscAdType": "VIDEO",
+    "isDsc": true,
+    "dscAdAccount": "urn:li:sponsoredAccount:520866471"
+  }
+}

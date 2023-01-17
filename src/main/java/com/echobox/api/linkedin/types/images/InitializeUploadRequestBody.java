@@ -19,7 +19,9 @@ package com.echobox.api.linkedin.types.images;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.urn.URN;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -30,6 +32,7 @@ import lombok.Setter;
  * @author Sergio Abplanalp
  */
 @RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class InitializeUploadRequestBody {
   
   @NonNull
@@ -43,6 +46,7 @@ public class InitializeUploadRequestBody {
    * @author Sergio Abplanalp
    */
   @RequiredArgsConstructor
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static class InitializeUploadRequest {
   
     /**

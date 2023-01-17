@@ -36,6 +36,7 @@ import java.util.List;
  * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api">UGC Shares</a>
  * @author joanna
  */
+@Deprecated
 public class UGCShareConnection extends ConnectionBaseV2 {
   
   private static final String UGC_POST = "/ugcPosts";
