@@ -34,6 +34,7 @@ import java.util.List;
  * @author joanna
  *
  */
+@Deprecated
 public class ShareConnection extends ConnectionBaseV2 {
   
   private static final String SHARES = "/shares";
