@@ -121,7 +121,7 @@ public class VersionedPostConnection extends VersionedConnection {
     WebRequestor.Response response = linkedinClient.publish(POSTS, post);
     Map<String, String> headers = response.getHeaders();
     if (headers == null) {
-      throw new LinkedInResponseException("The response headers is missing.");
+      throw new LinkedInResponseException("No headers were found on the response.");
     }
   
     String postURN = headers.get(HEADER_ID);
