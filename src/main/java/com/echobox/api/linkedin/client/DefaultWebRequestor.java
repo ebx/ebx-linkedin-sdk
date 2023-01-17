@@ -55,7 +55,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -574,9 +576,23 @@ public class DefaultWebRequestor implements WebRequestor {
    */
   protected Response fetchResponse(int statusCode, HttpHeaders headers, String body) {
     Map<String, String> headerMap = headers.entrySet().stream()
-        .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().toString(),
-            (key, value) -> value));
+            .collect(Collectors.toMap(Map.Entry::getKey, headerValueMapper()));
     return new Response(statusCode, headerMap, body);
+  }
+  
+  private Function<Map.Entry<String, Object>, String> headerValueMapper() {
+    return entry -> {
+      List<Object> value = (List<Object>) entry.getValue();
+      if (value == null || value.isEmpty()) {
+        return "";
+      }
+  
+      if (value.size() == 1) {
+        return value.get(0).toString();
+      }
+  
+      return value.toString();
+    };
   }
 
   /**
