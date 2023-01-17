@@ -58,6 +58,7 @@ public class Post extends LinkedInURNIdType {
    */
   @Getter
   @Setter
+  @NonNull
   @LinkedIn
   private String commentary;
   
@@ -106,6 +107,7 @@ public class Post extends LinkedInURNIdType {
    */
   @Getter
   @Setter
+  @NonNull
   @LinkedIn
   private Distribution distribution;
   
@@ -123,7 +125,7 @@ public class Post extends LinkedInURNIdType {
   @Getter
   @Setter
   @LinkedIn
-  private boolean isReshareDisabledByAuthor;
+  private Boolean isReshareDisabledByAuthor;
   
   /**
    * A timestamp corresponding to the last modification of this resource.
@@ -138,6 +140,7 @@ public class Post extends LinkedInURNIdType {
    */
   @Getter
   @Setter
+  @NonNull
   @LinkedIn
   private LifecycleState lifecycleState;
   
@@ -170,6 +173,7 @@ public class Post extends LinkedInURNIdType {
    */
   @Getter
   @Setter
+  @NonNull
   @LinkedIn
   private Visibility visibility;
   

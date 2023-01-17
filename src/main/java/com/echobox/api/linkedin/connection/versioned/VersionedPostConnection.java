@@ -20,6 +20,8 @@ package com.echobox.api.linkedin.connection.versioned;
 import com.echobox.api.linkedin.client.Connection;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.VersionedLinkedInClient;
+import com.echobox.api.linkedin.client.WebRequestor;
+import com.echobox.api.linkedin.exception.LinkedInResponseException;
 import com.echobox.api.linkedin.types.posts.Post;
 import com.echobox.api.linkedin.types.posts.ViewContext;
 import com.echobox.api.linkedin.types.urn.URN;
@@ -27,6 +29,7 @@ import com.echobox.api.linkedin.util.URLUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Post connection
@@ -51,6 +54,11 @@ public class VersionedPostConnection extends VersionedConnection {
    * Param
    */
   private static final String PARAM_AUTHOR = "author";
+
+  /**
+   * Headers
+   */
+  private static final String HEADER_ID = "x-linkedin-id";
   
   /**
    * Instantiates a new connection base.
@@ -102,4 +110,26 @@ public class VersionedPostConnection extends VersionedConnection {
     linkedinClient.deleteObject(POSTS + "/" + URLUtils.urlEncode(shareURN.toString()));
   }
   
+  
+  /**
+   * Create a post.
+   * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/posts-api#create-a-post">Create a Post</a>
+   * @param post The Post to share
+   * @return The URN of the post that was created.
+   */
+  public URN createPost(Post post) {
+    WebRequestor.Response response = linkedinClient.publish(POSTS, post);
+    Map<String, String> headers = response.getHeaders();
+    if (headers == null) {
+      throw new LinkedInResponseException("No headers were found on the response.");
+    }
+  
+    String postURN = headers.get(HEADER_ID);
+    if (postURN == null) {
+      throw new LinkedInResponseException(String.format("The header [%s] is missing from the "
+          + "response.", HEADER_ID));
+    }
+  
+    return new URN(postURN);
+  }
 }
