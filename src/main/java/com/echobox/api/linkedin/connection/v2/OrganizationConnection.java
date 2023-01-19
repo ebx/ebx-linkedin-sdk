@@ -51,6 +51,7 @@ import java.util.stream.Collectors;
 
 // Ignore CPD as this will be removed after migration
 // CPD-OFF
+@Deprecated
 public class OrganizationConnection extends ConnectionBaseV2 {
   
   private static final String ORGANIZATION_ACLS = "/organizationAcls";
@@ -83,7 +84,6 @@ public class OrganizationConnection extends ConnectionBaseV2 {
    * Initialise an organization connection
    * @param linkedinClient the linkedIn API client to create a LinkedIn organization connection
    */
-  @Deprecated
   public OrganizationConnection(LinkedInClient linkedinClient) {
     super(linkedinClient);
   }

@@ -32,6 +32,7 @@ import java.util.List;
  * Connection base for all V2 connections
  * @author joanna
  */
+@Deprecated
 public class ConnectionBaseV2 extends ConnectionBase {
 
   // CPD-OFF
