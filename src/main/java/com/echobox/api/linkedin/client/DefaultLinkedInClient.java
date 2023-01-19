@@ -59,6 +59,7 @@ import java.util.Map;
  * @author Joanna
  *
  */
+@Deprecated
 public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedInClient {
   // off code duplication check, as this will be removed when migration completed
   // CPD-OFF
