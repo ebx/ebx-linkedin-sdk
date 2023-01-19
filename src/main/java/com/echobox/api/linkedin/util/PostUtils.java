@@ -26,7 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 public abstract class PostUtils {
   
   /**
-   * Helper function for creating activ
+   * Helper function for filling article content to post
    * @param post post to be filled
    * @param articleUrl link of the article
    * @param thumbnail thumbnail image as ImageURN
