@@ -42,14 +42,19 @@ public enum Version {
   /**
    * LinkedIn V2 API version
    */
-  V2("v2", new V2PagingImpl(), false);
+  V2("v2", new V2PagingImpl(), false),
+  
+  /**
+   * LinkedIn versioned API
+   */
+  VERSIONED("rest", new V2PagingImpl(), false);
   
   private static Logger LOGGER = LoggerFactory.getLogger(Version.class);
   
   /**
    * The default version - should be the most up to date version of LinkedIn API
    */
-  public static final Version DEFAULT_VERSION = V2;
+  public static final Version DEFAULT_VERSION = VERSIONED;
   
   @Getter
   private final String urlElement;

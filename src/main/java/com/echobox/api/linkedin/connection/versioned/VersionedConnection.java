@@ -15,57 +15,43 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.connection.v2;
+package com.echobox.api.linkedin.connection.versioned;
 
-import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
+import com.echobox.api.linkedin.client.VersionedLinkedInClient;
 import com.echobox.api.linkedin.connection.ConnectionBase;
 import com.echobox.api.linkedin.types.TimeInterval;
-import com.echobox.api.linkedin.types.urn.URN;
-import com.echobox.api.linkedin.types.urn.URNEntityType;
-import com.echobox.api.linkedin.util.ValidationUtils;
 import com.echobox.api.linkedin.version.Version;
 
 import java.util.List;
 
 /**
- * Connection base for all V2 connections
- * @author joanna
+ * Base class for all connections using versioned API
+ * @author Kenneth Wong
  */
-@Deprecated
-public class ConnectionBaseV2 extends ConnectionBase {
-
-  // CPD-OFF
-  // Ignore CPD as this will be removed after migration (use VersionedConnection)
+public abstract class VersionedConnection extends ConnectionBase {
+  
   /**
    * The query key.
    */
   protected static final String QUERY_KEY = "q";
-  /**
-   * The edge type.
-   */
-  protected static final String EDGE_TYPE = "edgeType";
-  /**
-   * The shares parameter
-   */
-  protected static final String SHARES_PARAM = "shares";
+  
   private static final String TIME_INTERVALS_GRANULARITY = "timeIntervals.timeGranularityType";
   private static final String TIME_INTERVALS_START = "timeIntervals.timeRange.start";
   private static final String TIME_INTERVALS_END = "timeIntervals.timeRange.end";
-
+  
   /**
-   * Instantiates a new connection base v2.
+   * Instantiates a new connection base.
    *
    * @param linkedinClient the LinkedIn client
    */
-  protected ConnectionBaseV2(LinkedInClient linkedinClient) {
+  protected VersionedConnection(VersionedLinkedInClient linkedinClient) {
     super(linkedinClient);
-    if (!Version.V2.equals(linkedinClient.getVersion())) {
-      throw new IllegalStateException(
-          "The LinkedIn client should be set to V2 to access the endpoints");
+    if (Version.VERSIONED != linkedinClient.getVersion()) {
+      throw new IllegalArgumentException("The version of linkedInClient is not VERSIONED");
     }
   }
-
+  
   /**
    * Add time interval to parameters.
    *
@@ -95,16 +81,5 @@ public class ConnectionBaseV2 extends ConnectionBase {
           "timeIntervals.timeGranularityType cannot be null when " + "timeInterval is provided");
     }
   }
-
-  /**
-   * Validate share urn.
-   *
-   * @param shareURN the share URN parameter to check
-   */
-  protected void validateShareURN(URN shareURN) {
-    ValidationUtils.verifyParameterPresence("share", shareURN);
-    validateURN(URNEntityType.SHARE, shareURN);
-  }
   
-  // CPD-ON
 }

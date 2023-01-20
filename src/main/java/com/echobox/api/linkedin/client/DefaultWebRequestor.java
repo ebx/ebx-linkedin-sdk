@@ -55,7 +55,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -93,8 +95,6 @@ public class DefaultWebRequestor implements WebRequestor {
    * Default charset to use for encoding/decoding strings.
    */
   public static final String ENCODING_CHARSET = "UTF-8";
-  
-  private static final String CONTENT_TYPE = "application/json";
   
   private static final String FORMAT_HEADER = "x-li-format";
 
@@ -215,7 +215,12 @@ public class DefaultWebRequestor implements WebRequestor {
 
   @Override
   public Response executeGet(String url) throws IOException {
-    return execute(url, HttpMethod.GET);
+    return executeGet(url, null);
+  }
+  
+  @Override
+  public Response executeGet(String url, Map<String, String> headers) throws IOException {
+    return execute(url, HttpMethod.GET, headers);
   }
 
   @Override
@@ -273,9 +278,6 @@ public class DefaultWebRequestor implements WebRequestor {
       } else {
         if (jsonBody != null) {
           request = requestFactory.buildPostRequest(genericUrl, getJsonHttpContent(jsonBody));
-
-          // Ensure the headers are set to JSON
-          httpHeaders.setContentType(CONTENT_TYPE).set(FORMAT_HEADER, "json");
 
           // Ensure the response headers are also set to JSON
           request.setResponseHeaders(new HttpHeaders().set(FORMAT_HEADER, "json"));
@@ -341,9 +343,6 @@ public class DefaultWebRequestor implements WebRequestor {
       } else {
         if (jsonBody != null) {
           request = requestFactory.buildPutRequest(genericUrl, getJsonHttpContent(jsonBody));
-        
-          // Ensure the headers are set to JSON
-          httpHeaders.setContentType(CONTENT_TYPE).set(FORMAT_HEADER, "json");
         
           // Ensure the response headers are also set to JSON
           request.setResponseHeaders(new HttpHeaders().set(FORMAT_HEADER, "json"));
@@ -499,15 +498,21 @@ public class DefaultWebRequestor implements WebRequestor {
 
   @Override
   public Response executeDelete(String url) throws IOException {
-    return execute(url, HttpMethod.DELETE);
+    return executeDelete(url, null);
   }
 
+  @Override
+  public Response executeDelete(String url, Map<String, String> headers) throws IOException {
+    return execute(url, HttpMethod.DELETE, headers);
+  }
+  
   @Override
   public DebugHeaderInfo getDebugHeaderInfo() {
     return debugHeaderInfo;
   }
 
-  private Response execute(String url, HttpMethod httpMethod) throws IOException {
+  private Response execute(String url, HttpMethod httpMethod, Map<String, String> headers)
+      throws IOException {
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug(format("Making a %s request to %s", httpMethod.name(), url));
     }
@@ -521,6 +526,8 @@ public class DefaultWebRequestor implements WebRequestor {
       // Allow subclasses to customize the connection if they'd like to - set their own headers,
       // timeouts, etc.
       customizeConnection(request);
+      HttpHeaders requestHeaders = new HttpHeaders();
+      addHeadersToRequest(request, requestHeaders, headers);
 
       return getResponse(request);
     } catch (HttpResponseException ex) {
@@ -569,9 +576,27 @@ public class DefaultWebRequestor implements WebRequestor {
    */
   protected Response fetchResponse(int statusCode, HttpHeaders headers, String body) {
     Map<String, String> headerMap = headers.entrySet().stream()
-        .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().toString(),
-            (key, value) -> value));
+            .collect(Collectors.toMap(Map.Entry::getKey, headerValueMapper()));
     return new Response(statusCode, headerMap, body);
+  }
+  
+  protected Function<Map.Entry<String, Object>, String> headerValueMapper() {
+    return entry -> {
+      if (!(entry.getValue() instanceof List)) {
+        return entry.getValue().toString();
+      }
+      
+      List<Object> value = (List<Object>) entry.getValue();
+      if (value.isEmpty()) {
+        return "";
+      }
+  
+      if (value.size() == 1) {
+        return value.get(0).toString();
+      }
+  
+      return value.toString();
+    };
   }
 
   /**

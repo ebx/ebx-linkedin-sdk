@@ -140,3 +140,8 @@ can get data for both organization and organization brand pages.
 * Removed google-api-services-oauth2 dependency
 * Bump sevntu-checks dependencies from 1.42.0 to 1.44.0
 * Fix getShares method in ShareConnection
+
+## 4.0.0 (Jan 23, 2023)
+* Bump google-api-client from 2.0.0 to 2.1.1
+* Support LinkedIn Versioning API
+* Deprecated V2 connection classes

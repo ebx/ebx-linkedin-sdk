@@ -4,7 +4,7 @@
 
 ## What it is
 
-ebx-linkedin-sdk is a pure Java LinkedIn API client. It implements the v2 API as described 
+ebx-linkedin-sdk is a pure Java LinkedIn API client. It implements the versioning API as described 
 [here](https://docs.microsoft.com/en-us/linkedin/).
 
 It is created and maintained by [Echobox](http://echobox.com).
@@ -22,7 +22,7 @@ use:
 <dependency>
   <groupId>com.echobox</groupId>
   <artifactId>ebx-linkedin-sdk</artifactId>
-  <version>3.1.3</version>
+  <version>4.0.0</version>
 </dependency>
 ```
 
@@ -70,32 +70,31 @@ Please see the tests for examples of API calls that are supported and the expect
 To get the access token to begin to make requests ([See
 documentation](https://docs.microsoft.com/en-us/linkedin/shared/authentication/authorization-code-flow?context=linkedin/marketing/context])):
 
-    DefaultLinkedInClient client = new DefaultLinkedInClient(Version.DEFAULT_VERSION);
+    VersionedLinkedInClient client = new DefaultVersionedLinkedInClient(Version.DEFAULT_VERSION);
     LinkedInClient.AccessToken accessToken = client.obtainUserAccessToken(clientId, clientSecret, redirectURI, code);
 
 To create a LinkedIn Share
-([See documentation](https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/share-api#post-shares)):
+([See documentation](https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/posts-api?tabs=http&view=li-lms-2023-01#create-a-post)):
 
-    ShareConnection shareConnection = new ShareConnection(new DefaultLinkedInClient(authToken));
-    
-    ShareRequestBody shareRequestBody = new ShareRequestBody(URN);
-    
-    ShareContent shareContent = new ShareContent();
-    
-    ContentEntity contentEntity = new ContentEntity();
-    contentEntity.setEntityLocation("https://www.example.com/content.html");
-    shareContent.setContentEntities(Arrays.asList(contentEntity));
-    shareContent.setTitle("Test Share with Content");
-    shareRequestBody.setContent(shareContent);
-    shareRequestBody.setSubject("Test share subject");
-    ShareText shareText = new ShareText();
-    shareText.setText("test share");
-    shareRequestBody.setText(shareText);
-    Share share = shareConnection.postShare(shareRequestBody);
+
+    VersionedPostConnection postConnection = 
+        new VersionedPostConnection(new DefaultLinkedInClient(authToken));
+
+    Distribution distribution = new Distribution(Distribution.FeedDistribution.MAIN_FEED);
+    String commentary = "Message here"
+    Post post = new Post(ownerURN, commentary, distribution, Post.LifecycleState.PUBLISHED,
+        Post.Visibility.PUBLIC);
+    String articleLink = "https://www.example.com/1234";
+    String title = "title";
+    String description = "description";
+    PostUtils.fillArticleContent(post, articleLink, imageURN, title, description);
+    URN postURN = postConnection.createPost(post);
 
 Retrieve an organization from LinkedIn 
-([See documentation](https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api#retrieve-organizations)):
+([See documentation](https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-lookup-api?view=li-lms-2023-01&tabs=http#retrieve-an-administered-organization)):
     
+    VersionedOrganizationConnection connection = 
+        new VersionedOrganizationConnection(linkedInClient);
     Organization organization = connection.retrieveOrganization(organizationURN, Parameter
             .with("projection",
                 "(elements*(*,roleAssignee~(localizedFirstName, localizedLastName),"
