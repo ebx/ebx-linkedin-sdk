@@ -145,3 +145,5 @@ can get data for both organization and organization brand pages.
 * Bump google-api-client from 2.0.0 to 2.1.1
 * Support LinkedIn Versioning API
 * Deprecated V2 connection classes
+
+## 4.0.1 (Work in progress)
