@@ -54,7 +54,7 @@ public enum Version {
   /**
    * The default version - should be the most up to date version of LinkedIn API
    */
-  public static final Version DEFAULT_VERSION = V2;
+  public static final Version DEFAULT_VERSION = VERSIONED;
   
   @Getter
   private final String urlElement;
