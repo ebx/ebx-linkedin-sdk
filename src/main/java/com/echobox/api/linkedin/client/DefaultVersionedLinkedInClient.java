@@ -17,18 +17,13 @@
 
 package com.echobox.api.linkedin.client;
 
-import com.echobox.api.linkedin.exception.LinkedInAPIException;
+import com.echobox.api.linkedin.exception.DefaultLinkedInExceptionMapper;
 import com.echobox.api.linkedin.exception.LinkedInAccessTokenException;
 import com.echobox.api.linkedin.exception.LinkedInException;
 import com.echobox.api.linkedin.exception.LinkedInExceptionMapper;
-import com.echobox.api.linkedin.exception.LinkedInGatewayTimeoutException;
-import com.echobox.api.linkedin.exception.LinkedInInteralServerException;
 import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
 import com.echobox.api.linkedin.exception.LinkedInNetworkException;
 import com.echobox.api.linkedin.exception.LinkedInOAuthException;
-import com.echobox.api.linkedin.exception.LinkedInQueryParseException;
-import com.echobox.api.linkedin.exception.LinkedInRateLimitException;
-import com.echobox.api.linkedin.exception.LinkedInResourceNotFoundException;
 import com.echobox.api.linkedin.exception.ResponseErrorJsonParsingException;
 import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapper;
 import com.echobox.api.linkedin.jsonmapper.JsonMapper;
@@ -223,6 +218,25 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   /**
    * Creates a LinkedIn API client with the given {@code accessToken}.
    *
+   * @param accessToken
+   *          A LinkedIn OAuth access token.
+   * @param apiVersion
+   *          Version of the API endpoint
+   * @param versionedMonth
+   *          LinkedIn-version of the API (in format YYYYMM)
+   * @throws GeneralSecurityException
+   *          If the DefaultWebRequestor fails to initialise
+   * @throws IOException
+   *          If the DefaultWebRequestor fails to initialise
+   */
+  public DefaultVersionedLinkedInClient(String accessToken, Version apiVersion,
+      String versionedMonth) throws GeneralSecurityException, IOException {
+    this(new DefaultWebRequestor(accessToken), new DefaultJsonMapper(), apiVersion, versionedMonth);
+  }
+  
+  /**
+   * Creates a LinkedIn API client with the given {@code accessToken}.
+   *
    * @param webRequestor
    *          The {@link WebRequestor} implementation to use for sending requests to the API
    *          endpoint.
@@ -235,6 +249,27 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   public DefaultVersionedLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper,
       Version apiVersion) {
     this(webRequestor, jsonMapper, apiVersion, new DefaultLinkedInExceptionMapper());
+    ValidationUtils.verifyParameterPresence("webRequestor", webRequestor);
+  }
+  
+  /**
+   * Creates a LinkedIn API client with the given {@code accessToken}.
+   *
+   * @param webRequestor
+   *          The {@link WebRequestor} implementation to use for sending requests to the API
+   *          endpoint.
+   * @param jsonMapper
+   *          The {@link JsonMapper} implementation to use for mapping API response JSON to Java
+   *          objects.
+   * @param apiVersion
+   *          Version of the API endpoint
+   * @param versionedMonth
+   *          LinkedIn-version of the API (in format YYYYMM)
+   */
+  public DefaultVersionedLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper,
+      Version apiVersion, String versionedMonth) {
+    this(webRequestor, jsonMapper, apiVersion, new DefaultLinkedInExceptionMapper(),
+        versionedMonth);
     ValidationUtils.verifyParameterPresence("webRequestor", webRequestor);
   }
   
@@ -271,7 +306,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    * @param linkedinExceptionMapper
    *          Mapper class to handle LinkedIn exceptions
    * @param versionedMonth
-   *          LinkedIn-version of the API
+   *          LinkedIn-version of the API (in format YYYYMM)
    */
   public DefaultVersionedLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper,
       Version apiVersion, LinkedInExceptionMapper linkedinExceptionMapper,
@@ -776,51 +811,6 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
       if (LOGGER.isTraceEnabled()) {
         LOGGER.trace("caught ResponseErrorJsonParsingException - ignoring", ex);
       }
-    }
-  }
-  
-  /**
-   * Implementation of {@code LinkedInExceptionMapper} that maps LinkedIn API exceptions.
-   * @author Joanna
-   */
-  protected static class DefaultLinkedInExceptionMapper implements LinkedInExceptionMapper {
-    @Override
-    public LinkedInException exceptionForTypeAndMessage(Integer errorCode, Integer httpStatusCode,
-        String message, Boolean isTransient, JsonObject rawError) {
-      // Bad Request - client mistakes
-      if (Integer.valueOf(HttpStatus.SC_BAD_REQUEST).equals(httpStatusCode)) {
-        return new LinkedInQueryParseException(message, errorCode, httpStatusCode, rawError);
-      }
-      
-      // Unauthorised
-      if (Integer.valueOf(HttpStatus.SC_UNAUTHORIZED).equals(httpStatusCode)) {
-        return new LinkedInOAuthException(message, errorCode, httpStatusCode, rawError);
-      }
-      
-      // Resource not found
-      if (Integer.valueOf(HttpStatus.SC_NOT_FOUND).equals(httpStatusCode)) {
-        return new LinkedInResourceNotFoundException(message, errorCode, httpStatusCode,
-            rawError);
-      }
-      
-      // 429 Rate limit
-      if (Integer.valueOf(HttpStatus.SC_TOO_MANY_REQUESTS).equals(httpStatusCode)) {
-        return new LinkedInRateLimitException(message, errorCode, httpStatusCode,
-            rawError);
-      }
-      
-      // Internal Server Error
-      if (Integer.valueOf(HttpStatus.SC_INTERNAL_SERVER_ERROR).equals(httpStatusCode)) {
-        return new LinkedInInteralServerException(message, errorCode, httpStatusCode, rawError);
-      }
-      
-      // Gateway timeout
-      if (Integer.valueOf(HttpStatus.SC_GATEWAY_TIMEOUT).equals(httpStatusCode)) {
-        return new LinkedInGatewayTimeoutException(message, errorCode, httpStatusCode, rawError);
-      }
-      
-      // Don't recognize this exception type? Just go with the standard LinkedInAPIException.
-      return new LinkedInAPIException(message, errorCode, httpStatusCode, rawError);
     }
   }
   
