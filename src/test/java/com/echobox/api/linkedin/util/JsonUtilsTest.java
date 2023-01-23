@@ -89,8 +89,6 @@ public class JsonUtilsTest {
     assertEquals(1055736L, initializeUploadRequest.get("fileSizeBytes"));
     assertFalse((Boolean) initializeUploadRequest.get("uploadCaptions"));
     assertTrue((Boolean) initializeUploadRequest.get("uploadThumbnail"));
-  
-  
   }
 
 }
