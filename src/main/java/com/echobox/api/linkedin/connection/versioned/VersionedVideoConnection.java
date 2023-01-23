@@ -21,26 +21,26 @@ import com.echobox.api.linkedin.client.VersionedLinkedInClient;
 
 /**
  * Videos connection class to handle video operations
- * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/videos-api">Videos API</a>
  *
  * @author sergio
- *
+ * @see
+ * <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/videos-api">Videos API</a>
  */
 public class VersionedVideoConnection extends VersionedConnection {
-
-    /**
-     * endpoint path
-     */
-    private static final String VIDEOS = "/videos";
-    private static final String ACTION_KEY = "action";
-    private static final String INITIALIZE_UPLOAD = "initializeUpload";
-
-    /**
-     * Instantiates a new connection base.
-     *
-     * @param linkedinClient the LinkedIn client
-     */
-    protected VersionedVideoConnection(VersionedLinkedInClient linkedinClient) {
-        super(linkedinClient);
-    }
+  
+  /**
+   * endpoint path
+   */
+  private static final String VIDEOS = "/videos";
+  private static final String ACTION_KEY = "action";
+  private static final String INITIALIZE_UPLOAD = "initializeUpload";
+  
+  /**
+   * Instantiates a new connection base.
+   *
+   * @param linkedinClient the LinkedIn client
+   */
+  protected VersionedVideoConnection(VersionedLinkedInClient linkedinClient) {
+    super(linkedinClient);
+  }
 }
