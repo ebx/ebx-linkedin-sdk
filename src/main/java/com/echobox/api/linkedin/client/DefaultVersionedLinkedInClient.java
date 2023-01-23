@@ -189,7 +189,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   }
   
   /**
-   * Creates a LinkedIn API client with the given {@code accessToken}.
+   * Creates a LinkedIn API client with the given {@code accessToken} and {@code apiVersion}
    *
    * @param accessToken
    *          A LinkedIn OAuth access token.
@@ -216,7 +216,8 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   }
   
   /**
-   * Creates a LinkedIn API client with the given {@code accessToken}.
+   * Creates a LinkedIn API client with the given {@code accessToken}, {@code apiVersion}
+   *   and {@code versionedMonth}
    *
    * @param accessToken
    *          A LinkedIn OAuth access token.
@@ -231,11 +232,12 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    */
   public DefaultVersionedLinkedInClient(String accessToken, Version apiVersion,
       String versionedMonth) throws GeneralSecurityException, IOException {
-    this(new DefaultWebRequestor(accessToken), new DefaultJsonMapper(), apiVersion, versionedMonth);
+    this(new DefaultWebRequestor(accessToken), new DefaultJsonMapper(),
+        apiVersion, versionedMonth);
   }
   
   /**
-   * Creates a LinkedIn API client with the given {@code accessToken}.
+   * Creates a LinkedIn API client
    *
    * @param webRequestor
    *          The {@link WebRequestor} implementation to use for sending requests to the API
@@ -253,7 +255,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   }
   
   /**
-   * Creates a LinkedIn API client with the given {@code accessToken}.
+   * Creates a LinkedIn API client
    *
    * @param webRequestor
    *          The {@link WebRequestor} implementation to use for sending requests to the API
@@ -274,7 +276,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   }
   
   /**
-   * Creates a LinkedIn API client with the given {@code accessToken}.
+   * Creates a LinkedIn API client
    *
    * @param webRequestor
    *          The {@link WebRequestor} implementation to use for sending requests to the API
@@ -293,7 +295,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   }
   
   /**
-   * Creates a LinkedIn API client with the given {@code accessToken}.
+   * Creates a LinkedIn API client
    *
    * @param webRequestor
    *          The {@link WebRequestor} implementation to use for sending requests to the API
