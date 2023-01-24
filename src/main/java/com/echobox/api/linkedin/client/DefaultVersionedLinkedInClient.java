@@ -372,8 +372,15 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   }
   
   @Override
-  public WebRequestor.Response put(String connection, Object jsonBody, Parameter... parameters) {
-    return makeRequest(connection, RequestType.PUT, jsonBody, new ArrayList<>(), parameters);
+  public WebRequestor.Response put(String connection, Object jsonBody,
+      BinaryAttachment binaryAttachment, Parameter... parameters) {
+
+    List<BinaryAttachment> attachments = new ArrayList<>();
+    if (binaryAttachment != null) {
+      attachments.add(binaryAttachment);
+    }
+  
+    return makeRequest(connection, RequestType.PUT, jsonBody, attachments, parameters);
   }
   
   @Override
