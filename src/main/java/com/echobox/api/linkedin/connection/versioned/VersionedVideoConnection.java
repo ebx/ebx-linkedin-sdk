@@ -17,7 +17,14 @@
 
 package com.echobox.api.linkedin.connection.versioned;
 
+import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.VersionedLinkedInClient;
+import com.echobox.api.linkedin.client.WebRequestor;
+import com.echobox.api.linkedin.types.videos.InitializeUpload;
+import com.echobox.api.linkedin.types.videos.InitializeUploadRequestBody;
+import com.echobox.api.linkedin.types.videos.UploadFileRequestBody;
+
+import java.net.URL;
 
 /**
  * Videos connection class to handle video operations
@@ -42,5 +49,17 @@ public class VersionedVideoConnection extends VersionedConnection {
    */
   protected VersionedVideoConnection(VersionedLinkedInClient linkedinClient) {
     super(linkedinClient);
+  }
+  
+  public InitializeUpload initializeUpload(InitializeUploadRequestBody initializeUploadRequestBody) {
+    return linkedinClient.publish(VIDEOS, InitializeUpload.class, initializeUploadRequestBody,
+        Parameter.with(ACTION_KEY, INITIALIZE_UPLOAD));
+  }
+  
+  public void uploadFile(URL uploadURL, UploadFileRequestBody uploadFileRequestBody) {
+  }
+  
+  public void uploadVideo(InitializeUploadRequestBody initializeUploadRequestBody) {
+  
   }
 }
