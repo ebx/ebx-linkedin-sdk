@@ -335,10 +335,14 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   }
   
   @Override
+  public WebRequestor.Response put(String connection, Object jsonBody, Parameter... parameters) {
+    return makeRequest(connection, RequestType.PUT, jsonBody, new ArrayList<>(), parameters);
+  }
+  
+  @Override
   public WebRequestor.Response publish(String connection, Object jsonBody,
       Parameter... parameters) {
-    return makeRequest(connection, true, false, jsonBody,
-        new ArrayList<>(), parameters);
+    return makeRequest(connection, RequestType.POST, jsonBody, new ArrayList<>(), parameters);
   }
   
   @Override
@@ -351,7 +355,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   public <T> T publish(String connection, Class<T> objectType, Object jsonBody,
       List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
     
-    WebRequestor.Response response = makeRequest(connection, true, false, jsonBody,
+    WebRequestor.Response response = makeRequest(connection, RequestType.POST, jsonBody,
         binaryAttachments, parameters);
     return jsonMapper.toJavaObject(response.getBody(), objectType);
   }
@@ -372,7 +376,8 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   public boolean deleteObject(String object, Parameter... parameters) {
     ValidationUtils.verifyParameterPresence("object", object);
     
-    WebRequestor.Response response = makeRequest(object, false, true, null, null, parameters);
+    WebRequestor.Response response = makeRequest(object, RequestType.DELETE,
+        null, null, parameters);
     String responseBody = response.getBody();
   
     try {
@@ -411,9 +416,8 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
       headers.put("Content-Type", "application/x-www-form-urlencoded");
       
       final WebRequestor.Response response = makeRequestFull(ENDPOINT_ACCESS_TOKEN,
-          true, false, null,
-          headers, Collections.emptyList(), Parameter.with(GRANT_TYPE_PARAM_NAME,
-              "authorization_code"),
+          RequestType.POST, null, headers, Collections.emptyList(),
+          Parameter.with(GRANT_TYPE_PARAM_NAME, "authorization_code"),
           Parameter.with(CODE_PARAM_NAME, verificationCode),
           Parameter.with(REDIRECT_URI_PARAM_NAME, redirectUri),
           Parameter.with(CLIENT_ID_PARAM_NAME, appId),
@@ -496,7 +500,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    *           If an error occurs while making the LinkedIn API POST or processing the response.
    */
   protected WebRequestor.Response makeRequest(String endpoint, Parameter... parameters) {
-    return makeRequest(endpoint, false, false, null, null, parameters);
+    return makeRequest(endpoint, RequestType.GET, null, null, parameters);
   }
   
   /**
@@ -506,11 +510,8 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    *
    * @param endpoint
    *          LinkedIn Graph API endpoint.
-   * @param executeAsPost
-   *          {@code true} to execute the web request as a {@code POST}, {@code false} to execute
-   *          as a {@code GET}.
-   * @param executeAsDelete
-   *          {@code true} to add a special 'treat this request as a {@code DELETE}' parameter.
+   * @param requestType
+   *          the web request type to execute.
    * @param jsonBody
    *          Post JSON body
    * @param binaryAttachments
@@ -522,9 +523,8 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    * @throws LinkedInException
    *           If an error occurs while making the LinkedIn API POST or processing the response.
    */
-  protected WebRequestor.Response makeRequest(String endpoint, final boolean executeAsPost,
-      final boolean executeAsDelete, Object jsonBody,
-      final List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
+  protected WebRequestor.Response makeRequest(String endpoint, RequestType requestType,
+      Object jsonBody, final List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
     
     if (!endpoint.startsWith("/")) {
       endpoint = "/" + endpoint;
@@ -533,7 +533,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
     final String fullEndpoint = createEndpointForApiCall(endpoint,
         binaryAttachments != null && !binaryAttachments.isEmpty());
 
-    return makeRequestFull(fullEndpoint, executeAsPost, executeAsDelete, jsonBody,
+    return makeRequestFull(fullEndpoint, requestType, jsonBody,
         defaultHeaders, binaryAttachments, parameters);
   }
   
@@ -544,11 +544,8 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    *
    * @param fullEndpoint
    *          LinkedIn Graph API endpoint.
-   * @param executeAsPost
-   *          {@code true} to execute the web request as a {@code POST}, {@code false} to execute
-   *          as a {@code GET}.
-   * @param executeAsDelete
-   *          {@code true} to add a special 'treat this request as a {@code DELETE}' parameter.
+   * @param requestType
+   *          the web request type to execute.
    * @param jsonBody
    *          The POST JSON body
    * @param headers
@@ -560,12 +557,12 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    *          Arbitrary number of parameters to send along to LinkedIn as part of the API call.
    * @return The WebRequestor response returned by LinkedIn for the API call.
    */
-  protected WebRequestor.Response makeRequestFull(String fullEndpoint, final boolean executeAsPost,
-      final boolean executeAsDelete, Object jsonBody, Map<String, String> headers,
+  protected WebRequestor.Response makeRequestFull(String fullEndpoint, RequestType requestType,
+      Object jsonBody, Map<String, String> headers,
       final List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
     verifyParameterLegality(parameters);
     
-    if (executeAsDelete && isHttpDeleteFallback()) {
+    if (RequestType.DELETE == requestType && isHttpDeleteFallback()) {
       parameters = parametersWithAdditionalParameter(Parameter.with(METHOD_PARAM_NAME, "delete"),
           parameters);
     }
@@ -581,17 +578,30 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
        */
       @Override
       public WebRequestor.Response makeRequest() throws IOException {
-        if (executeAsDelete && !isHttpDeleteFallback()) {
-          return webRequestor.executeDelete(fullEndpoint + finalParameterString, headers);
-        } else {
-          return executeAsPost
-              ? webRequestor.executePost(fullEndpoint, parameterString,
-              jsonBody == null ? null : jsonMapper.toJson(jsonBody, true),
-              headers,
-              binaryAttachments == null ? null
-                  : binaryAttachments.toArray(new BinaryAttachment[binaryAttachments.size()]))
-              : webRequestor.executeGet(fullEndpoint + finalParameterString, headers);
+        if (RequestType.GET == requestType) {
+          return webRequestor.executeGet(fullEndpoint + finalParameterString, headers);
         }
+
+        String body = jsonBody == null ? null : jsonMapper.toJson(jsonBody, true);
+        BinaryAttachment[] attachments = binaryAttachments == null ? null
+            : binaryAttachments.toArray(new BinaryAttachment[binaryAttachments.size()]);
+
+        if (RequestType.PUT == requestType) {
+          BinaryAttachment attachment = attachments == null || attachments.length == 0
+              ? null : attachments[0];
+          return webRequestor.executePut(fullEndpoint, parameterString, body, headers, attachment);
+        }
+
+        if (RequestType.POST == requestType) {
+          return webRequestor.executePost(fullEndpoint, parameterString, body, headers,
+              attachments);
+        }
+
+        if (RequestType.DELETE == requestType && !isHttpDeleteFallback()) {
+          return webRequestor.executeDelete(fullEndpoint + finalParameterString, headers);
+        }
+        
+        throw new IllegalArgumentException("The request type parameter is required");
       }
     });
   }
