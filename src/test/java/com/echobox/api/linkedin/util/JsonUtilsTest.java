@@ -18,6 +18,8 @@
 package com.echobox.api.linkedin.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
@@ -71,6 +73,22 @@ public class JsonUtilsTest {
     assertEquals(523412423423L, numbers.get("long"));
     assertEquals(2.434343423432, numbers.get("double"));
     
+  }
+  
+  @Test
+  public void testJsonWithBooleanValues() {
+    String json = "{ \"initializeUploadRequest\": {\n"
+        + "       \"owner\": \"urn:li:organization:2414183\",\n"
+        + "       \"fileSizeBytes\": 1055736 ,\n" + "       \"uploadCaptions\": false,\n"
+        + "       \"uploadThumbnail\": true\n" + "}\n" + "}";
+  
+    JsonObject asObject = Json.parse(json).asObject();
+    Map<String, Object> map = JsonUtils.toMap(asObject);
+    Map<String, Object> initializeUploadRequest = (Map) map.get("initializeUploadRequest");
+    assertEquals("urn:li:organization:2414183", initializeUploadRequest.get("owner"));
+    assertEquals(1055736L, initializeUploadRequest.get("fileSizeBytes"));
+    assertFalse((Boolean) initializeUploadRequest.get("uploadCaptions"));
+    assertTrue((Boolean) initializeUploadRequest.get("uploadThumbnail"));
   }
 
 }
