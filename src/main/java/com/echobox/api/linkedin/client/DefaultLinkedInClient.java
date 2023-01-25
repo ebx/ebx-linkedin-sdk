@@ -281,6 +281,12 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   }
 
   @Override
+  public Response put(String connection, Object jsonBody,
+      BinaryAttachment binaryAttachment, Parameter... parameters) {
+    throw new UnsupportedOperationException();
+  }
+  
+  @Override
   public WebRequestor.Response publish(String connection, Object jsonBody,
       Parameter... parameters) {
     throw new UnsupportedOperationException();
