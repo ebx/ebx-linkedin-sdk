@@ -148,3 +148,4 @@ can get data for both organization and organization brand pages.
 
 ## 4.0.1 (Work in progress)
 * Better support for non-default versioned month
+* Add boolean support to JsonUtils

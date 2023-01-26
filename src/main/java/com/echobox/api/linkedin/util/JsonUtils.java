@@ -67,6 +67,8 @@ public abstract class JsonUtils {
       value = jsonValue.asString();
     } else if (jsonValue.isNumber()) {
       value = getNumber(jsonValue);
+    } else if (jsonValue.isBoolean()) {
+      value = jsonValue.asBoolean();
     }
     return value;
   }
