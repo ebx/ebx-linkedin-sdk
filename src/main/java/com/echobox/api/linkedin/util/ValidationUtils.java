@@ -20,8 +20,14 @@ package com.echobox.api.linkedin.util;
 import com.echobox.api.linkedin.client.WebRequestor;
 import com.echobox.api.linkedin.exception.LinkedInNetworkException;
 import com.echobox.api.linkedin.exception.LinkedInOAuthException;
+import com.echobox.api.linkedin.exception.LinkedInResponseException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Map;
 
 /**
  * Valiation utility class
@@ -86,6 +92,32 @@ public class ValidationUtils {
     if (HttpStatus.SC_OK != response.getStatusCode()
         && HttpStatus.SC_CREATED != response.getStatusCode()) {
       throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
+    }
+  }
+  
+  /**
+   * Validate that the response contains the required header.
+   *
+   * @param headers map of headers from the response
+   * @param header the header to check exists
+   */
+  public static void validateRequiredResponseHeader(Map<String, String> headers, String header) {
+    if (headers == null || headers.isEmpty()) {
+      throw new LinkedInResponseException("No headers were found on the response.");
+    }
+  
+    String headerResponse = headers.get(header);
+    if (headerResponse == null) {
+      throw new LinkedInResponseException(String.format("The header [%s] is missing from the "
+          + "response.", header));
+    }
+  }
+  
+  public static void validateVideoFile(Path filePath) throws IOException {
+    long fileSize = Files.size(filePath);
+    if (fileSize > Integer.MAX_VALUE) {
+      throw new IllegalArgumentException(String.format("The maximum video file size is %s bytes.",
+          Integer.MAX_VALUE));
     }
   }
 }

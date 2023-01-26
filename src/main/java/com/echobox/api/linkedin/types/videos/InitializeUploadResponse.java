@@ -18,24 +18,53 @@
 package com.echobox.api.linkedin.types.videos;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import com.echobox.api.linkedin.types.urn.URN;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.ToString;
 
-@RequiredArgsConstructor
+import java.util.List;
+
+@ToString
 @NoArgsConstructor
-public class UploadFileRequestBody {
-  @NonNull
-  @Setter
+public class InitializeUploadResponse {
   @Getter
   @LinkedIn
-  private Long firstByte;
+  private Value value;
 
-  @NonNull
-  @Setter
-  @Getter
-  @LinkedIn
-  private Long lastByte;
+  @ToString
+  @NoArgsConstructor
+  public static class Value {
+    @Getter
+    @LinkedIn
+    private Long uploadUrlExpiresAt;
+    
+    @Getter
+    @LinkedIn
+    private URN video;
+    
+    @Getter
+    @LinkedIn
+    private String uploadToken;
+    
+    @Getter
+    @LinkedIn
+    private List<UploadInstruction> uploadInstructions;
+  }
+  
+  @ToString
+  @NoArgsConstructor
+  public static class UploadInstruction {
+    @Getter
+    @LinkedIn
+    private String uploadUrl;
+    
+    @Getter
+    @LinkedIn
+    private Long firstByte;
+    
+    @Getter
+    @LinkedIn
+    private Long lastByte;
+  }
 }

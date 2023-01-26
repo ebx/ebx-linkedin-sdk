@@ -38,9 +38,7 @@ public class PostTest extends DefaultJsonMapperTestBase {
     Post post = defaultJsonMapper.toJavaObject(json, Post.class);
     
     assertEquals(Post.LifecycleState.PUBLISHED, post.getLifecycleState());
-    assertEquals(1634790968775L, post.getLastModifiedAt().longValue());
     assertEquals(Post.Visibility.PUBLIC, post.getVisibility());
-    assertEquals(1634790968774L, post.getPublishedAt().longValue());
     assertEquals(new URN("urn:li:organization:5515715"), post.getAuthor());
     
     assertEquals(Distribution.FeedDistribution.NONE, post.getDistribution().getFeedDistribution());
@@ -49,10 +47,7 @@ public class PostTest extends DefaultJsonMapperTestBase {
     assertEquals(new URN("urn:li:video:C5F10AQGKQg_6y2a4sQ"),
         post.getContent().getMedia().getId());
     
-    assertFalse(post.getLifecycleStateInfo().isEditedByAuthor());
     assertFalse(post.getIsReshareDisabledByAuthor());
-    assertEquals(1634790968743L, post.getCreatedAt().longValue());
-    assertEquals(new URN("urn:li:share:6844785523593134080"), post.getId());
     assertEquals("comment on Oct 20", post.getCommentary());
     
     assertEquals(AdContext.Status.ACTIVE, post.getAdContext().getDscStatus());

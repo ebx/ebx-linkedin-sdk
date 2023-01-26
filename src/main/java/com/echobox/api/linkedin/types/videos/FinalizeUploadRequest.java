@@ -19,44 +19,57 @@ package com.echobox.api.linkedin.types.videos;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.urn.URN;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
-public class InitializeUpload {
+@ToString
+@RequiredArgsConstructor
+@NoArgsConstructor
+public class FinalizeUploadRequest {
+
+  @NonNull
+  @Setter
   @Getter
   @LinkedIn
-  private InitializeUploadValue value;
+  private RequestBody finalizeUploadRequest;
   
-  public static class InitializeUploadValue {
-    @Getter
-    @LinkedIn
-    private Long uploadUrlsExpiresAt;
-    
+  public FinalizeUploadRequest(URN videoURN, String uploadToken, List<String> uploadedPartIds) {
+    this(buildRequestBody(videoURN, uploadToken, uploadedPartIds));
+  }
+  
+  private static RequestBody buildRequestBody(URN videoURN, String uploadToken,
+      List<String> uploadedPartIds) {
+    return new RequestBody(videoURN, uploadToken, uploadedPartIds);
+  }
+  
+  @ToString
+  @RequiredArgsConstructor
+  @AllArgsConstructor
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
+  public static class RequestBody {
+    @NonNull
+    @Setter
     @Getter
     @LinkedIn
     private URN video;
-    
-    @Getter
-    @LinkedIn
-    private String uploadToken;
-    
-    @Getter
-    @LinkedIn
-    private List<UploadInstruction> uploadInstructions;
-  }
   
-  public static class UploadInstruction {
+    @Setter
     @Getter
     @LinkedIn
-    private String uploadUrl;
-    
+    private String uploadToken = "";
+  
+    @NonNull
+    @Setter
     @Getter
     @LinkedIn
-    private Long firstByte;
-    
-    @Getter
-    @LinkedIn
-    private Long lastByte;
+    private List<String> uploadedPartIds;
   }
 }

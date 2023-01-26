@@ -18,7 +18,6 @@
 package com.echobox.api.linkedin.types.posts;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.LinkedInURNIdType;
 import com.echobox.api.linkedin.types.urn.URN;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +33,7 @@ import lombok.Setter;
  */
 @RequiredArgsConstructor
 @NoArgsConstructor
-public class Post extends LinkedInURNIdType {
+public class Post {
   
   /**
    * Urn of the author of this content.
@@ -94,13 +93,13 @@ public class Post extends LinkedInURNIdType {
   @LinkedIn
   private ContentCallToActionLabel contentCallToActionLabel;
   
-  /**
-   * A timestamp corresponding to the creation of this resource.
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private Long createdAt;
+//  /**
+//   * A timestamp corresponding to the creation of this resource.
+//   */
+//  @Getter
+//  @Setter
+//  @LinkedIn
+//  private Long createdAt;
   
   /**
    * LinkedIn and external destinations where the post will be distributed.
@@ -111,13 +110,13 @@ public class Post extends LinkedInURNIdType {
   @LinkedIn
   private Distribution distribution;
   
-  /**
-   * ugcPostUrn or shareUrn
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private URN id;
+//  /**
+//   * ugcPostUrn or shareUrn
+//   */
+//  @Getter
+//  @Setter
+//  @LinkedIn
+//  private URN id;
   
   /**
    * The reshare state of this content
@@ -127,13 +126,13 @@ public class Post extends LinkedInURNIdType {
   @LinkedIn
   private Boolean isReshareDisabledByAuthor;
   
-  /**
-   * A timestamp corresponding to the last modification of this resource.
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private Long lastModifiedAt;
+//  /**
+//   * A timestamp corresponding to the last modification of this resource.
+//   */
+//  @Getter
+//  @Setter
+//  @LinkedIn
+//  private Long lastModifiedAt;
   
   /**
    * The state of this content
@@ -144,21 +143,21 @@ public class Post extends LinkedInURNIdType {
   @LinkedIn
   private LifecycleState lifecycleState;
   
-  /**
-   * The state info of this content
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private LifecycleStateInfo lifecycleStateInfo;
+//  /**
+//   * The state info of this content
+//   */
+//  @Getter
+//  @Setter
+//  @LinkedIn
+//  private LifecycleStateInfo lifecycleStateInfo;
   
-  /**
-   * A timestamp corresponding to the publication of this resource.
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  private Long publishedAt;
+//  /**
+//   * A timestamp corresponding to the publication of this resource.
+//   */
+//  @Getter
+//  @Setter
+//  @LinkedIn
+//  private Long publishedAt;
   
   /**
    * The context in which the post was re-shared.

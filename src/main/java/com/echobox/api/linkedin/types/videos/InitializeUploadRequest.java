@@ -28,13 +28,13 @@ import lombok.Setter;
 
 @RequiredArgsConstructor
 @NoArgsConstructor
-public class InitializeUploadRequestBody {
+public class InitializeUploadRequest {
 
   @NonNull
   @Setter
   @Getter
   @LinkedIn
-  private InitializeUploadRequest initializeUploadRequest;
+  private RequestBody initializeUploadRequest;
   
   /**
    * InitializeUploadRequest object
@@ -42,7 +42,7 @@ public class InitializeUploadRequestBody {
    */
   @RequiredArgsConstructor
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
-  public static class InitializeUploadRequest {
+  public static class RequestBody {
     
     /**
      * The URN of the entity that owns this asset
@@ -57,15 +57,5 @@ public class InitializeUploadRequestBody {
     @Getter
     @LinkedIn
     private Long fileSizeBytes;
-  
-    @Setter
-    @Getter
-    @LinkedIn
-    private boolean uploadCaptions;
-  
-    @Setter
-    @Getter
-    @LinkedIn
-    private boolean uploadThumbnail;
   }
 }

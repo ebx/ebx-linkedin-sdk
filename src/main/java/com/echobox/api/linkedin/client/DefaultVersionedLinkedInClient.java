@@ -118,7 +118,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   /**
    * Request header to put API version
    */
-  private static final String HEADER_NAME_VERSION = "Linkedin-Version";
+  public static final String HEADER_NAME_VERSION = "Linkedin-Version";
 
   /**
    * Default LinkedIn-version header
@@ -327,6 +327,10 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
       this.defaultHeaders = new HashMap<>();
       this.defaultHeaders.put(HEADER_NAME_VERSION, versionedMonth);
     }
+  }
+  
+  public Map<String, String> getHeaders() {
+    return defaultHeaders;
   }
   
   @Override
