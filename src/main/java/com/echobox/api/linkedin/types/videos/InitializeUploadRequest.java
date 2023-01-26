@@ -26,6 +26,11 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Register Upload Request body
+ * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/videos-api#initialize-video-upload">Initialize a Video Upload</a>
+ * @author sergio
+ */
 @RequiredArgsConstructor
 @NoArgsConstructor
 public class InitializeUploadRequest {
@@ -37,8 +42,8 @@ public class InitializeUploadRequest {
   private RequestBody initializeUploadRequest;
   
   /**
-   * InitializeUploadRequest object
-   * @author Sergio Abplanalp
+   * RequestBody object
+   * @author sergio
    */
   @RequiredArgsConstructor
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -53,6 +58,9 @@ public class InitializeUploadRequest {
     @LinkedIn
     private URN owner;
   
+    /**
+     * File size in bytes
+     */
     @Setter
     @Getter
     @LinkedIn

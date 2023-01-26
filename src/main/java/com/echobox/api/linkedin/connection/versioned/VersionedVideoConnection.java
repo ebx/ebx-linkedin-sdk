@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,9 +75,12 @@ public class VersionedVideoConnection extends VersionedConnection {
   
   public URN uploadVideo(InitializeUploadRequest initializeUploadRequest, String filePath)
       throws IOException {
-    
-    ValidationUtils.validateVideoFile(Paths.get(filePath));
-    
+  
+    Path videoFilePath = Paths.get(filePath);
+    long fileSizeBytes = Files.size(videoFilePath);
+    ValidationUtils.validateVideoFile(fileSizeBytes);
+  
+    initializeUploadRequest.getInitializeUploadRequest().setFileSizeBytes(fileSizeBytes);
     InitializeUploadResponse initializeUploadResponse = initializeUpload(initializeUploadRequest);
     InitializeUploadResponse.Value value = initializeUploadResponse.getValue();
     

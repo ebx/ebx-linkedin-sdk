@@ -25,8 +25,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Map;
 
 /**
@@ -113,8 +111,7 @@ public class ValidationUtils {
     }
   }
   
-  public static void validateVideoFile(Path filePath) throws IOException {
-    long fileSize = Files.size(filePath);
+  public static void validateVideoFile(long fileSize) throws IOException {
     if (fileSize > Integer.MAX_VALUE) {
       throw new IllegalArgumentException(String.format("The maximum video file size is %s bytes.",
           Integer.MAX_VALUE));

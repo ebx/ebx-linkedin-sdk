@@ -26,11 +26,14 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.List;
 
-@ToString
+/**
+ * Finalize Video Upload
+ * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/videos-api#finalize-video-upload">Finalize Video Upload</a>
+ * @author sergio
+ */
 @RequiredArgsConstructor
 @NoArgsConstructor
 public class FinalizeUploadRequest {
@@ -41,31 +44,59 @@ public class FinalizeUploadRequest {
   @LinkedIn
   private RequestBody finalizeUploadRequest;
   
+  /**
+   * Instantiates a new LinkedIn upload request.
+   *
+   * @param videoURN video URN that the uploaded Video is associated with
+   * @param uploadToken identifier for an upload session
+   * @param uploadedPartIds IDs for each uploaded video part in the multipart upload
+   */
   public FinalizeUploadRequest(URN videoURN, String uploadToken, List<String> uploadedPartIds) {
     this(buildRequestBody(videoURN, uploadToken, uploadedPartIds));
   }
   
+  /**
+   * Returns a new request body for the upload request.
+   *
+   * @param videoURN video URN that the uploaded Video is associated with
+   * @param uploadToken identifier for an upload session
+   * @param uploadedPartIds IDs for each uploaded video part in the multipart upload
+   * @return a new instance of the request body
+   */
   private static RequestBody buildRequestBody(URN videoURN, String uploadToken,
       List<String> uploadedPartIds) {
     return new RequestBody(videoURN, uploadToken, uploadedPartIds);
   }
   
-  @ToString
+  /**
+   * RequestBody object
+   * @author sergio
+   */
   @RequiredArgsConstructor
   @AllArgsConstructor
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static class RequestBody {
+
+    /**
+     * Video URN that the uploaded Video is associated with
+     */
     @NonNull
     @Setter
     @Getter
     @LinkedIn
     private URN video;
   
+    /**
+     * Identifier for an upload session
+     */
     @Setter
     @Getter
     @LinkedIn
     private String uploadToken = "";
   
+    /**
+     * IDs for each uploaded video part in the multipart upload
+     */
     @NonNull
     @Setter
     @Getter
