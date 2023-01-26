@@ -24,7 +24,6 @@ import com.echobox.api.linkedin.exception.LinkedInResponseException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -111,8 +110,13 @@ public class ValidationUtils {
     }
   }
   
-  public static void validateVideoFile(long fileSize) throws IOException {
-    if (fileSize > Integer.MAX_VALUE) {
+  /**
+   * Validate video files
+   *
+   * @param fileSizeBytes size of the video file in bytes
+   */
+  public static void validateVideoFile(long fileSizeBytes) {
+    if (fileSizeBytes > Integer.MAX_VALUE) {
       throw new IllegalArgumentException(String.format("The maximum video file size is %s bytes.",
           Integer.MAX_VALUE));
     }
