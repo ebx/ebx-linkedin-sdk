@@ -323,14 +323,8 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
     this.apiVersion = apiVersion;
     this.linkedinExceptionMapper = linkedinExceptionMapper;
     this.versionedMonth = versionedMonth;
-    if (this.defaultHeaders == null) {
-      this.defaultHeaders = new HashMap<>();
-      this.defaultHeaders.put(HEADER_NAME_VERSION, versionedMonth);
-    }
-  }
-  
-  public Map<String, String> getHeaders() {
-    return defaultHeaders;
+    this.defaultHeaders = new HashMap<>();
+    this.defaultHeaders.put(HEADER_NAME_VERSION, versionedMonth);
   }
   
   @Override
