@@ -120,7 +120,7 @@ public class VersionedVideoConnection extends VersionedConnection {
     
     Map<String, String> requestHeaders = new HashMap<>();
     requestHeaders.put(DefaultVersionedLinkedInClient.HEADER_NAME_VERSION,
-        DefaultVersionedLinkedInClient.DEFAULT_VERSIONED_MONTH);
+        linkedinClient.getVersionedMonth());
     
     byte[] chunkBytes = Arrays.copyOfRange(fileBytes,
         Math.toIntExact(instruction.getFirstByte()),
