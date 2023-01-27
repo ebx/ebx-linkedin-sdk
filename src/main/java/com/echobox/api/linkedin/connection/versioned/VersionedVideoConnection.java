@@ -88,7 +88,7 @@ public class VersionedVideoConnection extends VersionedConnection {
     
     FinalizeUploadRequest finalizeUploadRequest =
         new FinalizeUploadRequest(value.getVideo(), value.getUploadToken(), uploadedPartIds);
-    finalizeUploadProd(finalizeUploadRequest);
+    finalizeUpload(finalizeUploadRequest);
     
     return value.getVideo();
   }
@@ -137,7 +137,7 @@ public class VersionedVideoConnection extends VersionedConnection {
     return responseHeaders.get(HEADER_ETAG);
   }
   
-  public void finalizeUploadProd(FinalizeUploadRequest finalizeUploadRequest) {
+  public void finalizeUpload(FinalizeUploadRequest finalizeUploadRequest) {
     linkedinClient.publish(VIDEOS, finalizeUploadRequest,
         Parameter.with(ACTION_KEY, FINALIZE_UPLOAD));
   }
