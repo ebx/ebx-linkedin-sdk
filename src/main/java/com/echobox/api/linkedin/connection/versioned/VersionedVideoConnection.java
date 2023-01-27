@@ -22,6 +22,7 @@ import com.echobox.api.linkedin.client.DefaultVersionedLinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.VersionedLinkedInClient;
 import com.echobox.api.linkedin.client.WebRequestor;
+import com.echobox.api.linkedin.exception.LinkedInResponseException;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.videos.FinalizeUploadRequest;
 import com.echobox.api.linkedin.types.videos.InitializeUploadRequest;
@@ -32,6 +33,7 @@ import org.apache.http.entity.ContentType;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -128,13 +130,21 @@ public class VersionedVideoConnection extends VersionedConnection {
     BinaryAttachment attachment = BinaryAttachment.with(filePath, chunkBytes,
         ContentType.APPLICATION_OCTET_STREAM.toString());
     
-    URL url = new URL(instruction.getUploadUrl());
+    URL url = extractUploadURL(instruction.getUploadUrl());
     WebRequestor.Response response =
         webRequestor.executePut(url.toString(), null, null, requestHeaders, attachment);
     Map<String, String> responseHeaders = response.getHeaders();
     ValidationUtils.validateRequiredResponseHeader(responseHeaders, HEADER_ETAG);
     
     return responseHeaders.get(HEADER_ETAG);
+  }
+  
+  private URL extractUploadURL(String url) {
+    try {
+      return new URL(url);
+    } catch (MalformedURLException e) {
+      throw new LinkedInResponseException("Invalid upload url returned from LinkedIn.", e);
+    }
   }
   
   public void finalizeUpload(FinalizeUploadRequest finalizeUploadRequest) {
