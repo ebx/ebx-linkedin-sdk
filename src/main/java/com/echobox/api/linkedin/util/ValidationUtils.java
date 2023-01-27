@@ -115,7 +115,7 @@ public class ValidationUtils {
    *
    * @param fileSizeBytes size of the video file in bytes
    */
-  public static void validateVideoFile(long fileSizeBytes) {
+  public static void validateVideoFileSize(long fileSizeBytes) {
     if (fileSizeBytes > Integer.MAX_VALUE) {
       throw new IllegalArgumentException(String.format("The maximum video file size is %s bytes.",
           Integer.MAX_VALUE));

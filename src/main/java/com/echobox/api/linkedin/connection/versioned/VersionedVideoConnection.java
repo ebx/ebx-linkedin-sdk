@@ -80,7 +80,7 @@ public class VersionedVideoConnection extends VersionedConnection {
   
     Path videoFilePath = Paths.get(filePath);
     long fileSizeBytes = Files.size(videoFilePath);
-    ValidationUtils.validateVideoFile(fileSizeBytes);
+    ValidationUtils.validateVideoFileSize(fileSizeBytes);
   
     initializeUploadRequest.getInitializeUploadRequest().setFileSizeBytes(fileSizeBytes);
     InitializeUploadResponse initializeUploadResponse = initializeUpload(initializeUploadRequest);
