@@ -146,7 +146,7 @@ can get data for both organization and organization brand pages.
 * Support LinkedIn Versioning API
 * Deprecated V2 connection classes
 
-## 4.0.1 (Jan 30, 2023)
+## 4.1.0 (Jan 30, 2023)
 * Better support for non-default versioned month
 * Add boolean support to JsonUtils
 * Add support for video
