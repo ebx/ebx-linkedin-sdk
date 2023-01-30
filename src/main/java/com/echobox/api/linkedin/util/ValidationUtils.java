@@ -33,6 +33,12 @@ import java.util.Map;
  */
 public class ValidationUtils {
   
+  /**
+   * Video file byte arrays are chunked by specifying the start and end bytes of type {@code int}.
+   * To prevent a XException, file sizes are limited to the integer's max value, which allows for
+   * file sizes of ~2GB.
+   */
+  private static final int MAX_VIDEO_FILE_SIZE_LIMIT = Integer.MAX_VALUE;
 
   /**
    * Ensures that {@code parameter} isn't {@code null} or an empty string.
@@ -115,10 +121,14 @@ public class ValidationUtils {
    *
    * @param fileSizeBytes size of the video file in bytes
    */
-  public static void validateVideoFileSize(long fileSizeBytes) {
-    if (fileSizeBytes > Integer.MAX_VALUE) {
+  public static void validateVideoFileSize(Long fileSizeBytes) {
+    if (fileSizeBytes == null) {
+      throw new IllegalArgumentException("fileSizeBytes is a required field.");
+    }
+
+    if (fileSizeBytes > MAX_VIDEO_FILE_SIZE_LIMIT) {
       throw new IllegalArgumentException(String.format("The maximum video file size is %s bytes.",
-          Integer.MAX_VALUE));
+          MAX_VIDEO_FILE_SIZE_LIMIT));
     }
   }
 }

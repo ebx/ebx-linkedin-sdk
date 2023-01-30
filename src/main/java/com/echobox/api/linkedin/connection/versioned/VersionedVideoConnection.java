@@ -80,7 +80,6 @@ public class VersionedVideoConnection extends VersionedConnection {
   
     Path videoFilePath = Paths.get(filePath);
     long fileSizeBytes = Files.size(videoFilePath);
-    ValidationUtils.validateVideoFileSize(fileSizeBytes);
   
     initializeUploadRequest.getInitializeUploadRequest().setFileSizeBytes(fileSizeBytes);
     InitializeUploadResponse initializeUploadResponse = initializeUpload(initializeUploadRequest);
@@ -97,6 +96,8 @@ public class VersionedVideoConnection extends VersionedConnection {
   
   public InitializeUploadResponse initializeUpload(
       InitializeUploadRequest initializeUploadRequest) {
+    ValidationUtils.validateVideoFileSize(
+        initializeUploadRequest.getInitializeUploadRequest().getFileSizeBytes());
     return linkedinClient.publish(VIDEOS, InitializeUploadResponse.class, initializeUploadRequest,
         Parameter.with(ACTION_KEY, INITIALIZE_UPLOAD));
   }
