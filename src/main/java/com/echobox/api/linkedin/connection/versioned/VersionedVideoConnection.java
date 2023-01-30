@@ -22,6 +22,7 @@ import com.echobox.api.linkedin.client.DefaultVersionedLinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.VersionedLinkedInClient;
 import com.echobox.api.linkedin.client.WebRequestor;
+import com.echobox.api.linkedin.exception.LinkedInResponseException;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.videos.FinalizeUploadRequest;
 import com.echobox.api.linkedin.types.videos.InitializeUploadRequest;
@@ -32,6 +33,7 @@ import org.apache.http.entity.ContentType;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -78,7 +80,6 @@ public class VersionedVideoConnection extends VersionedConnection {
   
     Path videoFilePath = Paths.get(filePath);
     long fileSizeBytes = Files.size(videoFilePath);
-    ValidationUtils.validateVideoFile(fileSizeBytes);
   
     initializeUploadRequest.getInitializeUploadRequest().setFileSizeBytes(fileSizeBytes);
     InitializeUploadResponse initializeUploadResponse = initializeUpload(initializeUploadRequest);
@@ -88,13 +89,15 @@ public class VersionedVideoConnection extends VersionedConnection {
     
     FinalizeUploadRequest finalizeUploadRequest =
         new FinalizeUploadRequest(value.getVideo(), value.getUploadToken(), uploadedPartIds);
-    finalizeUploadProd(finalizeUploadRequest);
+    finalizeUpload(finalizeUploadRequest);
     
     return value.getVideo();
   }
   
   public InitializeUploadResponse initializeUpload(
       InitializeUploadRequest initializeUploadRequest) {
+    ValidationUtils.validateVideoFileSize(
+        initializeUploadRequest.getInitializeUploadRequest().getFileSizeBytes());
     return linkedinClient.publish(VIDEOS, InitializeUploadResponse.class, initializeUploadRequest,
         Parameter.with(ACTION_KEY, INITIALIZE_UPLOAD));
   }
@@ -120,7 +123,7 @@ public class VersionedVideoConnection extends VersionedConnection {
     
     Map<String, String> requestHeaders = new HashMap<>();
     requestHeaders.put(DefaultVersionedLinkedInClient.HEADER_NAME_VERSION,
-        DefaultVersionedLinkedInClient.DEFAULT_VERSIONED_MONTH);
+        linkedinClient.getVersionedMonth());
     
     byte[] chunkBytes = Arrays.copyOfRange(fileBytes,
         Math.toIntExact(instruction.getFirstByte()),
@@ -128,7 +131,7 @@ public class VersionedVideoConnection extends VersionedConnection {
     BinaryAttachment attachment = BinaryAttachment.with(filePath, chunkBytes,
         ContentType.APPLICATION_OCTET_STREAM.toString());
     
-    URL url = new URL(instruction.getUploadUrl());
+    URL url = extractUploadURL(instruction.getUploadUrl());
     WebRequestor.Response response =
         webRequestor.executePut(url.toString(), null, null, requestHeaders, attachment);
     Map<String, String> responseHeaders = response.getHeaders();
@@ -137,7 +140,15 @@ public class VersionedVideoConnection extends VersionedConnection {
     return responseHeaders.get(HEADER_ETAG);
   }
   
-  public void finalizeUploadProd(FinalizeUploadRequest finalizeUploadRequest) {
+  private URL extractUploadURL(String url) {
+    try {
+      return new URL(url);
+    } catch (MalformedURLException e) {
+      throw new LinkedInResponseException("Invalid upload url returned from LinkedIn.", e);
+    }
+  }
+  
+  public void finalizeUpload(FinalizeUploadRequest finalizeUploadRequest) {
     linkedinClient.publish(VIDEOS, finalizeUploadRequest,
         Parameter.with(ACTION_KEY, FINALIZE_UPLOAD));
   }

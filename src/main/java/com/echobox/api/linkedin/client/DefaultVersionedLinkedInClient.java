@@ -497,6 +497,11 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   }
   
   @Override
+  public String getVersionedMonth() {
+    return versionedMonth == null ? DEFAULT_VERSIONED_MONTH : versionedMonth;
+  }
+  
+  @Override
   protected String createEndpointForApiCall(String apiCall, boolean hasAttachment) {
     while (apiCall.startsWith("/")) {
       apiCall = apiCall.substring(1);
