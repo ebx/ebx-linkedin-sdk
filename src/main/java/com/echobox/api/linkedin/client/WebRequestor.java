@@ -134,15 +134,15 @@ public interface WebRequestor {
    * 
    * @param url
    *          The URL to {@code POST} to.
-   * @param jsonBody
-   *          The POST JSON body
    * @param parameters
    *          The parameters to be {@code POST}ed.
+   * @param jsonBody
+   *          The POST JSON body
    * @return HTTP response data.
    * @throws IOException
    *           If an error occurs while performing the {@code POST}.
    */
-  Response executePost(String url, String jsonBody, String parameters) throws IOException;
+  Response executePost(String url, String parameters, String jsonBody) throws IOException;
 
   /**
    * Given a LinkedIn API endpoint URL and parameter string, execute a {@code POST} to the endpoint

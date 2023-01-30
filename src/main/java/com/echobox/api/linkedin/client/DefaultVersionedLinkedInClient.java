@@ -118,7 +118,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   /**
    * Request header to put API version
    */
-  private static final String HEADER_NAME_VERSION = "Linkedin-Version";
+  public static final String HEADER_NAME_VERSION = "Linkedin-Version";
 
   /**
    * Default LinkedIn-version header
@@ -323,10 +323,8 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
     this.apiVersion = apiVersion;
     this.linkedinExceptionMapper = linkedinExceptionMapper;
     this.versionedMonth = versionedMonth;
-    if (this.defaultHeaders == null) {
-      this.defaultHeaders = new HashMap<>();
-      this.defaultHeaders.put(HEADER_NAME_VERSION, versionedMonth);
-    }
+    this.defaultHeaders = new HashMap<>();
+    this.defaultHeaders.put(HEADER_NAME_VERSION, versionedMonth);
   }
   
   @Override
@@ -496,6 +494,11 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   @Override
   public WebRequestor getWebRequestor() {
     return webRequestor;
+  }
+  
+  @Override
+  public String getVersionedMonth() {
+    return versionedMonth == null ? DEFAULT_VERSIONED_MONTH : versionedMonth;
   }
   
   @Override

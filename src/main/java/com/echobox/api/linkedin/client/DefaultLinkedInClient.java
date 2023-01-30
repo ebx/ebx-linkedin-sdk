@@ -396,7 +396,13 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   public WebRequestor getWebRequestor() {
     return webRequestor;
   }
-
+  
+  @Override
+  public String getVersionedMonth() {
+    throw new UnsupportedOperationException("Versioned month is not applicable for older LinkedIn"
+        + " API implementations.");
+  }
+  
   @Override
   protected String createEndpointForApiCall(String apiCall, boolean hasAttachment) {
     while (apiCall.startsWith("/")) {
