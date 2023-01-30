@@ -35,8 +35,8 @@ public class ValidationUtils {
   
   /**
    * Video file byte arrays are chunked by specifying the start and end bytes of type {@code int}.
-   * To prevent a XException, file sizes are limited to the integer's max value, which allows for
-   * file sizes of ~2GB.
+   * To prevent an ArithmeticException, file sizes are limited to the integer's max value, which
+   * allows for file sizes of ~2GB.
    */
   private static final int MAX_VIDEO_FILE_SIZE_LIMIT = Integer.MAX_VALUE;
 
