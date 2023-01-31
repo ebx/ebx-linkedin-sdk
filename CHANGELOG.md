@@ -150,3 +150,5 @@ can get data for both organization and organization brand pages.
 * Better support for non-default versioned month
 * Add boolean support to JsonUtils
 * Add support for video
+
+## 4.1.1 (Work in progress)
