@@ -20,8 +20,11 @@ package com.echobox.api.linkedin.util;
 import com.echobox.api.linkedin.client.WebRequestor;
 import com.echobox.api.linkedin.exception.LinkedInNetworkException;
 import com.echobox.api.linkedin.exception.LinkedInOAuthException;
+import com.echobox.api.linkedin.exception.LinkedInResponseException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
+
+import java.util.Map;
 
 /**
  * Valiation utility class
@@ -30,6 +33,12 @@ import org.apache.http.HttpStatus;
  */
 public class ValidationUtils {
   
+  /**
+   * Video file byte arrays are chunked by specifying the start and end bytes of type {@code int}.
+   * To prevent an ArithmeticException, file sizes are limited to the integer's max value, which
+   * allows for file sizes of ~2GB.
+   */
+  private static final int MAX_VIDEO_FILE_SIZE_LIMIT = Integer.MAX_VALUE;
 
   /**
    * Ensures that {@code parameter} isn't {@code null} or an empty string.
@@ -86,6 +95,40 @@ public class ValidationUtils {
     if (HttpStatus.SC_OK != response.getStatusCode()
         && HttpStatus.SC_CREATED != response.getStatusCode()) {
       throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
+    }
+  }
+  
+  /**
+   * Validate that the response contains the required header.
+   *
+   * @param headers map of headers from the response
+   * @param header the header to check exists
+   */
+  public static void validateRequiredResponseHeader(Map<String, String> headers, String header) {
+    if (headers == null || headers.isEmpty()) {
+      throw new LinkedInResponseException("No headers were found on the response.");
+    }
+  
+    String headerResponse = headers.get(header);
+    if (headerResponse == null) {
+      throw new LinkedInResponseException(String.format("The header [%s] is missing from the "
+          + "response.", header));
+    }
+  }
+  
+  /**
+   * Validate video files
+   *
+   * @param fileSizeBytes size of the video file in bytes
+   */
+  public static void validateVideoFileSize(Long fileSizeBytes) {
+    if (fileSizeBytes == null) {
+      throw new IllegalArgumentException("fileSizeBytes is a required field.");
+    }
+
+    if (fileSizeBytes > MAX_VIDEO_FILE_SIZE_LIMIT) {
+      throw new IllegalArgumentException(String.format("The maximum video file size is %s bytes.",
+          MAX_VIDEO_FILE_SIZE_LIMIT));
     }
   }
 }

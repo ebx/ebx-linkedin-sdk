@@ -99,6 +99,20 @@ public interface LinkedInClient {
    *          data.
    */
   <T> Connection<T> fetchConnectionPage(String connectionPageUrl, Class<T> connectionType);
+  
+  /**
+   * Performs a LinkedIn API publish operation on the given {@code connection}.
+   *
+   * @param connection
+   *          The Connection to publish to.
+   * @param jsonBody
+   *          The json body to publish.
+   * @param parameters
+   *          URL parameters to include in the API call.
+   * @return The WebRequestor response
+   */
+  WebRequestor.Response put(String connection, Object jsonBody,
+      BinaryAttachment binaryAttachment, Parameter... parameters);
 
   /**
    * Performs a LinkedIn API publish operation on the given {@code connection}.
@@ -236,6 +250,13 @@ public interface LinkedInClient {
    * @return The {@code WebRequestor} used to talk to the LinkedIn API endpoints.
    */
   WebRequestor getWebRequestor();
+  
+  /**
+   * Gets the versionedMonth used as a header for the versioned LinkedIn API endpoints.
+   *
+   * @return The versioned month used as a header for the versioned LinkedIn API endpoints.
+   */
+  String getVersionedMonth();
 
   /**
    * Represents an access token/expiration date pair.

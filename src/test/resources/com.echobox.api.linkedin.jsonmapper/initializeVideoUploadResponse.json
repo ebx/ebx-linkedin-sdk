@@ -1,0 +1,19 @@
+{
+  "value": {
+    "uploadUrlExpiresAt": "1222398767",
+    "video": "urn:li:video:C4E10AQFoyyAjHPMQuQ",
+    "uploadToken": "cbR43NsIOs",
+    "uploadInstructions": [
+      {
+        "uploadUrl": "https://linkedin.com/upload/chunk/one",
+        "firstByte": 0,
+        "lastByte": 12345
+      },
+      {
+        "uploadUrl": "https://linkedin.com/upload/chunk/two",
+        "firstByte": 12346,
+        "lastByte": 73132
+      }
+    ]
+  }
+}

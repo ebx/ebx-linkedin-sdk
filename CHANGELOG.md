@@ -145,3 +145,8 @@ can get data for both organization and organization brand pages.
 * Bump google-api-client from 2.0.0 to 2.1.1
 * Support LinkedIn Versioning API
 * Deprecated V2 connection classes
+
+## 4.1.0 (Jan 30, 2023)
+* Better support for non-default versioned month
+* Add boolean support to JsonUtils
+* Add support for video

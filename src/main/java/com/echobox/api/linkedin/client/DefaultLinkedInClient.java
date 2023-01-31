@@ -281,6 +281,12 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   }
 
   @Override
+  public Response put(String connection, Object jsonBody,
+      BinaryAttachment binaryAttachment, Parameter... parameters) {
+    throw new UnsupportedOperationException();
+  }
+  
+  @Override
   public WebRequestor.Response publish(String connection, Object jsonBody,
       Parameter... parameters) {
     throw new UnsupportedOperationException();
@@ -390,7 +396,13 @@ public class DefaultLinkedInClient extends BaseLinkedInClient implements LinkedI
   public WebRequestor getWebRequestor() {
     return webRequestor;
   }
-
+  
+  @Override
+  public String getVersionedMonth() {
+    throw new UnsupportedOperationException("Versioned month is not applicable for older LinkedIn"
+        + " API implementations.");
+  }
+  
   @Override
   protected String createEndpointForApiCall(String apiCall, boolean hasAttachment) {
     while (apiCall.startsWith("/")) {

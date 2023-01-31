@@ -17,18 +17,13 @@
 
 package com.echobox.api.linkedin.client;
 
-import com.echobox.api.linkedin.exception.LinkedInAPIException;
+import com.echobox.api.linkedin.exception.DefaultLinkedInExceptionMapper;
 import com.echobox.api.linkedin.exception.LinkedInAccessTokenException;
 import com.echobox.api.linkedin.exception.LinkedInException;
 import com.echobox.api.linkedin.exception.LinkedInExceptionMapper;
-import com.echobox.api.linkedin.exception.LinkedInGatewayTimeoutException;
-import com.echobox.api.linkedin.exception.LinkedInInteralServerException;
 import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
 import com.echobox.api.linkedin.exception.LinkedInNetworkException;
 import com.echobox.api.linkedin.exception.LinkedInOAuthException;
-import com.echobox.api.linkedin.exception.LinkedInQueryParseException;
-import com.echobox.api.linkedin.exception.LinkedInRateLimitException;
-import com.echobox.api.linkedin.exception.LinkedInResourceNotFoundException;
 import com.echobox.api.linkedin.exception.ResponseErrorJsonParsingException;
 import com.echobox.api.linkedin.jsonmapper.DefaultJsonMapper;
 import com.echobox.api.linkedin.jsonmapper.JsonMapper;
@@ -123,7 +118,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   /**
    * Request header to put API version
    */
-  private static final String HEADER_NAME_VERSION = "Linkedin-Version";
+  public static final String HEADER_NAME_VERSION = "Linkedin-Version";
 
   /**
    * Default LinkedIn-version header
@@ -194,7 +189,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   }
   
   /**
-   * Creates a LinkedIn API client with the given {@code accessToken}.
+   * Creates a LinkedIn API client with the given {@code accessToken} and {@code apiVersion}
    *
    * @param accessToken
    *          A LinkedIn OAuth access token.
@@ -221,7 +216,28 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   }
   
   /**
-   * Creates a LinkedIn API client with the given {@code accessToken}.
+   * Creates a LinkedIn API client with the given {@code accessToken}, {@code apiVersion}
+   *   and {@code versionedMonth}
+   *
+   * @param accessToken
+   *          A LinkedIn OAuth access token.
+   * @param apiVersion
+   *          Version of the API endpoint
+   * @param versionedMonth
+   *          LinkedIn-version of the API (in format YYYYMM)
+   * @throws GeneralSecurityException
+   *          If the DefaultWebRequestor fails to initialise
+   * @throws IOException
+   *          If the DefaultWebRequestor fails to initialise
+   */
+  public DefaultVersionedLinkedInClient(String accessToken, Version apiVersion,
+      String versionedMonth) throws GeneralSecurityException, IOException {
+    this(new DefaultWebRequestor(accessToken), new DefaultJsonMapper(),
+        apiVersion, versionedMonth);
+  }
+  
+  /**
+   * Creates a LinkedIn API client
    *
    * @param webRequestor
    *          The {@link WebRequestor} implementation to use for sending requests to the API
@@ -239,7 +255,28 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   }
   
   /**
-   * Creates a LinkedIn API client with the given {@code accessToken}.
+   * Creates a LinkedIn API client
+   *
+   * @param webRequestor
+   *          The {@link WebRequestor} implementation to use for sending requests to the API
+   *          endpoint.
+   * @param jsonMapper
+   *          The {@link JsonMapper} implementation to use for mapping API response JSON to Java
+   *          objects.
+   * @param apiVersion
+   *          Version of the API endpoint
+   * @param versionedMonth
+   *          LinkedIn-version of the API (in format YYYYMM)
+   */
+  public DefaultVersionedLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper,
+      Version apiVersion, String versionedMonth) {
+    this(webRequestor, jsonMapper, apiVersion, new DefaultLinkedInExceptionMapper(),
+        versionedMonth);
+    ValidationUtils.verifyParameterPresence("webRequestor", webRequestor);
+  }
+  
+  /**
+   * Creates a LinkedIn API client
    *
    * @param webRequestor
    *          The {@link WebRequestor} implementation to use for sending requests to the API
@@ -258,7 +295,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   }
   
   /**
-   * Creates a LinkedIn API client with the given {@code accessToken}.
+   * Creates a LinkedIn API client
    *
    * @param webRequestor
    *          The {@link WebRequestor} implementation to use for sending requests to the API
@@ -271,7 +308,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    * @param linkedinExceptionMapper
    *          Mapper class to handle LinkedIn exceptions
    * @param versionedMonth
-   *          LinkedIn-version of the API
+   *          LinkedIn-version of the API (in format YYYYMM)
    */
   public DefaultVersionedLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper,
       Version apiVersion, LinkedInExceptionMapper linkedinExceptionMapper,
@@ -286,10 +323,8 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
     this.apiVersion = apiVersion;
     this.linkedinExceptionMapper = linkedinExceptionMapper;
     this.versionedMonth = versionedMonth;
-    if (this.defaultHeaders == null) {
-      this.defaultHeaders = new HashMap<>();
-      this.defaultHeaders.put(HEADER_NAME_VERSION, versionedMonth);
-    }
+    this.defaultHeaders = new HashMap<>();
+    this.defaultHeaders.put(HEADER_NAME_VERSION, versionedMonth);
   }
   
   @Override
@@ -335,10 +370,21 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   }
   
   @Override
+  public WebRequestor.Response put(String connection, Object jsonBody,
+      BinaryAttachment binaryAttachment, Parameter... parameters) {
+
+    List<BinaryAttachment> attachments = new ArrayList<>();
+    if (binaryAttachment != null) {
+      attachments.add(binaryAttachment);
+    }
+  
+    return makeRequest(connection, RequestType.PUT, jsonBody, attachments, parameters);
+  }
+  
+  @Override
   public WebRequestor.Response publish(String connection, Object jsonBody,
       Parameter... parameters) {
-    return makeRequest(connection, true, false, jsonBody,
-        new ArrayList<>(), parameters);
+    return makeRequest(connection, RequestType.POST, jsonBody, new ArrayList<>(), parameters);
   }
   
   @Override
@@ -351,7 +397,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   public <T> T publish(String connection, Class<T> objectType, Object jsonBody,
       List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
     
-    WebRequestor.Response response = makeRequest(connection, true, false, jsonBody,
+    WebRequestor.Response response = makeRequest(connection, RequestType.POST, jsonBody,
         binaryAttachments, parameters);
     return jsonMapper.toJavaObject(response.getBody(), objectType);
   }
@@ -372,7 +418,8 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   public boolean deleteObject(String object, Parameter... parameters) {
     ValidationUtils.verifyParameterPresence("object", object);
     
-    WebRequestor.Response response = makeRequest(object, false, true, null, null, parameters);
+    WebRequestor.Response response = makeRequest(object, RequestType.DELETE,
+        null, null, parameters);
     String responseBody = response.getBody();
   
     try {
@@ -411,9 +458,8 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
       headers.put("Content-Type", "application/x-www-form-urlencoded");
       
       final WebRequestor.Response response = makeRequestFull(ENDPOINT_ACCESS_TOKEN,
-          true, false, null,
-          headers, Collections.emptyList(), Parameter.with(GRANT_TYPE_PARAM_NAME,
-              "authorization_code"),
+          RequestType.POST, null, headers, Collections.emptyList(),
+          Parameter.with(GRANT_TYPE_PARAM_NAME, "authorization_code"),
           Parameter.with(CODE_PARAM_NAME, verificationCode),
           Parameter.with(REDIRECT_URI_PARAM_NAME, redirectUri),
           Parameter.with(CLIENT_ID_PARAM_NAME, appId),
@@ -448,6 +494,11 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   @Override
   public WebRequestor getWebRequestor() {
     return webRequestor;
+  }
+  
+  @Override
+  public String getVersionedMonth() {
+    return versionedMonth == null ? DEFAULT_VERSIONED_MONTH : versionedMonth;
   }
   
   @Override
@@ -496,7 +547,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    *           If an error occurs while making the LinkedIn API POST or processing the response.
    */
   protected WebRequestor.Response makeRequest(String endpoint, Parameter... parameters) {
-    return makeRequest(endpoint, false, false, null, null, parameters);
+    return makeRequest(endpoint, RequestType.GET, null, null, parameters);
   }
   
   /**
@@ -506,11 +557,8 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    *
    * @param endpoint
    *          LinkedIn Graph API endpoint.
-   * @param executeAsPost
-   *          {@code true} to execute the web request as a {@code POST}, {@code false} to execute
-   *          as a {@code GET}.
-   * @param executeAsDelete
-   *          {@code true} to add a special 'treat this request as a {@code DELETE}' parameter.
+   * @param requestType
+   *          the web request type to execute.
    * @param jsonBody
    *          Post JSON body
    * @param binaryAttachments
@@ -522,9 +570,8 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    * @throws LinkedInException
    *           If an error occurs while making the LinkedIn API POST or processing the response.
    */
-  protected WebRequestor.Response makeRequest(String endpoint, final boolean executeAsPost,
-      final boolean executeAsDelete, Object jsonBody,
-      final List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
+  protected WebRequestor.Response makeRequest(String endpoint, RequestType requestType,
+      Object jsonBody, final List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
     
     if (!endpoint.startsWith("/")) {
       endpoint = "/" + endpoint;
@@ -533,7 +580,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
     final String fullEndpoint = createEndpointForApiCall(endpoint,
         binaryAttachments != null && !binaryAttachments.isEmpty());
 
-    return makeRequestFull(fullEndpoint, executeAsPost, executeAsDelete, jsonBody,
+    return makeRequestFull(fullEndpoint, requestType, jsonBody,
         defaultHeaders, binaryAttachments, parameters);
   }
   
@@ -544,11 +591,8 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    *
    * @param fullEndpoint
    *          LinkedIn Graph API endpoint.
-   * @param executeAsPost
-   *          {@code true} to execute the web request as a {@code POST}, {@code false} to execute
-   *          as a {@code GET}.
-   * @param executeAsDelete
-   *          {@code true} to add a special 'treat this request as a {@code DELETE}' parameter.
+   * @param requestType
+   *          the web request type to execute.
    * @param jsonBody
    *          The POST JSON body
    * @param headers
@@ -560,12 +604,12 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    *          Arbitrary number of parameters to send along to LinkedIn as part of the API call.
    * @return The WebRequestor response returned by LinkedIn for the API call.
    */
-  protected WebRequestor.Response makeRequestFull(String fullEndpoint, final boolean executeAsPost,
-      final boolean executeAsDelete, Object jsonBody, Map<String, String> headers,
+  protected WebRequestor.Response makeRequestFull(String fullEndpoint, RequestType requestType,
+      Object jsonBody, Map<String, String> headers,
       final List<BinaryAttachment> binaryAttachments, Parameter... parameters) {
     verifyParameterLegality(parameters);
     
-    if (executeAsDelete && isHttpDeleteFallback()) {
+    if (RequestType.DELETE == requestType && isHttpDeleteFallback()) {
       parameters = parametersWithAdditionalParameter(Parameter.with(METHOD_PARAM_NAME, "delete"),
           parameters);
     }
@@ -581,17 +625,30 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
        */
       @Override
       public WebRequestor.Response makeRequest() throws IOException {
-        if (executeAsDelete && !isHttpDeleteFallback()) {
-          return webRequestor.executeDelete(fullEndpoint + finalParameterString, headers);
-        } else {
-          return executeAsPost
-              ? webRequestor.executePost(fullEndpoint, parameterString,
-              jsonBody == null ? null : jsonMapper.toJson(jsonBody, true),
-              headers,
-              binaryAttachments == null ? null
-                  : binaryAttachments.toArray(new BinaryAttachment[binaryAttachments.size()]))
-              : webRequestor.executeGet(fullEndpoint + finalParameterString, headers);
+        if (RequestType.GET == requestType) {
+          return webRequestor.executeGet(fullEndpoint + finalParameterString, headers);
         }
+
+        String body = jsonBody == null ? null : jsonMapper.toJson(jsonBody, true);
+        BinaryAttachment[] attachments = binaryAttachments == null ? null
+            : binaryAttachments.toArray(new BinaryAttachment[binaryAttachments.size()]);
+
+        if (RequestType.PUT == requestType) {
+          BinaryAttachment attachment = attachments == null || attachments.length == 0
+              ? null : attachments[0];
+          return webRequestor.executePut(fullEndpoint, parameterString, body, headers, attachment);
+        }
+
+        if (RequestType.POST == requestType) {
+          return webRequestor.executePost(fullEndpoint, parameterString, body, headers,
+              attachments);
+        }
+
+        if (RequestType.DELETE == requestType && !isHttpDeleteFallback()) {
+          return webRequestor.executeDelete(fullEndpoint + finalParameterString, headers);
+        }
+        
+        throw new IllegalArgumentException("The request type parameter is required");
       }
     });
   }
@@ -776,51 +833,6 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
       if (LOGGER.isTraceEnabled()) {
         LOGGER.trace("caught ResponseErrorJsonParsingException - ignoring", ex);
       }
-    }
-  }
-  
-  /**
-   * Implementation of {@code LinkedInExceptionMapper} that maps LinkedIn API exceptions.
-   * @author Joanna
-   */
-  protected static class DefaultLinkedInExceptionMapper implements LinkedInExceptionMapper {
-    @Override
-    public LinkedInException exceptionForTypeAndMessage(Integer errorCode, Integer httpStatusCode,
-        String message, Boolean isTransient, JsonObject rawError) {
-      // Bad Request - client mistakes
-      if (Integer.valueOf(HttpStatus.SC_BAD_REQUEST).equals(httpStatusCode)) {
-        return new LinkedInQueryParseException(message, errorCode, httpStatusCode, rawError);
-      }
-      
-      // Unauthorised
-      if (Integer.valueOf(HttpStatus.SC_UNAUTHORIZED).equals(httpStatusCode)) {
-        return new LinkedInOAuthException(message, errorCode, httpStatusCode, rawError);
-      }
-      
-      // Resource not found
-      if (Integer.valueOf(HttpStatus.SC_NOT_FOUND).equals(httpStatusCode)) {
-        return new LinkedInResourceNotFoundException(message, errorCode, httpStatusCode,
-            rawError);
-      }
-      
-      // 429 Rate limit
-      if (Integer.valueOf(HttpStatus.SC_TOO_MANY_REQUESTS).equals(httpStatusCode)) {
-        return new LinkedInRateLimitException(message, errorCode, httpStatusCode,
-            rawError);
-      }
-      
-      // Internal Server Error
-      if (Integer.valueOf(HttpStatus.SC_INTERNAL_SERVER_ERROR).equals(httpStatusCode)) {
-        return new LinkedInInteralServerException(message, errorCode, httpStatusCode, rawError);
-      }
-      
-      // Gateway timeout
-      if (Integer.valueOf(HttpStatus.SC_GATEWAY_TIMEOUT).equals(httpStatusCode)) {
-        return new LinkedInGatewayTimeoutException(message, errorCode, httpStatusCode, rawError);
-      }
-      
-      // Don't recognize this exception type? Just go with the standard LinkedInAPIException.
-      return new LinkedInAPIException(message, errorCode, httpStatusCode, rawError);
     }
   }
   
