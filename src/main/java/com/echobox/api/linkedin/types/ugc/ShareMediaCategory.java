@@ -21,6 +21,7 @@ package com.echobox.api.linkedin.types.ugc;
  * Share media category
  * @author joanna
  */
+@Deprecated
 public enum ShareMediaCategory {
   
   /**

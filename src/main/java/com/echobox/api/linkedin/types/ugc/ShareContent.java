@@ -30,6 +30,7 @@ import java.util.List;
  * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#sharecontent">Share Content</a>
  * @author joanna
  */
+@Deprecated
 public class ShareContent {
   
   @Getter
@@ -86,6 +87,7 @@ public class ShareContent {
      * Categorization info associated with the share.
      * @author joanna
      */
+    @Deprecated
     public static class ShareCategorization {
     
       /**

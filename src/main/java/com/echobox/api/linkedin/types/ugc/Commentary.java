@@ -28,6 +28,7 @@ import java.util.List;
  * Commentary
  * @author joanna
  */
+@Deprecated
 public class Commentary {
   
   /**

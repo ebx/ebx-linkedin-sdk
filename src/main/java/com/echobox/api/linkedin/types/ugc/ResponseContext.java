@@ -26,6 +26,7 @@ import lombok.Getter;
  * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#responsecontext">Response Context</a>
  * @author joanna
  */
+@Deprecated
 public class ResponseContext {
   
   /**
