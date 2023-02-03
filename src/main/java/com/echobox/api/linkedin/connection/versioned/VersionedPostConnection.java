@@ -78,7 +78,7 @@ public class VersionedPostConnection extends VersionedConnection {
    */
   public Post retrievePost(URN shareURN, ViewContext viewContext) {
     Parameter viewContextParam = Parameter.with(VIEW_CONTEXT, viewContext);
-    return linkedinClient.fetchObject(POSTS + "/" + URLUtils.urlDecode(shareURN.toString()),
+    return linkedinClient.fetchObject(POSTS + "/" + URLUtils.urlEncode(shareURN.toString()),
         Post.class, viewContextParam);
   }
   
