@@ -21,6 +21,7 @@ package com.echobox.api.linkedin.types.assets;
  * Relationship type
  * @author Joanna
  */
+@Deprecated
 public enum RelationshipType {
 
   /**

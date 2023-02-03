@@ -25,6 +25,7 @@ import lombok.Getter;
  * @author Joanna
  *
  */
+@Deprecated
 public class ContactInfo {
   
   /**

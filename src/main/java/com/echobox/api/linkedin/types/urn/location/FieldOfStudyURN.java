@@ -28,6 +28,7 @@ import java.util.List;
  * <a href="https://docs.microsoft.com/en-us/linkedin/shared/references/v2/standardized-data/fields-of-study?context=linkedin/marketing/context">Field of Study URN</a>
  * @author joanna
  */
+@Deprecated
 public class FieldOfStudyURN extends FunctionURN {
   
   /**

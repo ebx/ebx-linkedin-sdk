@@ -27,6 +27,7 @@ import java.util.List;
  * @author joanna
  *
  */
+@Deprecated
 public class Thumbnail {
   
   @Getter

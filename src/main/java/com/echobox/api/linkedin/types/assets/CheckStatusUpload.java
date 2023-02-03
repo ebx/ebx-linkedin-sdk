@@ -28,6 +28,7 @@ import java.util.List;
  * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#check-status-of-upload">Check Status of Upload</a>
  * @author Joanna
  */
+@Deprecated
 public class CheckStatusUpload {
 
   @Getter

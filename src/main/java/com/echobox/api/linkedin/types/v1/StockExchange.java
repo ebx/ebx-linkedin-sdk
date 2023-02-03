@@ -24,6 +24,7 @@ import lombok.Getter;
  * @author Joanna
  *
  */
+@Deprecated
 public enum StockExchange implements CodeType<Integer> {
 
   /**

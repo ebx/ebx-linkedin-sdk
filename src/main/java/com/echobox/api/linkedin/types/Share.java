@@ -29,6 +29,7 @@ import lombok.Setter;
  * @author joanna
  *
  */
+@Deprecated
 public class Share extends LinkedInIdType {
   
   /**

@@ -27,6 +27,7 @@ import lombok.Getter;
  * @author joanna
  *
  */
+@Deprecated
 public class CountryGroupURN extends LocaleStringNameURN {
   
   /**

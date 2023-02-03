@@ -29,6 +29,7 @@ import lombok.Getter;
  * @author joanna
  *
  */
+@Deprecated
 public class FunctionURN extends ContainsURN {
   
   /**
