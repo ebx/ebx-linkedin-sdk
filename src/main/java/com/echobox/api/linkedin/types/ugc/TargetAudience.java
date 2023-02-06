@@ -34,6 +34,7 @@ import java.util.List;
  * @author joanna
  */
 @EqualsAndHashCode
+@Deprecated
 public class TargetAudience implements Serializable {
   // CPD-OFF
   // Ignore CPD as this will be removed after migration (use VersionedConnection)
@@ -53,6 +54,7 @@ public class TargetAudience implements Serializable {
    * @author joanna
    */
   @EqualsAndHashCode
+  @Deprecated
   public static class TargetAudienceEntity implements Serializable {
   
     private static final long serialVersionUID = -1L;

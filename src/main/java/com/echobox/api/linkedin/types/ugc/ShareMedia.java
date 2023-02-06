@@ -30,6 +30,7 @@ import java.util.List;
  * <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#sharemedia">Share Media</a>
  * @author joanna
  */
+@Deprecated
 public class ShareMedia {
   
   /**
@@ -99,6 +100,7 @@ public class ShareMedia {
   /**
    * Url that overrides the landing page.
    */
+  @Deprecated
   public static class LandingPage {
     /**
      * content entity will be rendered as a CTA with landingPageTitle as the CTA text and
@@ -122,6 +124,7 @@ public class ShareMedia {
    * An overlay associated with a media(video, image etc).
    * @author joanna
    */
+  @Deprecated
   public static class MediaOverlay {
     
     /**
@@ -157,6 +160,7 @@ public class ShareMedia {
   /**
    * The thumbnail saved from the ingestion of this article.
    */
+  @Deprecated
   public static class Thumbnail {
   
     /**

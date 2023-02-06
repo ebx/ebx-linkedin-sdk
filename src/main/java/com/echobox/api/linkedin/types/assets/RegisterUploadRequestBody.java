@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
  * @author Joanna
  */
 @RequiredArgsConstructor
+@Deprecated
 public class RegisterUploadRequestBody {
   
   @NonNull

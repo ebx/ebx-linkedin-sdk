@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
  */
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Deprecated
 public class CodeAndNameType {
   
   @Getter

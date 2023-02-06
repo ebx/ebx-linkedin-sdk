@@ -28,6 +28,7 @@ import lombok.Setter;
  * @author joanna
  *
  */
+@Deprecated
 public class Annotation {
   
   /**

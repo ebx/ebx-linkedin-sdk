@@ -21,6 +21,7 @@ package com.echobox.api.linkedin.types.ugc;
  * Visibility enum
  * @author joanna
  */
+@Deprecated
 public enum Visibility {
   
   /**

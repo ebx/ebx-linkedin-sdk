@@ -31,6 +31,7 @@ import java.util.List;
  * @author Joanna
  *
  */
+@Deprecated
 public class Company extends LinkedInIdAndNameType {
 
   /**

@@ -28,6 +28,7 @@ import lombok.Getter;
  * @author joanna
  *
  */
+@Deprecated
 public class StateURN extends LocaleStringNameURN {
   
   /**

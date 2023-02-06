@@ -28,6 +28,7 @@ import java.util.Map;
  * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/vector-asset-api#register-an-upload">Register an Upload</a>
  * @author Joanna
  */
+@Deprecated
 public class RegisterUpload {
   
   @Getter

@@ -21,6 +21,7 @@ package com.echobox.api.linkedin.types.ugc;
  * The context in which the user generated content is being viewed.
  * @author joanna
  */
+@Deprecated
 public enum ViewContext {
   
   /**

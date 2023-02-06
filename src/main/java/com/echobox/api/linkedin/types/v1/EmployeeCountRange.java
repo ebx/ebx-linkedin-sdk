@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 @RequiredArgsConstructor
+@Deprecated
 public enum EmployeeCountRange implements CodeType<String> {
 
   /**

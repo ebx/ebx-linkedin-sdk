@@ -26,6 +26,7 @@ import com.eclipsesource.json.Json;
  * Update share request body
  * @author joanna
  */
+@Deprecated
 public class UpdateShareRequestBody {
   
   @LinkedIn("patch")

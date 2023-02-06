@@ -27,6 +27,7 @@ import lombok.Setter;
  * Like Action
  * @author Alexandros
  */
+@Deprecated
 public class LikeAction extends ContainsURN {
   
   @Getter

@@ -25,6 +25,7 @@ import lombok.Setter;
  * Comments Summary
  * @author Alexandros
  */
+@Deprecated
 public class CommentsSummary {
   
   @Getter

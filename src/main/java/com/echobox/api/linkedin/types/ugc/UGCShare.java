@@ -33,6 +33,7 @@ import lombok.Setter;
  * @author joanna
  */
 @RequiredArgsConstructor
+@Deprecated
 public class UGCShare extends LinkedInURNIdType {
   
   /**
@@ -182,6 +183,7 @@ public class UGCShare extends LinkedInURNIdType {
    * @author Joanna
    */
   @RequiredArgsConstructor
+  @Deprecated
   public static class Visibility {
     @Getter
     @Setter

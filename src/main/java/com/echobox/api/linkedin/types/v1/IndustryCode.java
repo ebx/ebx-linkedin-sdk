@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
  * @author Joanna
  *
  */
+@Deprecated
 public enum IndustryCode implements CodeType<Integer> {
 
   /**

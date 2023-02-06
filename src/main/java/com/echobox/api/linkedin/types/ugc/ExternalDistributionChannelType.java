@@ -22,6 +22,7 @@ package com.echobox.api.linkedin.types.ugc;
  * @see <a href="https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/ugc-post-api#distribution">External Distribution Channel Type</a>
  * @author joanna
  */
+@Deprecated
 public enum ExternalDistributionChannelType {
   
   /**
