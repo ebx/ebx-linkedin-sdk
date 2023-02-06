@@ -155,3 +155,5 @@ can get data for both organization and organization brand pages.
 * Mark deprecated classes
 * Revert default versioned month (`202301` contains breaking changes)
 * Fix URL encoding for retrieving a post
+
+## 4.1.2 (Work in progress)
