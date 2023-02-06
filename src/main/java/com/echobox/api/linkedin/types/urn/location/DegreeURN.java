@@ -26,6 +26,7 @@ import com.echobox.api.linkedin.types.urn.function.FunctionURN;
  * @see <a href="https://docs.microsoft.com/en-us/linkedin/shared/references/v2/standardized-data/degrees?context=linkedin/marketing/context">Degree URN</a>
  * @author joanna
  */
+@Deprecated
 public class DegreeURN extends FunctionURN {
   
   /**

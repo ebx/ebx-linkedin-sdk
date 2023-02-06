@@ -26,6 +26,7 @@ import lombok.Getter;
  * @author Joanna
  *
  */
+@Deprecated
 public class Update {
   
   @Getter

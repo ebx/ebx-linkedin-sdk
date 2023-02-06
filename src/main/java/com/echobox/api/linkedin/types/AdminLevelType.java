@@ -22,6 +22,7 @@ package com.echobox.api.linkedin.types;
  * @author joanna
  *
  */
+@Deprecated
 public enum AdminLevelType {
   
   /**

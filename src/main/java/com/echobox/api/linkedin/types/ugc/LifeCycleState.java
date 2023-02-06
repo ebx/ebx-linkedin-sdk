@@ -21,6 +21,7 @@ package com.echobox.api.linkedin.types.ugc;
  * The state of the content
  * @author joanna
  */
+@Deprecated
 public enum LifeCycleState {
   
   /**

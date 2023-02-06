@@ -33,6 +33,7 @@ import lombok.Setter;
  * @author joanna
  */
 @RequiredArgsConstructor
+@Deprecated
 public class ShareRequestBody {
   
   private ShareRequestBody() {}

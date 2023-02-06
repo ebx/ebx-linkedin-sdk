@@ -33,6 +33,7 @@ import java.util.List;
  * @author Joanna
  */
 @RequiredArgsConstructor
+@Deprecated
 public class CompleteMultiPartUploadBody {
   
   @NonNull

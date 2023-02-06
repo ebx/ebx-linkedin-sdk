@@ -25,6 +25,7 @@ import org.apache.commons.lang3.text.WordUtils;
  *
  * @param <T> type
  */
+@Deprecated
 public interface CodeType<T> {
   
   /**

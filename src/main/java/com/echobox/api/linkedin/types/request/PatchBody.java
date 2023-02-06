@@ -26,6 +26,7 @@ import lombok.Data;
  * @author joanna
  */
 @Data
+@Deprecated
 public class PatchBody {
 
   @LinkedIn("$set")

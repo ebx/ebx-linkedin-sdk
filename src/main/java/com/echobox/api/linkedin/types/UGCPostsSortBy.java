@@ -22,6 +22,7 @@ package com.echobox.api.linkedin.types;
  * @author Christopher Lyall
  *
  */
+@Deprecated
 public enum UGCPostsSortBy {
   
   /**

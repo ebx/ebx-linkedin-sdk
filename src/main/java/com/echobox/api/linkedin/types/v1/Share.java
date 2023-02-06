@@ -30,6 +30,7 @@ import lombok.Setter;
  *
  */
 @AllArgsConstructor
+@Deprecated
 public class Share {
 
   /**

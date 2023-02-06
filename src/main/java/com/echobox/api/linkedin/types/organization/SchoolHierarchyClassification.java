@@ -23,6 +23,7 @@ package com.echobox.api.linkedin.types.organization;
  * @author joanna
  *
  */
+@Deprecated
 public enum SchoolHierarchyClassification {
   
   /**

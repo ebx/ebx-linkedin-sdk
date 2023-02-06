@@ -27,6 +27,7 @@ import lombok.Setter;
  * Social Action Model
  * @author Alexandros
  */
+@Deprecated
 public class SocialAction extends ContainsURN {
   
   @Getter

@@ -26,6 +26,7 @@ import lombok.Setter;
  * @author Joanna
  *
  */
+@Deprecated
 public abstract class LinkedInIdAndNameType extends LinkedInIdType {
   
   /**

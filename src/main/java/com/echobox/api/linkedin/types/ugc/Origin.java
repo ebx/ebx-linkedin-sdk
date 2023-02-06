@@ -21,6 +21,7 @@ package com.echobox.api.linkedin.types.ugc;
  * Origin
  * @author joanna
  */
+@Deprecated
 public enum Origin {
   
   /**

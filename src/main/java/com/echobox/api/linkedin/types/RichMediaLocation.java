@@ -25,6 +25,7 @@ import lombok.Getter;
  * Rich media location type
  * @author joanna
  */
+@Deprecated
 public class RichMediaLocation {
   
   /**
