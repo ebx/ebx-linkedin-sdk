@@ -151,4 +151,7 @@ can get data for both organization and organization brand pages.
 * Add boolean support to JsonUtils
 * Add support for video
 
-## 4.1.1 (Work in progress)
+## 4.1.1 (Feb 6, 2023)
+* Mark deprecated classes
+* Revert default versioned month (`202301` contains breaking changes)
+* Fix URL encoding for retrieving a post
