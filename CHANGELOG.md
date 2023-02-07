@@ -156,4 +156,6 @@ can get data for both organization and organization brand pages.
 * Revert default versioned month (`202301` contains breaking changes)
 * Fix URL encoding for retrieving a post
 
-## 4.1.2 (Work in progress)
+## 4.1.2 (Feb 7, 2023)
+* Add constructors and builders for request/response objects
+* Replace URN response of `uploadImage` method with full response 
