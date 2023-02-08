@@ -18,6 +18,8 @@
 package com.echobox.api.linkedin.types.posts;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -32,8 +34,10 @@ import java.util.List;
  *
  * @author Sergio Abplanalp
  */
-@RequiredArgsConstructor
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Distribution {
   
   /**

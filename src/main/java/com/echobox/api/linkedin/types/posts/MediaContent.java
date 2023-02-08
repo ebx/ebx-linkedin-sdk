@@ -19,7 +19,10 @@ package com.echobox.api.linkedin.types.posts;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.urn.URN;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -27,6 +30,9 @@ import lombok.Setter;
  *
  * @author Sergio Abplanalp
  */
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MediaContent {
   /**
    * The URN of the media such as image or video.

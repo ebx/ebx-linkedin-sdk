@@ -18,7 +18,10 @@
 package com.echobox.api.linkedin.types.posts;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -28,6 +31,9 @@ import java.util.List;
  *
  * @author Sergio Abplanalp
  */
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PollContent {
   /**
    * Question for the poll

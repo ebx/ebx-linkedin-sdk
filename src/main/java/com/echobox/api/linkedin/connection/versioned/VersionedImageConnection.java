@@ -75,7 +75,8 @@ public class VersionedImageConnection extends VersionedConnection {
     try (InputStream videoInputStream = Files.newInputStream(file.toPath())) {
       byte[] bytes = new byte[(int) file.length()];
       videoInputStream.read(bytes);
-      return uploadImage(initializeUploadRequestBody, filename, bytes);
+      InitializeUpload initializeUpload = uploadImage(initializeUploadRequestBody, filename, bytes);
+      return initializeUpload.getValue().getImage();
     }
   }
   
@@ -85,10 +86,10 @@ public class VersionedImageConnection extends VersionedConnection {
    * @param initializeUploadRequestBody the initialize upload request body
    * @param filename the file name
    * @param bytes the image bytes to upload as an image
-   * @return the digital asset URN
+   * @return the upload response
    * @throws MalformedURLException MalformedURLException
    */
-  public URN uploadImage(InitializeUploadRequestBody initializeUploadRequestBody,
+  public InitializeUpload uploadImage(InitializeUploadRequestBody initializeUploadRequestBody,
       String filename, byte[] bytes) throws MalformedURLException {
     // Initialize the file upload
     InitializeUpload initializeUploadResponse = initializeUpload(initializeUploadRequestBody);
@@ -98,7 +99,7 @@ public class VersionedImageConnection extends VersionedConnection {
         new URL(initializeUploadResponse.getValue().getUploadUrl()),
         new HashMap<>(), filename, bytes);
     
-    return initializeUploadResponse.getValue().getImage();
+    return initializeUploadResponse;
   }
   
   /**
