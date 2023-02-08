@@ -20,6 +20,8 @@ package com.echobox.api.linkedin.types.posts;
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.LinkedInURNIdType;
 import com.echobox.api.linkedin.types.urn.URN;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -32,8 +34,10 @@ import lombok.Setter;
  *
  * @author Sergio Abplanalp
  */
-@RequiredArgsConstructor
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Post extends LinkedInURNIdType {
   
   /**
@@ -152,6 +156,14 @@ public class Post extends LinkedInURNIdType {
   @LinkedIn
   private LifecycleStateInfo lifecycleStateInfo;
   
+  /**
+   * The service provider that created this UGC.
+   */
+  @Getter
+  @Setter
+  @LinkedIn
+  private String origin;
+
   /**
    * A timestamp corresponding to the publication of this resource.
    */

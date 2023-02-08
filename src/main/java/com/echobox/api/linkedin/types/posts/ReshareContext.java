@@ -18,12 +18,20 @@
 package com.echobox.api.linkedin.types.posts;
 
 import com.echobox.api.linkedin.types.urn.URN;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * ReshareContext object
  *
  * @author Sergio Abplanalp
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ReshareContext {
   /**
    * The direct parent of the post.
