@@ -160,4 +160,4 @@ can get data for both organization and organization brand pages.
 * Add constructors and builders for request/response objects
 * Replace URN response of `uploadImage` method with full response 
 
-## 4.1.2 (Work in progress)
+## 4.1.3 (Work in progress)
