@@ -28,6 +28,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ImageDetails {
   
+  public ImageDetails(String downloadUrl) {
+    this.downloadUrl = downloadUrl;
+  }
+  
   @LinkedIn
   private URN owner;
   
