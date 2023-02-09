@@ -28,6 +28,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -231,6 +232,7 @@ public class Post extends LinkedInURNIdType {
   public List<String> getImageURLs() {
     return images.values().stream()
         .map(ImageDetails::getDownloadUrl)
+        .filter(StringUtils::isNoneBlank)
         .collect(Collectors.toList());
   }
   
