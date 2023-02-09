@@ -32,6 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -221,22 +222,16 @@ public class Post extends LinkedInURNIdType {
   }
   
   public String getDescription() {
-    Content content = this.getContent();
-    if (content == null) {
-      return null;
-    }
-    
-    if (content.getArticle() == null) {
-      return null;
-    }
-    
-    return content.getArticle().getDescription();
+    return Optional.ofNullable(this.getContent())
+        .map(Content::getArticle)
+        .map(ArticleContent::getDescription)
+        .orElse(null);
   }
   
   public List<String> getImageURLs() {
     return images.values().stream()
         .map(ImageDetails::getDownloadUrl)
-        .filter(StringUtils::isNoneBlank)
+        .filter(StringUtils::isNotBlank)
         .collect(Collectors.toList());
   }
   
