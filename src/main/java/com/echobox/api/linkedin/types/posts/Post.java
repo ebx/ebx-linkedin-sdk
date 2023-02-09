@@ -19,6 +19,7 @@ package com.echobox.api.linkedin.types.posts;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.LinkedInURNIdType;
+import com.echobox.api.linkedin.types.images.ImageDetails;
 import com.echobox.api.linkedin.types.urn.URN;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,10 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Post
@@ -188,6 +193,46 @@ public class Post extends LinkedInURNIdType {
   @NonNull
   @LinkedIn
   private Visibility visibility;
+  
+  @Getter
+  @Setter
+  private Map<URN, ImageDetails> images;
+
+  public String getTitle() {
+    Content content = this.getContent();
+    if (content == null) {
+      return null;
+    }
+    
+    if (content.getMedia() != null) {
+      return content.getMedia().getTitle();
+    }
+    
+    if (content.getArticle() != null) {
+      return content.getArticle().getTitle();
+    }
+    
+    return null;
+  }
+  
+  public String getDescription() {
+    Content content = this.getContent();
+    if (content == null) {
+      return null;
+    }
+    
+    if (content.getArticle() == null) {
+      return null;
+    }
+    
+    return content.getArticle().getDescription();
+  }
+  
+  public List<String> getImageURLs() {
+    return images.values().stream()
+        .map(ImageDetails::getDownloadUrl)
+        .collect(Collectors.toList());
+  }
   
   /**
    * ContentCallToActionLabel enum
