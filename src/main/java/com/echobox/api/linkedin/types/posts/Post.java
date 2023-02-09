@@ -195,6 +195,10 @@ public class Post extends LinkedInURNIdType {
   @LinkedIn
   private Visibility visibility;
   
+  /**
+   * Mapping of image URN to image details.
+   * The image details will need to be retrieved via a separate API call and populated manually.
+   */
   @Getter
   @Setter
   private Map<URN, ImageDetails> images;
