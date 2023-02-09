@@ -22,9 +22,11 @@ import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.VersionedLinkedInClient;
 import com.echobox.api.linkedin.client.WebRequestor;
 import com.echobox.api.linkedin.exception.LinkedInNetworkException;
+import com.echobox.api.linkedin.types.images.ImageDetails;
 import com.echobox.api.linkedin.types.images.InitializeUpload;
 import com.echobox.api.linkedin.types.images.InitializeUploadRequestBody;
 import com.echobox.api.linkedin.types.urn.URN;
+import com.echobox.api.linkedin.util.URLUtils;
 import com.echobox.api.linkedin.util.ValidationUtils;
 
 import java.io.File;
@@ -159,5 +161,16 @@ public class VersionedImageConnection extends VersionedConnection {
     ValidationUtils.validateResponse(response);
     
     return response.getHeaders();
+  }
+  
+  /**
+   * Retrieve the details of an image using the image URN
+   * @see <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/images-api#get-a-single-image">GET a single image</a>
+   * @param imageURN the image URN to retrieve the details of
+   * @return the image details
+   */
+  public ImageDetails retrieveImageDetails(URN imageURN) {
+    return linkedinClient.fetchObject(IMAGES + "/" + URLUtils.urlEncode(imageURN.toString()),
+        ImageDetails.class);
   }
 }
