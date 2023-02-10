@@ -164,3 +164,5 @@ can get data for both organization and organization brand pages.
 * Add support to retrieve image details from LinkedIn
 * Extend `Post` object to include image details mapping
 * Add helper methods to `Post` to extract title, description and image URLs
+
+## 4.2.1 (Work in progress)
