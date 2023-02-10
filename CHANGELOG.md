@@ -159,3 +159,8 @@ can get data for both organization and organization brand pages.
 ## 4.1.2 (Feb 7, 2023)
 * Add constructors and builders for request/response objects
 * Replace URN response of `uploadImage` method with full response 
+
+## 4.2.0 (Feb 9, 2023)
+* Add support to retrieve image details from LinkedIn
+* Extend `Post` object to include image details mapping
+* Add helper methods to `Post` to extract title, description and image URLs

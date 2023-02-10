@@ -19,6 +19,7 @@ package com.echobox.api.linkedin.types.posts;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.LinkedInURNIdType;
+import com.echobox.api.linkedin.types.images.ImageDetails;
 import com.echobox.api.linkedin.types.urn.URN;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,12 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Post
@@ -188,6 +195,45 @@ public class Post extends LinkedInURNIdType {
   @NonNull
   @LinkedIn
   private Visibility visibility;
+  
+  /**
+   * Mapping of image URN to image details.
+   * The image details will need to be retrieved via a separate API call and populated manually.
+   */
+  @Getter
+  @Setter
+  private Map<URN, ImageDetails> images;
+
+  public String getTitle() {
+    Content content = this.getContent();
+    if (content == null) {
+      return null;
+    }
+    
+    if (content.getMedia() != null) {
+      return content.getMedia().getTitle();
+    }
+    
+    if (content.getArticle() != null) {
+      return content.getArticle().getTitle();
+    }
+    
+    return null;
+  }
+  
+  public String getDescription() {
+    return Optional.ofNullable(this.getContent())
+        .map(Content::getArticle)
+        .map(ArticleContent::getDescription)
+        .orElse(null);
+  }
+  
+  public List<String> getImageURLs() {
+    return images.values().stream()
+        .map(ImageDetails::getDownloadUrl)
+        .filter(StringUtils::isNotBlank)
+        .collect(Collectors.toList());
+  }
   
   /**
    * ContentCallToActionLabel enum
