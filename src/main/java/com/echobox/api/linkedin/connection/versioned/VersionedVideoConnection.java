@@ -27,6 +27,8 @@ import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.videos.FinalizeUploadRequest;
 import com.echobox.api.linkedin.types.videos.InitializeUploadRequest;
 import com.echobox.api.linkedin.types.videos.InitializeUploadResponse;
+import com.echobox.api.linkedin.types.videos.VideoDetails;
+import com.echobox.api.linkedin.util.URLUtils;
 import com.echobox.api.linkedin.util.ValidationUtils;
 import org.apache.http.entity.ContentType;
 
@@ -159,5 +161,10 @@ public class VersionedVideoConnection extends VersionedConnection {
       videoInputStream.read(bytes);
       return bytes;
     }
+  }
+
+  public VideoDetails retrieveVideoDetails(URN videoURN) {
+    return linkedinClient.fetchObject(
+        VIDEOS + "/" + URLUtils.urlEncode(videoURN.toString()), VideoDetails.class);
   }
 }
