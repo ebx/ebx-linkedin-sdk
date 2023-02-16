@@ -17,24 +17,31 @@
 
 package com.echobox.api.linkedin.types.posts;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import lombok.Data;
+
 /**
  * PollOption object
  *
  * @author Sergio Abplanalp
  */
+@Data
 public class PollOption {
   /**
    * Text describing the option.
    */
+  @LinkedIn
   private String text;
   
   /**
    * Boolean value to show whether the viewer voted this poll option.
    */
+  @LinkedIn
   private Boolean isVotedByViewer;
   
   /**
    * Vote counts of the poll option.
    */
+  @LinkedIn
   private Long voteCount;
 }

@@ -17,26 +17,33 @@
 
 package com.echobox.api.linkedin.types.posts;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
+import lombok.Data;
+
 /**
  * PollSettings object
  *
  * @author Sergio Abplanalp
  */
+@Data
 public class PollSettings {
   /**
    * The selection type of votes on the poll.
    */
+  @LinkedIn
   private VoteSelectionType voteSelectionType;
   
   /**
    * Duration of poll being open for votes.
    */
+  @LinkedIn
   private Duration duration;
   
   /**
    * Poll author’s visibility to voters.
    * Currently, isVoterVisibleToAuthor=false is not supported
    */
+  @LinkedIn
   private Boolean isVoterVisibleToAuthor = true;
   
   /**
