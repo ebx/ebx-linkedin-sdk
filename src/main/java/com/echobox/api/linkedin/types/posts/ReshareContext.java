@@ -17,6 +17,7 @@
 
 package com.echobox.api.linkedin.types.posts;
 
+import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.urn.URN;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,10 +37,12 @@ public class ReshareContext {
   /**
    * The direct parent of the post.
    */
+  @LinkedIn
   private URN parent;
   
   /**
    * The greatest ancestor of the post.
    */
+  @LinkedIn
   private URN root;
 }
