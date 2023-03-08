@@ -168,5 +168,5 @@ can get data for both organization and organization brand pages.
 ## 4.2.1 (Feb 27, 2023)
 * Add missing LinkedIn annotations
 
-## 4.2.2 (Mar 8, 2023)
-* When uploading videos, consider video files from URLs instead of an actual files with a file path 
+## 4.3.0 (Mar 8, 2023)
+* Add support to upload video files from URLs
