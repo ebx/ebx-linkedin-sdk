@@ -33,6 +33,7 @@ import org.apache.http.entity.ContentType;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -75,9 +76,11 @@ public class VersionedVideoConnection extends VersionedConnection {
     super(linkedinClient);
   }
   
-  public URN uploadVideoFromURL(InitializeUploadRequest initializeUploadRequest, String videoURL,
-      long videoFileSizeBytes)
+  public URN uploadVideoFromURL(InitializeUploadRequest initializeUploadRequest, String videoURL)
       throws IOException {
+    
+    URL videoFileURL = new URL(videoURL);
+    long videoFileSizeBytes = getFileSize(videoFileURL);
   
     initializeUploadRequest.getInitializeUploadRequest().setFileSizeBytes(videoFileSizeBytes);
     InitializeUploadResponse initializeUploadResponse = initializeUpload(initializeUploadRequest);
@@ -199,6 +202,22 @@ public class VersionedVideoConnection extends VersionedConnection {
       byte[] bytes = new byte[(int) file.length()];
       videoInputStream.read(bytes);
       return bytes;
+    }
+  }
+  
+  private static long getFileSize(URL videoURL) {
+    HttpURLConnection conn = null;
+    try {
+      conn = (HttpURLConnection) videoURL.openConnection();
+      conn.setRequestMethod("HEAD");
+      conn.getInputStream();
+      return conn.getContentLength();
+    } catch (IOException e) {
+      return -1;
+    } finally {
+      if (conn != null) {
+        conn.disconnect();
+      }
     }
   }
 }
