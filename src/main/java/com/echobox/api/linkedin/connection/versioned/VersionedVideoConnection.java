@@ -30,6 +30,7 @@ import com.echobox.api.linkedin.types.videos.InitializeUploadResponse;
 import com.echobox.api.linkedin.util.ValidationUtils;
 import org.apache.http.entity.ContentType;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,22 +76,44 @@ public class VersionedVideoConnection extends VersionedConnection {
     super(linkedinClient);
   }
   
-  public URN uploadVideo(InitializeUploadRequest initializeUploadRequest, String filePath)
+  public URN uploadVideoFromURL(InitializeUploadRequest initializeUploadRequest, String videoURL)
       throws IOException {
   
-    Path videoFilePath = Paths.get(filePath);
-    long fileSizeBytes = Files.size(videoFilePath);
+    URL url = new URL(videoURL);
+    byte[] fileBytes = convertURLToBytes(url);
+    long videoFileSizeBytes = fileBytes.length;
   
-    initializeUploadRequest.getInitializeUploadRequest().setFileSizeBytes(fileSizeBytes);
+    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, videoURL, fileBytes);
+  }
+  
+  public URN uploadVideoFromFile(InitializeUploadRequest initializeUploadRequest, String filePath)
+      throws IOException {
+  
+    File file = new File(filePath);
+    Path videoFilePath = Paths.get(filePath);
+    byte[] fileBytes = convertFileToBytes(file);
+    long videoFileSizeBytes = Files.size(videoFilePath);
+    
+    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, filePath, fileBytes);
+  }
+  
+  private URN getVideoURN(long videoFileSizeBytes, InitializeUploadRequest initializeUploadRequest,
+      String videoLocation, byte[] fileBytes) throws IOException {
+  
+    initializeUploadRequest.getInitializeUploadRequest().setFileSizeBytes(videoFileSizeBytes);
     InitializeUploadResponse initializeUploadResponse = initializeUpload(initializeUploadRequest);
     InitializeUploadResponse.Value value = initializeUploadResponse.getValue();
-    
-    List<String> uploadedPartIds = uploadVideoFile(filePath, value.getUploadInstructions());
-    
+  
+    List<String> uploadedPartIds = new ArrayList<>();
+    for (InitializeUploadResponse.UploadInstruction instruction : value.getUploadInstructions()) {
+      String etag = uploadVideoFileChunk(videoLocation, fileBytes, instruction);
+      uploadedPartIds.add(etag);
+    }
+  
     FinalizeUploadRequest finalizeUploadRequest =
         new FinalizeUploadRequest(value.getVideo(), value.getUploadToken(), uploadedPartIds);
     finalizeUpload(finalizeUploadRequest);
-    
+  
     return value.getVideo();
   }
   
@@ -100,21 +123,6 @@ public class VersionedVideoConnection extends VersionedConnection {
         initializeUploadRequest.getInitializeUploadRequest().getFileSizeBytes());
     return linkedinClient.publish(VIDEOS, InitializeUploadResponse.class, initializeUploadRequest,
         Parameter.with(ACTION_KEY, INITIALIZE_UPLOAD));
-  }
-  
-  public List<String> uploadVideoFile(String filePath,
-      List<InitializeUploadResponse.UploadInstruction> uploadInstructions) throws IOException {
-    
-    File file = new File(filePath);
-    byte[] fileBytes = convertToBytes(file);
-    
-    List<String> uploadPartIds = new ArrayList<>();
-    for (InitializeUploadResponse.UploadInstruction instruction : uploadInstructions) {
-      String etag = uploadVideoFileChunk(filePath, fileBytes, instruction);
-      uploadPartIds.add(etag);
-    }
-    
-    return uploadPartIds;
   }
   
   public String uploadVideoFileChunk(String filePath, byte[] fileBytes,
@@ -153,7 +161,25 @@ public class VersionedVideoConnection extends VersionedConnection {
         Parameter.with(ACTION_KEY, FINALIZE_UPLOAD));
   }
   
-  private static byte[] convertToBytes(File file) throws IOException {
+  private byte[] convertURLToBytes(URL videoURL) throws IOException {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    try (InputStream inputStream = videoURL.openStream()) {
+
+      int byteChunk;
+    
+      while ((byteChunk = inputStream.read()) != -1) {
+        baos.write(byteChunk);
+      }
+    } catch (IOException e) {
+      throw new IOException(
+          String.format("Failed while reading bytes from %s: %s", videoURL.toExternalForm(),
+              e.getMessage()));
+    }
+  
+    return baos.toByteArray();
+  }
+  
+  private byte[] convertFileToBytes(File file) throws IOException {
     try (InputStream videoInputStream = Files.newInputStream(file.toPath())) {
       byte[] bytes = new byte[(int) file.length()];
       videoInputStream.read(bytes);
