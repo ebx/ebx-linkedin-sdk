@@ -78,41 +78,40 @@ public class VersionedVideoConnection extends VersionedConnection {
   
   public URN uploadVideoFromURL(InitializeUploadRequest initializeUploadRequest, String videoURL)
       throws IOException {
-    
-    URL videoFileURL = new URL(videoURL);
-    long videoFileSizeBytes = getFileSize(videoFileURL);
   
-    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, videoURL, true);
+    URL url = new URL(videoURL);
+    byte[] fileBytes = convertURLToBytes(url);
+    long videoFileSizeBytes = getFileSize(url);
+  
+    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, videoURL, fileBytes);
   }
   
   public URN uploadVideoFromFile(InitializeUploadRequest initializeUploadRequest, String filePath)
       throws IOException {
   
+    File file = new File(filePath);
     Path videoFilePath = Paths.get(filePath);
+    byte[] fileBytes = convertFileToBytes(file);
     long videoFileSizeBytes = Files.size(videoFilePath);
-  
-    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, filePath, false);
+    
+    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, filePath, fileBytes);
   }
   
-  private URN getVideoURN(long videoFileSizeBytes,
-      InitializeUploadRequest initializeUploadRequest, String videoLocation,
-      boolean isUploadFromURL) throws IOException {
+  private URN getVideoURN(long videoFileSizeBytes, InitializeUploadRequest initializeUploadRequest,
+      String videoLocation, byte[] fileBytes) throws IOException {
   
     initializeUploadRequest.getInitializeUploadRequest().setFileSizeBytes(videoFileSizeBytes);
     InitializeUploadResponse initializeUploadResponse = initializeUpload(initializeUploadRequest);
     InitializeUploadResponse.Value value = initializeUploadResponse.getValue();
-    
-    List<String> uploadedPartIds;
-    
-    if (isUploadFromURL) {
-      uploadedPartIds = uploadVideoFileFromURL(videoLocation, value.getUploadInstructions());
-    } else {
-      uploadedPartIds = uploadVideoFileFromDirectory(videoLocation,
-          value.getUploadInstructions());
+  
+    List<String> uploadPartIds = new ArrayList<>();
+    for (InitializeUploadResponse.UploadInstruction instruction : value.getUploadInstructions()) {
+      String etag = uploadVideoFileChunk(videoLocation, fileBytes, instruction);
+      uploadPartIds.add(etag);
     }
   
     FinalizeUploadRequest finalizeUploadRequest =
-        new FinalizeUploadRequest(value.getVideo(), value.getUploadToken(), uploadedPartIds);
+        new FinalizeUploadRequest(value.getVideo(), value.getUploadToken(), uploadPartIds);
     finalizeUpload(finalizeUploadRequest);
   
     return value.getVideo();
@@ -124,35 +123,6 @@ public class VersionedVideoConnection extends VersionedConnection {
         initializeUploadRequest.getInitializeUploadRequest().getFileSizeBytes());
     return linkedinClient.publish(VIDEOS, InitializeUploadResponse.class, initializeUploadRequest,
         Parameter.with(ACTION_KEY, INITIALIZE_UPLOAD));
-  }
-  
-  public List<String> uploadVideoFileFromURL(String videoFileURL,
-      List<InitializeUploadResponse.UploadInstruction> uploadInstructions) throws IOException {
-    
-    URL url = new URL(videoFileURL);
-    byte[] fileBytes = convertURLToBytes(url);
-  
-    return uploadVideoAsBytes(videoFileURL, fileBytes, uploadInstructions);
-  }
-  
-  public List<String> uploadVideoFileFromDirectory(String filePath,
-      List<InitializeUploadResponse.UploadInstruction> uploadInstructions) throws IOException {
-  
-    File file = new File(filePath);
-    byte[] fileBytes = convertFileToBytes(file);
-    
-    return uploadVideoAsBytes(filePath, fileBytes, uploadInstructions);
-  }
-  
-  private List<String> uploadVideoAsBytes(String videoLocation, byte[] fileBytes,
-      List<InitializeUploadResponse.UploadInstruction> uploadInstructions) throws IOException {
-    List<String> uploadPartIds = new ArrayList<>();
-    for (InitializeUploadResponse.UploadInstruction instruction : uploadInstructions) {
-      String etag = uploadVideoFileChunk(videoLocation, fileBytes, instruction);
-      uploadPartIds.add(etag);
-    }
-  
-    return uploadPartIds;
   }
   
   public String uploadVideoFileChunk(String filePath, byte[] fileBytes,
