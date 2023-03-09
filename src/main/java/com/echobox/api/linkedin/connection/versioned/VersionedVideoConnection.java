@@ -30,6 +30,7 @@ import com.echobox.api.linkedin.types.videos.InitializeUploadResponse;
 import com.echobox.api.linkedin.util.ValidationUtils;
 import org.apache.http.entity.ContentType;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -81,7 +82,7 @@ public class VersionedVideoConnection extends VersionedConnection {
   
     URL url = new URL(videoURL);
     byte[] fileBytes = convertURLToBytes(url);
-    long videoFileSizeBytes = getFileSize(url);
+    long videoFileSizeBytes = fileBytes.length;
   
     return getVideoURN(videoFileSizeBytes, initializeUploadRequest, videoURL, fileBytes);
   }
@@ -162,11 +163,21 @@ public class VersionedVideoConnection extends VersionedConnection {
   }
   
   private byte[] convertURLToBytes(URL videoURL) throws IOException {
-    try (InputStream videoInputStream = videoURL.openStream()) {
-      byte[] bytes = new byte[videoInputStream.available()];
-      videoInputStream.read(bytes);
-      return bytes;
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    try (InputStream inputStream = videoURL.openStream()) {
+
+      int byteChunk;
+    
+      while ((byteChunk = inputStream.read()) != -1) {
+        baos.write(byteChunk);
+      }
+    } catch (IOException e) {
+      throw new IOException(
+          String.format("Failed while reading bytes from %s: %s", videoURL.toExternalForm(),
+              e.getMessage()));
     }
+  
+    return baos.toByteArray();
   }
   
   private byte[] convertFileToBytes(File file) throws IOException {
@@ -174,22 +185,6 @@ public class VersionedVideoConnection extends VersionedConnection {
       byte[] bytes = new byte[(int) file.length()];
       videoInputStream.read(bytes);
       return bytes;
-    }
-  }
-  
-  private long getFileSize(URL videoURL) {
-    HttpURLConnection conn = null;
-    try {
-      conn = (HttpURLConnection) videoURL.openConnection();
-      conn.setRequestMethod("HEAD");
-      conn.getInputStream();
-      return conn.getContentLength();
-    } catch (IOException e) {
-      return -1;
-    } finally {
-      if (conn != null) {
-        conn.disconnect();
-      }
     }
   }
 }
