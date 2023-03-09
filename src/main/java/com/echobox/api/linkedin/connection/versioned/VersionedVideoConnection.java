@@ -82,36 +82,39 @@ public class VersionedVideoConnection extends VersionedConnection {
     URL videoFileURL = new URL(videoURL);
     long videoFileSizeBytes = getFileSize(videoFileURL);
   
-    initializeUploadRequest.getInitializeUploadRequest().setFileSizeBytes(videoFileSizeBytes);
-    InitializeUploadResponse initializeUploadResponse = initializeUpload(initializeUploadRequest);
-    InitializeUploadResponse.Value value = initializeUploadResponse.getValue();
-    
-    List<String> uploadedPartIds = uploadVideoFileFromURL(videoURL, value.getUploadInstructions());
-    
-    FinalizeUploadRequest finalizeUploadRequest =
-        new FinalizeUploadRequest(value.getVideo(), value.getUploadToken(), uploadedPartIds);
-    finalizeUpload(finalizeUploadRequest);
-    
-    return value.getVideo();
+    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, videoURL, true);
   }
   
   public URN uploadVideoFromFile(InitializeUploadRequest initializeUploadRequest, String filePath)
       throws IOException {
   
     Path videoFilePath = Paths.get(filePath);
-    long fileSizeBytes = Files.size(videoFilePath);
+    long videoFileSizeBytes = Files.size(videoFilePath);
   
-    initializeUploadRequest.getInitializeUploadRequest().setFileSizeBytes(fileSizeBytes);
+    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, filePath, false);
+  }
+  
+  private URN getVideoURN(long videoFileSizeBytes,
+      InitializeUploadRequest initializeUploadRequest, String videoLocation,
+      boolean isUploadFromURL) throws IOException {
+  
+    initializeUploadRequest.getInitializeUploadRequest().setFileSizeBytes(videoFileSizeBytes);
     InitializeUploadResponse initializeUploadResponse = initializeUpload(initializeUploadRequest);
     InitializeUploadResponse.Value value = initializeUploadResponse.getValue();
     
-    List<String> uploadedPartIds = uploadVideoFileFromDirectory(filePath,
-        value.getUploadInstructions());
+    List<String> uploadedPartIds;
     
+    if (isUploadFromURL) {
+      uploadedPartIds = uploadVideoFileFromURL(videoLocation, value.getUploadInstructions());
+    } else {
+      uploadedPartIds = uploadVideoFileFromDirectory(videoLocation,
+          value.getUploadInstructions());
+    }
+  
     FinalizeUploadRequest finalizeUploadRequest =
         new FinalizeUploadRequest(value.getVideo(), value.getUploadToken(), uploadedPartIds);
     finalizeUpload(finalizeUploadRequest);
-    
+  
     return value.getVideo();
   }
   
@@ -128,14 +131,8 @@ public class VersionedVideoConnection extends VersionedConnection {
     
     URL url = new URL(videoFileURL);
     byte[] fileBytes = convertURLToBytes(url);
-    
-    List<String> uploadPartIds = new ArrayList<>();
-    for (InitializeUploadResponse.UploadInstruction instruction : uploadInstructions) {
-      String etag = uploadVideoFileChunk(videoFileURL, fileBytes, instruction);
-      uploadPartIds.add(etag);
-    }
-    
-    return uploadPartIds;
+  
+    return uploadVideoAsBytes(videoFileURL, fileBytes, uploadInstructions);
   }
   
   public List<String> uploadVideoFileFromDirectory(String filePath,
@@ -144,12 +141,17 @@ public class VersionedVideoConnection extends VersionedConnection {
     File file = new File(filePath);
     byte[] fileBytes = convertFileToBytes(file);
     
+    return uploadVideoAsBytes(filePath, fileBytes, uploadInstructions);
+  }
+  
+  private List<String> uploadVideoAsBytes(String videoLocation, byte[] fileBytes,
+      List<InitializeUploadResponse.UploadInstruction> uploadInstructions) throws IOException {
     List<String> uploadPartIds = new ArrayList<>();
     for (InitializeUploadResponse.UploadInstruction instruction : uploadInstructions) {
-      String etag = uploadVideoFileChunk(filePath, fileBytes, instruction);
+      String etag = uploadVideoFileChunk(videoLocation, fileBytes, instruction);
       uploadPartIds.add(etag);
     }
-    
+  
     return uploadPartIds;
   }
   
@@ -189,7 +191,7 @@ public class VersionedVideoConnection extends VersionedConnection {
         Parameter.with(ACTION_KEY, FINALIZE_UPLOAD));
   }
   
-  private static byte[] convertURLToBytes(URL videoURL) throws IOException {
+  private byte[] convertURLToBytes(URL videoURL) throws IOException {
     try (InputStream videoInputStream = videoURL.openStream()) {
       byte[] bytes = new byte[videoInputStream.available()];
       videoInputStream.read(bytes);
@@ -197,7 +199,7 @@ public class VersionedVideoConnection extends VersionedConnection {
     }
   }
   
-  private static byte[] convertFileToBytes(File file) throws IOException {
+  private byte[] convertFileToBytes(File file) throws IOException {
     try (InputStream videoInputStream = Files.newInputStream(file.toPath())) {
       byte[] bytes = new byte[(int) file.length()];
       videoInputStream.read(bytes);
@@ -205,7 +207,7 @@ public class VersionedVideoConnection extends VersionedConnection {
     }
   }
   
-  private static long getFileSize(URL videoURL) {
+  private long getFileSize(URL videoURL) {
     HttpURLConnection conn = null;
     try {
       conn = (HttpURLConnection) videoURL.openConnection();
