@@ -105,14 +105,14 @@ public class VersionedVideoConnection extends VersionedConnection {
     InitializeUploadResponse initializeUploadResponse = initializeUpload(initializeUploadRequest);
     InitializeUploadResponse.Value value = initializeUploadResponse.getValue();
   
-    List<String> uploadPartIds = new ArrayList<>();
+    List<String> uploadedPartIds = new ArrayList<>();
     for (InitializeUploadResponse.UploadInstruction instruction : value.getUploadInstructions()) {
       String etag = uploadVideoFileChunk(videoLocation, fileBytes, instruction);
-      uploadPartIds.add(etag);
+      uploadedPartIds.add(etag);
     }
   
     FinalizeUploadRequest finalizeUploadRequest =
-        new FinalizeUploadRequest(value.getVideo(), value.getUploadToken(), uploadPartIds);
+        new FinalizeUploadRequest(value.getVideo(), value.getUploadToken(), uploadedPartIds);
     finalizeUpload(finalizeUploadRequest);
   
     return value.getVideo();
