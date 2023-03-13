@@ -76,17 +76,21 @@ public class VersionedVideoConnection extends VersionedConnection {
     super(linkedinClient);
   }
   
-  public URN uploadVideoFromURL(InitializeUploadRequest initializeUploadRequest, String videoURL)
+  public URN uploadVideoFromURL(InitializeUploadRequest initializeUploadRequest, String videoURL,
+      boolean uploadThumbnail)
       throws IOException {
+    
   
     URL url = new URL(videoURL);
     byte[] fileBytes = convertURLToBytes(url);
     long videoFileSizeBytes = fileBytes.length;
   
-    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, videoURL, fileBytes);
+    return getVideoURN(videoFileSizeBytes, uploadThumbnail, initializeUploadRequest, videoURL,
+        fileBytes);
   }
   
-  public URN uploadVideoFromFile(InitializeUploadRequest initializeUploadRequest, String filePath)
+  public URN uploadVideoFromFile(InitializeUploadRequest initializeUploadRequest, String filePath,
+      boolean uploadThumbnail)
       throws IOException {
   
     File file = new File(filePath);
@@ -94,13 +98,20 @@ public class VersionedVideoConnection extends VersionedConnection {
     byte[] fileBytes = convertFileToBytes(file);
     long videoFileSizeBytes = Files.size(videoFilePath);
     
-    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, filePath, fileBytes);
+    return getVideoURN(videoFileSizeBytes, uploadThumbnail, initializeUploadRequest, filePath,
+        fileBytes);
   }
   
-  private URN getVideoURN(long videoFileSizeBytes, InitializeUploadRequest initializeUploadRequest,
+  private URN getVideoURN(long videoFileSizeBytes, boolean uploadThumbnail,
+      InitializeUploadRequest initializeUploadRequest,
       String videoLocation, byte[] fileBytes) throws IOException {
   
     initializeUploadRequest.getInitializeUploadRequest().setFileSizeBytes(videoFileSizeBytes);
+    
+    if (uploadThumbnail) {
+      initializeUploadRequest.getInitializeUploadRequest().setUploadThumbnail(true);
+    }
+    
     InitializeUploadResponse initializeUploadResponse = initializeUpload(initializeUploadRequest);
     InitializeUploadResponse.Value value = initializeUploadResponse.getValue();
   
@@ -116,6 +127,30 @@ public class VersionedVideoConnection extends VersionedConnection {
   
     return value.getVideo();
   }
+  
+  private URN getImageThumbnailURN(long videoFileSizeBytes,
+      InitializeUploadRequest initializeUploadRequest,
+      String videoLocation, byte[] fileBytes) throws IOException {
+    
+    initializeUploadRequest.getInitializeUploadRequest().setFileSizeBytes(videoFileSizeBytes);
+    InitializeUploadResponse initializeUploadResponse = initializeUpload(initializeUploadRequest);
+    InitializeUploadResponse.Value value = initializeUploadResponse.getValue();
+    
+    List<String> uploadedPartIds = new ArrayList<>();
+    for (InitializeUploadResponse.UploadInstruction instruction : value.getUploadInstructions()) {
+      String etag = uploadVideoFileChunk(videoLocation, fileBytes, instruction);
+      uploadedPartIds.add(etag);
+    }
+    
+    FinalizeUploadRequest finalizeUploadRequest =
+        new FinalizeUploadRequest(value.getVideo(), value.getUploadToken(), uploadedPartIds);
+    finalizeUpload(finalizeUploadRequest);
+    
+    return value.getVideo();
+  }
+  
+  
+  
   
   public InitializeUploadResponse initializeUpload(
       InitializeUploadRequest initializeUploadRequest) {
