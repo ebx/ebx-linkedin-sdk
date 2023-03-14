@@ -76,20 +76,18 @@ public class VersionedVideoConnection extends VersionedConnection {
     super(linkedinClient);
   }
   
-  public URN uploadVideoFromURL(InitializeUploadRequest initializeUploadRequest, String videoURL,
-      boolean uploadThumbnail)
+  public URN uploadVideoFromURL(InitializeUploadRequest initializeUploadRequest, String videoURL)
       throws IOException {
     
     URL url = new URL(videoURL);
     byte[] fileBytes = convertURLToBytes(url);
     long videoFileSizeBytes = fileBytes.length;
   
-    return getVideoURN(videoFileSizeBytes, uploadThumbnail, initializeUploadRequest, videoURL,
+    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, videoURL,
         fileBytes);
   }
   
-  public URN uploadVideoFromFile(InitializeUploadRequest initializeUploadRequest, String filePath,
-      boolean uploadThumbnail)
+  public URN uploadVideoFromFile(InitializeUploadRequest initializeUploadRequest, String filePath)
       throws IOException {
   
     File file = new File(filePath);
@@ -97,19 +95,14 @@ public class VersionedVideoConnection extends VersionedConnection {
     byte[] fileBytes = convertFileToBytes(file);
     long videoFileSizeBytes = Files.size(videoFilePath);
     
-    return getVideoURN(videoFileSizeBytes, uploadThumbnail, initializeUploadRequest, filePath,
+    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, filePath,
         fileBytes);
   }
   
-  private URN getVideoURN(long videoFileSizeBytes, boolean uploadThumbnail,
-      InitializeUploadRequest initializeUploadRequest,
+  private URN getVideoURN(long videoFileSizeBytes, InitializeUploadRequest initializeUploadRequest,
       String videoLocation, byte[] fileBytes) throws IOException {
   
     initializeUploadRequest.getInitializeUploadRequest().setFileSizeBytes(videoFileSizeBytes);
-    
-    if (uploadThumbnail) {
-      initializeUploadRequest.getInitializeUploadRequest().setUploadThumbnail(true);
-    }
     
     InitializeUploadResponse initializeUploadResponse = initializeUpload(initializeUploadRequest);
     InitializeUploadResponse.Value value = initializeUploadResponse.getValue();
