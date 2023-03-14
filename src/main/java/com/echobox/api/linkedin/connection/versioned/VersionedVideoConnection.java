@@ -78,13 +78,12 @@ public class VersionedVideoConnection extends VersionedConnection {
   
   public URN uploadVideoFromURL(InitializeUploadRequest initializeUploadRequest, String videoURL)
       throws IOException {
-    
+  
     URL url = new URL(videoURL);
     byte[] fileBytes = convertURLToBytes(url);
     long videoFileSizeBytes = fileBytes.length;
   
-    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, videoURL,
-        fileBytes);
+    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, videoURL, fileBytes);
   }
   
   public URN uploadVideoFromFile(InitializeUploadRequest initializeUploadRequest, String filePath)
@@ -95,8 +94,7 @@ public class VersionedVideoConnection extends VersionedConnection {
     byte[] fileBytes = convertFileToBytes(file);
     long videoFileSizeBytes = Files.size(videoFilePath);
     
-    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, filePath,
-        fileBytes);
+    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, filePath, fileBytes);
   }
   
   private URN getVideoURN(long videoFileSizeBytes, InitializeUploadRequest initializeUploadRequest,
