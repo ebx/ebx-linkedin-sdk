@@ -80,7 +80,6 @@ public class VersionedVideoConnection extends VersionedConnection {
       boolean uploadThumbnail)
       throws IOException {
     
-  
     URL url = new URL(videoURL);
     byte[] fileBytes = convertURLToBytes(url);
     long videoFileSizeBytes = fileBytes.length;
@@ -127,30 +126,6 @@ public class VersionedVideoConnection extends VersionedConnection {
   
     return value.getVideo();
   }
-  
-  private URN getImageThumbnailURN(long videoFileSizeBytes,
-      InitializeUploadRequest initializeUploadRequest,
-      String videoLocation, byte[] fileBytes) throws IOException {
-    
-    initializeUploadRequest.getInitializeUploadRequest().setFileSizeBytes(videoFileSizeBytes);
-    InitializeUploadResponse initializeUploadResponse = initializeUpload(initializeUploadRequest);
-    InitializeUploadResponse.Value value = initializeUploadResponse.getValue();
-    
-    List<String> uploadedPartIds = new ArrayList<>();
-    for (InitializeUploadResponse.UploadInstruction instruction : value.getUploadInstructions()) {
-      String etag = uploadVideoFileChunk(videoLocation, fileBytes, instruction);
-      uploadedPartIds.add(etag);
-    }
-    
-    FinalizeUploadRequest finalizeUploadRequest =
-        new FinalizeUploadRequest(value.getVideo(), value.getUploadToken(), uploadedPartIds);
-    finalizeUpload(finalizeUploadRequest);
-    
-    return value.getVideo();
-  }
-  
-  
-  
   
   public InitializeUploadResponse initializeUpload(
       InitializeUploadRequest initializeUploadRequest) {
