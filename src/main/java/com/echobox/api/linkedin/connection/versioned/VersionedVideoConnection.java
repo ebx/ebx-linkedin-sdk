@@ -101,6 +101,7 @@ public class VersionedVideoConnection extends VersionedConnection {
       String videoLocation, byte[] fileBytes) throws IOException {
   
     initializeUploadRequest.getInitializeUploadRequest().setFileSizeBytes(videoFileSizeBytes);
+    
     InitializeUploadResponse initializeUploadResponse = initializeUpload(initializeUploadRequest);
     InitializeUploadResponse.Value value = initializeUploadResponse.getValue();
   
