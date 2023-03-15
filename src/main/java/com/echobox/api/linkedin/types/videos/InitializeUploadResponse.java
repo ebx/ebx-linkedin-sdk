@@ -35,6 +35,10 @@ public class InitializeUploadResponse {
   @LinkedIn
   private Value value;
   
+  @Getter
+  @LinkedIn
+  private String thumbnailUploadUrl;
+  
   /**
    * Value object
    * @author sergio
