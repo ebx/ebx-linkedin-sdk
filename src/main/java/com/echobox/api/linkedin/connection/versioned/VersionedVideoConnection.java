@@ -155,17 +155,21 @@ public class VersionedVideoConnection extends VersionedConnection {
         Parameter.with(ACTION_KEY, FINALIZE_UPLOAD));
   }
   
-  private void uploadThumbnailImage(String thumbnailImageURL, InitializeUploadResponse
-      initializeUploadResponse) throws IOException {
+  private Map<String, String> uploadThumbnailImage(String thumbnailImageURL,
+      InitializeUploadResponse initializeUploadResponse) throws IOException {
+    
+    Map<String, String> responseHeaders = new HashMap<>();
+    
     if (StringUtils.isNotEmpty(thumbnailImageURL)) {
       byte[] bytes =
           UploadHelper.convertURLToBytes(UploadHelper.extractUploadURL(thumbnailImageURL));
-  
       String thumbnailUploadUrl = initializeUploadResponse.getThumbnailUploadUrl();
       if (StringUtils.isNotEmpty(thumbnailUploadUrl)) {
-        UploadHelper.uploadImageBytes(linkedinClient.getWebRequestor(), new URL(thumbnailUploadUrl),
-            new HashMap<>(), thumbnailImageURL, bytes);
+        responseHeaders = UploadHelper.uploadImageBytes(linkedinClient.getWebRequestor(),
+            new URL(thumbnailUploadUrl), new HashMap<>(), thumbnailImageURL, bytes);
       }
     }
+    
+    return responseHeaders;
   }
 }
