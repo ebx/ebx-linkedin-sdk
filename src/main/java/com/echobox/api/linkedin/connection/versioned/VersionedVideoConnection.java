@@ -110,7 +110,7 @@ public class VersionedVideoConnection extends VersionedConnection {
       uploadedPartIds.add(etag);
     }
   
-    uploadThumbnailImage(thumbnailImageURL, initializeUploadResponse);
+    uploadThumbnailImage(thumbnailImageURL, value);
   
     FinalizeUploadRequest finalizeUploadRequest =
         new FinalizeUploadRequest(value.getVideo(), value.getUploadToken(), uploadedPartIds);
@@ -156,14 +156,14 @@ public class VersionedVideoConnection extends VersionedConnection {
   }
   
   private Map<String, String> uploadThumbnailImage(String thumbnailImageURL,
-      InitializeUploadResponse initializeUploadResponse) throws IOException {
+      InitializeUploadResponse.Value initializeUploadResponseValue) throws IOException {
     
     Map<String, String> responseHeaders = new HashMap<>();
     
     if (StringUtils.isNotEmpty(thumbnailImageURL)) {
       byte[] bytes =
           UploadHelper.convertURLToBytes(UploadHelper.extractUploadURL(thumbnailImageURL));
-      String thumbnailUploadUrl = initializeUploadResponse.getThumbnailUploadUrl();
+      String thumbnailUploadUrl = initializeUploadResponseValue.getThumbnailUploadUrl();
       if (StringUtils.isNotEmpty(thumbnailUploadUrl)) {
         responseHeaders = UploadHelper.uploadImageBytes(linkedinClient.getWebRequestor(),
             new URL(thumbnailUploadUrl), new HashMap<>(), thumbnailImageURL, bytes);

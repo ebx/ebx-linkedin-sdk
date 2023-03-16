@@ -35,10 +35,6 @@ public class InitializeUploadResponse {
   @LinkedIn
   private Value value;
   
-  @Getter
-  @LinkedIn
-  private String thumbnailUploadUrl;
-  
   /**
    * Value object
    * @author sergio
@@ -73,6 +69,14 @@ public class InitializeUploadResponse {
     @Getter
     @LinkedIn
     private List<UploadInstruction> uploadInstructions;
+  
+    /**
+     * URL used for uploading thumbnail image for the video. This value will be present only if
+     * initializeUploadRequest.uploadThumbnail is true.
+     */
+    @Getter
+    @LinkedIn
+    private String thumbnailUploadUrl;
   }
   
   /**
