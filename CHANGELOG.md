@@ -173,3 +173,6 @@ can get data for both organization and organization brand pages.
 
 ## 4.3.1 (Mar 14, 2023)
 * Add a flag to note that we want to upload a thumbnail image along with the video
+
+## 4.4.0 (Mar 16, 2023)
+* Add support to upload thumbnail image to a video
