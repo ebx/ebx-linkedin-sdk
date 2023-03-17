@@ -22,19 +22,16 @@ import com.echobox.api.linkedin.client.DefaultVersionedLinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.VersionedLinkedInClient;
 import com.echobox.api.linkedin.client.WebRequestor;
-import com.echobox.api.linkedin.exception.LinkedInResponseException;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.videos.FinalizeUploadRequest;
 import com.echobox.api.linkedin.types.videos.InitializeUploadRequest;
 import com.echobox.api.linkedin.types.videos.InitializeUploadResponse;
 import com.echobox.api.linkedin.util.ValidationUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.entity.ContentType;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -76,29 +73,31 @@ public class VersionedVideoConnection extends VersionedConnection {
     super(linkedinClient);
   }
   
-  public URN uploadVideoFromURL(InitializeUploadRequest initializeUploadRequest, String videoURL)
-      throws IOException {
+  public URN uploadVideoFromURL(InitializeUploadRequest initializeUploadRequest, String videoURL,
+      String thumbnailImageURL) throws IOException {
   
-    URL url = new URL(videoURL);
-    byte[] fileBytes = convertURLToBytes(url);
+    URL url = UploadHelper.extractUploadURL(videoURL);
+    byte[] fileBytes = UploadHelper.convertURLToBytes(url);
     long videoFileSizeBytes = fileBytes.length;
   
-    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, videoURL, fileBytes);
+    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, videoURL, fileBytes,
+        thumbnailImageURL);
   }
   
-  public URN uploadVideoFromFile(InitializeUploadRequest initializeUploadRequest, String filePath)
-      throws IOException {
+  public URN uploadVideoFromFile(InitializeUploadRequest initializeUploadRequest, String filePath,
+      String thumbnailImageURL) throws IOException {
   
     File file = new File(filePath);
     Path videoFilePath = Paths.get(filePath);
-    byte[] fileBytes = convertFileToBytes(file);
+    byte[] fileBytes = UploadHelper.convertFileToBytes(file);
     long videoFileSizeBytes = Files.size(videoFilePath);
     
-    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, filePath, fileBytes);
+    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, filePath,
+        fileBytes, thumbnailImageURL);
   }
   
   private URN getVideoURN(long videoFileSizeBytes, InitializeUploadRequest initializeUploadRequest,
-      String videoLocation, byte[] fileBytes) throws IOException {
+      String videoLocation, byte[] fileBytes, String thumbnailImageURL) throws IOException {
   
     initializeUploadRequest.getInitializeUploadRequest().setFileSizeBytes(videoFileSizeBytes);
     
@@ -110,6 +109,8 @@ public class VersionedVideoConnection extends VersionedConnection {
       String etag = uploadVideoFileChunk(videoLocation, fileBytes, instruction);
       uploadedPartIds.add(etag);
     }
+  
+    uploadThumbnailImage(thumbnailImageURL, value);
   
     FinalizeUploadRequest finalizeUploadRequest =
         new FinalizeUploadRequest(value.getVideo(), value.getUploadToken(), uploadedPartIds);
@@ -140,7 +141,7 @@ public class VersionedVideoConnection extends VersionedConnection {
     BinaryAttachment attachment = BinaryAttachment.with(filePath, chunkBytes,
         ContentType.APPLICATION_OCTET_STREAM.toString());
     
-    URL url = extractUploadURL(instruction.getUploadUrl());
+    URL url = UploadHelper.extractUploadURL(instruction.getUploadUrl());
     WebRequestor.Response response =
         webRequestor.executePut(url.toString(), null, null, requestHeaders, attachment);
     Map<String, String> responseHeaders = response.getHeaders();
@@ -149,42 +150,26 @@ public class VersionedVideoConnection extends VersionedConnection {
     return responseHeaders.get(HEADER_ETAG);
   }
   
-  private URL extractUploadURL(String url) {
-    try {
-      return new URL(url);
-    } catch (MalformedURLException e) {
-      throw new LinkedInResponseException("Invalid upload url returned from LinkedIn.", e);
-    }
-  }
-  
   public void finalizeUpload(FinalizeUploadRequest finalizeUploadRequest) {
     linkedinClient.publish(VIDEOS, finalizeUploadRequest,
         Parameter.with(ACTION_KEY, FINALIZE_UPLOAD));
   }
   
-  private byte[] convertURLToBytes(URL videoURL) throws IOException {
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    try (InputStream inputStream = videoURL.openStream()) {
-
-      int byteChunk;
+  private Map<String, String> uploadThumbnailImage(String thumbnailImageURL,
+      InitializeUploadResponse.Value initializeUploadResponseValue) throws IOException {
     
-      while ((byteChunk = inputStream.read()) != -1) {
-        baos.write(byteChunk);
+    Map<String, String> responseHeaders = new HashMap<>();
+    
+    if (StringUtils.isNotEmpty(thumbnailImageURL)) {
+      byte[] bytes =
+          UploadHelper.convertURLToBytes(UploadHelper.extractUploadURL(thumbnailImageURL));
+      String thumbnailUploadUrl = initializeUploadResponseValue.getThumbnailUploadUrl();
+      if (StringUtils.isNotEmpty(thumbnailUploadUrl)) {
+        responseHeaders = UploadHelper.uploadImageBytes(linkedinClient.getWebRequestor(),
+            new URL(thumbnailUploadUrl), new HashMap<>(), thumbnailImageURL, bytes);
       }
-    } catch (IOException e) {
-      throw new IOException(
-          String.format("Failed while reading bytes from %s: %s", videoURL.toExternalForm(),
-              e.getMessage()));
     }
-  
-    return baos.toByteArray();
-  }
-  
-  private byte[] convertFileToBytes(File file) throws IOException {
-    try (InputStream videoInputStream = Files.newInputStream(file.toPath())) {
-      byte[] bytes = new byte[(int) file.length()];
-      videoInputStream.read(bytes);
-      return bytes;
-    }
+    
+    return responseHeaders;
   }
 }

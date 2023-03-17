@@ -69,6 +69,14 @@ public class InitializeUploadResponse {
     @Getter
     @LinkedIn
     private List<UploadInstruction> uploadInstructions;
+  
+    /**
+     * URL used for uploading thumbnail image for the video. This value will be present only if
+     * initializeUploadRequest.uploadThumbnail is true.
+     */
+    @Getter
+    @LinkedIn
+    private String thumbnailUploadUrl;
   }
   
   /**
