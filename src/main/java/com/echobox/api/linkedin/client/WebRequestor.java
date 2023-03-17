@@ -97,10 +97,10 @@ public interface WebRequestor {
      */
     @Override
     public String toString() {
-      if (StringUtils.isBlank(getBody())) {
-        return format("HTTP status code %d and an empty response body.", getStatusCode());
-      }
-      return format("HTTP status code %d and response body: %s", getStatusCode(), getBody());
+      String responseBody = StringUtils.isBlank(getBody()) ? "an empty response body" :
+          format("response body: %s", getBody());
+      return format("HTTP status code %d and %s and headers %s.", getStatusCode(), responseBody,
+          getHeaders());
     }
   }
 
