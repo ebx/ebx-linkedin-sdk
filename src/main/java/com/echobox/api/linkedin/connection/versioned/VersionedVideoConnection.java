@@ -22,7 +22,6 @@ import com.echobox.api.linkedin.client.DefaultVersionedLinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.VersionedLinkedInClient;
 import com.echobox.api.linkedin.client.WebRequestor;
-import com.echobox.api.linkedin.exception.LinkedInResponseException;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.videos.FinalizeUploadRequest;
 import com.echobox.api.linkedin.types.videos.InitializeUploadRequest;
@@ -30,12 +29,11 @@ import com.echobox.api.linkedin.types.videos.InitializeUploadResponse;
 import com.echobox.api.linkedin.types.videos.VideoDetails;
 import com.echobox.api.linkedin.util.URLUtils;
 import com.echobox.api.linkedin.util.ValidationUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.entity.ContentType;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -77,22 +75,49 @@ public class VersionedVideoConnection extends VersionedConnection {
     super(linkedinClient);
   }
   
-  public URN uploadVideo(InitializeUploadRequest initializeUploadRequest, String filePath)
-      throws IOException {
+  public URN uploadVideoFromURL(InitializeUploadRequest initializeUploadRequest, String videoURL,
+      String thumbnailImageURL) throws IOException {
   
+    URL url = UploadHelper.extractUploadURL(videoURL);
+    byte[] fileBytes = UploadHelper.convertURLToBytes(url);
+    long videoFileSizeBytes = fileBytes.length;
+  
+    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, videoURL, fileBytes,
+        thumbnailImageURL);
+  }
+  
+  public URN uploadVideoFromFile(InitializeUploadRequest initializeUploadRequest, String filePath,
+      String thumbnailImageURL) throws IOException {
+  
+    File file = new File(filePath);
     Path videoFilePath = Paths.get(filePath);
-    long fileSizeBytes = Files.size(videoFilePath);
+    byte[] fileBytes = UploadHelper.convertFileToBytes(file);
+    long videoFileSizeBytes = Files.size(videoFilePath);
+    
+    return getVideoURN(videoFileSizeBytes, initializeUploadRequest, filePath,
+        fileBytes, thumbnailImageURL);
+  }
   
-    initializeUploadRequest.getInitializeUploadRequest().setFileSizeBytes(fileSizeBytes);
+  private URN getVideoURN(long videoFileSizeBytes, InitializeUploadRequest initializeUploadRequest,
+      String videoLocation, byte[] fileBytes, String thumbnailImageURL) throws IOException {
+  
+    initializeUploadRequest.getInitializeUploadRequest().setFileSizeBytes(videoFileSizeBytes);
+    
     InitializeUploadResponse initializeUploadResponse = initializeUpload(initializeUploadRequest);
     InitializeUploadResponse.Value value = initializeUploadResponse.getValue();
-    
-    List<String> uploadedPartIds = uploadVideoFile(filePath, value.getUploadInstructions());
-    
+  
+    List<String> uploadedPartIds = new ArrayList<>();
+    for (InitializeUploadResponse.UploadInstruction instruction : value.getUploadInstructions()) {
+      String etag = uploadVideoFileChunk(videoLocation, fileBytes, instruction);
+      uploadedPartIds.add(etag);
+    }
+  
+    uploadThumbnailImage(thumbnailImageURL, value);
+  
     FinalizeUploadRequest finalizeUploadRequest =
         new FinalizeUploadRequest(value.getVideo(), value.getUploadToken(), uploadedPartIds);
     finalizeUpload(finalizeUploadRequest);
-    
+  
     return value.getVideo();
   }
   
@@ -102,21 +127,6 @@ public class VersionedVideoConnection extends VersionedConnection {
         initializeUploadRequest.getInitializeUploadRequest().getFileSizeBytes());
     return linkedinClient.publish(VIDEOS, InitializeUploadResponse.class, initializeUploadRequest,
         Parameter.with(ACTION_KEY, INITIALIZE_UPLOAD));
-  }
-  
-  public List<String> uploadVideoFile(String filePath,
-      List<InitializeUploadResponse.UploadInstruction> uploadInstructions) throws IOException {
-    
-    File file = new File(filePath);
-    byte[] fileBytes = convertToBytes(file);
-    
-    List<String> uploadPartIds = new ArrayList<>();
-    for (InitializeUploadResponse.UploadInstruction instruction : uploadInstructions) {
-      String etag = uploadVideoFileChunk(filePath, fileBytes, instruction);
-      uploadPartIds.add(etag);
-    }
-    
-    return uploadPartIds;
   }
   
   public String uploadVideoFileChunk(String filePath, byte[] fileBytes,
@@ -133,7 +143,7 @@ public class VersionedVideoConnection extends VersionedConnection {
     BinaryAttachment attachment = BinaryAttachment.with(filePath, chunkBytes,
         ContentType.APPLICATION_OCTET_STREAM.toString());
     
-    URL url = extractUploadURL(instruction.getUploadUrl());
+    URL url = UploadHelper.extractUploadURL(instruction.getUploadUrl());
     WebRequestor.Response response =
         webRequestor.executePut(url.toString(), null, null, requestHeaders, attachment);
     Map<String, String> responseHeaders = response.getHeaders();
@@ -142,25 +152,27 @@ public class VersionedVideoConnection extends VersionedConnection {
     return responseHeaders.get(HEADER_ETAG);
   }
   
-  private URL extractUploadURL(String url) {
-    try {
-      return new URL(url);
-    } catch (MalformedURLException e) {
-      throw new LinkedInResponseException("Invalid upload url returned from LinkedIn.", e);
-    }
-  }
-  
   public void finalizeUpload(FinalizeUploadRequest finalizeUploadRequest) {
     linkedinClient.publish(VIDEOS, finalizeUploadRequest,
         Parameter.with(ACTION_KEY, FINALIZE_UPLOAD));
   }
   
-  private static byte[] convertToBytes(File file) throws IOException {
-    try (InputStream videoInputStream = Files.newInputStream(file.toPath())) {
-      byte[] bytes = new byte[(int) file.length()];
-      videoInputStream.read(bytes);
-      return bytes;
+  private Map<String, String> uploadThumbnailImage(String thumbnailImageURL,
+      InitializeUploadResponse.Value initializeUploadResponseValue) throws IOException {
+    
+    Map<String, String> responseHeaders = new HashMap<>();
+    
+    if (StringUtils.isNotEmpty(thumbnailImageURL)) {
+      byte[] bytes =
+          UploadHelper.convertURLToBytes(UploadHelper.extractUploadURL(thumbnailImageURL));
+      String thumbnailUploadUrl = initializeUploadResponseValue.getThumbnailUploadUrl();
+      if (StringUtils.isNotEmpty(thumbnailUploadUrl)) {
+        responseHeaders = UploadHelper.uploadImageBytes(linkedinClient.getWebRequestor(),
+            new URL(thumbnailUploadUrl), new HashMap<>(), thumbnailImageURL, bytes);
+      }
     }
+    
+    return responseHeaders;
   }
 
   public VideoDetails retrieveVideoDetails(URN videoURN) {
