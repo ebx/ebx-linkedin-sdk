@@ -20,7 +20,6 @@ package com.echobox.api.linkedin.client;
 import static java.lang.String.format;
 
 import com.echobox.api.linkedin.util.JsonUtils;
-import com.echobox.api.linkedin.util.URLUtils;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
