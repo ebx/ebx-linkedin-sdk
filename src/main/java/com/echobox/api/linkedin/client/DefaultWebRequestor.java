@@ -227,6 +227,7 @@ public class DefaultWebRequestor implements WebRequestor {
     return executePost(url, parameters, jsonBody, null, new BinaryAttachment[0]);
   }
 
+  // CPD-OFF
   @Override
   public Response executePost(String url, String parameters, String jsonBody,
       Map<String, String> headers,
@@ -337,7 +338,7 @@ public class DefaultWebRequestor implements WebRequestor {
           // Ensure the response headers are also set to JSON
           request.setResponseHeaders(new HttpHeaders().set(FORMAT_HEADER, "json"));
         } else {
-          // Plain old POST request
+          // Plain old PUT request
           request = requestFactory.buildPutRequest(genericUrl, null);
         }
       }
@@ -366,6 +367,7 @@ public class DefaultWebRequestor implements WebRequestor {
       }
     }
   }
+  // CPD-ON
   
   private Response getResponse(HttpRequest request) throws IOException {
     HttpResponse httpResponse = request.execute();
