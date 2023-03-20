@@ -21,6 +21,7 @@ import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.LinkedInURNIdType;
 import com.echobox.api.linkedin.types.images.ImageDetails;
 import com.echobox.api.linkedin.types.urn.URN;
+import com.echobox.api.linkedin.types.videos.VideoDetails;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -203,6 +204,14 @@ public class Post extends LinkedInURNIdType {
   @Getter
   @Setter
   private Map<URN, ImageDetails> images;
+  
+  /**
+   * Mapping of video URN to video details.
+   * The video details will need to be retrieved via a separate API call and populated manually.
+   */
+  @Getter
+  @Setter
+  private Map<URN, VideoDetails> videos;
 
   public String getTitle() {
     Content content = this.getContent();
@@ -231,6 +240,13 @@ public class Post extends LinkedInURNIdType {
   public List<String> getImageURLs() {
     return images.values().stream()
         .map(ImageDetails::getDownloadUrl)
+        .filter(StringUtils::isNotBlank)
+        .collect(Collectors.toList());
+  }
+  
+  public List<String> getVideoURLs() {
+    return videos.values().stream()
+        .map(VideoDetails::getDownloadUrl)
         .filter(StringUtils::isNotBlank)
         .collect(Collectors.toList());
   }
