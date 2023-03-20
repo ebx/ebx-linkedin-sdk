@@ -20,7 +20,6 @@ package com.echobox.api.linkedin.client;
 import static java.lang.String.format;
 
 import com.echobox.api.linkedin.util.JsonUtils;
-import com.echobox.api.linkedin.util.URLUtils;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
@@ -228,20 +227,13 @@ public class DefaultWebRequestor implements WebRequestor {
     return executePost(url, parameters, jsonBody, null, new BinaryAttachment[0]);
   }
 
+  // CPD-OFF
   @Override
   public Response executePost(String url, String parameters, String jsonBody,
       Map<String, String> headers,
       BinaryAttachment... binaryAttachments)
       throws IOException {
     
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Executing a POST to " + url + " with parameters "
-          + (binaryAttachments.length > 0 ? "" : "(sent in request body): ")
-          + URLUtils.urlDecode(parameters)
-          + (binaryAttachments.length > 0 ? " and " + binaryAttachments.length
-              + " binary attachment[s]." : ""));
-    }
-
     if (binaryAttachments == null) {
       binaryAttachments = new BinaryAttachment[0];
     }
@@ -294,6 +286,13 @@ public class DefaultWebRequestor implements WebRequestor {
       customizeConnection(request);
   
       addHeadersToRequest(request, httpHeaders, headers);
+  
+      if (LOGGER.isDebugEnabled()) {
+        String body = StringUtils.isEmpty(jsonBody) ? "no payload"
+            : format("payload: %s", jsonBody);
+        LOGGER.debug(format("Executing a POST to %s with %s and headers: %s.",
+            request.getUrl().toString(), body, request.getHeaders().toString()));
+      }
 
       return getResponse(request);
     } catch (HttpResponseException ex) {
@@ -311,14 +310,6 @@ public class DefaultWebRequestor implements WebRequestor {
   public Response executePut(String url, String parameters, String jsonBody,
       Map<String, String> headers, BinaryAttachment binaryAttachment)
       throws IOException {
-  
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Executing a PUT to " + url + " with parameters "
-          + (binaryAttachment != null ? "" : "(sent in request body): ")
-          + URLUtils.urlDecode(parameters)
-          + (binaryAttachment != null ? " and " + binaryAttachment
-          + " binary attachment." : ""));
-    }
   
     try {
       GenericUrl genericUrl = getGenericURL(url, parameters);
@@ -347,7 +338,7 @@ public class DefaultWebRequestor implements WebRequestor {
           // Ensure the response headers are also set to JSON
           request.setResponseHeaders(new HttpHeaders().set(FORMAT_HEADER, "json"));
         } else {
-          // Plain old POST request
+          // Plain old PUT request
           request = requestFactory.buildPutRequest(genericUrl, null);
         }
       }
@@ -360,6 +351,13 @@ public class DefaultWebRequestor implements WebRequestor {
   
       addHeadersToRequest(request, httpHeaders, headers);
     
+      if (LOGGER.isDebugEnabled()) {
+        String body = StringUtils.isEmpty(jsonBody) ? "no payload"
+            : format("payload: %s", jsonBody);
+        LOGGER.debug(format("Executing a PUT to %s with %s and headers: %s.",
+            request.getUrl().toString(), body, request.getHeaders().toString()));
+      }
+  
       return getResponse(request);
     } catch (HttpResponseException ex) {
       return handleException(ex);
@@ -369,6 +367,7 @@ public class DefaultWebRequestor implements WebRequestor {
       }
     }
   }
+  // CPD-ON
   
   private Response getResponse(HttpRequest request) throws IOException {
     HttpResponse httpResponse = request.execute();
@@ -514,7 +513,8 @@ public class DefaultWebRequestor implements WebRequestor {
   private Response execute(String url, HttpMethod httpMethod, Map<String, String> headers)
       throws IOException {
     if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug(format("Making a %s request to %s", httpMethod.name(), url));
+      LOGGER.debug(format("Making a %s request to %s with headers %s", httpMethod.name(), url,
+          headers));
     }
 
     HttpResponse httpResponse = null;
