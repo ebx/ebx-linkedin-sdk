@@ -31,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -238,17 +239,25 @@ public class Post extends LinkedInURNIdType {
   }
   
   public List<String> getImageURLs() {
-    return images.values().stream()
-        .map(ImageDetails::getDownloadUrl)
-        .filter(StringUtils::isNotBlank)
-        .collect(Collectors.toList());
+    if (images != null) {
+      return images.values().stream()
+          .map(ImageDetails::getDownloadUrl)
+          .filter(StringUtils::isNotBlank)
+          .collect(Collectors.toList());
+    } else {
+      return new ArrayList<>();
+    }
   }
   
   public List<String> getVideoURLs() {
-    return videos.values().stream()
-        .map(VideoDetails::getDownloadUrl)
-        .filter(StringUtils::isNotBlank)
-        .collect(Collectors.toList());
+    if (videos != null) {
+      return videos.values().stream()
+          .map(VideoDetails::getDownloadUrl)
+          .filter(StringUtils::isNotBlank)
+          .collect(Collectors.toList());
+    } else {
+      return new ArrayList<>();
+    }
   }
   
   /**
