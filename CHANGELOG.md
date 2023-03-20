@@ -177,6 +177,9 @@ can get data for both organization and organization brand pages.
 ## 4.4.0 (Mar 16, 2023)
 * Add support to upload thumbnail image to a video
 
-## 4.4.1 (Mar 20, 2023)
+## 4.4.1 (Mar 17, 2023)
+* Add more detail to debug logs
+
+## 4.4.2 (Mar 20, 2023)
 * Add support to retrieve video details from LinkedIn
 * Extend `Post` object to include video details mapping
