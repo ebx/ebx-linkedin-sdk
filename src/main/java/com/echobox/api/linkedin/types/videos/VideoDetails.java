@@ -27,35 +27,34 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VideoDetails {
-
   public VideoDetails(String downloadUrl) {
     this.downloadUrl = downloadUrl;
   }
-
+  
   @LinkedIn
   private URN owner;
-
+  
   @LinkedIn
   private URN id;
-
-  @LinkedIn
-  private String downloadUrl;
-
-  @LinkedIn
-  private Long downloadUrlExpiresAt;
-
-  @LinkedIn
-  private String status;
-
-  @LinkedIn
-  private String thumbnail;
-
-  @LinkedIn
-  private Float aspectRatioWidth;
-
-  @LinkedIn
-  private Float aspectRatioHeight;
-
+  
   @LinkedIn
   private Long duration;
+  
+  @LinkedIn
+  private Float aspectRatioWidth;
+  
+  @LinkedIn
+  private Float aspectRatioHeight;
+  
+  @LinkedIn
+  private String downloadUrl;
+  
+  @LinkedIn
+  private Long downloadUrlExpiresAt;
+  
+  @LinkedIn
+  private String status;
+  
+  @LinkedIn
+  private String thumbnail;
 }
