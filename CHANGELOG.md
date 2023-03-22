@@ -182,4 +182,5 @@ can get data for both organization and organization brand pages.
 * Add support to retrieve video details from LinkedIn
 * Extend `Post` object to include video details mapping
 
-## 4.4.2 (Work in progress)
+## 4.4.2 (Mar 22, 2023)
+* Add support to retrieve video details from LinkedIn
