@@ -181,3 +181,5 @@ can get data for both organization and organization brand pages.
 * Add more detail to debug logs
 * Add support to retrieve video details from LinkedIn
 * Extend `Post` object to include video details mapping
+
+## 4.4.2 (Work in progress)
