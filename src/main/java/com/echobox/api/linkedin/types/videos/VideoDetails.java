@@ -27,7 +27,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VideoDetails {
-  
   public VideoDetails(String downloadUrl) {
     this.downloadUrl = downloadUrl;
   }
