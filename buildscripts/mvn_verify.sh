@@ -1,4 +1,6 @@
 #!/bin/bash
+set -euo pipefail
+# shellcheck disable=SC2059
 ##
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -16,15 +18,15 @@
 # limitations under the License.
 ##
 
-## For DEV and MASTER deploy to maven central (DEV will always be a snapshot)
-## All other builds are simply verified
-if [ "$CIRCLE_BRANCH" == "$RELEASE_BRANCH" ] || [ "$CIRCLE_BRANCH" == "$DEV_BRANCH" ]; then
-  printf "${GREEN_COLOUR}Performing deploy build to maven central.${NO_COLOUR}\n"
-  echo "${GPG_SECRET_KEYS}" | base64 --decode | $GPG_EXECUTABLE --import --batch --passphrase "${GPG_PASSPHRASE}" || echo "Failed to import GPG_SECRET_KEYS."
-  echo "${GPG_OWNERTRUST}" | base64 --decode | $GPG_EXECUTABLE --import-ownertrust --batch --passphrase "${GPG_PASSPHRASE}" || echo "Failed to import GPG_OWNERTRUST."
-  
-  mvn clean deploy --settings .maven.xml -B -U -Prelease
+## For PR builds, perform maven verify. Exit with error if dev or master 
+## as these are handled separately in mvn_deploy.sh
+export JAVA_HOME="/usr"
+
+if [ "$CIRCLE_BRANCH" == "${DEV_BRANCH}" ] || [ "$CIRCLE_BRANCH" == "${RELEASE_BRANCH}" ]; then
+  printf "${RED_COLOUR}ERROR: PR builds should not be triggered by ${DEV_BRANCH} or ${RELEASE_BRANCH} branches.${NO_COLOUR}\n"
+  exit 1
 else
-  printf "${GREEN_COLOUR}Performing a PR verify build. Releases are only created from $DEV_BRANCH and $RELEASE_BRANCH branches.${NO_COLOUR}\n"
+  printf "${GREEN_COLOUR}Performing a PR verify build on PR #${CIRCLE_PULL_REQUEST##*/}.${NO_COLOUR}\n"
+  java --version
   mvn clean verify
 fi
