@@ -1,4 +1,6 @@
 #!/bin/bash
+set -euo pipefail
+# shellcheck disable=SC2059
 ##
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -16,11 +18,8 @@
 # limitations under the License.
 ##
 
-if [ "$CIRCLE_BRANCH" == "dev" ] || [ "$CIRCLE_BRANCH" == "master" ]; then
+if [ "${CIRCLE_BRANCH}" == "${RELEASE_BRANCH}" ] || [ "${CIRCLE_BRANCH}" == "${DEV_BRANCH}" ]; then
   printf "${GREEN_COLOUR}Building base branch $CIRCLE_BRANCH.${NO_COLOUR}\n"
 else
-  #Get the PR title
-  export PR_TITLE=$(curl -s https://api.github.com/repos/$REPO/pulls/${CIRCLE_PULL_REQUEST##*/} | grep -Po '(?<="title":[[:space:]]")[^"]*(?=",)')
-
-  printf "${GREEN_COLOUR}Building PR #${CIRCLE_PULL_REQUEST##*/} '$PR_TITLE' from branch $CIRCLE_BRANCH (into $DEV_BRANCH)${NO_COLOUR}\n"
+  printf "${GREEN_COLOUR}Building PR #${CIRCLE_PULL_REQUEST##*/} '${CIRCLE_PULL_REQUEST}' from branch ${CIRCLE_BRANCH} (into ${DEV_BRANCH})${NO_COLOUR}\n"
 fi
