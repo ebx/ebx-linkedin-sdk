@@ -20,7 +20,7 @@ workflows:
           requires:
             - validate
 
-  stage_or_release_build:
+  dev_or_master_build:
     when:
       or:
         - equal: [ dev, << pipeline.git.branch >> ]
