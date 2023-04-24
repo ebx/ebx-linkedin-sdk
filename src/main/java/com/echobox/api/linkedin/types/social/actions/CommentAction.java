@@ -91,6 +91,19 @@ public class CommentAction extends ContainsURN {
     @Setter
     @LinkedIn
     private String url;
+
+    @Getter
+    @Setter
+    @LinkedIn
+    private CommentEntity entity;
+  }
+
+  public static class CommentEntity {
+
+    @Getter
+    @Setter
+    @LinkedIn
+    private URN digitalMediaAsset;
   }
   
   /**
