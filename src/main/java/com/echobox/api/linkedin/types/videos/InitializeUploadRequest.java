@@ -65,5 +65,13 @@ public class InitializeUploadRequest {
     @Getter
     @LinkedIn
     private Long fileSizeBytes;
+  
+    /**
+     * Whether a thumbnail image should be uploaded for the video. Default = false
+     */
+    @Setter
+    @Getter
+    @LinkedIn
+    private boolean uploadThumbnail = false;
   }
 }

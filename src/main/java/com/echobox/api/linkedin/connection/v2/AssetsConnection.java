@@ -21,6 +21,7 @@ import com.echobox.api.linkedin.client.BinaryAttachment;
 import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
 import com.echobox.api.linkedin.client.WebRequestor;
+import com.echobox.api.linkedin.connection.versioned.UploadHelper;
 import com.echobox.api.linkedin.exception.LinkedInNetworkException;
 import com.echobox.api.linkedin.types.assets.CheckStatusUpload;
 import com.echobox.api.linkedin.types.assets.CompleteMultiPartUploadBody;
@@ -30,9 +31,7 @@ import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.util.ValidationUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -81,11 +80,8 @@ public class AssetsConnection extends ConnectionBaseV2 {
    */
   public URN uploadImageAsset(RegisterUploadRequestBody registerUploadRequestBody, String filename,
       File file) throws IOException {
-    try (InputStream videoInputStream = new FileInputStream(file)) {
-      byte[] bytes = new byte[(int) file.length()];
-      videoInputStream.read(bytes);
-      return uploadImageAsset(registerUploadRequestBody, filename, bytes);
-    }
+    byte[] bytes = UploadHelper.convertFileToBytes(file);
+    return uploadImageAsset(registerUploadRequestBody, filename, bytes);
   }
   
   /**
@@ -141,11 +137,8 @@ public class AssetsConnection extends ConnectionBaseV2 {
    */
   public static Map<String, String> uploadAsset(WebRequestor webRequestor, URL uploadURL,
       Map<String, String> headers, String filename, File file) throws IOException {
-    try (InputStream videoInputStream = new FileInputStream(file)) {
-      byte[] bytes = new byte[(int) file.length()];
-      videoInputStream.read(bytes);
-      return uploadAsset(webRequestor, uploadURL, headers, filename, bytes);
-    }
+    byte[] bytes = UploadHelper.convertFileToBytes(file);
+    return uploadAsset(webRequestor, uploadURL, headers, filename, bytes);
   }
   
   // CPD-OFF

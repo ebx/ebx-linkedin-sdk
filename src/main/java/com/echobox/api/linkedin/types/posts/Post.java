@@ -21,6 +21,7 @@ import com.echobox.api.linkedin.jsonmapper.LinkedIn;
 import com.echobox.api.linkedin.types.LinkedInURNIdType;
 import com.echobox.api.linkedin.types.images.ImageDetails;
 import com.echobox.api.linkedin.types.urn.URN;
+import com.echobox.api.linkedin.types.videos.VideoDetails;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -203,6 +205,14 @@ public class Post extends LinkedInURNIdType {
   @Getter
   @Setter
   private Map<URN, ImageDetails> images;
+  
+  /**
+   * Mapping of video URN to video details.
+   * The video details will need to be retrieved via a separate API call and populated manually.
+   */
+  @Getter
+  @Setter
+  private Map<URN, VideoDetails> videos;
 
   public String getTitle() {
     Content content = this.getContent();
@@ -229,10 +239,25 @@ public class Post extends LinkedInURNIdType {
   }
   
   public List<String> getImageURLs() {
-    return images.values().stream()
-        .map(ImageDetails::getDownloadUrl)
-        .filter(StringUtils::isNotBlank)
-        .collect(Collectors.toList());
+    if (images != null) {
+      return images.values().stream()
+          .map(ImageDetails::getDownloadUrl)
+          .filter(StringUtils::isNotBlank)
+          .collect(Collectors.toList());
+    } else {
+      return new ArrayList<>();
+    }
+  }
+  
+  public List<String> getVideoURLs() {
+    if (videos != null) {
+      return videos.values().stream()
+          .map(VideoDetails::getDownloadUrl)
+          .filter(StringUtils::isNotBlank)
+          .collect(Collectors.toList());
+    } else {
+      return new ArrayList<>();
+    }
   }
   
   /**

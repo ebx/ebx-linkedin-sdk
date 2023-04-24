@@ -8,7 +8,7 @@
 
   <groupId>com.echobox</groupId>
   <artifactId>ebx-linkedin-sdk</artifactId>
-  <version>4.3.0</version>
+  <version>4.4.3</version>
   <packaging>jar</packaging>
 
   <properties>
@@ -86,7 +86,7 @@
     <dependency>
       <groupId>com.google.api-client</groupId>
       <artifactId>google-api-client</artifactId>
-      <version>2.1.1</version>
+      <version>2.2.0</version>
     </dependency>
     <dependency>
       <groupId>com.eclipsesource.minimal-json</groupId>
@@ -108,12 +108,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.22.2</version>
+        <version>3.0.0</version>
         <dependencies>
           <dependency>
             <groupId>org.apache.maven.surefire</groupId>
             <artifactId>surefire-junit47</artifactId>
-            <version>2.22.2</version>
+            <version>3.0.0</version>
           </dependency>
         </dependencies>
       </plugin>
@@ -177,7 +177,7 @@
           <dependency>
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
-            <version>8.45</version>
+            <version>10.9.3</version>
           </dependency>
           <dependency>
             <groupId>com.github.sevntu-checkstyle</groupId>
