@@ -187,3 +187,5 @@ can get data for both organization and organization brand pages.
 
 ## 4.4.3 (April 24, 2023)
 *  Add missing CommentEntity field to CommentAction
+
+## 4.4.4 (Work in progress)
