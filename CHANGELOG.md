@@ -184,3 +184,6 @@ can get data for both organization and organization brand pages.
 
 ## 4.4.2 (Mar 22, 2023)
 * Add support to retrieve video details from LinkedIn
+
+## 4.4.3 (April 24, 2023)
+*  Add missing CommentEntity field to CommentAction
