@@ -189,3 +189,4 @@ can get data for both organization and organization brand pages.
 *  Add missing CommentEntity field to CommentAction
 
 ## 4.4.4 (Work in progress)
+*  Update Versioned API to use the 202306 by default
