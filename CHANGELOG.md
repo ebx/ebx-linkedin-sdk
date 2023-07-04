@@ -190,3 +190,6 @@ can get data for both organization and organization brand pages.
 
 ## 4.4.4 (July 4, 2023)
 *  Update Versioned API to use the 202306 by default
+
+## 4.4.5 (Work in progress)
+
