@@ -192,4 +192,6 @@ can get data for both organization and organization brand pages.
 *  Update Versioned API to use the 202306 by default
 
 ## 4.4.5 (Work in progress)
-
+* Update edgeType parameter value for the /networkSizes endpoint to be 
+  COMPANY_FOLLOWED_BY_MEMBER instead of CompanyFollowedByMember. 
+  This changed in the LinkedIn API 202305 release.
