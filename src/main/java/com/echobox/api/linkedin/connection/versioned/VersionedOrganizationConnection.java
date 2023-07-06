@@ -84,7 +84,7 @@ public class VersionedOrganizationConnection extends VersionedConnection {
   private static final String ROLE_ASSIGNEE_VALUE = "roleAssignee";
   private static final String ORGANIZATION_VALUE = "organization";
   private static final String ORGANIZATIONAL_ENTITY_VALUE = "organizationalEntity";
-  private static final String COMPANY_FOLLOWED_BY_MEMBER_VALUE = "CompanyFollowedByMember";
+  private static final String COMPANY_FOLLOWED_BY_MEMBER_VALUE = "COMPANY_FOLLOWED_BY_MEMBER";
   
   /**
    * Instantiates a new connection base.
