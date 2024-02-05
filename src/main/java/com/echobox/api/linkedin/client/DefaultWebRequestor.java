@@ -287,10 +287,10 @@ public class DefaultWebRequestor implements WebRequestor {
   
       addHeadersToRequest(request, httpHeaders, headers);
   
-      if (LOGGER.isDebugEnabled()) {
+      if (LOGGER.isTraceEnabled()) {
         String body = StringUtils.isEmpty(jsonBody) ? "no payload"
             : format("payload: %s", jsonBody);
-        LOGGER.debug(format("Executing a POST to %s with %s and headers: %s.",
+        LOGGER.trace(format("Executing a POST to %s with %s and headers: %s.",
             request.getUrl().toString(), body, request.getHeaders().toString()));
       }
 
@@ -351,10 +351,10 @@ public class DefaultWebRequestor implements WebRequestor {
   
       addHeadersToRequest(request, httpHeaders, headers);
     
-      if (LOGGER.isDebugEnabled()) {
+      if (LOGGER.isTraceEnabled()) {
         String body = StringUtils.isEmpty(jsonBody) ? "no payload"
             : format("payload: %s", jsonBody);
-        LOGGER.debug(format("Executing a PUT to %s with %s and headers: %s.",
+        LOGGER.trace(format("Executing a PUT to %s with %s and headers: %s.",
             request.getUrl().toString(), body, request.getHeaders().toString()));
       }
   
@@ -376,8 +376,8 @@ public class DefaultWebRequestor implements WebRequestor {
 
     Response response = fetchResponse(httpResponse);
 
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug(format("LinkedIn responded with %s", response));
+    if (LOGGER.isTraceEnabled()) {
+      LOGGER.trace(format("LinkedIn responded with %s", response));
     }
 
     return response;
@@ -512,8 +512,8 @@ public class DefaultWebRequestor implements WebRequestor {
 
   private Response execute(String url, HttpMethod httpMethod, Map<String, String> headers)
       throws IOException {
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug(format("Making a %s request to %s with headers %s", httpMethod.name(), url,
+    if (LOGGER.isTraceEnabled()) {
+      LOGGER.trace(format("Making a %s request to %s with headers %s", httpMethod.name(), url,
           headers));
     }
 

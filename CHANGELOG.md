@@ -197,4 +197,6 @@ can get data for both organization and organization brand pages.
   This changed in the LinkedIn API 202305 release.
 
 ## 4.5.1 (Work in progress)
+* Update the log level of logs to reduce the excessive number of debug
+  logs when making requests to the LinkedIn endpoints.
 
