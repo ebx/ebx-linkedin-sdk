@@ -96,16 +96,7 @@ public class Organization extends OrganizationBase {
   @Setter
   @LinkedIn
   private SchoolAttribute schoolAttributes;
-
-  /**
-   * The image used in the Overview tab on the organization's page.
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  @Deprecated
-  private CroppedImage overviewPhoto;
-
+  
   /**
    * The image used in the Overview tab on the organization's page.
    */

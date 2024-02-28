@@ -18,7 +18,6 @@
 package com.echobox.api.linkedin.version;
 
 import com.echobox.api.linkedin.client.paging.PagingStrategy;
-import com.echobox.api.linkedin.client.paging.V1PagingImpl;
 import com.echobox.api.linkedin.client.paging.V2PagingImpl;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -35,21 +34,11 @@ import org.slf4j.LoggerFactory;
 public enum Version {
   
   /**
-   * LinkedIn V1 API version
-   */
-  V1("v1", new V1PagingImpl(), true),
-  
-  /**
-   * LinkedIn V2 API version
-   */
-  V2("v2", new V2PagingImpl(), false),
-  
-  /**
    * LinkedIn versioned API
    */
   VERSIONED("rest", new V2PagingImpl(), false);
   
-  private static Logger LOGGER = LoggerFactory.getLogger(Version.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(Version.class);
   
   /**
    * The default version - should be the most up to date version of LinkedIn API

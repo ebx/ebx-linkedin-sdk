@@ -20,7 +20,6 @@ package com.echobox.api.linkedin.connection;
 import com.echobox.api.linkedin.client.Connection;
 import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
-import com.echobox.api.linkedin.types.UGCPostsSortBy;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.urn.URNEntityType;
 import com.echobox.api.linkedin.util.ValidationUtils;
@@ -121,18 +120,6 @@ public abstract class ConnectionBase {
     }
     if (count != null) {
       params.add(Parameter.with("count", count));
-    }
-  }
-  
-  /**
-   * Add sortBy parameter
-   *
-   * @param params the list of parameters
-   * @param sortBy how the posts should be sorted in the response
-   */
-  protected void addSortByParam(List<Parameter> params, UGCPostsSortBy sortBy) {
-    if (sortBy != null) {
-      params.add(Parameter.with("sortBy", sortBy.toString()));
     }
   }
 
