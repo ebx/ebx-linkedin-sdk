@@ -200,6 +200,3 @@ can get data for both organization and organization brand pages.
 * Update the log level of logs to reduce the excessive number of debug logs when making requests 
   to the LinkedIn endpoints.
 * Minor dependency updates
-
-# 4.5.2 (work in progress)
-
