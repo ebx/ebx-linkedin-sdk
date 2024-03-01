@@ -203,3 +203,4 @@ can get data for both organization and organization brand pages.
 
 # 4.5.2 (work in progress)
 * Delete all dead code for V1 and V2 LinkedIn API endpoints and objects
+* Remove duplicate key in Post object
