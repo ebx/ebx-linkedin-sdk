@@ -18,7 +18,6 @@
 package com.echobox.api.linkedin.types.posts;
 
 import com.echobox.api.linkedin.jsonmapper.LinkedIn;
-import com.echobox.api.linkedin.types.LinkedInURNIdType;
 import com.echobox.api.linkedin.types.images.ImageDetails;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.videos.VideoDetails;
@@ -47,7 +46,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class Post extends LinkedInURNIdType {
+public class Post {
   
   /**
    * Urn of the author of this content.

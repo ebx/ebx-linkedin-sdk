@@ -202,4 +202,4 @@ can get data for both organization and organization brand pages.
 * Minor dependency updates
 
 # 4.5.2 (work in progress)
-
+* Remove duplicate key in Post object
