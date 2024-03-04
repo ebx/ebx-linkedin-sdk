@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.connection.versioned;
+package com.echobox.api.linkedin.connection;
 
-import com.echobox.api.linkedin.client.VersionedLinkedInClient;
+import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.types.social.actions.CommentAction;
 import com.echobox.api.linkedin.types.social.actions.CommentResponse;
 import com.echobox.api.linkedin.types.urn.URN;
@@ -28,7 +28,7 @@ import com.echobox.api.linkedin.types.urn.URN;
  * @author Sergio Abplanalp
  *
  */
-public class VersionedCommentConnection extends VersionedConnection {
+public class CommentConnection extends Connection {
   
   /**
    * endpoint path
@@ -36,11 +36,11 @@ public class VersionedCommentConnection extends VersionedConnection {
   private static final String SOCIAL_ACTIONS_COMMENT = "/socialActions/%s/comments";
 
   /**
-   * Instantiates a new versioned comment connection.
+   * Instantiates a new comment connection.
    *
    * @param linkedinClient the LinkedIn client
    */
-  public VersionedCommentConnection(VersionedLinkedInClient linkedinClient) {
+  public CommentConnection(LinkedInClient linkedinClient) {
     super(linkedinClient);
   }
   

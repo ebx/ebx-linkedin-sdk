@@ -49,15 +49,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Default implementation of a LinkedIn versioned API client.
+ * Default implementation of a LinkedIn API client.
  * @author Kenneth Wong
  *
  */
-public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
-    implements VersionedLinkedInClient {
+public class DefaultLinkedInClient extends BaseLinkedInClient
+    implements LinkedInClient {
   
   private static final Logger LOGGER =
-      LoggerFactory.getLogger(DefaultVersionedLinkedInClient.class);
+      LoggerFactory.getLogger(DefaultLinkedInClient.class);
 
   /**
    * HTTP parameter names.
@@ -167,7 +167,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
   protected String versionedMonth;
   
   /**
-   * By default this is <code>false</code>, so real http DELETE is used
+   * By default, this is <code>false</code>, so real http DELETE is used
    */
   protected boolean httpDeleteFallback = false;
   
@@ -183,7 +183,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    * @throws IOException
    *          If the DefaultWebRequestor fails to initialise
    */
-  public DefaultVersionedLinkedInClient(String accessToken)
+  public DefaultLinkedInClient(String accessToken)
       throws GeneralSecurityException, IOException {
     this(accessToken, Version.VERSIONED);
   }
@@ -200,7 +200,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    * @throws IOException
    *          If the DefaultWebRequestor fails to initialise
    */
-  public DefaultVersionedLinkedInClient(String accessToken, Version apiVersion)
+  public DefaultLinkedInClient(String accessToken, Version apiVersion)
       throws GeneralSecurityException, IOException {
     this(new DefaultWebRequestor(accessToken), new DefaultJsonMapper(), apiVersion);
   }
@@ -211,7 +211,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    * @param apiVersion
    *          Version of the api endpoint
    */
-  public DefaultVersionedLinkedInClient(Version apiVersion) {
+  public DefaultLinkedInClient(Version apiVersion) {
     this(null, new DefaultJsonMapper(), apiVersion, new DefaultLinkedInExceptionMapper());
   }
   
@@ -230,7 +230,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    * @throws IOException
    *          If the DefaultWebRequestor fails to initialise
    */
-  public DefaultVersionedLinkedInClient(String accessToken, Version apiVersion,
+  public DefaultLinkedInClient(String accessToken, Version apiVersion,
       String versionedMonth) throws GeneralSecurityException, IOException {
     this(new DefaultWebRequestor(accessToken), new DefaultJsonMapper(),
         apiVersion, versionedMonth);
@@ -248,7 +248,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    * @param apiVersion
    *          Version of the API endpoint
    */
-  public DefaultVersionedLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper,
+  public DefaultLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper,
       Version apiVersion) {
     this(webRequestor, jsonMapper, apiVersion, new DefaultLinkedInExceptionMapper());
     ValidationUtils.verifyParameterPresence("webRequestor", webRequestor);
@@ -268,7 +268,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    * @param versionedMonth
    *          LinkedIn-version of the API (in format YYYYMM)
    */
-  public DefaultVersionedLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper,
+  public DefaultLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper,
       Version apiVersion, String versionedMonth) {
     this(webRequestor, jsonMapper, apiVersion, new DefaultLinkedInExceptionMapper(),
         versionedMonth);
@@ -289,7 +289,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    * @param linkedinExceptionMapper
    *          Mapper class to handle LinkedIn exceptions
    */
-  public DefaultVersionedLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper,
+  public DefaultLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper,
       Version apiVersion, LinkedInExceptionMapper linkedinExceptionMapper) {
     this(webRequestor, jsonMapper, apiVersion, linkedinExceptionMapper, DEFAULT_VERSIONED_MONTH);
   }
@@ -310,7 +310,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
    * @param versionedMonth
    *          LinkedIn-version of the API (in format YYYYMM)
    */
-  public DefaultVersionedLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper,
+  public DefaultLinkedInClient(WebRequestor webRequestor, JsonMapper jsonMapper,
       Version apiVersion, LinkedInExceptionMapper linkedinExceptionMapper,
       String versionedMonth) {
     ValidationUtils.verifyParameterPresence("jsonMapper", jsonMapper);
@@ -621,7 +621,7 @@ public class DefaultVersionedLinkedInClient extends BaseLinkedInClient
     return makeRequestAndProcessResponse(new Requestor() {
       /**
        * Make the request
-       * @see DefaultVersionedLinkedInClient.Requestor#makeRequest()
+       * @see DefaultLinkedInClient.Requestor#makeRequest()
        */
       @Override
       public WebRequestor.Response makeRequest() throws IOException {

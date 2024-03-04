@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.connection.versioned;
+package com.echobox.api.linkedin.connection;
 
 import com.echobox.api.linkedin.client.Parameter;
-import com.echobox.api.linkedin.client.VersionedLinkedInClient;
+import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.connection.ConnectionBase;
 import com.echobox.api.linkedin.types.TimeInterval;
 import com.echobox.api.linkedin.version.Version;
@@ -26,10 +26,10 @@ import com.echobox.api.linkedin.version.Version;
 import java.util.List;
 
 /**
- * Base class for all connections using versioned API
+ * Base class for all connections using API
  * @author Kenneth Wong
  */
-public abstract class VersionedConnection extends ConnectionBase {
+public abstract class Connection extends ConnectionBase {
   
   /**
    * The query key.
@@ -45,7 +45,7 @@ public abstract class VersionedConnection extends ConnectionBase {
    *
    * @param linkedinClient the LinkedIn client
    */
-  protected VersionedConnection(VersionedLinkedInClient linkedinClient) {
+  protected Connection(LinkedInClient linkedinClient) {
     super(linkedinClient);
     if (Version.VERSIONED != linkedinClient.getVersion()) {
       throw new IllegalArgumentException("The version of linkedInClient is not VERSIONED");
