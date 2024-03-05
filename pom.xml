@@ -8,7 +8,7 @@
 
   <groupId>com.echobox</groupId>
   <artifactId>ebx-linkedin-sdk</artifactId>
-  <version>4.5.1</version>
+  <version>4.6.0</version>
   <packaging>jar</packaging>
 
   <properties>
@@ -177,7 +177,7 @@
           <dependency>
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
-            <version>10.13.0</version>
+            <version>10.14.0</version>
           </dependency>
           <dependency>
             <groupId>com.github.sevntu-checkstyle</groupId>
