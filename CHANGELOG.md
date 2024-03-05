@@ -201,6 +201,9 @@ can get data for both organization and organization brand pages.
   to the LinkedIn endpoints.
 * Minor dependency updates
 
+# 4.6.0 (March 5, 2024)
+* Add additional URN entity types to URNEntityType enum
+* Remove duplicate key in Post object
+
 # 5.0.0 (work in progress)
 * Delete all deprecated code for V1 and V2 LinkedIn API endpoints and objects
-* Remove duplicate key in Post object

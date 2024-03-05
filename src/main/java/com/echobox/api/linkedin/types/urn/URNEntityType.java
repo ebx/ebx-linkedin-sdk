@@ -54,7 +54,47 @@ public enum URNEntityType {
   /**
    * UGC post URN entity type.
    */
-  UGCPOST("ugcPost");
+  UGCPOST("ugcPost"),
+  /**
+   * UGC post URN entity type.
+   */
+  IMAGE("image"),
+  /**
+   * UGC post URN entity type.
+   */
+  DIGITALMEDIAASSET("ugcPost"),
+  /**
+   * UGC post URN entity type.
+   */
+  PERSON("person"),
+  /**
+   * UGC post URN entity type.
+   */
+  SPONSOREDACCOUNT("sponsoredAccount"),
+  /**
+   * UGC post URN entity type.
+   */
+  MEMBER("member"),
+  /**
+   * UGC post URN entity type.
+   */
+  COMPANY("company"),
+  /**
+   * UGC post URN entity type.
+   */
+  CSUSER("csUser"),
+  /**
+   * UGC post URN entity type.
+   */
+  COMMENT("comment"),
+  /**
+   * UGC post URN entity type.
+   */
+  ORIGINALARTICLE("originalArticle"),
+  /**
+   * UGC post URN entity type.
+   */
+  LIKE("like");
 
   /**
    * The string representation of the type
