@@ -22,7 +22,7 @@ use:
 <dependency>
   <groupId>com.echobox</groupId>
   <artifactId>ebx-linkedin-sdk</artifactId>
-  <version>4.6.0</version>
+  <version>5.0.0</version>
 </dependency>
 ```
 
@@ -95,10 +95,7 @@ Retrieve an organization from LinkedIn
     
     VersionedOrganizationConnection connection = 
         new VersionedOrganizationConnection(linkedInClient);
-    Organization organization = connection.retrieveOrganization(organizationURN, Parameter
-            .with("projection",
-                "(elements*(*,roleAssignee~(localizedFirstName, localizedLastName),"
-                    + "organizationalTarget~(localizedName)))"));
+    Organization organization = connection.retrieveOrganization(organizationURN, null);
 
 ## Getting in touch
 
