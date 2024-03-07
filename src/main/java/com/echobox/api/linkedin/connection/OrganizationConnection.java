@@ -121,8 +121,8 @@ public class OrganizationConnection extends Connection {
    * @param count the number of entries to be returned per paged request
    * @return The organization with the vanity name
    */
-  public List<OrganizationBase> findOrganizationByVanityName(String vanityName,
-      Parameter fields, Integer count) {
+  public List<OrganizationBase> findOrganizationByVanityName(String vanityName, Parameter fields,
+      Integer count) {
     ValidationUtils.verifyParameterPresence(VANITY_NAME_VALUE, vanityName);
     
     List<Parameter> parameters = new ArrayList<>();
@@ -209,15 +209,14 @@ public class OrganizationConnection extends Connection {
    * Access Control</a>
    * @param role Limit results to specific roles, such as ADMINISTRATOR.
    * @param state Limit results to specific role states, such as APPROVED.
-   * @param projection Field projection
    * @param count the number of entries to be returned per paged request
    * @return List of access controls for a given role and state for the member
    */
   public List<AccessControl> retrieveMemberOrganizationAccessControl(String role, String state,
-      Parameter projection, Integer count) {
+      Integer count) {
     List<Parameter> params = new ArrayList<>();
     params.add(Parameter.with(QUERY_KEY, ROLE_ASSIGNEE_VALUE));
-    addRoleStateParams(role, state, projection, params);
+    addRoleStateParams(role, state, params);
     addStartAndCountParams(params, null, count);
     
     return getListFromQuery(ORGANIZATION_ACLS, AccessControl.class,
@@ -232,18 +231,17 @@ public class OrganizationConnection extends Connection {
    * is retrieved.
    * @param role Limit results to specific roles
    * @param state Limit results to specific role states
-   * @param projection Field projection
    * @param count the number of entries to be returned per paged request
    * @return List of access controls for an organization
    */
-  public List<AccessControl> findOrganizationAccessControl(URN organizationURN,
-      String role, String state, Parameter projection, Integer count) {
+  public List<AccessControl> findOrganizationAccessControl(URN organizationURN, String role,
+      String state, Integer count) {
     validateOrganizationURN("organization", organizationURN);
     
     List<Parameter> parameters = new ArrayList<>();
     parameters.add(Parameter.with(QUERY_KEY, ORGANIZATION_VALUE));
     parameters.add(Parameter.with(ORGANIZATION_KEY, organizationURN.toString()));
-    addRoleStateParams(role, state, projection, parameters);
+    addRoleStateParams(role, state, parameters);
     addStartAndCountParams(parameters, null, count);
     
     return getListFromQuery(ORGANIZATION_ACLS, AccessControl.class,
@@ -266,10 +264,9 @@ public class OrganizationConnection extends Connection {
     
     addParametersForStatistics(organizationURN, null, parameters);
     addStartAndCountParams(parameters, null, count);
-    
+  
     return getListFromQuery(ORGANIZATIONAL_ENTITY_FOLLOWER_STATS,
-        OrganizationFollowerStatistics.class,
-        parameters.toArray(new Parameter[0]));
+        OrganizationFollowerStatistics.class, parameters.toArray(new Parameter[0]));
   }
   
   /**
@@ -446,16 +443,12 @@ public class OrganizationConnection extends Connection {
     validateURN(type, urn);
   }
   
-  private void addRoleStateParams(String role, String state, Parameter projection,
-      List<Parameter> parameters) {
+  private void addRoleStateParams(String role, String state, List<Parameter> parameters) {
     if (StringUtils.isNotBlank(role)) {
       parameters.add(Parameter.with(ROLE_KEY, role));
     }
     if (StringUtils.isNotBlank(state)) {
       parameters.add(Parameter.with(STATE_KEY, state));
-    }
-    if (projection != null) {
-      parameters.add(projection);
     }
   }
   
