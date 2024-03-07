@@ -206,4 +206,5 @@ can get data for both organization and organization brand pages.
 * Remove duplicate key in Post object
 
 # 5.0.0 (work in progress)
-* Delete all deprecated code for V1 and V2 LinkedIn API endpoints and objects
+* Delete all deprecated code for V1 and V2 LinkedIn API endpoints and objects, the last of these 
+  endpoints were retired on June 30th 2023
