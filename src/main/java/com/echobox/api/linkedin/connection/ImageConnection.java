@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.connection.versioned;
+package com.echobox.api.linkedin.connection;
 
+import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
-import com.echobox.api.linkedin.client.VersionedLinkedInClient;
 import com.echobox.api.linkedin.client.WebRequestor;
 import com.echobox.api.linkedin.types.images.ImageDetails;
 import com.echobox.api.linkedin.types.images.InitializeUpload;
@@ -42,7 +42,7 @@ import java.util.Map;
  * @author Sergio Abplanalp
  *
  */
-public class VersionedImageConnection extends VersionedConnection {
+public class ImageConnection extends Connection {
   
   /**
    * endpoint path
@@ -56,7 +56,7 @@ public class VersionedImageConnection extends VersionedConnection {
    *
    * @param linkedinClient the LinkedIn client
    */
-  public VersionedImageConnection(VersionedLinkedInClient linkedinClient) {
+  public ImageConnection(LinkedInClient linkedinClient) {
     super(linkedinClient);
   }
   

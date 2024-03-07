@@ -22,7 +22,7 @@ use:
 <dependency>
   <groupId>com.echobox</groupId>
   <artifactId>ebx-linkedin-sdk</artifactId>
-  <version>4.6.0</version>
+  <version>5.0.0</version>
 </dependency>
 ```
 
@@ -70,7 +70,7 @@ Please see the tests for examples of API calls that are supported and the expect
 To get the access token to begin to make requests ([See
 documentation](https://docs.microsoft.com/en-us/linkedin/shared/authentication/authorization-code-flow?context=linkedin/marketing/context])):
 
-    VersionedLinkedInClient client = new DefaultVersionedLinkedInClient(Version.DEFAULT_VERSION);
+    LinkedInClient client = new DefaultLinkedInClient(Version.DEFAULT_VERSION);
     LinkedInClient.AccessToken accessToken = client.obtainUserAccessToken(clientId, clientSecret, redirectURI, code);
 
 To create a LinkedIn Share
