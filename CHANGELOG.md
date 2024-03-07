@@ -214,3 +214,4 @@ can get data for both organization and organization brand pages.
 * Stop accepting projection parameters when making API requests (support for this parameter was 
   deprecated for different endpoints between 202305, 202306 and 202307) 
 * Update the default API version to 202307
+* Bump nexus-staging-maven-plugin version to 1.6.13
