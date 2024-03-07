@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.connection.versioned;
+package com.echobox.api.linkedin.connection;
 
 import com.echobox.api.linkedin.client.BinaryAttachment;
-import com.echobox.api.linkedin.client.DefaultVersionedLinkedInClient;
+import com.echobox.api.linkedin.client.DefaultLinkedInClient;
+import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
-import com.echobox.api.linkedin.client.VersionedLinkedInClient;
 import com.echobox.api.linkedin.client.WebRequestor;
 import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.videos.FinalizeUploadRequest;
@@ -51,7 +51,7 @@ import java.util.Map;
  * @see
  * <a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/videos-api">Videos API</a>
  */
-public class VersionedVideoConnection extends VersionedConnection {
+public class VideoConnection extends Connection {
   
   /**
    * endpoint path
@@ -71,7 +71,7 @@ public class VersionedVideoConnection extends VersionedConnection {
    *
    * @param linkedinClient the LinkedIn client
    */
-  public VersionedVideoConnection(VersionedLinkedInClient linkedinClient) {
+  public VideoConnection(LinkedInClient linkedinClient) {
     super(linkedinClient);
   }
   
@@ -134,7 +134,7 @@ public class VersionedVideoConnection extends VersionedConnection {
     WebRequestor webRequestor = linkedinClient.getWebRequestor();
     
     Map<String, String> requestHeaders = new HashMap<>();
-    requestHeaders.put(DefaultVersionedLinkedInClient.HEADER_NAME_VERSION,
+    requestHeaders.put(DefaultLinkedInClient.HEADER_NAME_VERSION,
         linkedinClient.getVersionedMonth());
     
     byte[] chunkBytes = Arrays.copyOfRange(fileBytes,

@@ -45,15 +45,6 @@ public class OrganizationBrandTest extends DefaultJsonMapperTestBase {
     assertEquals(11111111L, organizationBrand.getId());
     assertEquals("example.com", organizationBrand.getLocalizedName());
     
-    assertEquals("urn:li:media:/p/8/000/206/3de/1111111.png", 
-        organizationBrand.getLogo().getCropped().toString());
-    assertEquals("urn:li:media:/p/8/000/206/3de/1111111.png",
-        organizationBrand.getLogo().getOriginal().toString());
-    assertEquals(0, organizationBrand.getLogo().getCropInfo().getHeight());
-    assertEquals(0, organizationBrand.getLogo().getCropInfo().getWidth());
-    assertEquals(0, organizationBrand.getLogo().getCropInfo().getXAxis());
-    assertEquals(0, organizationBrand.getLogo().getCropInfo().getYAxis());
-    
     assertEquals("test_product", organizationBrand.getName().getLocalized().get("en_US"));
     assertEquals("US", organizationBrand.getName().getPreferredLocale().getCountry());
     assertEquals("en", organizationBrand.getName().getPreferredLocale().getLanguage());

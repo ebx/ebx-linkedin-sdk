@@ -252,9 +252,9 @@ public interface LinkedInClient {
   WebRequestor getWebRequestor();
   
   /**
-   * Gets the versionedMonth used as a header for the versioned LinkedIn API endpoints.
+   * Gets the versionedMonth used as a header for the LinkedIn API endpoints.
    *
-   * @return The versioned month used as a header for the versioned LinkedIn API endpoints.
+   * @return The versioned month used as a header for the LinkedIn API endpoints.
    */
   String getVersionedMonth();
 

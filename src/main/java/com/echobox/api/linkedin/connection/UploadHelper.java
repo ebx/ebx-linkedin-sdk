@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.connection.versioned;
+package com.echobox.api.linkedin.connection;
 
 import com.echobox.api.linkedin.client.BinaryAttachment;
 import com.echobox.api.linkedin.client.WebRequestor;

@@ -26,11 +26,10 @@ import java.net.HttpURLConnection;
 import java.security.GeneralSecurityException;
 
 /**
- * DefaultLinkedInClient test
- * @author Joanna
+ * Test for {@link DefaultLinkedInClient}
+ * @author Kenneth Wong
  */
 public class DefaultLinkedInClientTest {
-  
   /**
    * Test 200 response status does not throw a LinkedInOauthException
    * @throws GeneralSecurityException GeneralSecurityException

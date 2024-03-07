@@ -44,15 +44,6 @@ public abstract class OrganizationBase extends LinkedInIdAndURNType {
   private List<LocaleString> alternativeNames;
   
   /**
-   * The entity's background cover image.
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  @Deprecated
-  private CroppedImage coverPhoto;
-  
-  /**
    * The entity's background cover image. 
    * The sizes may vary, so clients should handle the given height and width accordingly.
    */
@@ -160,16 +151,6 @@ public abstract class OrganizationBase extends LinkedInIdAndURNType {
   @Setter
   @LinkedIn
   private MultiLocaleString website;
-  
-  /**
-   * The entity’s logo.
-   */
-  @Getter
-  @Setter
-  @LinkedIn
-  @Deprecated
-  private CroppedImage logo;
-  
   
   /**
    * The entity’s logo. The sizes may vary greatly, 

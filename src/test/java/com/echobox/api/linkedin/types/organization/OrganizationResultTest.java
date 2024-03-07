@@ -63,17 +63,6 @@ public class OrganizationResultTest extends DefaultJsonMapperTestBase {
     
     Assert.assertEquals("ACTIVE", organization.getEntityStatus());
     
-    CroppedImage logo = organization.getLogo();
-    CropInfo cropInfo = logo.getCropInfo();
-    Assert.assertEquals(10, cropInfo.getXAxis());
-    Assert.assertEquals(10, cropInfo.getYAxis());
-    Assert.assertEquals(800, cropInfo.getWidth());
-    Assert.assertEquals(800, cropInfo.getHeight());
-    Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAAH-AAAAJDRRlZTNlZDQwLTk4YTIt.png",
-        logo.getOriginal().toString());
-    Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAANyAAAAJGRlZTNlZDQwLTk4YTIt.png",
-        logo.getCropped().toString());
-    
     Assert.assertEquals("linkedin", organization.getVanityName());
     
     assertTrue(organization.getAlternativeNames().isEmpty());
@@ -127,17 +116,6 @@ public class OrganizationResultTest extends DefaultJsonMapperTestBase {
     Assert.assertEquals("en", specialty.getLocale().getLanguage());
     Assert.assertEquals(8, specialty.getTags().size());
     
-    CroppedImage coverPhoto = organization.getCoverPhoto();
-    CropInfo cropInfoCoverPhoto = coverPhoto.getCropInfo();
-    Assert.assertEquals(0, cropInfoCoverPhoto.getXAxis());
-    Assert.assertEquals(0, cropInfoCoverPhoto.getYAxis());
-    Assert.assertEquals(646, cropInfoCoverPhoto.getWidth());
-    Assert.assertEquals(220, cropInfoCoverPhoto.getHeight());
-    Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAAfmAAAAJDQwLTk4YTItNGNlLWRj.png",
-        coverPhoto.getOriginal().toString());
-    Assert.assertEquals("urn:li:media:/AAEAAQAAAAAAAAkOAAAAJDA3NmYwMzRkLTA2MTAt.png",
-        coverPhoto.getCropped().toString());
-    
     CroppedImage overviewPhotoV2 = organization.getOverviewPhotoV2();
     CropInfo cropOverviewPhotoV2 = overviewPhotoV2.getCropInfo();
     Assert.assertEquals(0, cropOverviewPhotoV2.getXAxis());
@@ -167,15 +145,6 @@ public class OrganizationResultTest extends DefaultJsonMapperTestBase {
     
     assertEquals(11111111L, organizationBrand.getId());
     assertEquals("example.com", organizationBrand.getLocalizedName());
-    
-    assertEquals("urn:li:media:/p/8/000/206/3de/1111111.png",
-        organizationBrand.getLogo().getCropped().toString());
-    assertEquals("urn:li:media:/p/8/000/206/3de/1111111.png",
-        organizationBrand.getLogo().getOriginal().toString());
-    assertEquals(0, organizationBrand.getLogo().getCropInfo().getHeight());
-    assertEquals(0, organizationBrand.getLogo().getCropInfo().getWidth());
-    assertEquals(0, organizationBrand.getLogo().getCropInfo().getXAxis());
-    assertEquals(0, organizationBrand.getLogo().getCropInfo().getYAxis());
     
     assertEquals("test_product", organizationBrand.getName().getLocalized().get("en_US"));
     assertEquals("US", organizationBrand.getName().getPreferredLocale().getCountry());
