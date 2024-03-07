@@ -31,7 +31,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Base class that contains data and functionality common to {@link DefaultLinkedInClient}
+ * Base class that contains data and functionality common to LinkedIn clients
  * 
  * @author Joanna
  *
