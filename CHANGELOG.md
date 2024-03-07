@@ -205,7 +205,7 @@ can get data for both organization and organization brand pages.
 * Add additional URN entity types to URNEntityType enum
 * Remove duplicate key in Post object
 
-# 5.0.0 (March 7, 2024)
+## 5.0.0 (March 7, 2024)
 * Delete all deprecated code for V1 and V2 LinkedIn API endpoints and objects, the last of these
   endpoints were retired on June 30th 2023
 * Remove 'versioned' from class and variable names
