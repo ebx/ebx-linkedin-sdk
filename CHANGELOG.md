@@ -209,3 +209,8 @@ can get data for both organization and organization brand pages.
 * Delete all deprecated code for V1 and V2 LinkedIn API endpoints and objects, the last of these
   endpoints were retired on June 30th 2023
 * Remove 'versioned' from class and variable names
+
+## 6.0.0 (March 7, 2024)
+* Stop accepting projection parameters when making API requests (support for this parameter was 
+  deprecated for different endpoints between 202305, 202306 and 202307) 
+* Update the default API version to 202307
