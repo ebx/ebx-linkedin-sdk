@@ -91,7 +91,7 @@ public class PostConnection extends Connection {
    * @param count page count
    * @return Connection object of the posts by the author
    */
-  public com.echobox.api.linkedin.client.Connection retrievePostsByAuthor(URN authorURN,
+  public com.echobox.api.linkedin.client.Connection<Post> retrievePostsByAuthor(URN authorURN,
       Integer count) {
     List<Parameter> parameters = new ArrayList<>();
     parameters.add(Parameter.with(QUERY_KEY, KEY_AUTHOR));
