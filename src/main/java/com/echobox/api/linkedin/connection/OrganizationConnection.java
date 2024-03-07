@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.connection.versioned;
+package com.echobox.api.linkedin.connection;
 
+import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
-import com.echobox.api.linkedin.client.VersionedLinkedInClient;
 import com.echobox.api.linkedin.types.TimeInterval;
 import com.echobox.api.linkedin.types.engagement.ShareStatistic;
 import com.echobox.api.linkedin.types.organization.AccessControl;
@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
  * @author Kenneth Wong
  *
  */
-public class VersionedOrganizationConnection extends VersionedConnection {
+public class OrganizationConnection extends Connection {
   
   /**
    * endpoint path
@@ -91,7 +91,7 @@ public class VersionedOrganizationConnection extends VersionedConnection {
    *
    * @param linkedinClient the LinkedIn client
    */
-  public VersionedOrganizationConnection(VersionedLinkedInClient linkedinClient) {
+  public OrganizationConnection(LinkedInClient linkedinClient) {
     super(linkedinClient);
   }
   

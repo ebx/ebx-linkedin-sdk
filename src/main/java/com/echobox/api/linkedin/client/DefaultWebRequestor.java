@@ -111,7 +111,7 @@ public class DefaultWebRequestor implements WebRequestor {
   private HttpRequestFactory requestFactory;
 
   /**
-   * By default this is true, to prevent breaking existing usage
+   * By default, this is true, to prevent breaking existing usage
    */
   private boolean autocloseBinaryAttachmentStream = true;
 

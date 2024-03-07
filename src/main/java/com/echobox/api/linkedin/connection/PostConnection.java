@@ -15,11 +15,10 @@
  * limitations under the License.
  */
 
-package com.echobox.api.linkedin.connection.versioned;
+package com.echobox.api.linkedin.connection;
 
-import com.echobox.api.linkedin.client.Connection;
+import com.echobox.api.linkedin.client.LinkedInClient;
 import com.echobox.api.linkedin.client.Parameter;
-import com.echobox.api.linkedin.client.VersionedLinkedInClient;
 import com.echobox.api.linkedin.client.WebRequestor;
 import com.echobox.api.linkedin.types.posts.Post;
 import com.echobox.api.linkedin.types.posts.ViewContext;
@@ -37,7 +36,7 @@ import java.util.Map;
  *
  * @author Sergio Abplanalp
  */
-public class VersionedPostConnection extends VersionedConnection {
+public class PostConnection extends Connection {
   
   /**
    * endpoint path
@@ -65,7 +64,7 @@ public class VersionedPostConnection extends VersionedConnection {
    *
    * @param linkedinClient the LinkedIn client
    */
-  public VersionedPostConnection(VersionedLinkedInClient linkedinClient) {
+  public PostConnection(LinkedInClient linkedinClient) {
     super(linkedinClient);
   }
   
@@ -92,7 +91,8 @@ public class VersionedPostConnection extends VersionedConnection {
    * @param count page count
    * @return Connection object of the posts by the author
    */
-  public Connection<Post> retrievePostsByAuthor(URN authorURN, Integer count) {
+  public com.echobox.api.linkedin.client.Connection<Post> retrievePostsByAuthor(URN authorURN,
+      Integer count) {
     List<Parameter> parameters = new ArrayList<>();
     parameters.add(Parameter.with(QUERY_KEY, KEY_AUTHOR));
     parameters.add(Parameter.with(PARAM_AUTHOR, authorURN));
