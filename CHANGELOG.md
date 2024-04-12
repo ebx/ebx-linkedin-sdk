@@ -216,6 +216,6 @@ can get data for both organization and organization brand pages.
 * Update the default API version to 202307
 * Bump nexus-staging-maven-plugin version to 1.6.13
 
-## 6.0.1 (March 15, 2024)
+## 6.0.1 (March 12, 2024)
 * OrganizationConnection.retrieveShareStatistics now accepts ugcPost type post URNs in addition
   to the existing share type post URNs.

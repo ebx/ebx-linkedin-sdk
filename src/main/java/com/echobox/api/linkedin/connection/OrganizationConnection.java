@@ -364,7 +364,7 @@ public class OrganizationConnection extends Connection {
     params.add(Parameter.with(ORGANIZATIONAL_ENTITY_KEY, organizationURN));
     
     if (shareURNs != null && !shareURNs.isEmpty()) {
-      // Validate and separate out ugcPosts and share posts
+      // Validate and separate out share and ugcPost posts
       Pair<List<URN>, List<URN>> urns = getValidShareAndUGCPostURNs(shareURNs);
       if (!urns.getLeft().isEmpty()) {
         addParametersFromURNs(params, SHARES_PARAM_KEY, urns.getLeft());
