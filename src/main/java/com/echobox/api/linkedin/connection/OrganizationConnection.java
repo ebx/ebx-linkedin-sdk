@@ -76,6 +76,7 @@ public class OrganizationConnection extends Connection {
   private static final String ORGANIZATIONAL_ENTITY_KEY = "organizationalEntity";
   private static final String EDGE_TYPE_KEY = "edgeType";
   private static final String SHARES_PARAM_KEY = "shares";
+  private static final String UGCPOSTS_PARAM_KEY = "ugcPosts";
   
   /**
    * Param value
@@ -366,10 +367,10 @@ public class OrganizationConnection extends Connection {
       // Validate and separate out ugcPosts and share posts
       Pair<List<URN>, List<URN>> urns = getValidShareAndUGCPostURNs(shareURNs);
       if (!urns.getLeft().isEmpty()) {
-        addParametersFromURNs(params, "shares", shareURNs);
+        addParametersFromURNs(params, SHARES_PARAM_KEY, shareURNs);
       }
       if (!urns.getRight().isEmpty()) {
-        addParametersFromURNs(params, "ugcPosts", shareURNs);
+        addParametersFromURNs(params, UGCPOSTS_PARAM_KEY, shareURNs);
       }
     }
     
