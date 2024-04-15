@@ -8,7 +8,7 @@
 
   <groupId>com.echobox</groupId>
   <artifactId>ebx-linkedin-sdk</artifactId>
-  <version>6.0.0</version>
+  <version>6.0.1</version>
   <packaging>jar</packaging>
 
   <properties>
@@ -100,7 +100,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.12.1</version>
+        <version>3.13.0</version>
         <configuration>
           <showDeprecation>true</showDeprecation>
         </configuration>
@@ -177,7 +177,7 @@
           <dependency>
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
-            <version>10.14.0</version>
+            <version>10.15.0</version>
           </dependency>
           <dependency>
             <groupId>com.github.sevntu-checkstyle</groupId>
@@ -288,7 +288,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.1.0</version>
+            <version>3.2.0</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>

@@ -34,8 +34,10 @@ import com.echobox.api.linkedin.types.urn.URN;
 import com.echobox.api.linkedin.types.urn.URNEntityType;
 import com.echobox.api.linkedin.util.ValidationUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,6 +76,7 @@ public class OrganizationConnection extends Connection {
   private static final String ORGANIZATIONAL_ENTITY_KEY = "organizationalEntity";
   private static final String EDGE_TYPE_KEY = "edgeType";
   private static final String SHARES_PARAM_KEY = "shares";
+  private static final String UGCPOSTS_PARAM_KEY = "ugcPosts";
   
   /**
    * Param value
@@ -361,8 +364,14 @@ public class OrganizationConnection extends Connection {
     params.add(Parameter.with(ORGANIZATIONAL_ENTITY_KEY, organizationURN));
     
     if (shareURNs != null && !shareURNs.isEmpty()) {
-      shareURNs.forEach(this::validateShareURN);
-      addParametersFromURNs(params, SHARES_PARAM_KEY, shareURNs);
+      // Validate and separate out share and ugcPost posts
+      Pair<List<URN>, List<URN>> urns = getValidShareAndUGCPostURNs(shareURNs);
+      if (!urns.getLeft().isEmpty()) {
+        addParametersFromURNs(params, SHARES_PARAM_KEY, urns.getLeft());
+      }
+      if (!urns.getRight().isEmpty()) {
+        addParametersFromURNs(params, UGCPOSTS_PARAM_KEY, urns.getRight());
+      }
     }
     
     addTimeIntervalToParams(params, timeInterval);
@@ -418,6 +427,27 @@ public class OrganizationConnection extends Connection {
     ValidationUtils.verifyParameterPresence("share", shareURN);
     validateURN(URNEntityType.SHARE, shareURN);
   }
+  
+  private Pair<List<URN>, List<URN>> getValidShareAndUGCPostURNs(List<URN> shareURNs) {
+    final List<URN> shares = new ArrayList<>();
+    final List<URN> ugcPosts = new ArrayList<>();
+    
+    for (URN urn: shareURNs) {
+      if (URNEntityType.SHARE.getEntityValue().equals(urn.getEntityType())) {
+        shares.add(urn);
+      } else if (URNEntityType.UGCPOST.getEntityValue().equals(urn.getEntityType())) {
+        ugcPosts.add(urn);
+      } else {
+        final List<String> acceptableEntityTypes =
+            Arrays.asList(URNEntityType.SHARE.getEntityValue(),
+                URNEntityType.UGCPOST.getEntityValue());
+        throw new IllegalArgumentException(
+            "The URN should be type " + String.join(",", acceptableEntityTypes));
+      }
+    }
+    return Pair.of(shares, ugcPosts);
+  }
+  
   
   private void validateOrganizationOrBrandURN(String paramName, URN organizationOrBrandURN) {
     ValidationUtils.verifyParameterPresence(paramName, organizationOrBrandURN);
