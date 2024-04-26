@@ -224,4 +224,4 @@ can get data for both organization and organization brand pages.
 * Update the CircleCI Build image from ubuntu-2004 to cimg/openjdk:8.0
 
 ## 7.0.0 (April 26, 2024)
-* Update build form Java 8 to Java 11. This included updating the build image to cimg/openjdk:11.0.
+* Update build from Java 8 to Java 11. This included updating the build image to cimg/openjdk:11.0.
