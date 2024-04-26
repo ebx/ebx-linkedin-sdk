@@ -20,7 +20,7 @@ set -euo pipefail
 
 ## For PR builds, perform maven verify. Exit with error if dev or master 
 ## as these are handled separately in mvn_deploy.sh
-
+printenv
 if [ "$CIRCLE_BRANCH" == "${DEV_BRANCH}" ] || [ "$CIRCLE_BRANCH" == "${RELEASE_BRANCH}" ]; then
   printf "${RED_COLOUR}ERROR: PR builds should not be triggered by ${DEV_BRANCH} or ${RELEASE_BRANCH} branches.${NO_COLOUR}\n"
   exit 1
