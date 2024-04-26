@@ -22,7 +22,7 @@ use:
 <dependency>
   <groupId>com.echobox</groupId>
   <artifactId>ebx-linkedin-sdk</artifactId>
-  <version>6.0.2</version>
+  <version>7.0.0</version>
 </dependency>
 ```
 
