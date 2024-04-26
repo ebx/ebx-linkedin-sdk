@@ -220,7 +220,7 @@ can get data for both organization and organization brand pages.
 * OrganizationConnection.retrieveShareStatistics now accepts ugcPost type post URNs in addition
   to the existing share type post URNs.
 
-## 6.0.2 (April 26. 2024)
+## 6.0.2 (April 26, 2024)
 * Update the CircleCI Build image from ubuntu-2004 to cimg/openjdk:8.0
 
 ## 7.0.0 (April 26, 2024)
