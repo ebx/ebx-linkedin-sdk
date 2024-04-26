@@ -39,7 +39,7 @@ workflows:
 
 jobs:
   validate:
-    machine:
+    docker:
       image: cimg/openjdk:8.0
     steps:
       - checkout
@@ -50,7 +50,7 @@ jobs:
           name: "Validate build"
           command: source buildscripts/validate_build.sh
   maven_verify:
-    machine:
+    docker:
       image: cimg/openjdk:8.0
     steps:
       - checkout
@@ -58,7 +58,7 @@ jobs:
           name: "Perform Maven Verify"
           command: source buildscripts/mvn_verify.sh
   maven_deploy:
-    machine:
+    docker:
       image: cimg/openjdk:8.0
     steps:
       - checkout
