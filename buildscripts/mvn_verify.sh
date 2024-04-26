@@ -27,6 +27,6 @@ if [ "$CIRCLE_BRANCH" == "${DEV_BRANCH}" ] || [ "$CIRCLE_BRANCH" == "${RELEASE_B
   exit 1
 else
   printf "${GREEN_COLOUR}Performing a PR verify build on PR #${CIRCLE_PULL_REQUEST##*/}.${NO_COLOUR}\n"
-  java --version
+  java -version
   mvn clean verify
 fi
