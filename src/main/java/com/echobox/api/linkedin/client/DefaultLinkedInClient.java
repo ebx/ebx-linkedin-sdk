@@ -18,7 +18,6 @@
 package com.echobox.api.linkedin.client;
 
 import com.echobox.api.linkedin.exception.DefaultLinkedInExceptionMapper;
-import com.echobox.api.linkedin.exception.LinkedInAccessTokenException;
 import com.echobox.api.linkedin.exception.LinkedInException;
 import com.echobox.api.linkedin.exception.LinkedInExceptionMapper;
 import com.echobox.api.linkedin.exception.LinkedInJsonMappingException;
@@ -43,7 +42,6 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -200,8 +198,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
    * @throws IOException
    *          If the DefaultWebRequestor fails to initialise
    */
-  public DefaultLinkedInClient(String accessToken, Version apiVersion)
-      throws GeneralSecurityException, IOException {
+  public DefaultLinkedInClient(String accessToken, Version apiVersion) {
     this(new DefaultWebRequestor(accessToken), new DefaultJsonMapper(), apiVersion);
   }
   
@@ -231,7 +228,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
    *          If the DefaultWebRequestor fails to initialise
    */
   public DefaultLinkedInClient(String accessToken, Version apiVersion,
-      String versionedMonth) throws GeneralSecurityException, IOException {
+      String versionedMonth) {
     this(new DefaultWebRequestor(accessToken), new DefaultJsonMapper(),
         apiVersion, versionedMonth);
   }
@@ -443,33 +440,33 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
     return "true".equals(responseBody);
   }
   
-  @Override
-  public AccessToken obtainUserAccessToken(String appId, String appSecret, String redirectUri,
-      String verificationCode) {
-    ValidationUtils.verifyParameterPresence("appId", appId);
-    ValidationUtils.verifyParameterPresence("appSecret", appSecret);
-    ValidationUtils.verifyParameterPresence("redirectUri", redirectUri);
-    ValidationUtils.verifyParameterPresence("verificationCode", verificationCode);
-    
-    try {
-      this.webRequestor = new DefaultWebRequestor(appId, appSecret);
-      
-      Map<String, String> headers = new HashMap<>();
-      headers.put("Content-Type", "application/x-www-form-urlencoded");
-      
-      final WebRequestor.Response response = makeRequestFull(ENDPOINT_ACCESS_TOKEN,
-          RequestType.POST, null, headers, Collections.emptyList(),
-          Parameter.with(GRANT_TYPE_PARAM_NAME, "authorization_code"),
-          Parameter.with(CODE_PARAM_NAME, verificationCode),
-          Parameter.with(REDIRECT_URI_PARAM_NAME, redirectUri),
-          Parameter.with(CLIENT_ID_PARAM_NAME, appId),
-          Parameter.with(CLIENT_SECRET_PARAM_NAME, appSecret));
-      
-      return getAccessTokenFromResponse(response.getBody());
-    } catch (Exception ex) {
-      throw new LinkedInAccessTokenException(ex);
-    }
-  }
+//  @Override
+//  public AccessToken obtainUserAccessToken(String appId, String appSecret, String redirectUri,
+//      String verificationCode) {
+//    ValidationUtils.verifyParameterPresence("appId", appId);
+//    ValidationUtils.verifyParameterPresence("appSecret", appSecret);
+//    ValidationUtils.verifyParameterPresence("redirectUri", redirectUri);
+//    ValidationUtils.verifyParameterPresence("verificationCode", verificationCode);
+//
+//    try {
+//      this.webRequestor = new DefaultWebRequestor(appId, appSecret);
+//
+//      Map<String, String> headers = new HashMap<>();
+//      headers.put("Content-Type", "application/x-www-form-urlencoded");
+//
+//      final WebRequestor.Response response = makeRequestFull(ENDPOINT_ACCESS_TOKEN,
+//          RequestType.POST, null, headers, Collections.emptyList(),
+//          Parameter.with(GRANT_TYPE_PARAM_NAME, "authorization_code"),
+//          Parameter.with(CODE_PARAM_NAME, verificationCode),
+//          Parameter.with(REDIRECT_URI_PARAM_NAME, redirectUri),
+//          Parameter.with(CLIENT_ID_PARAM_NAME, appId),
+//          Parameter.with(CLIENT_SECRET_PARAM_NAME, appSecret));
+//
+//      return getAccessTokenFromResponse(response.getBody());
+//    } catch (Exception ex) {
+//      throw new LinkedInAccessTokenException(ex);
+//    }
+//  }
   
   private AccessToken getAccessTokenFromResponse(String response) {
     try {

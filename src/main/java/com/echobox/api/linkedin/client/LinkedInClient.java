@@ -220,8 +220,8 @@ public interface LinkedInClient {
    * @return The access token for the user identified by {@code appId}, {@code appSecret},
    *          {@code redirectUri} and {@code verificationCode}.
    */
-  AccessToken obtainUserAccessToken(String appId, String appSecret, String redirectUri,
-      String verificationCode);
+//  AccessToken obtainUserAccessToken(String appId, String appSecret, String redirectUri,
+//      String verificationCode);
 
   /**
    * Obtains an access token which can be used to perform Graph API operations on behalf of an
