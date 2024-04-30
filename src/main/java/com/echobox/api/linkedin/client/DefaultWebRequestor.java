@@ -30,7 +30,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +40,7 @@ import java.util.stream.Stream;
 
 /**
  * Default implementation of a service that sends HTTP requests to an API endpoint.
- * @author paulp
+ * @author Joanna
  *
  */
 public class DefaultWebRequestor implements WebRequestor {
@@ -102,36 +101,38 @@ public class DefaultWebRequestor implements WebRequestor {
   }
   
   @Override
-  public Response executeGet(String url) throws IOException {
-    return execute(url, null, HttpRequest.Builder::GET, null);
-  }
-  
-  @Override
   public Response executeGet(String url, Map<String, String> headers) throws IOException {
     return execute(url, null, HttpRequest.Builder::GET, headers);
   }
   
-  @Override
-  public Response executePost(String url, String jsonBody, String parameters) throws IOException {
-    return execute(url, parameters, builder -> {
-      if (jsonBody != null) {
-        builder.POST(BodyPublishers.ofString(jsonBody)).header("Content-Type", "application/json");
-      } else {
-        builder.POST(BodyPublishers.noBody());
-      }
-    }, null);
-  }
   
   @Override
   public Response executePost(String url, String parameters, String jsonBody,
       Map<String, String> headers, BinaryAttachment... binaryAttachments) throws IOException {
     return execute(url, parameters, builder -> {
-      if (jsonBody != null) {
-        builder.POST(BodyPublishers.ofString(jsonBody)).header("Content-Type", "application/json");
+      if (binaryAttachments.length > 0) {
+        HTTPRequestMultipartBody.Builder multipartBodyBuilder =
+            new HTTPRequestMultipartBody.Builder();
+        for (BinaryAttachment binaryAttachment : binaryAttachments) {
+          multipartBodyBuilder.addPart(createFormFieldName(binaryAttachment),
+              binaryAttachment.getData(), binaryAttachment.getContentType(),
+              binaryAttachment.getFilename());
+        }
+        try {
+          HTTPRequestMultipartBody multipartBody = multipartBodyBuilder.build();
+          builder.POST(BodyPublishers.ofByteArray(multipartBody.getBody()));
+          builder.header("Connection", "Keep-Alive");
+        } catch (IOException e) {
+          logger.error("Error encountered with POST request: " + url);
+        }
       } else {
-        builder.POST(BodyPublishers.noBody());
+        if (jsonBody != null) {
+          builder.POST(BodyPublishers.ofString(jsonBody))
+              .header("Content-Type", "application/json");
+        } else {
+          builder.POST(BodyPublishers.noBody());
+        }
       }
-      // Add binary attachments
     }, headers);
   }
   
@@ -146,11 +147,6 @@ public class DefaultWebRequestor implements WebRequestor {
       }
       // Add binary attachments
     }, headers);
-  }
-  
-  @Override
-  public Response executeDelete(String url) throws IOException {
-    return execute(url, null, HttpRequest.Builder::DELETE, null);
   }
   
   @Override
@@ -173,18 +169,15 @@ public class DefaultWebRequestor implements WebRequestor {
       
       HttpRequest.Builder builder =
           HttpRequest.newBuilder(uri).timeout(Duration.ofMillis(readTimeout));
-  
-      List<String> allHeaders = new ArrayList<>();
+      
       if (customHeaders != null && !customHeaders.isEmpty()) {
-        allHeaders = customHeaders.entrySet().stream()
+        List<String> customHeadersAsList = customHeaders.entrySet().stream()
             .flatMap(entry -> Stream.of(entry.getKey(), entry.getValue()))
             .collect(Collectors.toList());
+        builder.headers(customHeadersAsList.toArray(new String[0]));
       }
-      if (!headers.isEmpty()) {
-        allHeaders.addAll(headers);
-      }
-      if (!allHeaders.isEmpty()) {
-        builder.headers(allHeaders.toArray(new String[0]));
+      if (headers != null && !headers.isEmpty()) {
+        builder.headers(headers.toArray(new String[0]));
       }
       
       requestBuilder.accept(builder);
@@ -219,6 +212,25 @@ public class DefaultWebRequestor implements WebRequestor {
       parametersToAppend = parameters.startsWith("?") ? parameters : "?" + parameters;
     }
     return new URI(url + parametersToAppend);
+  }
+  
+  /**
+   * Creates the form field name for the binary attachment filename by stripping off the
+   * file extension - for example,
+   * the filename "test.png" would return "test".
+   *
+   * @param binaryAttachment
+   *          The binary attachment for which to create the form field name.
+   * @return The form field name for the given binary attachment.
+   */
+  protected String createFormFieldName(BinaryAttachment binaryAttachment) {
+    if (binaryAttachment.getFieldName() != null) {
+      return binaryAttachment.getFieldName();
+    }
+    
+    String name = binaryAttachment.getFilename();
+    int fileExtensionIndex = name.lastIndexOf('.');
+    return fileExtensionIndex > 0 ? name.substring(0, fileExtensionIndex) : name;
   }
   
 }
