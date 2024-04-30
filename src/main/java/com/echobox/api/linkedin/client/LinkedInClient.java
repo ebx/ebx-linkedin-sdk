@@ -107,6 +107,8 @@ public interface LinkedInClient {
    *          The Connection to publish to.
    * @param jsonBody
    *          The json body to publish.
+   * @param binaryAttachment
+   *          The binary attachment
    * @param parameters
    *          URL parameters to include in the API call.
    * @return The WebRequestor response

@@ -193,10 +193,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
    *          A LinkedIn OAuth access token.
    * @param apiVersion
    *          Version of the API endpoint
-   * @throws GeneralSecurityException
-   *          If the DefaultWebRequestor fails to initialise
-   * @throws IOException
-   *          If the DefaultWebRequestor fails to initialise
    */
   public DefaultLinkedInClient(String accessToken, Version apiVersion) {
     this(new DefaultWebRequestor(accessToken), new DefaultJsonMapper(), apiVersion);
@@ -222,10 +218,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
    *          Version of the API endpoint
    * @param versionedMonth
    *          LinkedIn-version of the API (in format YYYYMM)
-   * @throws GeneralSecurityException
-   *          If the DefaultWebRequestor fails to initialise
-   * @throws IOException
-   *          If the DefaultWebRequestor fails to initialise
    */
   public DefaultLinkedInClient(String accessToken, Version apiVersion,
       String versionedMonth) {
