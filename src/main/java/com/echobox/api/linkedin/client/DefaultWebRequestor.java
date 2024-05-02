@@ -65,7 +65,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Default implementation of a service that sends HTTP requests to the LinkedIn API endpoint.
