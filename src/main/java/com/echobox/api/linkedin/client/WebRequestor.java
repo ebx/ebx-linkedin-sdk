@@ -103,6 +103,17 @@ public interface WebRequestor {
           getHeaders());
     }
   }
+
+  /**
+   * Given a LinkedIn API endpoint URL, execute a {@code GET} against it.
+   *
+   * @param url
+   *          The URL to make a {@code GET} request for, including URL parameters.
+   * @return HTTP response data.
+   * @throws IOException
+   *           If an error occurs while performing the {@code GET} operation.
+   */
+  Response executeGet(String url) throws IOException;
   
   /**
    * Given a LinkedIn API endpoint URL, execute a {@code GET} against it.
@@ -116,7 +127,23 @@ public interface WebRequestor {
    *           If an error occurs while performing the {@code GET} operation.
    */
   Response executeGet(String url, Map<String, String> headers) throws IOException;
-  
+
+  /**
+   * Given a LinkedIn API endpoint URL and parameter string, execute a {@code POST} to the endpoint
+   * URL.
+   *
+   * @param url
+   *          The URL to {@code POST} to.
+   * @param parameters
+   *          The parameters to be {@code POST}ed.
+   * @param jsonBody
+   *          The POST JSON body
+   * @return HTTP response data.
+   * @throws IOException
+   *           If an error occurs while performing the {@code POST}.
+   */
+  Response executePost(String url, String parameters, String jsonBody) throws IOException;
+
   /**
    * Given a LinkedIn API endpoint URL and parameter string, execute a {@code POST} to the endpoint
    * URL.
@@ -143,7 +170,19 @@ public interface WebRequestor {
   Response executePut(String url, String parameters, String jsonBody,
       Map<String, String> headers, BinaryAttachment binaryAttachments)
       throws IOException;
-  
+
+  /**
+   * Given a LinkedIn API endpoint URL and parameter string, execute a {@code DELETE} to the
+   * endpoint URL.
+   *
+   * @param url
+   *          The URL to submit the {@code DELETE} to.
+   * @return HTTP response data.
+   * @throws IOException
+   *           If an error occurs while performing the {@code DELETE}.
+   */
+  Response executeDelete(String url) throws IOException;
+
   /**
    * Given a LinkedIn API endpoint URL and parameter string, execute a {@code DELETE} to the
    * endpoint URL.

@@ -194,7 +194,8 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
    * @param apiVersion
    *          Version of the API endpoint
    */
-  public DefaultLinkedInClient(String accessToken, Version apiVersion) {
+  public DefaultLinkedInClient(String accessToken, Version apiVersion)
+      throws GeneralSecurityException, IOException {
     this(new DefaultWebRequestor(accessToken), new DefaultJsonMapper(), apiVersion);
   }
   
@@ -220,7 +221,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
    *          LinkedIn-version of the API (in format YYYYMM)
    */
   public DefaultLinkedInClient(String accessToken, Version apiVersion,
-      String versionedMonth) {
+      String versionedMonth) throws GeneralSecurityException, IOException {
     this(new DefaultWebRequestor(accessToken), new DefaultJsonMapper(),
         apiVersion, versionedMonth);
   }
