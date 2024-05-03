@@ -225,3 +225,6 @@ can get data for both organization and organization brand pages.
 
 ## 7.0.0 (April 26, 2024)
 * Update build from Java 8 to Java 11. This included updating the build image to cimg/openjdk:11.0.
+
+## 7.1.0 (May 3, 2024)
+* Update GET and DELETE requests to use Java 11's HTTP Client.
