@@ -583,6 +583,9 @@ public class DefaultWebRequestor implements WebRequestor {
       
       return getResponse(builder.build());
     } catch (URISyntaxException | InterruptedException ex) {
+      if (LOGGER.isDebugEnabled()) {
+        LOGGER.debug(format("LinkedIn responded with an error %s", ex.getMessage()));
+      }
       throw new IOException(ex);
     }
   }
@@ -615,11 +618,10 @@ public class DefaultWebRequestor implements WebRequestor {
   private void fillHeaderAndDebugInfo(java.net.http.HttpHeaders httpHeaders) {
     currentHttpHeaders = httpHeaders;
   
-    String liFabric = StringUtils.trimToEmpty(httpHeaders.firstValue("x-li-fabric").orElse(null));
-    String liFormat = StringUtils.trimToEmpty(httpHeaders.firstValue("x-li-format").orElse(null));
-    String liRequestId = StringUtils.trimToEmpty(httpHeaders.firstValue(
-        "x-li-request-id").orElse(null));
-    String liUUID = StringUtils.trimToEmpty(httpHeaders.firstValue("x-li-uuid").orElse(null));
+    String liFabric = httpHeaders.firstValue("x-li-fabric").orElse("");
+    String liFormat = httpHeaders.firstValue("x-li-format").orElse("");
+    String liRequestId =httpHeaders.firstValue("x-li-request-id").orElse("");
+    String liUUID = httpHeaders.firstValue("x-li-uuid").orElse("");
     debugHeaderInfo = new DebugHeaderInfo(liFabric, liFormat, liRequestId, liUUID);
   }
   
