@@ -53,9 +53,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
 import java.security.GeneralSecurityException;
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -68,6 +75,13 @@ import java.util.stream.Collectors;
 public class DefaultWebRequestor implements WebRequestor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWebRequestor.class);
+  
+  private static final int DEFAULT_CONNECT_TIMEOUT_MS = 10000;
+  private static final int DEFAULT_READ_TIMEOUT_MS = 30000;
+  
+  private final List<String> headers;
+  private final HttpClient httpClient;
+  private final int readTimeout;
 
   /**
    * Arbitrary unique boundary marker for multipart {@code POST}s.
@@ -168,6 +182,11 @@ public class DefaultWebRequestor implements WebRequestor {
   public DefaultWebRequestor(String clientId, String clientSecret, String accessToken)
       throws GeneralSecurityException, IOException {
     this.requestFactory = authorize(clientId, clientSecret, accessToken);
+    this.headers =
+        accessToken != null ? Arrays.asList("Authorization", accessToken) : Collections.emptyList();
+    this.httpClient = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL)
+        .connectTimeout(Duration.ofMillis(DEFAULT_CONNECT_TIMEOUT_MS)).build();
+    this.readTimeout = DEFAULT_READ_TIMEOUT_IN_MS;
   }
 
   private HttpRequestFactory authorize(String clientId, String clientSecret, String accessToken)
@@ -214,12 +233,12 @@ public class DefaultWebRequestor implements WebRequestor {
 
   @Override
   public Response executeGet(String url) throws IOException {
-    return executeGet(url, null);
+    return executeGet(url);
   }
   
   @Override
   public Response executeGet(String url, Map<String, String> headers) throws IOException {
-    return execute(url, HttpMethod.GET, headers);
+    return execute(url, null, java.net.http.HttpRequest.Builder::GET, headers);
   }
 
   @Override
@@ -382,6 +401,19 @@ public class DefaultWebRequestor implements WebRequestor {
 
     return response;
   }
+  
+  private Response getResponse(java.net.http.HttpRequest request)
+      throws IOException, InterruptedException {
+    java.net.http.HttpResponse<String> httpResponse =
+        httpClient.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
+    
+    Response response =
+        fetchResponse(httpResponse.statusCode(), httpResponse.headers(), httpResponse.body());
+    
+    LOGGER.debug("API {} responded with {}", request.uri(), response);
+    
+    return response;
+  }
 
   private Response handleException(HttpResponseException ex) {
     fillHeaderAndDebugInfo(ex.getHeaders());
@@ -536,6 +568,44 @@ public class DefaultWebRequestor implements WebRequestor {
       closeQuietly(httpResponse);
     }
   }
+  
+  private Response execute(String url, String parameters,
+      Consumer<java.net.http.HttpRequest.Builder> requestBuilder, Map<String, String> customHeaders)
+      throws IOException {
+    if (LOGGER.isTraceEnabled()) {
+      LOGGER.trace("Executing request {} with parameters: {} and headers: {}", url, parameters,
+          headers);
+    }
+    
+    try {
+      URI uri = getURI(url, parameters);
+      
+      java.net.http.HttpRequest.Builder builder =
+          java.net.http.HttpRequest.newBuilder(uri).timeout(Duration.ofMillis(readTimeout));
+      
+      if (customHeaders != null && !customHeaders.isEmpty()) {
+        customHeaders.forEach(builder::header);
+      }
+      if (headers != null && !headers.isEmpty()) {
+        builder.headers(headers.toArray(new String[0]));
+      }
+      
+      requestBuilder.accept(builder);
+      
+      return getResponse(builder.build());
+    } catch (URISyntaxException | InterruptedException ex) {
+      throw new IOException(ex);
+    }
+  }
+  
+  private URI getURI(String url, String parameters) throws URISyntaxException {
+    String parametersToAppend = "";
+    if (StringUtils.isNotEmpty(parameters)) {
+      parametersToAppend = parameters.startsWith("?") ? parameters : "?" + parameters;
+    }
+    return new URI(url + parametersToAppend);
+  }
+  
 
   /**
    * Fill header and debug info.
@@ -551,6 +621,13 @@ public class DefaultWebRequestor implements WebRequestor {
         "x-li-request-id"));
     String liUUID = StringUtils.trimToEmpty(httpHeaders.getFirstHeaderStringValue("x-li-uuid"));
     debugHeaderInfo = new DebugHeaderInfo(liFabric, liFormat, liRequestId, liUUID);
+  }
+  
+  
+  private Response fetchResponse(int statusCode, java.net.http.HttpHeaders headers, String body) {
+    Map<String, String> headerMap = headers.map().entrySet().stream().collect(Collectors
+        .toMap(Map.Entry::getKey, entry -> entry.getValue().stream().findFirst().orElse("")));
+    return new Response(statusCode, headerMap, body);
   }
 
   /**
