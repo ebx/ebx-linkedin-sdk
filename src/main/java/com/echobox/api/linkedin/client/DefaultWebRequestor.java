@@ -119,6 +119,8 @@ public class DefaultWebRequestor implements WebRequestor {
   private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
   private Map<String, Object> currentHeaders;
+  
+  private java.net.http.HttpHeaders currentHttpHeaders;
 
   private DebugHeaderInfo debugHeaderInfo;
 
@@ -406,12 +408,15 @@ public class DefaultWebRequestor implements WebRequestor {
       throws IOException, InterruptedException {
     java.net.http.HttpResponse<String> httpResponse =
         httpClient.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
-    
+  
+    fillHeaderAndDebugInfo(httpResponse.headers());
+  
     Response response =
         fetchResponse(httpResponse.statusCode(), httpResponse.headers(), httpResponse.body());
-    
-    LOGGER.debug("API {} responded with {}", request.uri(), response);
-    
+  
+    if (LOGGER.isTraceEnabled()) {
+      LOGGER.trace(format("LinkedIn responded with %s", response));
+    }
     return response;
   }
 
@@ -526,7 +531,17 @@ public class DefaultWebRequestor implements WebRequestor {
   public Map<String, Object> getCurrentHeaders() {
     return currentHeaders;
   }
-
+  
+  /**
+   * access to the current response headers
+   *
+   * @return the current reponse header map
+   */
+  public java.net.http.HttpHeaders getCurrentHttpHeaders() {
+    return currentHttpHeaders;
+  }
+  
+  
   @Override
   public Response executeDelete(String url) throws IOException {
     return executeDelete(url, null);
@@ -594,6 +609,17 @@ public class DefaultWebRequestor implements WebRequestor {
     String liRequestId = StringUtils.trimToEmpty(httpHeaders.getFirstHeaderStringValue(
         "x-li-request-id"));
     String liUUID = StringUtils.trimToEmpty(httpHeaders.getFirstHeaderStringValue("x-li-uuid"));
+    debugHeaderInfo = new DebugHeaderInfo(liFabric, liFormat, liRequestId, liUUID);
+  }
+  
+  private void fillHeaderAndDebugInfo(java.net.http.HttpHeaders httpHeaders) {
+    currentHttpHeaders = httpHeaders;
+  
+    String liFabric = StringUtils.trimToEmpty(httpHeaders.firstValue("x-li-fabric").orElse(null));
+    String liFormat = StringUtils.trimToEmpty(httpHeaders.firstValue("x-li-format").orElse(null));
+    String liRequestId = StringUtils.trimToEmpty(httpHeaders.firstValue(
+        "x-li-request-id").orElse(null));
+    String liUUID = StringUtils.trimToEmpty(httpHeaders.firstValue("x-li-uuid").orElse(null));
     debugHeaderInfo = new DebugHeaderInfo(liFabric, liFormat, liRequestId, liUUID);
   }
   
