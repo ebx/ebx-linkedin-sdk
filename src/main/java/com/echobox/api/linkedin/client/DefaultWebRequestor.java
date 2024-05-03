@@ -182,11 +182,11 @@ public class DefaultWebRequestor implements WebRequestor {
   public DefaultWebRequestor(String clientId, String clientSecret, String accessToken)
       throws GeneralSecurityException, IOException {
     this.requestFactory = authorize(clientId, clientSecret, accessToken);
-    this.headers =
-        accessToken != null ? Arrays.asList("Authorization", accessToken) : Collections.emptyList();
+    this.headers = accessToken != null ? Arrays.asList("Authorization",
+        String.format("Bearer %s", accessToken)) : Collections.emptyList();
     this.httpClient = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL)
         .connectTimeout(Duration.ofMillis(DEFAULT_CONNECT_TIMEOUT_MS)).build();
-    this.readTimeout = DEFAULT_READ_TIMEOUT_IN_MS;
+    this.readTimeout = DEFAULT_READ_TIMEOUT_MS;
   }
 
   private HttpRequestFactory authorize(String clientId, String clientSecret, String accessToken)
@@ -534,40 +534,14 @@ public class DefaultWebRequestor implements WebRequestor {
 
   @Override
   public Response executeDelete(String url, Map<String, String> headers) throws IOException {
-    return execute(url, HttpMethod.DELETE, headers);
+    return execute(url, null, java.net.http.HttpRequest.Builder::DELETE, headers);
   }
   
   @Override
   public DebugHeaderInfo getDebugHeaderInfo() {
     return debugHeaderInfo;
   }
-
-  private Response execute(String url, HttpMethod httpMethod, Map<String, String> headers)
-      throws IOException {
-    if (LOGGER.isTraceEnabled()) {
-      LOGGER.trace(format("Making a %s request to %s with headers %s", httpMethod.name(), url,
-          headers));
-    }
-
-    HttpResponse httpResponse = null;
-    try {
-      GenericUrl genericUrl = new GenericUrl(url);
-      HttpRequest request = requestFactory.buildRequest(httpMethod.name(), genericUrl, null);
-      request.setReadTimeout(DEFAULT_READ_TIMEOUT_IN_MS);
-
-      // Allow subclasses to customize the connection if they'd like to - set their own headers,
-      // timeouts, etc.
-      customizeConnection(request);
-      HttpHeaders requestHeaders = new HttpHeaders();
-      addHeadersToRequest(request, requestHeaders, headers);
-
-      return getResponse(request);
-    } catch (HttpResponseException ex) {
-      return handleException(ex);
-    } finally {
-      closeQuietly(httpResponse);
-    }
-  }
+  
   
   private Response execute(String url, String parameters,
       Consumer<java.net.http.HttpRequest.Builder> requestBuilder, Map<String, String> customHeaders)
