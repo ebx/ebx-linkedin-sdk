@@ -452,7 +452,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
     ValidationUtils.verifyParameterPresence("verificationCode", verificationCode);
     
     try {
-      this.webRequestor = new DefaultWebRequestor(appId, appSecret);
+      this.webRequestor = new DefaultWebRequestor();
       
       Map<String, String> headers = new HashMap<>();
       headers.put("Content-Type", "application/x-www-form-urlencoded");
