@@ -620,7 +620,7 @@ public class DefaultWebRequestor implements WebRequestor {
   
     String liFabric = httpHeaders.firstValue("x-li-fabric").orElse("");
     String liFormat = httpHeaders.firstValue("x-li-format").orElse("");
-    String liRequestId =httpHeaders.firstValue("x-li-request-id").orElse("");
+    String liRequestId = httpHeaders.firstValue("x-li-request-id").orElse("");
     String liUUID = httpHeaders.firstValue("x-li-uuid").orElse("");
     debugHeaderInfo = new DebugHeaderInfo(liFabric, liFormat, liRequestId, liUUID);
   }
