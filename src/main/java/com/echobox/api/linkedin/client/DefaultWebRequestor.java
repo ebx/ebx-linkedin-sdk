@@ -584,7 +584,7 @@ public class DefaultWebRequestor implements WebRequestor {
       return getResponse(builder.build());
     } catch (URISyntaxException | InterruptedException ex) {
       if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug(format("LinkedIn responded with an error %s", ex.getMessage()));
+        LOGGER.debug("LinkedIn responded with an error {}", ex.getMessage());
       }
       throw new IOException(ex);
     }
