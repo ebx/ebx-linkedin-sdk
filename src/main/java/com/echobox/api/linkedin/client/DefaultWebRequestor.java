@@ -83,8 +83,8 @@ public class DefaultWebRequestor implements WebRequestor {
    * @param readTimeout the read timeout
    */
   public DefaultWebRequestor(String accessToken, int connectTimeout, int readTimeout) {
-    this.headers =
-        accessToken != null ? Arrays.asList("Access-Token", accessToken) : Collections.emptyList();
+    this.headers = accessToken != null ? Arrays.asList("Authorization",
+        String.format("Bearer %s", accessToken)) : Collections.emptyList();
     this.httpClient = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL)
         .connectTimeout(Duration.ofMillis(connectTimeout)).build();
     this.readTimeout = readTimeout;
