@@ -235,7 +235,7 @@ public class DefaultWebRequestor implements WebRequestor {
 
   @Override
   public Response executeGet(String url) throws IOException {
-    return executeGet(url);
+    return executeGet(url, null);
   }
   
   @Override
