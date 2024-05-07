@@ -19,20 +19,18 @@ package com.echobox.api.linkedin.client;
 
 import static java.lang.String.format;
 
-import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
+import java.net.http.HttpHeaders;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,7 +41,7 @@ import java.util.stream.Collectors;
 
 /**
  * Default implementation of a service that sends HTTP requests to the LinkedIn API endpoint.
- * 
+ *
  * @author Joanna
  *
  */
@@ -58,40 +56,8 @@ public class DefaultWebRequestor implements WebRequestor {
   private final HttpClient httpClient;
   private final int readTimeout;
   
-  private Map<String, Object> currentHeaders;
-  
-  private java.net.http.HttpHeaders currentHttpHeaders;
-  
+  private HttpHeaders currentHttpHeaders;
   private DebugHeaderInfo debugHeaderInfo;
-  
-  /**
-   * By default, this is true, to prevent breaking existing usage
-   */
-  private boolean autocloseBinaryAttachmentStream = true;
-  
-  /**
-   * HTTP methods available
-   * @author Joanna
-   *
-   */
-  protected enum HttpMethod {
-    /**
-     * Get http method.
-     */
-    GET,
-    /**
-     * Delete http method.
-     */
-    DELETE,
-    /**
-     * Post http method.
-     */
-    POST,
-    /**
-     * Put http method.
-     */
-    PUT
-  }
   
   /**
    * Initialise the default web requestor with no authentication
@@ -126,17 +92,17 @@ public class DefaultWebRequestor implements WebRequestor {
   
   @Override
   public Response executeGet(String url) throws IOException {
-    return executeGet(url);
+    return executeGet(url, null);
   }
   
   @Override
   public Response executeGet(String url, Map<String, String> headers) throws IOException {
-    return execute(url, null, java.net.http.HttpRequest.Builder::GET, headers);
+    return execute(url, null, HttpRequest.Builder::GET, headers);
   }
   
   @Override
   public Response executePost(String url, String parameters, String jsonBody) throws IOException {
-    return executePost(url, parameters, jsonBody, null, new BinaryAttachment[0]);
+    return executePost(url, parameters, jsonBody, null);
   }
   
   // CPD-OFF
@@ -146,9 +112,9 @@ public class DefaultWebRequestor implements WebRequestor {
     return execute(url, parameters, builder -> {
       String body = StringUtils.isEmpty(jsonBody) ? "no payload" : format("payload: %s", jsonBody);
       if (binaryAttachments != null && binaryAttachments.length > 0) {
-        buildRequestBodyWithBinaryAttachments(url, builder, binaryAttachments);
+        builder.POST(buildRequestBodyWithBinaryAttachments(url, builder, binaryAttachments));
       } else {
-        buildJsonRequestBody(jsonBody, builder);
+        builder.POST(buildJsonRequestBody(jsonBody, builder));
       }
       if (LOGGER.isTraceEnabled()) {
         LOGGER.trace("Executing a POST to {} with {} and headers: {}.", url, body,
@@ -157,17 +123,17 @@ public class DefaultWebRequestor implements WebRequestor {
     }, headers);
   }
   
-  private void buildJsonRequestBody(String jsonBody,
-      java.net.http.HttpRequest.Builder builder) {
+  private HttpRequest.BodyPublisher buildJsonRequestBody(String jsonBody,
+      HttpRequest.Builder builder) {
     if (jsonBody != null) {
-      builder.POST(java.net.http.HttpRequest.BodyPublishers.ofString(jsonBody))
-          .header("Content-Type", "application/json");
+      builder.header("Content-Type", "application/json");
+      return HttpRequest.BodyPublishers.ofString(jsonBody);
     }
-    builder.POST(java.net.http.HttpRequest.BodyPublishers.noBody());
+    return HttpRequest.BodyPublishers.noBody();
   }
   
-  private void buildRequestBodyWithBinaryAttachments(String url,
-      java.net.http.HttpRequest.Builder builder, BinaryAttachment... binaryAttachments) {
+  private HttpRequest.BodyPublisher buildRequestBodyWithBinaryAttachments(String url,
+      HttpRequest.Builder builder, BinaryAttachment... binaryAttachments) {
     HTTPRequestMultipartBody.Builder multipartBodyBuilder = new HTTPRequestMultipartBody.Builder();
     for (BinaryAttachment binaryAttachment : binaryAttachments) {
       multipartBodyBuilder.addPart(createFormFieldName(binaryAttachment),
@@ -176,55 +142,54 @@ public class DefaultWebRequestor implements WebRequestor {
     }
     try {
       HTTPRequestMultipartBody multipartBody = multipartBodyBuilder.build();
-      builder.POST(java.net.http.HttpRequest.BodyPublishers.ofByteArray(multipartBody.getBody()));
       builder.header("Connection", "Keep-Alive");
+      return HttpRequest.BodyPublishers.ofByteArray(multipartBody.getBody());
     } catch (IOException e) {
       if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug("Encountered error when executing POST to {} with binary attachments and "
+        LOGGER.debug("Encountered error when executing POST/PUT to {} with binary attachments and "
             + "headers: {}.", url, builder.headers());
       }
     }
+    return HttpRequest.BodyPublishers.noBody();
   }
   
   @Override
   public Response executePut(String url, String parameters, String jsonBody,
-      Map<String, String> headers, BinaryAttachment binaryAttachment)
-      throws IOException {
+      Map<String, String> headers, BinaryAttachment binaryAttachment) throws IOException {
     return execute(url, parameters, builder -> {
       String body = StringUtils.isEmpty(jsonBody) ? "no payload" : format("payload: %s", jsonBody);
       if (binaryAttachment != null) {
-        buildRequestBodyWithBinaryAttachments(url, builder, binaryAttachment);
+        builder.PUT(buildRequestBodyWithBinaryAttachments(url, builder, binaryAttachment));
       } else {
-        buildJsonRequestBody(jsonBody, builder);
+        builder.PUT(buildJsonRequestBody(jsonBody, builder));
       }
       if (LOGGER.isTraceEnabled()) {
-        LOGGER.trace("Executing a POST to {} with {} and headers: {}.", url, body,
+        LOGGER.trace("Executing a PUT to {} with {} and headers: {}.", url, body,
             builder.headers());
       }
     }, headers);
   }
   
-  private Response getResponse(java.net.http.HttpRequest request)
-      throws IOException, InterruptedException {
-    java.net.http.HttpResponse<String> httpResponse =
-        httpClient.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
-  
+  private Response getResponse(HttpRequest request) throws IOException, InterruptedException {
+    HttpResponse<String> httpResponse =
+        httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    
     fillHeaderAndDebugInfo(httpResponse.headers());
-  
+    
     Response response =
         fetchResponse(httpResponse.statusCode(), httpResponse.headers(), httpResponse.body());
-  
+    
     if (LOGGER.isTraceEnabled()) {
       LOGGER.trace(format("LinkedIn responded with %s", response));
     }
     return response;
   }
-
+  
   /**
    * Creates the form field name for the binary attachment filename by stripping off the 
    * file extension - for example,
    * the filename "test.png" would return "test".
-   * 
+   *
    * @param binaryAttachment
    *          The binary attachment for which to create the form field name.
    * @return The form field name for the given binary attachment.
@@ -233,29 +198,29 @@ public class DefaultWebRequestor implements WebRequestor {
     if (binaryAttachment.getFieldName() != null) {
       return binaryAttachment.getFieldName();
     }
-
+    
     String name = binaryAttachment.getFilename();
     int fileExtensionIndex = name.lastIndexOf('.');
     return fileExtensionIndex > 0 ? name.substring(0, fileExtensionIndex) : name;
   }
-
+  
   /**
    * Hook method which allows subclasses to easily customise the HTTP request connection
    * This implementation is a no-op.
-   * 
-   * @param connection The connection to customize.
+   *
+   * @param requestBuilder The connection to customize.
    */
-  protected void customizeConnection(HttpRequest connection) {
+  protected void customizeConnection(HttpRequest.Builder requestBuilder) {
     // This implementation is a no-op
   }
-
+  
   /**
    * Attempts to cleanly close a resource, swallowing any exceptions that might occur since 
    * there's no way to recover
    * anyway.
    * <p>
    * It's OK to pass {@code null} in, this method will no-op in that case.
-   * 
+   *
    * @param closeable
    *          The resource to close.
    */
@@ -269,75 +234,24 @@ public class DefaultWebRequestor implements WebRequestor {
       LOGGER.warn(format("Unable to close %s: ", closeable), t);
     }
   }
-
-  /**
-   * Attempts to cleanly disconnect the response, swallowing any exceptions that might occur since
-   * there's no way to recover anyway.
-   * 
-   * @param response The HTTP response to close.
-   */
-  protected void closeQuietly(HttpResponse response) {
-    if (response == null) {
-      return;
-    }
-    try {
-      response.disconnect();
-    } catch (Exception t) {
-      LOGGER.warn(format("Unable to disconnect %s: ", response), t);
-    }
-  }
-
-  /**
-   * Writes the contents of the {@code source} stream to the {@code destination} stream using the 
-   * given {@code bufferSize}.
-   * 
-   * @param source The source stream to copy from.
-   * @param destination The destination stream to copy to.
-   * @param bufferSize The size of the buffer to use during the copy operation.
-   * @throws IOException If an error occurs when reading from {@code source} or writing to
-   * {@code destination}.
-   * @throws NullPointerException If either {@code source} or @{code destination} is {@code null}.
-   */
-  protected void write(InputStream source, OutputStream destination, int bufferSize)
-      throws IOException {
-    if (source == null || destination == null) {
-      throw new NullPointerException("Must provide non-null source and destination streams.");
-    }
-
-    int read;
-    byte[] chunk = new byte[bufferSize];
-    while ((read = source.read(chunk)) > 0) {
-      destination.write(chunk, 0, read);
-    }
-  }
-
-  /**
-   * access to the current response headers
-   * 
-   * @return the current reponse header map
-   */
-  public Map<String, Object> getCurrentHeaders() {
-    return currentHeaders;
-  }
   
   /**
-   * access to the current response headers
+   * Access to the current response headers
    *
-   * @return the current reponse header map
+   * @return the current response headers
    */
-  public java.net.http.HttpHeaders getCurrentHttpHeaders() {
+  public HttpHeaders getCurrentHttpHeaders() {
     return currentHttpHeaders;
   }
-  
   
   @Override
   public Response executeDelete(String url) throws IOException {
     return executeDelete(url, null);
   }
-
+  
   @Override
   public Response executeDelete(String url, Map<String, String> headers) throws IOException {
-    return execute(url, null, java.net.http.HttpRequest.Builder::DELETE, headers);
+    return execute(url, null, HttpRequest.Builder::DELETE, headers);
   }
   
   @Override
@@ -345,9 +259,8 @@ public class DefaultWebRequestor implements WebRequestor {
     return debugHeaderInfo;
   }
   
-  
   private Response execute(String url, String parameters,
-      Consumer<java.net.http.HttpRequest.Builder> requestBuilder, Map<String, String> customHeaders)
+      Consumer<HttpRequest.Builder> requestBuilder, Map<String, String> customHeaders)
       throws IOException {
     if (LOGGER.isTraceEnabled()) {
       LOGGER.trace("Executing request {} with parameters: {} and headers: {}", url, parameters,
@@ -357,8 +270,8 @@ public class DefaultWebRequestor implements WebRequestor {
     try {
       URI uri = getURI(url, parameters);
       
-      java.net.http.HttpRequest.Builder builder =
-          java.net.http.HttpRequest.newBuilder(uri).timeout(Duration.ofMillis(readTimeout));
+      HttpRequest.Builder builder =
+          HttpRequest.newBuilder(uri).timeout(Duration.ofMillis(readTimeout));
       
       if (customHeaders != null && !customHeaders.isEmpty()) {
         customHeaders.forEach(builder::header);
@@ -366,6 +279,8 @@ public class DefaultWebRequestor implements WebRequestor {
       if (headers != null && !headers.isEmpty()) {
         builder.headers(headers.toArray(new String[0]));
       }
+      
+      customizeConnection(builder);
       
       requestBuilder.accept(builder);
       
@@ -386,26 +301,9 @@ public class DefaultWebRequestor implements WebRequestor {
     return new URI(url + parametersToAppend);
   }
   
-
-  /**
-   * Fill header and debug info.
-   *
-   * @param httpHeaders the http headers
-   */
-  protected void fillHeaderAndDebugInfo(HttpHeaders httpHeaders) {
-    currentHeaders = httpHeaders;
-
-    String liFabric = StringUtils.trimToEmpty(httpHeaders.getFirstHeaderStringValue("x-li-fabric"));
-    String liFormat = StringUtils.trimToEmpty(httpHeaders.getFirstHeaderStringValue("x-li-format"));
-    String liRequestId = StringUtils.trimToEmpty(httpHeaders.getFirstHeaderStringValue(
-        "x-li-request-id"));
-    String liUUID = StringUtils.trimToEmpty(httpHeaders.getFirstHeaderStringValue("x-li-uuid"));
-    debugHeaderInfo = new DebugHeaderInfo(liFabric, liFormat, liRequestId, liUUID);
-  }
-  
-  private void fillHeaderAndDebugInfo(java.net.http.HttpHeaders httpHeaders) {
+  private void fillHeaderAndDebugInfo(HttpHeaders httpHeaders) {
     currentHttpHeaders = httpHeaders;
-  
+    
     String liFabric = httpHeaders.firstValue("x-li-fabric").orElse("");
     String liFormat = httpHeaders.firstValue("x-li-format").orElse("");
     String liRequestId = httpHeaders.firstValue("x-li-request-id").orElse("");
@@ -413,10 +311,10 @@ public class DefaultWebRequestor implements WebRequestor {
     debugHeaderInfo = new DebugHeaderInfo(liFabric, liFormat, liRequestId, liUUID);
   }
   
-  
-  private Response fetchResponse(int statusCode, java.net.http.HttpHeaders headers, String body) {
-    Map<String, String> headerMap = headers.map().entrySet().stream().collect(Collectors
-        .toMap(Map.Entry::getKey, entry -> entry.getValue().stream().findFirst().orElse("")));
+  private Response fetchResponse(int statusCode, HttpHeaders headers, String body) {
+    Map<String, String> headerMap = headers.map().entrySet().stream().collect(
+        Collectors.toMap(Map.Entry::getKey,
+            entry -> entry.getValue().stream().findFirst().orElse("")));
     return new Response(statusCode, headerMap, body);
   }
 }
