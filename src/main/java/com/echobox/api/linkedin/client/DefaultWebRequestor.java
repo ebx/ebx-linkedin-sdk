@@ -112,7 +112,8 @@ public class DefaultWebRequestor implements WebRequestor {
     return execute(url, parameters, builder -> {
       String body = StringUtils.isEmpty(jsonBody) ? "no payload" : format("payload: %s", jsonBody);
       if (binaryAttachments != null && binaryAttachments.length > 0) {
-        builder.POST(buildRequestBodyWithBinaryAttachments(url, builder, binaryAttachments));
+        builder.POST(buildRequestBodyWithBinaryAttachments(url, builder, headers,
+            binaryAttachments));
       } else {
         builder.POST(buildJsonRequestBody(jsonBody, builder));
       }
@@ -133,12 +134,17 @@ public class DefaultWebRequestor implements WebRequestor {
   }
   
   private HttpRequest.BodyPublisher buildRequestBodyWithBinaryAttachments(String url,
-      HttpRequest.Builder builder, BinaryAttachment... binaryAttachments) {
+      HttpRequest.Builder builder,
+      Map<String, String> headers, BinaryAttachment... binaryAttachments) {
     HTTPRequestMultipartBody.Builder multipartBodyBuilder = new HTTPRequestMultipartBody.Builder();
     for (BinaryAttachment binaryAttachment : binaryAttachments) {
+      String contentType =
+          binaryAttachment.getContentType() != null ? binaryAttachment.getContentType()
+              : headers.entrySet().stream()
+                  .filter(entry -> entry.getKey().equalsIgnoreCase("content-type"))
+                  .map(Map.Entry::getValue).findFirst().orElse("application/octet-stream");
       multipartBodyBuilder.addPart(createFormFieldName(binaryAttachment),
-          binaryAttachment.getData(), binaryAttachment.getContentType(),
-          binaryAttachment.getFilename());
+          binaryAttachment.getData(), contentType, binaryAttachment.getFilename());
     }
     try {
       HTTPRequestMultipartBody multipartBody = multipartBodyBuilder.build();
@@ -159,7 +165,7 @@ public class DefaultWebRequestor implements WebRequestor {
     return execute(url, parameters, builder -> {
       String body = StringUtils.isEmpty(jsonBody) ? "no payload" : format("payload: %s", jsonBody);
       if (binaryAttachment != null) {
-        builder.PUT(buildRequestBodyWithBinaryAttachments(url, builder, binaryAttachment));
+        builder.PUT(buildRequestBodyWithBinaryAttachments(url, builder, headers, binaryAttachment));
       } else {
         builder.PUT(buildJsonRequestBody(jsonBody, builder));
       }
