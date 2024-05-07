@@ -120,7 +120,7 @@ public class DefaultWebRequestor implements WebRequestor {
 
   private Map<String, Object> currentHeaders;
   
-  private java.net.http.HttpHeaders currentHttpHeaders;
+  private Map<String, List<String>> currentHttpHeaders;
 
   private DebugHeaderInfo debugHeaderInfo;
 
@@ -524,20 +524,20 @@ public class DefaultWebRequestor implements WebRequestor {
   }
 
   /**
-   * access to the current response headers
+   * Access to the current response headers
    * 
-   * @return the current reponse header map
+   * @return the current response header map
    */
   public Map<String, Object> getCurrentHeaders() {
     return currentHeaders;
   }
   
   /**
-   * access to the current response headers
+   * Access to the current response headers
    *
-   * @return the current reponse header map
+   * @return the current response header map
    */
-  public java.net.http.HttpHeaders getCurrentHttpHeaders() {
+  public Map<String, List<String>> getCurrentHttpHeaders() {
     return currentHttpHeaders;
   }
   
@@ -616,7 +616,7 @@ public class DefaultWebRequestor implements WebRequestor {
   }
   
   private void fillHeaderAndDebugInfo(java.net.http.HttpHeaders httpHeaders) {
-    currentHttpHeaders = httpHeaders;
+    currentHttpHeaders = httpHeaders.map();
   
     String liFabric = httpHeaders.firstValue("x-li-fabric").orElse("");
     String liFormat = httpHeaders.firstValue("x-li-format").orElse("");
