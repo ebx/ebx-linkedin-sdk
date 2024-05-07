@@ -105,23 +105,23 @@ public class DefaultWebRequestor implements WebRequestor {
     return executePost(url, parameters, jsonBody, null);
   }
   
-  // CPD-OFF
   @Override
   public Response executePost(String url, String parameters, String jsonBody,
       Map<String, String> headers, BinaryAttachment... binaryAttachments) throws IOException {
-    return execute(url, parameters, builder -> {
-      String body = StringUtils.isEmpty(jsonBody) ? "no payload" : format("payload: %s", jsonBody);
-      if (binaryAttachments != null && binaryAttachments.length > 0) {
-        builder.POST(buildRequestBodyWithBinaryAttachments(url, builder, headers,
-            binaryAttachments));
-      } else {
-        builder.POST(buildJsonRequestBody(jsonBody, builder));
-      }
-      if (LOGGER.isTraceEnabled()) {
-        LOGGER.trace("Executing a POST to {} with {} and headers: {}.", url, body,
-            builder.headers());
-      }
-    }, headers);
+    return execute(url, parameters,
+        builder -> buildRequestWithBody(builder, builder::POST, url, jsonBody, headers,
+            binaryAttachments), headers);
+  }
+  
+  private void buildRequestWithBody(HttpRequest.Builder builder,
+      Consumer<HttpRequest.BodyPublisher> bodyConsumer, String url, String jsonBody,
+      Map<String, String> headers, BinaryAttachment... binaryAttachments) {
+    if (binaryAttachments != null && binaryAttachments.length > 0) {
+      bodyConsumer.accept(
+          buildRequestBodyWithBinaryAttachments(url, builder, headers, binaryAttachments));
+    } else {
+      bodyConsumer.accept(buildJsonRequestBody(jsonBody, builder));
+    }
   }
   
   private HttpRequest.BodyPublisher buildJsonRequestBody(String jsonBody,
@@ -162,18 +162,9 @@ public class DefaultWebRequestor implements WebRequestor {
   @Override
   public Response executePut(String url, String parameters, String jsonBody,
       Map<String, String> headers, BinaryAttachment binaryAttachment) throws IOException {
-    return execute(url, parameters, builder -> {
-      String body = StringUtils.isEmpty(jsonBody) ? "no payload" : format("payload: %s", jsonBody);
-      if (binaryAttachment != null) {
-        builder.PUT(buildRequestBodyWithBinaryAttachments(url, builder, headers, binaryAttachment));
-      } else {
-        builder.PUT(buildJsonRequestBody(jsonBody, builder));
-      }
-      if (LOGGER.isTraceEnabled()) {
-        LOGGER.trace("Executing a PUT to {} with {} and headers: {}.", url, body,
-            builder.headers());
-      }
-    }, headers);
+    return execute(url, parameters,
+        builder -> buildRequestWithBody(builder, builder::PUT, url, jsonBody, headers,
+            binaryAttachment), headers);
   }
   
   private Response getResponse(HttpRequest request) throws IOException, InterruptedException {
@@ -269,8 +260,8 @@ public class DefaultWebRequestor implements WebRequestor {
       Consumer<HttpRequest.Builder> requestBuilder, Map<String, String> customHeaders)
       throws IOException {
     if (LOGGER.isTraceEnabled()) {
-      LOGGER.trace("Executing request {} with parameters: {} and headers: {}", url, parameters,
-          headers);
+      LOGGER.trace("Executing request {} with parameters: {} and headers: {} {}", url, parameters,
+          headers, customHeaders);
     }
     
     try {
