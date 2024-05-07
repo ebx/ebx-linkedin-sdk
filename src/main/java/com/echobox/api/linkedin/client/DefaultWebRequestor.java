@@ -460,6 +460,16 @@ public class DefaultWebRequestor implements WebRequestor {
   protected void customizeConnection(HttpRequest connection) {
     // This implementation is a no-op
   }
+  
+  /**
+   * Hook method which allows subclasses to easily customise the HTTP request connection
+   * This implementation is a no-op.
+   *
+   * @param connection The connection to customize.
+   */
+  protected void customizeConnection(java.net.http.HttpRequest.Builder connection) {
+    // This implementation is a no-op
+  }
 
   /**
    * Attempts to cleanly close a resource, swallowing any exceptions that might occur since 
@@ -579,6 +589,7 @@ public class DefaultWebRequestor implements WebRequestor {
         builder.headers(headers.toArray(new String[0]));
       }
       
+      customizeConnection(builder);
       requestBuilder.accept(builder);
       
       return getResponse(builder.build());
