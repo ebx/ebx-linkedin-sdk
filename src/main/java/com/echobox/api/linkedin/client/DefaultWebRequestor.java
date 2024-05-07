@@ -56,7 +56,7 @@ public class DefaultWebRequestor implements WebRequestor {
   private final HttpClient httpClient;
   private final int readTimeout;
   
-  private HttpHeaders currentHttpHeaders;
+  private Map<String, List<String>> currentHttpHeaders;
   private DebugHeaderInfo debugHeaderInfo;
   
   /**
@@ -203,17 +203,17 @@ public class DefaultWebRequestor implements WebRequestor {
     int fileExtensionIndex = name.lastIndexOf('.');
     return fileExtensionIndex > 0 ? name.substring(0, fileExtensionIndex) : name;
   }
-  
+
   /**
    * Hook method which allows subclasses to easily customise the HTTP request connection
    * This implementation is a no-op.
    *
-   * @param requestBuilder The connection to customize.
+   * @param connection The connection to customize.
    */
-  protected void customizeConnection(HttpRequest.Builder requestBuilder) {
+  protected void customizeConnection(java.net.http.HttpRequest.Builder connection) {
     // This implementation is a no-op
   }
-  
+
   /**
    * Attempts to cleanly close a resource, swallowing any exceptions that might occur since 
    * there's no way to recover
@@ -240,7 +240,7 @@ public class DefaultWebRequestor implements WebRequestor {
    *
    * @return the current response headers
    */
-  public HttpHeaders getCurrentHttpHeaders() {
+  public Map<String, List<String>> getCurrentHttpHeaders() {
     return currentHttpHeaders;
   }
   
@@ -301,8 +301,13 @@ public class DefaultWebRequestor implements WebRequestor {
     return new URI(url + parametersToAppend);
   }
   
-  private void fillHeaderAndDebugInfo(HttpHeaders httpHeaders) {
-    currentHttpHeaders = httpHeaders;
+  /**
+   * Fill header and debug info.
+   *
+   * @param httpHeaders the http headers
+   */
+  private void fillHeaderAndDebugInfo(java.net.http.HttpHeaders httpHeaders) {
+    currentHttpHeaders = httpHeaders.map();
     
     String liFabric = httpHeaders.firstValue("x-li-fabric").orElse("");
     String liFormat = httpHeaders.firstValue("x-li-format").orElse("");
