@@ -56,7 +56,7 @@ public class DefaultWebRequestor implements WebRequestor {
   private final HttpClient httpClient;
   private final int readTimeout;
   
-  private Map<String, List<String>> currentHttpHeaders;
+  private Map<String, List<String>> currentHeaders;
   private DebugHeaderInfo debugHeaderInfo;
   
   /**
@@ -148,12 +148,15 @@ public class DefaultWebRequestor implements WebRequestor {
     }
     try {
       HTTPRequestMultipartBody multipartBody = multipartBodyBuilder.build();
-      builder.header("Connection", "Keep-Alive");
       return HttpRequest.BodyPublishers.ofByteArray(multipartBody.getBody());
     } catch (IOException e) {
       if (LOGGER.isDebugEnabled()) {
         LOGGER.debug("Encountered error when executing POST/PUT to {} with binary attachments and "
             + "headers: {}.", url, builder.headers());
+      }
+    } finally {
+      for (BinaryAttachment binaryAttachment : binaryAttachments) {
+        closeQuietly(binaryAttachment.getDataInputStream());
       }
     }
     return HttpRequest.BodyPublishers.noBody();
@@ -237,8 +240,8 @@ public class DefaultWebRequestor implements WebRequestor {
    *
    * @return the current response headers
    */
-  public Map<String, List<String>> getCurrentHttpHeaders() {
-    return currentHttpHeaders;
+  public Map<String, List<String>> getCurrentHeaders() {
+    return currentHeaders;
   }
   
   @Override
@@ -304,7 +307,7 @@ public class DefaultWebRequestor implements WebRequestor {
    * @param httpHeaders the http headers
    */
   private void fillHeaderAndDebugInfo(java.net.http.HttpHeaders httpHeaders) {
-    currentHttpHeaders = httpHeaders.map();
+    currentHeaders = httpHeaders.map();
     
     String liFabric = httpHeaders.firstValue("x-li-fabric").orElse("");
     String liFormat = httpHeaders.firstValue("x-li-format").orElse("");

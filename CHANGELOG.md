@@ -228,3 +228,9 @@ can get data for both organization and organization brand pages.
 
 ## 7.1.0 (May 3, 2024)
 * Update GET and DELETE requests to use Java 11's HTTP Client.
+
+## 8.0.0 (May 9, 2024)
+* Update POST and PUT requests to use Java 11's HTTP Client.
+* Some backwards incompatible changes introduced such as return type of `getCurrentHeaders` and 
+parameter type of `customizeConnection`
+
