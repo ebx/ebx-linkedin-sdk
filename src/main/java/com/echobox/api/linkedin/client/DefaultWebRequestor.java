@@ -136,17 +136,21 @@ public class DefaultWebRequestor implements WebRequestor {
   private HttpRequest.BodyPublisher buildRequestBodyWithBinaryAttachments(String url,
       HttpRequest.Builder builder,
       Map<String, String> headers, BinaryAttachment... binaryAttachments) {
-    HTTPRequestMultipartBody.Builder multipartBodyBuilder = new HTTPRequestMultipartBody.Builder();
-    for (BinaryAttachment binaryAttachment : binaryAttachments) {
-      String contentType =
-          binaryAttachment.getContentType() != null ? binaryAttachment.getContentType()
-              : headers.entrySet().stream()
-                  .filter(entry -> entry.getKey().equalsIgnoreCase("content-type"))
-                  .map(Map.Entry::getValue).findFirst().orElse("application/octet-stream");
-      multipartBodyBuilder.addPart(createFormFieldName(binaryAttachment),
-          binaryAttachment.getData(), contentType, binaryAttachment.getFilename());
-    }
     try {
+      if (binaryAttachments.length == 1) {
+        String contentType = headers.entrySet().stream()
+            .filter(entry -> entry.getKey().equalsIgnoreCase("content-type"))
+            .map(Map.Entry::getValue).findFirst().orElse("application/octet-stream");
+        builder.header("Content-Type", contentType);
+        return HttpRequest.BodyPublishers.ofByteArray(binaryAttachments[0].getData());
+      }
+      HTTPRequestMultipartBody.Builder multipartBodyBuilder =
+          new HTTPRequestMultipartBody.Builder();
+      for (BinaryAttachment binaryAttachment : binaryAttachments) {
+        multipartBodyBuilder.addPart(createFormFieldName(binaryAttachment),
+            binaryAttachment.getData(), binaryAttachment.getContentType(),
+            binaryAttachment.getFilename());
+      }
       HTTPRequestMultipartBody multipartBody = multipartBodyBuilder.build();
       return HttpRequest.BodyPublishers.ofByteArray(multipartBody.getBody());
     } catch (IOException e) {
@@ -322,4 +326,5 @@ public class DefaultWebRequestor implements WebRequestor {
             entry -> entry.getValue().stream().findFirst().orElse("")));
     return new Response(statusCode, headerMap, body);
   }
+  
 }
