@@ -101,6 +101,16 @@ public class DefaultWebRequestor implements WebRequestor {
   }
   
   @Override
+  public Response executeDelete(String url) throws IOException {
+    return executeDelete(url, null);
+  }
+  
+  @Override
+  public Response executeDelete(String url, Map<String, String> headers) throws IOException {
+    return execute(url, null, HttpRequest.Builder::DELETE, headers);
+  }
+  
+  @Override
   public Response executePost(String url, String parameters, String jsonBody) throws IOException {
     return executePost(url, parameters, jsonBody, null);
   }
@@ -111,6 +121,14 @@ public class DefaultWebRequestor implements WebRequestor {
     return execute(url, parameters,
         builder -> buildRequestWithBody(builder, builder::POST, url, jsonBody, headers,
             binaryAttachments), headers);
+  }
+  
+  @Override
+  public Response executePut(String url, String parameters, String jsonBody,
+      Map<String, String> headers, BinaryAttachment binaryAttachment) throws IOException {
+    return execute(url, parameters,
+        builder -> buildRequestWithBody(builder, builder::PUT, url, jsonBody, headers,
+            binaryAttachment), headers);
   }
   
   private void buildRequestWithBody(HttpRequest.Builder builder,
@@ -166,12 +184,45 @@ public class DefaultWebRequestor implements WebRequestor {
     return HttpRequest.BodyPublishers.noBody();
   }
   
-  @Override
-  public Response executePut(String url, String parameters, String jsonBody,
-      Map<String, String> headers, BinaryAttachment binaryAttachment) throws IOException {
-    return execute(url, parameters,
-        builder -> buildRequestWithBody(builder, builder::PUT, url, jsonBody, headers,
-            binaryAttachment), headers);
+  private Response execute(String url, String parameters,
+      Consumer<HttpRequest.Builder> requestBuilder, Map<String, String> customHeaders)
+      throws IOException {
+    if (LOGGER.isTraceEnabled()) {
+      LOGGER.trace("Executing request {} with parameters: {} and headers: {} {}", url, parameters,
+          headers, customHeaders);
+    }
+    
+    try {
+      URI uri = getURI(url, parameters);
+      
+      HttpRequest.Builder builder =
+          HttpRequest.newBuilder(uri).timeout(Duration.ofMillis(readTimeout));
+      
+      if (customHeaders != null && !customHeaders.isEmpty()) {
+        customHeaders.forEach(builder::header);
+      }
+      if (headers != null && !headers.isEmpty()) {
+        builder.headers(headers.toArray(new String[0]));
+      }
+      
+      customizeConnection(builder);
+      requestBuilder.accept(builder);
+      
+      return getResponse(builder.build());
+    } catch (URISyntaxException | InterruptedException ex) {
+      if (LOGGER.isDebugEnabled()) {
+        LOGGER.debug("LinkedIn responded with an error {}", ex.getMessage());
+      }
+      throw new IOException(ex);
+    }
+  }
+  
+  private URI getURI(String url, String parameters) throws URISyntaxException {
+    String parametersToAppend = "";
+    if (StringUtils.isNotEmpty(parameters)) {
+      parametersToAppend = parameters.startsWith("?") ? parameters : "?" + parameters;
+    }
+    return new URI(url + parametersToAppend);
   }
   
   private Response getResponse(HttpRequest request) throws IOException, InterruptedException {
@@ -187,6 +238,28 @@ public class DefaultWebRequestor implements WebRequestor {
       LOGGER.trace(format("LinkedIn responded with %s", response));
     }
     return response;
+  }
+  
+  /**
+   * Fill header and debug info.
+   *
+   * @param httpHeaders the http headers
+   */
+  private void fillHeaderAndDebugInfo(java.net.http.HttpHeaders httpHeaders) {
+    currentHeaders = httpHeaders.map();
+    
+    String liFabric = httpHeaders.firstValue("x-li-fabric").orElse("");
+    String liFormat = httpHeaders.firstValue("x-li-format").orElse("");
+    String liRequestId = httpHeaders.firstValue("x-li-request-id").orElse("");
+    String liUUID = httpHeaders.firstValue("x-li-uuid").orElse("");
+    debugHeaderInfo = new DebugHeaderInfo(liFabric, liFormat, liRequestId, liUUID);
+  }
+  
+  private Response fetchResponse(int statusCode, HttpHeaders headers, String body) {
+    Map<String, String> headerMap = headers.map().entrySet().stream().collect(
+        Collectors.toMap(Map.Entry::getKey,
+            entry -> entry.getValue().stream().findFirst().orElse("")));
+    return new Response(statusCode, headerMap, body);
   }
   
   /**
@@ -249,81 +322,8 @@ public class DefaultWebRequestor implements WebRequestor {
   }
   
   @Override
-  public Response executeDelete(String url) throws IOException {
-    return executeDelete(url, null);
-  }
-  
-  @Override
-  public Response executeDelete(String url, Map<String, String> headers) throws IOException {
-    return execute(url, null, HttpRequest.Builder::DELETE, headers);
-  }
-  
-  @Override
   public DebugHeaderInfo getDebugHeaderInfo() {
     return debugHeaderInfo;
-  }
-  
-  private Response execute(String url, String parameters,
-      Consumer<HttpRequest.Builder> requestBuilder, Map<String, String> customHeaders)
-      throws IOException {
-    if (LOGGER.isTraceEnabled()) {
-      LOGGER.trace("Executing request {} with parameters: {} and headers: {} {}", url, parameters,
-          headers, customHeaders);
-    }
-    
-    try {
-      URI uri = getURI(url, parameters);
-      
-      HttpRequest.Builder builder =
-          HttpRequest.newBuilder(uri).timeout(Duration.ofMillis(readTimeout));
-      
-      if (customHeaders != null && !customHeaders.isEmpty()) {
-        customHeaders.forEach(builder::header);
-      }
-      if (headers != null && !headers.isEmpty()) {
-        builder.headers(headers.toArray(new String[0]));
-      }
-      
-      customizeConnection(builder);
-      requestBuilder.accept(builder);
-      
-      return getResponse(builder.build());
-    } catch (URISyntaxException | InterruptedException ex) {
-      if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug("LinkedIn responded with an error {}", ex.getMessage());
-      }
-      throw new IOException(ex);
-    }
-  }
-  
-  private URI getURI(String url, String parameters) throws URISyntaxException {
-    String parametersToAppend = "";
-    if (StringUtils.isNotEmpty(parameters)) {
-      parametersToAppend = parameters.startsWith("?") ? parameters : "?" + parameters;
-    }
-    return new URI(url + parametersToAppend);
-  }
-  
-  /**
-   * Fill header and debug info.
-   *
-   * @param httpHeaders the http headers
-   */
-  private void fillHeaderAndDebugInfo(java.net.http.HttpHeaders httpHeaders) {
-    currentHeaders = httpHeaders.map();
-    
-    String liFabric = httpHeaders.firstValue("x-li-fabric").orElse("");
-    String liFormat = httpHeaders.firstValue("x-li-format").orElse("");
-    String liRequestId = httpHeaders.firstValue("x-li-request-id").orElse("");
-    String liUUID = httpHeaders.firstValue("x-li-uuid").orElse("");
-    debugHeaderInfo = new DebugHeaderInfo(liFabric, liFormat, liRequestId, liUUID);
-  }
-  
-  private Response fetchResponse(int statusCode, HttpHeaders headers, String body) {
-    Map<String, String> headerMap = headers.map().entrySet().stream().collect(
-        Collectors.toMap(Map.Entry::getKey,
-            entry -> entry.getValue().stream().findFirst().orElse("")));
-    return new Response(statusCode, headerMap, body);
   }
   
 }
