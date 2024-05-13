@@ -711,7 +711,6 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
         && HttpStatus.SC_FORBIDDEN != response.getStatusCode()
         && HttpStatus.SC_NOT_FOUND != response.getStatusCode()
         && HttpStatus.SC_UNPROCESSABLE_ENTITY != response.getStatusCode()
-        && HttpStatus.SC_TOO_MANY_REQUESTS != response.getStatusCode()
         && HttpStatus.SC_INTERNAL_SERVER_ERROR != response.getStatusCode()
         && HttpStatus.SC_GATEWAY_TIMEOUT != response.getStatusCode()) {
       throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
