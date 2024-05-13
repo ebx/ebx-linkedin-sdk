@@ -53,9 +53,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
 import java.security.GeneralSecurityException;
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -68,6 +75,13 @@ import java.util.stream.Collectors;
 public class DefaultWebRequestor implements WebRequestor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWebRequestor.class);
+  
+  private static final int DEFAULT_CONNECT_TIMEOUT_MS = 10000;
+  private static final int DEFAULT_READ_TIMEOUT_MS = 30000;
+  
+  private final List<String> headers;
+  private final HttpClient httpClient;
+  private final int readTimeout;
 
   /**
    * Arbitrary unique boundary marker for multipart {@code POST}s.
@@ -105,6 +119,8 @@ public class DefaultWebRequestor implements WebRequestor {
   private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
   private Map<String, Object> currentHeaders;
+  
+  private Map<String, List<String>> currentHttpHeaders;
 
   private DebugHeaderInfo debugHeaderInfo;
 
@@ -168,6 +184,11 @@ public class DefaultWebRequestor implements WebRequestor {
   public DefaultWebRequestor(String clientId, String clientSecret, String accessToken)
       throws GeneralSecurityException, IOException {
     this.requestFactory = authorize(clientId, clientSecret, accessToken);
+    this.headers = accessToken != null ? Arrays.asList("Authorization",
+        String.format("Bearer %s", accessToken)) : Collections.emptyList();
+    this.httpClient = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL)
+        .connectTimeout(Duration.ofMillis(DEFAULT_CONNECT_TIMEOUT_MS)).build();
+    this.readTimeout = DEFAULT_READ_TIMEOUT_MS;
   }
 
   private HttpRequestFactory authorize(String clientId, String clientSecret, String accessToken)
@@ -219,7 +240,7 @@ public class DefaultWebRequestor implements WebRequestor {
   
   @Override
   public Response executeGet(String url, Map<String, String> headers) throws IOException {
-    return execute(url, HttpMethod.GET, headers);
+    return execute(url, null, java.net.http.HttpRequest.Builder::GET, headers);
   }
 
   @Override
@@ -382,6 +403,22 @@ public class DefaultWebRequestor implements WebRequestor {
 
     return response;
   }
+  
+  private Response getResponse(java.net.http.HttpRequest request)
+      throws IOException, InterruptedException {
+    java.net.http.HttpResponse<String> httpResponse =
+        httpClient.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
+  
+    fillHeaderAndDebugInfo(httpResponse.headers());
+  
+    Response response =
+        fetchResponse(httpResponse.statusCode(), httpResponse.headers(), httpResponse.body());
+  
+    if (LOGGER.isTraceEnabled()) {
+      LOGGER.trace(format("LinkedIn responded with %s", response));
+    }
+    return response;
+  }
 
   private Response handleException(HttpResponseException ex) {
     fillHeaderAndDebugInfo(ex.getHeaders());
@@ -421,6 +458,16 @@ public class DefaultWebRequestor implements WebRequestor {
    * @param connection The connection to customize.
    */
   protected void customizeConnection(HttpRequest connection) {
+    // This implementation is a no-op
+  }
+  
+  /**
+   * Hook method which allows subclasses to easily customise the HTTP request connection
+   * This implementation is a no-op.
+   *
+   * @param connection The connection to customize.
+   */
+  protected void customizeConnection(java.net.http.HttpRequest.Builder connection) {
     // This implementation is a no-op
   }
 
@@ -487,14 +534,24 @@ public class DefaultWebRequestor implements WebRequestor {
   }
 
   /**
-   * access to the current response headers
+   * Access to the current response headers
    * 
-   * @return the current reponse header map
+   * @return the current response header map
    */
   public Map<String, Object> getCurrentHeaders() {
     return currentHeaders;
   }
-
+  
+  /**
+   * Access to the current response headers
+   *
+   * @return the current response header map
+   */
+  public Map<String, List<String>> getCurrentHttpHeaders() {
+    return currentHttpHeaders;
+  }
+  
+  
   @Override
   public Response executeDelete(String url) throws IOException {
     return executeDelete(url, null);
@@ -502,40 +559,56 @@ public class DefaultWebRequestor implements WebRequestor {
 
   @Override
   public Response executeDelete(String url, Map<String, String> headers) throws IOException {
-    return execute(url, HttpMethod.DELETE, headers);
+    return execute(url, null, java.net.http.HttpRequest.Builder::DELETE, headers);
   }
   
   @Override
   public DebugHeaderInfo getDebugHeaderInfo() {
     return debugHeaderInfo;
   }
-
-  private Response execute(String url, HttpMethod httpMethod, Map<String, String> headers)
+  
+  
+  private Response execute(String url, String parameters,
+      Consumer<java.net.http.HttpRequest.Builder> requestBuilder, Map<String, String> customHeaders)
       throws IOException {
     if (LOGGER.isTraceEnabled()) {
-      LOGGER.trace(format("Making a %s request to %s with headers %s", httpMethod.name(), url,
-          headers));
+      LOGGER.trace("Executing request {} with parameters: {} and headers: {}", url, parameters,
+          headers);
     }
-
-    HttpResponse httpResponse = null;
+    
     try {
-      GenericUrl genericUrl = new GenericUrl(url);
-      HttpRequest request = requestFactory.buildRequest(httpMethod.name(), genericUrl, null);
-      request.setReadTimeout(DEFAULT_READ_TIMEOUT_IN_MS);
-
-      // Allow subclasses to customize the connection if they'd like to - set their own headers,
-      // timeouts, etc.
-      customizeConnection(request);
-      HttpHeaders requestHeaders = new HttpHeaders();
-      addHeadersToRequest(request, requestHeaders, headers);
-
-      return getResponse(request);
-    } catch (HttpResponseException ex) {
-      return handleException(ex);
-    } finally {
-      closeQuietly(httpResponse);
+      URI uri = getURI(url, parameters);
+      
+      java.net.http.HttpRequest.Builder builder =
+          java.net.http.HttpRequest.newBuilder(uri).timeout(Duration.ofMillis(readTimeout));
+      
+      if (customHeaders != null && !customHeaders.isEmpty()) {
+        customHeaders.forEach(builder::header);
+      }
+      if (headers != null && !headers.isEmpty()) {
+        builder.headers(headers.toArray(new String[0]));
+      }
+      
+      customizeConnection(builder);
+      requestBuilder.accept(builder);
+      
+      return getResponse(builder.build());
+    } catch (URISyntaxException | InterruptedException ex) {
+      if (LOGGER.isDebugEnabled()) {
+        LOGGER.debug("LinkedIn responded with an error {}", ex.getMessage());
+      }
+      throw new IOException(ex);
     }
   }
+  
+  private URI getURI(String url, String parameters) throws URISyntaxException {
+    String parametersToAppend = "";
+    if (StringUtils.isNotEmpty(parameters)) {
+      parametersToAppend = parameters.startsWith("?") ? parameters : "?" + parameters;
+    }
+    return new URI(url + parametersToAppend);
+  }
+  
 
   /**
    * Fill header and debug info.
@@ -551,6 +624,23 @@ public class DefaultWebRequestor implements WebRequestor {
         "x-li-request-id"));
     String liUUID = StringUtils.trimToEmpty(httpHeaders.getFirstHeaderStringValue("x-li-uuid"));
     debugHeaderInfo = new DebugHeaderInfo(liFabric, liFormat, liRequestId, liUUID);
+  }
+  
+  private void fillHeaderAndDebugInfo(java.net.http.HttpHeaders httpHeaders) {
+    currentHttpHeaders = httpHeaders.map();
+  
+    String liFabric = httpHeaders.firstValue("x-li-fabric").orElse("");
+    String liFormat = httpHeaders.firstValue("x-li-format").orElse("");
+    String liRequestId = httpHeaders.firstValue("x-li-request-id").orElse("");
+    String liUUID = httpHeaders.firstValue("x-li-uuid").orElse("");
+    debugHeaderInfo = new DebugHeaderInfo(liFabric, liFormat, liRequestId, liUUID);
+  }
+  
+  
+  private Response fetchResponse(int statusCode, java.net.http.HttpHeaders headers, String body) {
+    Map<String, String> headerMap = headers.map().entrySet().stream().collect(Collectors
+        .toMap(Map.Entry::getKey, entry -> entry.getValue().stream().findFirst().orElse("")));
+    return new Response(statusCode, headerMap, body);
   }
 
   /**
