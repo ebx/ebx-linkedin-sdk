@@ -207,14 +207,14 @@ public class DefaultWebRequestor implements WebRequestor {
     int fileExtensionIndex = name.lastIndexOf('.');
     return fileExtensionIndex > 0 ? name.substring(0, fileExtensionIndex) : name;
   }
-
+  
   /**
    * Hook method which allows subclasses to easily customise the HTTP request connection
    * This implementation is a no-op.
    *
    * @param connection The connection to customize.
    */
-  protected void customizeConnection(java.net.http.HttpRequest.Builder connection) {
+  protected void customizeConnection(HttpRequest.Builder connection) {
     // This implementation is a no-op
   }
 
@@ -285,7 +285,6 @@ public class DefaultWebRequestor implements WebRequestor {
       }
       
       customizeConnection(builder);
-      
       requestBuilder.accept(builder);
       
       return getResponse(builder.build());
