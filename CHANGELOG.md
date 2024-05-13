@@ -227,6 +227,6 @@ can get data for both organization and organization brand pages.
 * Update build from Java 8 to Java 11. This included updating the build image to cimg/openjdk:11.0.
 
 ## 8.0.0 (May 13, 2024)
-* Update HTTP requests to use Java 11's HTTP client instead of Google HTTP client.
+* Update HTTP requests to use Java 11's HTTP client instead of the Google HTTP client.
 * Some backwards incompatible changes introduced such as return type of `getCurrentHeaders` and 
 parameter type of `customizeConnection`
