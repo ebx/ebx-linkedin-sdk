@@ -1,6 +1,6 @@
 # Contributing to ebx-linkedin-sdk
 
-Contributing code is an essential part of open source and we try to make this as easy as possible. There are several ways you can contribute to ebx-linkedin-sdk.  Here are some guidelines for creating new issues and sending us pull requests. Please read them carefully before contributing.
+Contributing code is an essential part of open source, and we try to make this as easy as possible. There are several ways you can contribute to ebx-linkedin-sdk.  Here are some guidelines for creating new issues and sending us pull requests. Please read them carefully before contributing.
 
 ## How to create a new issue
 
@@ -29,9 +29,10 @@ Pull requests (PR) are a very important way to contribute code to the library. W
   
         GH-123 Fixed NPE exception when resvoling an organisation
 
-* The pull request should be mergeable, i.e. no conflicts.
+* The pull request should be merge-able, i.e. no conflicts.
 * Junit tests required for any functional change must be included.
-* The pull request should be targetted at the `dev` branch. If you raise it against `master` the PR will fail to build.
-* Please try to keep PR commits in a logical order incase we need to review each commit seperately, but generally speaking the fewer commits the better.
-* Your PR will have to build succesfully against our CI (we use [Travis CI](https://travis-ci.org/ebx/ebx-linkedin-sdk)).
+* The pull request should be targeted at the `dev` branch. If you raise it against `master` the PR will fail to build.
+* Please try to keep PR commits in a logical order in case we need to review each commit 
+  separately, but generally speaking the fewer commits the better.
+* Your PR will have to build successfully against our CI (we use [CircleCI](https://app.circleci.com/pipelines/github/ebx/ebx-linkedin-sdk)).
 * **Important Note**: If your PR contains breaking changes you must include a MAJOR version bump in the PR.
