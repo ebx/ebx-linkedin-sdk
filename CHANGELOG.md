@@ -230,3 +230,6 @@ can get data for both organization and organization brand pages.
 * Update HTTP requests to use Java 11's HTTP client instead of the Google HTTP client.
 * Some backwards incompatible changes introduced such as return type of `getCurrentHeaders` and 
 parameter type of `customizeConnection`
+
+## 8.0.1 (not yet released)
+* Updated contributing notes to specify CircleCI
