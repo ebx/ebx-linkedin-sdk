@@ -41,6 +41,11 @@ public class CommentAction extends ContainsURN {
   @Setter
   @LinkedIn
   private URN actor;
+
+  @Getter
+  @Setter
+  @LinkedIn
+  private URN commentUrn;
   
   @Getter
   @Setter
