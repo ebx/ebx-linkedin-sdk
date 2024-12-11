@@ -235,3 +235,7 @@ parameter type of `customizeConnection`
 ## 8.0.1 (November 28, 2024)
 * Update the default API version to 202411.
 * Update a number of dependencies, including org.apache.commons:commons-lang3 to 3.17.0.
+
+## 8.0.2 (December 11, 2024)
+* Revert back to using Google HTTP client for HTTP requests (after encountering issues with 
+  LinkedIn reconnections)
