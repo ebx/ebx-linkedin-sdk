@@ -8,7 +8,7 @@
 
   <groupId>com.echobox</groupId>
   <artifactId>ebx-linkedin-sdk</artifactId>
-  <version>8.0.1</version>
+  <version>8.1.0</version>
   <packaging>jar</packaging>
 
   <properties>
@@ -83,9 +83,9 @@
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-      <version>4.5.14</version>
+      <groupId>com.google.api-client</groupId>
+      <artifactId>google-api-client</artifactId>
+      <version>2.2.0</version>
     </dependency>
     <dependency>
       <groupId>com.eclipsesource.minimal-json</groupId>

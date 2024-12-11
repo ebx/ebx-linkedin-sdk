@@ -40,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -57,7 +58,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
   
   private static final Logger LOGGER =
       LoggerFactory.getLogger(DefaultLinkedInClient.class);
-
+  
   /**
    * HTTP parameter names.
    */
@@ -105,14 +106,39 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
       "https://www.linkedin.com/oauth/v2/accessToken";
   
   /**
+   * Reserved "start" parameter name.
+   */
+  protected static final String START = "start";
+  
+  /**
+   * Reserved "end" parameter name.
+   */
+  protected static final String END = "end";
+  
+  /**
    * Request header to put API version
    */
   public static final String HEADER_NAME_VERSION = "Linkedin-Version";
-
+  
   /**
    * Default LinkedIn-version header
    */
-  public static final String DEFAULT_VERSIONED_MONTH = "202411";
+  public static final String DEFAULT_VERSIONED_MONTH = "202307";
+  
+  /**
+   * Request header of protocol
+   */
+  private static final String HEADER_NAME_PROTOCOL = "X-Restli-Protocol-Version";
+  
+  /**
+   * Default LinkedIn Protocol
+   */
+  private static final String DEFAULT_LINKEDIN_PROTOCOL = "2.0.0";
+  
+  /**
+   * Graph API access token.
+   */
+  protected String accessToken;
   
   /**
    * Knows how to map Graph API exceptions to formal Java exception types.
@@ -145,15 +171,20 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
    */
   protected boolean httpDeleteFallback = false;
   
-  private final Map<String, String> defaultHeaders;
+  private Map<String, String> defaultHeaders;
   
   /**
    * Creates a LinkedIn API client with the given {@code accessToken}.
    *
    * @param accessToken
    *          A LinkedIn OAuth access token.
+   * @throws GeneralSecurityException
+   *          If the DefaultWebRequestor fails to initialise
+   * @throws IOException
+   *          If the DefaultWebRequestor fails to initialise
    */
-  public DefaultLinkedInClient(String accessToken) {
+  public DefaultLinkedInClient(String accessToken)
+      throws GeneralSecurityException, IOException {
     this(accessToken, Version.VERSIONED);
   }
   
@@ -164,8 +195,13 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
    *          A LinkedIn OAuth access token.
    * @param apiVersion
    *          Version of the API endpoint
+   * @throws GeneralSecurityException
+   *          If the DefaultWebRequestor fails to initialise
+   * @throws IOException
+   *          If the DefaultWebRequestor fails to initialise
    */
-  public DefaultLinkedInClient(String accessToken, Version apiVersion) {
+  public DefaultLinkedInClient(String accessToken, Version apiVersion)
+      throws GeneralSecurityException, IOException {
     this(new DefaultWebRequestor(accessToken), new DefaultJsonMapper(), apiVersion);
   }
   
@@ -189,9 +225,13 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
    *          Version of the API endpoint
    * @param versionedMonth
    *          LinkedIn-version of the API (in format YYYYMM)
+   * @throws GeneralSecurityException
+   *          If the DefaultWebRequestor fails to initialise
+   * @throws IOException
+   *          If the DefaultWebRequestor fails to initialise
    */
   public DefaultLinkedInClient(String accessToken, Version apiVersion,
-      String versionedMonth) {
+      String versionedMonth) throws GeneralSecurityException, IOException {
     this(new DefaultWebRequestor(accessToken), new DefaultJsonMapper(),
         apiVersion, versionedMonth);
   }
@@ -332,12 +372,12 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
   @Override
   public WebRequestor.Response put(String connection, Object jsonBody,
       BinaryAttachment binaryAttachment, Parameter... parameters) {
-
+    
     List<BinaryAttachment> attachments = new ArrayList<>();
     if (binaryAttachment != null) {
       attachments.add(binaryAttachment);
     }
-  
+    
     return makeRequest(connection, RequestType.PUT, jsonBody, attachments, parameters);
   }
   
@@ -381,7 +421,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
     WebRequestor.Response response = makeRequest(object, RequestType.DELETE,
         null, null, parameters);
     String responseBody = response.getBody();
-  
+    
     try {
       JsonValue jObj = Json.parse(responseBody);
       if (jObj.isObject()) {
@@ -412,7 +452,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
     ValidationUtils.verifyParameterPresence("verificationCode", verificationCode);
     
     try {
-      this.webRequestor = new DefaultWebRequestor();
+      this.webRequestor = new DefaultWebRequestor(appId, appSecret);
       
       Map<String, String> headers = new HashMap<>();
       headers.put("Content-Type", "application/x-www-form-urlencoded");
@@ -539,7 +579,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
     
     final String fullEndpoint = createEndpointForApiCall(endpoint,
         binaryAttachments != null && !binaryAttachments.isEmpty());
-
+    
     return makeRequestFull(fullEndpoint, requestType, jsonBody,
         defaultHeaders, binaryAttachments, parameters);
   }
@@ -588,22 +628,22 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
         if (RequestType.GET == requestType) {
           return webRequestor.executeGet(fullEndpoint + finalParameterString, headers);
         }
-
+        
         String body = jsonBody == null ? null : jsonMapper.toJson(jsonBody, true);
         BinaryAttachment[] attachments = binaryAttachments == null ? null
             : binaryAttachments.toArray(new BinaryAttachment[binaryAttachments.size()]);
-
+        
         if (RequestType.PUT == requestType) {
           BinaryAttachment attachment = attachments == null || attachments.length == 0
               ? null : attachments[0];
           return webRequestor.executePut(fullEndpoint, parameterString, body, headers, attachment);
         }
-
+        
         if (RequestType.POST == requestType) {
           return webRequestor.executePost(fullEndpoint, parameterString, body, headers,
               attachments);
         }
-
+        
         if (RequestType.DELETE == requestType && !isHttpDeleteFallback()) {
           return webRequestor.executeDelete(fullEndpoint + finalParameterString, headers);
         }
@@ -711,6 +751,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
         && HttpStatus.SC_FORBIDDEN != response.getStatusCode()
         && HttpStatus.SC_NOT_FOUND != response.getStatusCode()
         && HttpStatus.SC_UNPROCESSABLE_ENTITY != response.getStatusCode()
+        && HttpStatus.SC_TOO_MANY_REQUESTS != response.getStatusCode()
         && HttpStatus.SC_INTERNAL_SERVER_ERROR != response.getStatusCode()
         && HttpStatus.SC_GATEWAY_TIMEOUT != response.getStatusCode()) {
       throw new LinkedInNetworkException("LinkedIn request failed", response.getStatusCode());
