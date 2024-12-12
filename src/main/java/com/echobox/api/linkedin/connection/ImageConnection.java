@@ -24,7 +24,6 @@ import com.echobox.api.linkedin.types.images.ImageDetails;
 import com.echobox.api.linkedin.types.images.InitializeUpload;
 import com.echobox.api.linkedin.types.images.InitializeUploadRequestBody;
 import com.echobox.api.linkedin.types.urn.URN;
-import com.echobox.api.linkedin.util.URLUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -138,7 +137,7 @@ public class ImageConnection extends Connection {
    * @return the image details
    */
   public ImageDetails retrieveImageDetails(URN imageURN) {
-    return linkedinClient.fetchObject(IMAGES + "/" + URLUtils.urlEncode(imageURN.toString()),
+    return linkedinClient.fetchObject(IMAGES + "/" + imageURN.toString(),
         ImageDetails.class);
   }
 }
