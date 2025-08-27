@@ -47,18 +47,18 @@ public class PeopleConnection extends Connection {
    * Search followers of an organization by keyword.
    *
    * @param organizationURN URN of the organization (urn:li:organization:{id})
-   * @param keywords The search string (partial name, etc.)
+   * @param keyword The search string (partial name, etc.)
    * @param count Max number of results to return
    * @return list of follower results with URNs, names, headline, photo, etc.
    */
-  public List<FollowerResult> searchOrganizationFollowers(URN organizationURN, String keywords,
+  public List<FollowerResult> searchOrganizationFollowers(URN organizationURN, String keyword,
       Integer count) {
     ValidationUtils.verifyParameterPresence("organizationURN", organizationURN);
-    ValidationUtils.verifyParameterPresence("keywords", keywords);
+    ValidationUtils.verifyParameterPresence("keywords", keyword);
     
     List<Parameter> params = new ArrayList<>();
     params.add(Parameter.with(QUERY_KEY, ORG_FOLLOWERS_VALUE));
-    params.add(Parameter.with(KEYWORDS_KEY, keywords));
+    params.add(Parameter.with(KEYWORDS_KEY, keyword));
     params.add(Parameter.with(ORG_KEY, organizationURN.toString()));
     this.addStartAndCountParams(params, null, count);
     
