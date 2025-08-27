@@ -239,3 +239,6 @@ parameter type of `customizeConnection`
 ## 8.0.2 (December 11, 2024)
 * Revert back to using Google HTTP client for HTTP requests (after encountering issues with 
   LinkedIn reconnections)
+
+## 8.1.0 (August 27, 2025)
+* Add support for LinkedIn's People Typeahead API to search for an organization's followers.
