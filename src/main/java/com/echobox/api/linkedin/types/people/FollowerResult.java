@@ -28,30 +28,22 @@ import lombok.Setter;
  * @author Myrto Papakonstantinou
  */
 
+@Getter
+@Setter
 public class FollowerResult {
   
-  @Getter
-  @Setter
   @LinkedIn
   private String member;
   
-  @Getter
-  @Setter
   @LinkedIn
   private String firstName;
   
-  @Getter
-  @Setter
   @LinkedIn
   private String lastName;
   
-  @Getter
-  @Setter
   @LinkedIn
   private String headline;
   
-  @Getter
-  @Setter
   @LinkedIn
   private String photo;
 }
