@@ -242,6 +242,7 @@ parameter type of `customizeConnection`
 
 ## 8.1.0 (August 27, 2025)
 * Add support for LinkedIn's People Typeahead API to search for an organization's followers.
-* 
+
 ## 8.1.1 (November 11, 2025)
 * Update the default API version to 202510.
+* Adding a new commit to make the CI work
