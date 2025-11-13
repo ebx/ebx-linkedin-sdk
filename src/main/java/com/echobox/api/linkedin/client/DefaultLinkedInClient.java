@@ -123,7 +123,7 @@ public class DefaultLinkedInClient extends BaseLinkedInClient
   /**
    * Default LinkedIn-version header
    */
-  public static final String DEFAULT_VERSIONED_MONTH = "202411";
+  public static final String DEFAULT_VERSIONED_MONTH = "202510";
   
   /**
    * Request header of protocol
