@@ -245,4 +245,3 @@ parameter type of `customizeConnection`
 
 ## 8.1.1 (November 11, 2025)
 * Update the default API version to 202510.
-* Adding a new commit to make the CI work
