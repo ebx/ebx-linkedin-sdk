@@ -31,13 +31,10 @@
   </scm>
 
   <distributionManagement>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
     <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+      <id>echobox-ebx-core</id>
+      <name>Internal Release Repository</name>
+      <url>https://echobox-060610571733.d.codeartifact.eu-west-1.amazonaws.com/maven/ebx-core/</url>
     </repository>
   </distributionManagement>
 
